@@ -1,10 +1,24 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css';
+import React, { useState } from 'react';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 
 function App() {
-    return <>none</>;
+    const [currentForm, setCurrentForm] = useState('login');
+
+    const toggleFormm = (formName : string) => {
+        setCurrentForm(formName);
+    }
+
+    return (
+        <div>
+            {currentForm === 'login' ? (
+                <Login onFormSwitch={toggleFormm} />
+            ) : (
+                <Register onFormSwitch={toggleFormm} />
+            )}
+        </div>
+    );
 }
 
 export default App;

@@ -2,9 +2,9 @@ FROM node:alpine
 
 WORKDIR /client
 
-COPY package.json .
+COPY package*.json ./
 
-RUN npm i
+RUN npm install
 
 COPY . .
 
