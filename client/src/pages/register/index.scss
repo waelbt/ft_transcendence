@@ -1,0 +1,152 @@
+@import '../../constants/variables';
+@import 'draft-js/dist/Draft.css';
+
+.register-container {
+    display: flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    border-radius: 24px;
+    background: rgba(113, 199, 216, 0.8);
+    box-shadow: 10px 20px 8px 0px rgba(0, 0, 0, 0.2);
+
+    .third-party-btns {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+
+        .intra-btn {
+            display: flex;
+            width: 172px;
+            padding: 24px 36px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border-radius: 47px;
+            background: #304194;
+            .intra-btn-logo {
+                width: 30px;
+                height: 24px;
+                flex-shrink: 0;
+                background-image: url('../../devicon_24.svg');
+                background-repeat: no-repeat;
+            }
+            .intra-btn-text {
+                color: #fff;
+                text-align: center;
+                font-family: Inter;
+                font-size: 15px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+            }
+        }
+        .google-btn {
+            display: flex;
+            width: 172px;
+            height: 72px;
+            padding: 24px 36px;
+            align-items: center;
+            gap: 10px;
+            border-radius: 47px;
+            background: #fff;
+        }
+    }
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+
+        .form-label-input {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            .form-label {
+                color: #fff;
+                /* Shadow/xs focused 4px primary-100 */
+                text-shadow:
+                    0px 0px 0px #f4ebff,
+                    0px 1px 2px rgba(16, 24, 40, 0.05);
+                font-family: $font-Acme;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 20px; /* 142.857% */
+            }
+            .form-input {
+                display: flex;
+                padding: 18px 56px 18px 10px;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                border-radius: 12px;
+                border: 2px solid #304194;
+                background: #fff;
+                width: 393px;
+                color: #304194;
+                font-family: $font-Acme;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px;
+                &::placeholder {
+                    opacity: initial;
+                }
+            }
+        }
+    }
+
+    .sign-up-btn {
+        display: flex;
+        padding: 24px 160px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 55px;
+        background: #f20553;
+
+        .button-text-btn-text {
+            color: #fff;
+            text-align: center;
+            leading-trim: both;
+            text-edge: cap;
+            font-family: The Bomb Sound;
+            font-size: 36px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+
+        &:hover {
+            background-color: rgb(
+                189,
+                21,
+                66
+            ); /* Change to your desired hover color */
+        }
+    }
+
+    .login-label {
+        color: #fff;
+        text-align: center;
+        font-family: $font-Acme;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        .login-link {
+            color: #f20553;
+            font-family: $font-Acme;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

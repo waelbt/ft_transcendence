@@ -1,0 +1,68 @@
+$background-image: '../../background_image.svg';
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
+
+$font-Acme: 'Acme', sans-serif;
+
+@font-face {
+    font-family: 'The Bomb Sound';
+    src: url('../../The Bomb Sound.ttf') format('truetype');
+    /* Add additional font formats if available */
+}
+
+$primary-red: #7a0000;
+
+// $secondary-red: #e08b88;
+// $tertiary-red: #3002001c;
+// $primary-green: #001B19;
+// $secondary-green: #00cb6a;
+// $tertiary-grey: #9eafa2;
+// $background-white: #fafafa;
+$background-black: #171717;
+// $secondary-black: #171717;
+
+// $text-color-primary: #fafafa;
+// $text-color-secondary:#171717;
+// $text-color-secondary: $primary-green;
+
+// // temporary variable - will remove later
+// $temp-color: RGB(33, 0, 2);
+
+// @mixin flex-column {
+//   display: flex;
+//   flex-direction: column;
+// }
+// @mixin flex-row {
+//   display: flex;
+//   justify-content: space-evenly;
+// }
+
+// .bg-green {
+//   background-color: $primary-green;
+//   color: $text-color-primary;
+// }
+// .bg-tertiary-grey {
+//   background-color: $tertiary-grey;
+//   color: $text-color-primary;
+// }
+// .bg-red {
+//   background-color: $primary-red;
+//   color: $text-color-primary;
+// }
+// .bg-tertiary-red {
+//   background-color: $tertiary-red;
+//   color: $text-color-secondary;
+// }
+// .bg-secondary-red {
+//   background-color: $secondary-red;
+//   color: $text-color-secondary;
+// }
+// .bg-white {
+//   background-color: $background-white;
+//   color: $background-black;
+// }
+// .text-white {
+//   color: $text-color-primary;
+// }
+// .text-green {
+//   color: $primary-green;
+// }

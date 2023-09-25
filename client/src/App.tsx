@@ -1,14 +1,14 @@
-import './App.css';
+import './App.scss';
 import React, { useState } from 'react';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
+import { Login } from './pages/login';
+import { Register } from './pages/register';
 
 function App() {
     const [currentForm, setCurrentForm] = useState('login');
 
-    const toggleFormm = (formName : string) => {
+    const toggleFormm = (formName: string) => {
         setCurrentForm(formName);
-    }
+    };
 
     return (
         <div>
