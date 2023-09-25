@@ -18,14 +18,28 @@ export const Register: React.FC<RegisterProps> = (props) => {
     };
 
     return (
-        <>
+        <div className="register">
+            <div className="register-header">
+                <div className="register-header-text">How want to play</div>
+                <div className="register-header-text">Video games?</div>
+            </div>
             <form className="register-container" onSubmit={handleSubmit}>
                 <div className="third-party-btns">
                     <div className="intra-btn">
                         <span className="intra-btn-logo"></span>
                         <span className="intra-btn-text">Network</span>
                     </div>
-                    <button className="google-btn"></button>
+                    <div className="google-btn">
+                        <span className="google-btn-content">
+                            <span className="google-btn-logo"></span>
+                            <span className="google-btn-text">Google</span>
+                        </span>
+                    </div>
+                </div>
+                <div className="or-separator">
+                    <span className="or-separator-line"></span>
+                    <p className="or-separator-text">or</p>
+                    <span className="or-separator-line"></span>
                 </div>
                 <div className="register-form">
                     <div className="form-label-input">
@@ -99,6 +113,6 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     <span className="login-link">Log-in</span>
                 </div>
             </form>
-        </>
+        </div>
     );
 };
