@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './index.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface RegisterProps {
     onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
@@ -87,6 +89,8 @@ export const Register: React.FC<RegisterProps> = (props) => {
                             id="pass"
                             name="pass"
                         />
+                        <FontAwesomeIcon icon={faEyeSlash} />
+                        {/* <FontAwesomeIcon icon={faEye} /> */}
                     </div>
                     <div className="form-label-input">
                         <label className="form-label" htmlFor="confirm-pass">
