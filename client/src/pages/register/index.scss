@@ -15,7 +15,7 @@
         .register-header-text {
             color: #ffec47;
             text-align: center;
-            font-family: The Bomb Sound;
+            font-family: $font-Bomb-Sound;
             font-size: 3rem;
             font-style: normal;
             font-weight: 400;
@@ -101,7 +101,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.1875rem;
+            gap: 0.4rem;
             height: 2rem;
             .or-separator-line {
                 width: 4rem;
@@ -114,7 +114,7 @@
                 color: #fff;
                 text-align: center;
                 font-family: $font-Inter;
-                font-size: 1rem;
+                font-size: 1.2rem;
                 font-style: normal;
                 // font-weight: 500;
                 line-height: normal;
@@ -180,9 +180,7 @@
             .button-text-btn-text {
                 color: #fff;
                 text-align: center;
-                // leading-trim: both;
-                // text-edge: cap;
-                font-family: The Bomb Sound;
+                font-family: $font-Bomb-Sound;
                 font-size: 2.25rem;
                 font-style: normal;
                 font-weight: 400;
