@@ -5,50 +5,52 @@
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: 37px;
+    gap: 2.3125rem;
+
     .register-header {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 24px;
+        gap: 1.5rem;
         .register-header-text {
             color: #ffec47;
             text-align: center;
             font-family: The Bomb Sound;
-            font-size: 48px;
+            font-size: 3rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            letter-spacing: 2.16px;
+            letter-spacing: 0.135rem;
         }
     }
     .register-container {
         display: flex;
-        padding: 36px;
+        padding: 2.25rem;
         flex-direction: column;
         align-items: center;
-        gap: 36px;
-        border-radius: 24px;
+        gap: 2.25rem;
+        border-radius: 1.5rem;
         background: rgba(113, 199, 216, 0.8);
         box-shadow: 10px 20px 8px 0px rgba(0, 0, 0, 0.2);
 
         .third-party-btns {
             display: flex;
             align-items: flex-start;
-            gap: 24px;
+            gap: 1.5rem;
 
             .intra-btn {
                 display: flex;
-                width: 172px;
-                padding: 24px 36px;
+                width: 10.75rem;
+                border: none;
+                padding: 1.5rem 2.25rem;
                 justify-content: center;
                 align-items: center;
-                gap: 10px;
-                border-radius: 47px;
+                gap: 0.625rem;
+                border-radius: 2.9375rem;
                 background: #304194;
                 .intra-btn-logo {
-                    width: 30px;
-                    height: 24px;
+                    width: 1.875rem;
+                    height: 1.5rem;
                     flex-shrink: 0;
                     background-image: url('../../devicon_24.svg');
                     background-repeat: no-repeat;
@@ -57,7 +59,7 @@
                     color: #fff;
                     text-align: center;
                     font-family: Inter;
-                    font-size: 15px;
+                    font-size: 0.9375rem;
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
@@ -65,22 +67,29 @@
             }
             .google-btn {
                 display: flex;
-                width: 172px;
-                height: 72px;
-                // padding: 24px 36px;
+                width: 10.75rem;
+                height: 4.5rem;
+                border: none;
+                padding: 1.5rem 2.25rem;
                 align-items: center;
-                gap: 10px;
-                border-radius: 47px;
+                gap: 0.625rem;
+                border-radius: 2.9375rem;
                 background: #fff;
-                .google-btn-content {
-                    display: flex;
-                    align-items: center;
-                    gap: 11px;
-                    .google-btn-logo {
-                        width: 27px;
-                        height: 27px;
-                        background-image: url('../../devicon_google.svg');
-                    }
+                .google-btn-logo {
+                    width: 1.875rem;
+                    height: 1.5rem;
+                    background-image: url('../../devicon_google.svg');
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                }
+                .google-btn-text {
+                    color: #3686f7;
+                    text-align: center;
+                    font-family: Inter;
+                    font-size: 1.0625rem;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
                 }
             }
         }
@@ -88,11 +97,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 3px;
-
+            gap: 0.1875rem;
             .or-separator-line {
-                width: 80px;
-                height: 1px;
+                width: 5rem;
+                height: 0.0625rem;
                 background: rgba(255, 255, 255, 0.7);
                 box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
                 background-image: url('../../Line.svg');
@@ -101,7 +109,7 @@
                 color: #fff;
                 text-align: center;
                 font-family: Inter;
-                font-size: 20px;
+                font-size: 1.25rem;
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
@@ -111,41 +119,42 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 12px;
+            gap: 0.75rem;
 
             .form-label-input {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 16px;
+                gap: 1rem;
                 .form-label {
                     color: #fff;
+
                     /* Shadow/xs focused 4px primary-100 */
                     text-shadow:
                         0px 0px 0px #f4ebff,
                         0px 1px 2px rgba(16, 24, 40, 0.05);
-                    font-family: $font-Acme;
-                    font-size: 14px;
+                    font-family: Acme;
+                    font-size: 0.875rem;
                     font-style: normal;
                     font-weight: 400;
-                    line-height: 20px; /* 142.857% */
+                    line-height: 1.25rem; /* 142.857% */
                 }
                 .form-input {
                     display: flex;
-                    padding: 18px 56px 18px 10px;
+                    padding: 1.125rem 3.5rem 1.125rem 0.625rem;
                     justify-content: center;
                     align-items: center;
-                    gap: 10px;
-                    border-radius: 12px;
+                    gap: 0.625rem;
+                    border-radius: 0.75rem;
                     border: 2px solid #304194;
                     background: #fff;
-                    width: 393px;
                     color: #304194;
-                    font-family: $font-Acme;
-                    font-size: 18px;
+                    width: 24.5625rem;
+                    font-family: Acme;
+                    font-size: 1.125rem;
                     font-style: normal;
                     font-weight: 400;
-                    line-height: 24px;
+                    line-height: 1.5rem; /* 133.333% */
                     &::placeholder {
                         opacity: initial;
                     }
@@ -154,19 +163,20 @@
         }
 
         .sign-up-btn {
+            // leading-trim: both;
+            // text-edge: cap;
             display: flex;
-            padding: 24px 160px;
+            padding: 1.5rem 10rem;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            border-radius: 55px;
+            gap: 0.625rem;
+            border-radius: 3.4375rem;
             background: #f20553;
-
             .button-text-btn-text {
                 color: #fff;
                 text-align: center;
-                leading-trim: both;
-                text-edge: cap;
+                // leading-trim: both;
+                // text-edge: cap;
                 font-family: The Bomb Sound;
                 font-size: 36px;
                 font-style: normal;
@@ -186,15 +196,15 @@
         .login-label {
             color: #fff;
             text-align: center;
-            font-family: $font-Acme;
-            font-size: 18px;
+            font-family: Acme;
+            font-size: 1.125rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
             .login-link {
                 color: #f20553;
-                font-family: $font-Acme;
-                font-size: 18px;
+                font-family: Acme;
+                font-size: 1.125rem;
                 font-style: normal;
                 font-weight: 400;
                 line-height: normal;

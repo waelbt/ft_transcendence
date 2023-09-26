@@ -25,16 +25,20 @@ export const Register: React.FC<RegisterProps> = (props) => {
             </div>
             <form className="register-container" onSubmit={handleSubmit}>
                 <div className="third-party-btns">
-                    <div className="intra-btn">
+                    <button className="intra-btn">
                         <span className="intra-btn-logo"></span>
                         <span className="intra-btn-text">Network</span>
-                    </div>
-                    <div className="google-btn">
-                        <span className="google-btn-content">
-                            <span className="google-btn-logo"></span>
-                            <span className="google-btn-text">Google</span>
+                    </button>
+                    <button className="google-btn">
+                        <span className="google-btn-logo"></span>
+                        <span className="google-btn-text">
+                            G<span className="red">o</span>
+                            <span className="yellow">o</span>
+                            <span>g</span>
+                            <span className="green">l</span>
+                            <span className="red">e</span>
                         </span>
-                    </div>
+                    </button>
                 </div>
                 <div className="or-separator">
                     <span className="or-separator-line"></span>
