@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './index.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface RegisterProps {
     onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
@@ -94,8 +92,10 @@ export const Register: React.FC<RegisterProps> = (props) => {
                             />
                             <span
                                 className="p-viewer"
-                                onClick={() => (
-                                    (pwdVisibility === '') ? setpwdVisibility('-slash') : setpwdVisibility(""))
+                                onClick={() =>
+                                    pwdVisibility === ''
+                                        ? setpwdVisibility('-slash')
+                                        : setpwdVisibility('')
                                 }
                             >
                                 <i className="fa fa-eye"></i>
@@ -119,7 +119,11 @@ export const Register: React.FC<RegisterProps> = (props) => {
                             />
                             <span
                                 className="p-viewer"
-                                onClick={() => setpwdVisibility('-slash')}
+                                onClick={() =>
+                                    pwdVisibility === ''
+                                        ? setpwdVisibility('-slash')
+                                        : setpwdVisibility('')
+                                }
                             >
                                 <i className={`fa fa-eye${pwdVisibility}`}></i>
                             </span>
