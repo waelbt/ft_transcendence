@@ -38,7 +38,7 @@
             align-items: flex-start;
             gap: 1.5rem;
 
-            .intra-btn {
+            .default {
                 display: flex;
                 width: 10.75rem;
                 border: none;
@@ -47,6 +47,8 @@
                 align-items: center;
                 gap: 0.625rem;
                 border-radius: 2.9375rem;
+            }
+            .intra-btn {
                 background: #304194;
                 .intra-btn-logo {
                     width: 1.875rem;
@@ -66,15 +68,8 @@
                 }
             }
             .google-btn {
-                display: flex;
-                width: 10.75rem;
-                height: 4.5rem;
-                border: none;
-                padding: 1.5rem 2.25rem;
-                align-items: center;
-                gap: 0.625rem;
-                border-radius: 2.9375rem;
                 background: #fff;
+
                 .google-btn-logo {
                     width: 1.875rem;
                     height: 1.5rem;

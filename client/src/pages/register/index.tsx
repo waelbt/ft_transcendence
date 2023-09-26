@@ -25,11 +25,11 @@ export const Register: React.FC<RegisterProps> = (props) => {
             </div>
             <div className="register-container">
                 <div className="third-party-btns">
-                    <button className="intra-btn">
+                    <button className="intra-btn default">
                         <span className="intra-btn-logo"></span>
                         <span className="intra-btn-text">Network</span>
                     </button>
-                    <button className="google-btn">
+                    <button className="google-btn default">
                         <span className="google-btn-logo"></span>
                         <span className="google-btn-text">
                             G<span className="red">o</span>
