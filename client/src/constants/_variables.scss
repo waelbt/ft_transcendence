@@ -1,14 +1,16 @@
 $background-image: '../../background_image.svg';
-@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 $font-Acme: 'Acme', sans-serif;
+
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Inter:wght@500&display=swap');
+$font-Inter: 'Inter', sans-serif;
 
 @font-face {
     font-family: 'The Bomb Sound';
     src: url('../../The Bomb Sound.ttf') format('truetype');
     /* Add additional font formats if available */
 }
-
 
 $primary-red: #7a0000;
 

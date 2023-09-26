@@ -103,12 +103,12 @@ export const Register: React.FC<RegisterProps> = (props) => {
                         />
                     </div>
                 </form>
-                <div
+                <button
                     className="sign-up-btn"
                     // onClick={() => props.onFormSwitch('login')}
                 >
                     <span className="button-text-btn-text">Sign up</span>
-                </div>
+                </button>
                 <div
                     className="login-label"
                     onClick={() => props.onFormSwitch('login')}
