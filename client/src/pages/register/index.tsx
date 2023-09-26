@@ -11,6 +11,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
+    const [pwdVisibility, setpwdVisibility] = useState('');
 
     const [name, setName] = useState('');
 
@@ -69,8 +70,9 @@ export const Register: React.FC<RegisterProps> = (props) => {
                         <input
                             className="form-input"
                             type="email"
+                            aria-hidden
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.t - slasharget.value)}
                             placeholder="wael@student.1337.ma"
                             id="email"
                             name="email"
@@ -90,8 +92,13 @@ export const Register: React.FC<RegisterProps> = (props) => {
                                 id="pass"
                                 name="pass"
                             />
-                            <span className="p-viewer">
-                                <i className="fa fa-eye" aria-hidden="true"></i>
+                            <span
+                                className="p-viewer"
+                                onClick={() => (
+                                    (pwdVisibility === '') ? setpwdVisibility('-slash') : setpwdVisibility(""))
+                                }
+                            >
+                                <i className="fa fa-eye"></i>
                             </span>
                         </div>
                         {/* <FontAwesomeIcon icon={faEye} /> */}
@@ -110,8 +117,11 @@ export const Register: React.FC<RegisterProps> = (props) => {
                                 id="confirm-pass"
                                 name="confirm-pass"
                             />
-                            <span className="p-viewer">
-                                <i className="fa fa-eye" aria-hidden="true"></i>
+                            <span
+                                className="p-viewer"
+                                onClick={() => setpwdVisibility('-slash')}
+                            >
+                                <i className={`fa fa-eye${pwdVisibility}`}></i>
                             </span>
                         </div>
                         {/* <FontAwesomeIcon icon={faEye} /> */}
