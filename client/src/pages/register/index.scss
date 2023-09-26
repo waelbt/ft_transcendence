@@ -162,6 +162,19 @@
                         opacity: initial;
                     }
                 }
+                .pwd {
+                    position: relative;
+                    .p-viewer {
+                        z-index: 9999;
+                        position: absolute;
+                        top: 35%;
+                        right: 1rem;
+                    }
+
+                    .fa-eye {
+                        color: #304194;
+                    }
+                }
             }
         }
 

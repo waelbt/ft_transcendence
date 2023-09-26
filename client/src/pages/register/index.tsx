@@ -80,31 +80,41 @@ export const Register: React.FC<RegisterProps> = (props) => {
                         <label className="form-label" htmlFor="pass">
                             Password
                         </label>
-                        <input
-                            className="form-input"
-                            type="pass"
-                            value={pass}
-                            onChange={(e) => setPass(e.target.value)}
-                            placeholder="●●●●●●●●●●"
-                            id="pass"
-                            name="pass"
-                        />
-                        <FontAwesomeIcon icon={faEyeSlash} />
+                        <div className="pwd">
+                            <input
+                                className="form-input"
+                                type="pass"
+                                value={pass}
+                                onChange={(e) => setPass(e.target.value)}
+                                placeholder="●●●●●●●●●●"
+                                id="pass"
+                                name="pass"
+                            />
+                            <span className="p-viewer">
+                                <i className="fa fa-eye" aria-hidden="true"></i>
+                            </span>
+                        </div>
                         {/* <FontAwesomeIcon icon={faEye} /> */}
                     </div>
                     <div className="form-label-input">
                         <label className="form-label" htmlFor="confirm-pass">
-                            Confirm password
+                            Password
                         </label>
-                        <input
-                            className="form-input"
-                            type="confirm-pass"
-                            value={confirmPass} // implement password confirmation
-                            onChange={(e) => setConfirmPass(e.target.value)}
-                            placeholder="●●●●●●●●●●"
-                            id="confirm-pass"
-                            name="confirm-pass"
-                        />
+                        <div className="pwd">
+                            <input
+                                className="form-input"
+                                type="confirm-pass"
+                                value={confirmPass}
+                                onChange={(e) => setConfirmPass(e.target.value)}
+                                placeholder="●●●●●●●●●●"
+                                id="confirm-pass"
+                                name="confirm-pass"
+                            />
+                            <span className="p-viewer">
+                                <i className="fa fa-eye" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        {/* <FontAwesomeIcon icon={faEye} /> */}
                     </div>
                 </form>
                 <button

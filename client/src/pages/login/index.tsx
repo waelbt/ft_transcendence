@@ -14,7 +14,7 @@ export const Login: React.FC<RegisterProps> = (props) => {
     };
 
     return (
-        <>
+        <React.Fragment>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">email</label>
                 <input
@@ -39,6 +39,6 @@ export const Login: React.FC<RegisterProps> = (props) => {
             <button onClick={() => props.onFormSwitch('register')}>
                 Don't have an account? Register here
             </button>
-        </>
+        </React.Fragment>
     );
 };
