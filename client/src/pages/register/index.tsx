@@ -23,7 +23,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
                 <div className="register-header-text">How want to play</div>
                 <div className="register-header-text">Video games?</div>
             </div>
-            <form className="register-container" onSubmit={handleSubmit}>
+            <div className="register-container">
                 <div className="third-party-btns">
                     <button className="intra-btn">
                         <span className="intra-btn-logo"></span>
@@ -45,7 +45,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     <p className="or-separator-text">or</p>
                     <span className="or-separator-line"></span>
                 </div>
-                <div className="register-form">
+                <form className="register-form" onSubmit={handleSubmit}>
                     <div className="form-label-input">
                         <label className="form-label" htmlFor="name">
                             Full name
@@ -102,7 +102,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
                             name="confirm-pass"
                         />
                     </div>
-                </div>
+                </form>
                 <div
                     className="sign-up-btn"
                     // onClick={() => props.onFormSwitch('login')}
@@ -116,7 +116,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     already have an account?{' '}
                     <span className="login-link">Log-in</span>
                 </div>
-            </form>
+            </div>
         </div>
     );
 };
