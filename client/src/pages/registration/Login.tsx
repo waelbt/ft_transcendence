@@ -53,9 +53,9 @@ export const Login: React.FC<RegisterProps> = (props) => {
                     ></InputField>
                     <InputField
                         value={pass}
-                        label="pass"
+                        label="Password"
                         placeholder=""
-                        type="pass"
+                        type="hide"
                         onChange={setPass}
                         secure={true}
                     ></InputField>

@@ -17,7 +17,7 @@ const InputField: React.FC<InputFieldProps> = ({
     onChange,
     secure
 }) => {
-    const [visible, setvisible] = useState('');
+    const [visible, setvisible] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -32,30 +32,22 @@ const InputField: React.FC<InputFieldProps> = ({
             )}
             <div className="pwd">
                 <input
-                    className="form-input"
-                    type={type}
-                    value={
-                        secure
-                            ? value
-                                  .split('')
-                                  .reduce((result) => result + '*', '')
-                            : value
-                    }
+                    className="form-input" // remove id and use classname
+                    type={visible ? 'text' : type}
+                    value={value}
                     onChange={handleChange}
                     placeholder={placeholder}
                     id={value}
-                    name={value}
+                    name={label.toLowerCase()} // hadi 5assha tbdl ndir name li kay iban achno hadak l input
                 />
                 {secure ? (
                     <span
                         className="p-viewer"
-                        onClick={() =>
-                            visible === ''
-                                ? setvisible('-slash')
-                                : setvisible('')
-                        }
+                        onClick={() => setvisible(!visible)}
                     >
-                        <i className={`fa fa-eye${visible}`}></i>
+                        <i
+                            className={`fa fa-eye${visible ? '' : '-slash'}`}
+                        ></i>
                     </span>
                 ) : null}
             </div>

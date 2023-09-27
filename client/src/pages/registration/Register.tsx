@@ -50,7 +50,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
                         value={name}
                         label="Full name"
                         placeholder="Wael boutzougarte"
-                        type="name"
+                        type="text"
                         onChange={setName}
                     ></InputField>
                     <InputField
@@ -62,19 +62,19 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     ></InputField>
                     <InputField
                         value={pass}
-                        label="pass"
+                        label="password"
                         placeholder=""
-                        type="pass"
+                        type="hide"
                         onChange={setPass}
-                        secure={true}
+                        secure
                     ></InputField>
                     <InputField
                         value={confirmPass}
-                        label="confirm-pass"
+                        label="Confirm Password"
                         placeholder=""
-                        type="confirm-pass"
+                        type="hide"
                         onChange={setConfirmPass}
-                        secure={true}
+                        secure
                     ></InputField>
                 </form>
                 <button className="sign-up-btn">
