@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Register } from './Register';
 import { Login } from './Login';
 
+import './index.scss'
 function Registration() {
     const [currentForm, setCurrentForm] = useState('login');
 
@@ -24,11 +25,11 @@ function Registration() {
                     <button className="google-btn default">
                         <span className="google-btn-logo"></span>
                         <span className="google-btn-text">
-                            G<span className="red">o</span>
-                            <span className="yellow">o</span>
+                            G<span className="r">o</span>
+                            <span className="y">o</span>
                             <span>g</span>
-                            <span className="green">l</span>
-                            <span className="red">e</span>
+                            <span className="g">l</span>
+                            <span className="r">e</span>
                         </span>
                     </button>
                 </div>
@@ -36,13 +37,11 @@ function Registration() {
                     <span className="or-separator-line"></span>
                     <p className="or-separator-text">or</p>
                     <span className="or-separator-line"></span>
-                </div>{' '}
-                {currentForm === 'login' ? (
-                    <Login onFormSwitch={toggleFormm} />
-                ) : (
-                    <Register onFormSwitch={toggleFormm} />
-                )}{' '}
-            </div>
+                </div>  {currentForm === 'login' ? (
+                <Login onFormSwitch={toggleFormm} />
+            ) : (
+                <Register onFormSwitch={toggleFormm} />
+            )} </div>
         </div>
     );
 }

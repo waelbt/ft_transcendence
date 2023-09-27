@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.scss';
+import './form.scss';
 import InputField from './InputField';
 
 interface RegisterProps {

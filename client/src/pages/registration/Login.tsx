@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.scss';
+import './form.scss';
 import InputField from './InputField';
 
 interface RegisterProps {
@@ -7,21 +7,21 @@ interface RegisterProps {
 }
 
 export const Login: React.FC<RegisterProps> = (props) => {
-     const inputFieldProps = [
-         {
-             State: useState(''),
-             label: 'Email',
-             placeholder: 'example@youremail.com',
-             type: 'email'
-         },
-         {
-             State: useState(''),
-             label: 'Password',
-             placeholder: '',
-             type: 'hide',
-             secure: true
-         }
-     ];
+    const inputFieldProps = [
+        {
+            State: useState(''),
+            label: 'Email',
+            placeholder: 'example@youremail.com',
+            type: 'email'
+        },
+        {
+            State: useState(''),
+            label: 'Password',
+            placeholder: '',
+            type: 'hide',
+            secure: true
+        }
+    ];
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
     };
