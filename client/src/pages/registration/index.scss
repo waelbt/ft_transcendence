@@ -1,0 +1,270 @@
+@import '../../constants/variables';
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url(#{$background-image}), lightgray 50% / cover no-repeat; 
+  backdrop-filter: blur(5px);
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden; /* Prevent background image from overflowing */
+}
+
+@import '../../constants/variables';
+@import 'draft-js/dist/Draft.css';
+
+.register {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.3125rem;
+
+    .register-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        .register-header-text {
+            color: #ffec47;
+            text-align: center;
+            font-family: $font-Bomb-Sound;
+            font-size: 3rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.135rem;
+        }
+    }
+    .register-container {
+        display: flex;
+        padding: 2.25rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 1.5rem;
+        background: rgba(113, 199, 216, 0.8);
+        box-shadow: 0.625rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.2);
+
+        .third-party-btns {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+
+            .default {
+                display: flex;
+                // width: 10.75rem;
+                border: none;
+                padding: 1.1rem 1.5rem;
+                justify-content: center;
+                align-items: center;
+                gap: 0.625rem;
+                border-radius: 2.9375rem;
+            }
+            .intra-btn {
+                background: #304194;
+                .intra-btn-logo {
+                    width: 1.875rem;
+                    height: 1.5rem;
+                    flex-shrink: 0;
+                    background-image: url('../../devicon_24.svg');
+                    background-repeat: no-repeat;
+                }
+                .intra-btn-text {
+                    color: #fff;
+                    text-align: center;
+                    font-family: $font-Inter;
+                    font-size: 0.9375rem;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+                &:hover {
+                    background-color: #f20553;
+                    //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
+                }
+            }
+            .google-btn {
+                background: #fff;
+
+                .google-btn-logo {
+                    width: 1.875rem;
+                    height: 1.5rem;
+                    background-image: url('../../devicon_google.svg');
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                }
+                .google-btn-text {
+                    color: #3686f7;
+                    text-align: center;
+                    font-family: Inter;
+                    font-size: 1.0625rem;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    .red {
+                        color: #ff302f;
+                    }
+                    .yellow {
+                        color: #ffba40;
+                    }
+                    .green {
+                        color: #20b15a;
+                    }
+                }
+                &:hover {
+                    background-color: #f20553;
+
+                    .google-btn-logo {
+                        background-image: url('../../white_google.svg');
+                    }
+                    .google-btn-text {
+                        color: #ffffff;
+                        .red {
+                            color: #ffffff;
+                        }
+                        .yellow {
+                            color: #ffffff;
+                        }
+                        .green {
+                            color: #ffffff;
+                        }
+                    }
+                    //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
+                }
+            }
+        }
+        .or-separator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.4rem;
+            height: 2rem;
+            .or-separator-line {
+                width: 4rem;
+                height: 0.0625rem;
+                background: rgba(255, 255, 255, 0.7);
+                box-shadow: 0rem 0.25rem 0.25rem 0rem rgba(0, 0, 0, 0.25);
+                background-image: url('../../Line.svg');
+            }
+            .or-separator-text {
+                color: #fff;
+                text-align: center;
+                font-family: $font-Inter;
+                font-size: 1.2rem;
+                font-style: normal;
+                // font-weight: 500;
+                line-height: normal;
+            }
+        }
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+
+            .form-label-input {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+                .form-label {
+                    color: #fff;
+                    text-shadow:
+                        0rem 0rem 0rem #f4ebff,
+                        0rem 0.0625rem 0.125rem rgba(16, 24, 40, 0.05);
+                    font-family: $font-Acme;
+                    font-size: 0.875rem;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 1.25rem;
+                }
+                .form-input {
+                    display: flex;
+                    padding: 1.125rem 3.5rem 1.125rem 0.625rem;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.625rem;
+                    border-radius: 0.75rem;
+                    border: 0.125rem solid #304194;
+                    background: #fff;
+                    color: #304194;
+                    width: 24.5625rem;
+                    font-family: $font-Acme;
+                    font-size: 1.125rem;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 1.5rem; /* 133.333% */
+                    &::placeholder {
+                        opacity: initial;
+                        color: #5d5e63;
+                    }
+                }
+                .pwd {
+                    position: relative;
+                    .p-viewer {
+                        z-index: 9999;
+                        position: absolute;
+                        top: 35%;
+                        right: 1rem;
+                    }
+
+                    .fa-eye {
+                        color: #304194;
+                    }
+                }
+            }
+        }
+
+        .sign-up-btn {
+            // leading-trim: both;
+            // text-edge: cap;
+            display: flex;
+            margin: 1rem 0rem;
+            padding: 0.6rem 9rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.625rem;
+            border: none;
+            border-radius: 3.4375rem;
+            background: #304194;
+            .button-text-btn-text {
+                color: #fff;
+                text-align: center;
+                font-family: $font-Bomb-Sound;
+                font-size: 2.25rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+
+            &:hover {
+                background-color: #f20553;
+                //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
+            }
+        }
+
+        .login-label {
+            color: #fff;
+            text-align: center;
+            font-family: $font-Acme;
+            font-size: 1.125rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .login-link {
+                color: #f20553;
+                font-family: $font-Acme;
+                font-size: 1.125rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
