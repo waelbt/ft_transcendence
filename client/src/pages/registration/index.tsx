@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Register } from './Register';
 import { Login } from './Login';
 
-
 function Registration() {
     const [currentForm, setCurrentForm] = useState('login');
 
@@ -11,12 +10,39 @@ function Registration() {
     };
 
     return (
-        <div>
-            {currentForm === 'login' ? (
-                <Login onFormSwitch={toggleFormm} />
-            ) : (
-                <Register onFormSwitch={toggleFormm} />
-            )}
+        <div className="register">
+            <div className="register-header">
+                <div className="register-header-text">How want to play</div>
+                <div className="register-header-text">Video games?</div>
+            </div>
+            <div className="register-container">
+                <div className="third-party-btns">
+                    <button className="intra-btn default">
+                        <span className="intra-btn-logo"></span>
+                        <span className="intra-btn-text">Network</span>
+                    </button>
+                    <button className="google-btn default">
+                        <span className="google-btn-logo"></span>
+                        <span className="google-btn-text">
+                            G<span className="red">o</span>
+                            <span className="yellow">o</span>
+                            <span>g</span>
+                            <span className="green">l</span>
+                            <span className="red">e</span>
+                        </span>
+                    </button>
+                </div>
+                <div className="or-separator">
+                    <span className="or-separator-line"></span>
+                    <p className="or-separator-text">or</p>
+                    <span className="or-separator-line"></span>
+                </div>{' '}
+                {currentForm === 'login' ? (
+                    <Login onFormSwitch={toggleFormm} />
+                ) : (
+                    <Register onFormSwitch={toggleFormm} />
+                )}{' '}
+            </div>
         </div>
     );
 }

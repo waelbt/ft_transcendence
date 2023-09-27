@@ -1,27 +1,26 @@
 import React, { ChangeEvent, useState } from 'react';
 
 interface InputFieldProps {
-    value: string;
+    State: [string, (value: string) => void];
     label: string;
     placeholder?: string;
     type: string;
-    onChange: (value: string) => void;
     secure?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
-    value,
+    State,
     label,
     placeholder,
     type,
-    onChange,
     secure
 }) => {
     const [visible, setvisible] = useState(false);
+    const [state, SetState] = State;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        onChange(value);
+        SetState(value);
     };
     return (
         <div className="form-label-input">
@@ -34,10 +33,10 @@ const InputField: React.FC<InputFieldProps> = ({
                 <input
                     className="form-input" // remove id and use classname
                     type={visible ? 'text' : type}
-                    value={value}
+                    value={state}
                     onChange={handleChange}
                     placeholder={placeholder}
-                    id={value}
+                    id={state}
                     name={label.toLowerCase()} // hadi 5assha tbdl ndir name li kay iban achno hadak l input
                 />
                 {secure ? (
