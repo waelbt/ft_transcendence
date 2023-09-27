@@ -13,9 +13,6 @@ body {
   overflow: hidden; /* Prevent background image from overflowing */
 }
 
-@import '../../constants/variables';
-@import 'draft-js/dist/Draft.css';
-
 .register {
     display: inline-flex;
     flex-direction: column;

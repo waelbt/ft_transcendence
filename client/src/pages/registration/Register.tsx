@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './index.scss';
+import InputField from './InputField';
 
 interface RegisterProps {
     onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
@@ -47,35 +48,20 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     <span className="or-separator-line"></span>
                 </div>
                 <form className="register-form" onSubmit={handleSubmit}>
-                    <div className="form-label-input">
-                        <label className="form-label" htmlFor="name">
-                            Full name
-                        </label>
-                        <input
-                            className="form-input"
-                            type="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Wael boutzougarte"
-                            id="name"
-                            name="name"
-                        />
-                    </div>
-                    <div className="form-label-input">
-                        <label className="form-label" htmlFor="name">
-                            Email
-                        </label>
-                        <input
-                            className="form-input"
-                            type="email"
-                            aria-hidden
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="example@youremail.com"
-                            id="email"
-                            name="email"
-                        />
-                    </div>
+                    <InputField
+                        value={name}
+                        label="Full name"
+                        placeholder="Wael boutzougarte"
+                        type="name"
+                        onChange={setName}
+                    ></InputField>
+                    <InputField
+                        value={email}
+                        label="Email"
+                        placeholder="example@youremail.com"
+                        type="email"
+                        onChange={setEmail}
+                    ></InputField>
                     <div className="form-label-input">
                         <label className="form-label" htmlFor="pass">
                             Password
