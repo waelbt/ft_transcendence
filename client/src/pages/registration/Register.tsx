@@ -7,33 +7,28 @@ interface RegisterProps {
 }
 
 export const Register: React.FC<RegisterProps> = (props) => {
-    const nameState = useState('');
-    const emailState = useState('');
-    const passState = useState('');
-    const confirmPassState = useState('');
-
     const inputFieldProps = [
         {
-            State: nameState,
+            State: useState(''),
             label: 'Full name',
             placeholder: 'Wael boutzougarte',
             type: 'text'
         },
         {
-            State: emailState,
+            State: useState(''),
             label: 'Email',
             placeholder: 'example@youremail.com',
             type: 'email'
         },
         {
-            State: passState,
+            State: useState(''),
             label: 'Password',
             placeholder: '',
             type: 'hide',
             secure: true
         },
         {
-            State: confirmPassState,
+            State: useState(''),
             label: 'Confirm Password',
             placeholder: '',
             type: 'hide',

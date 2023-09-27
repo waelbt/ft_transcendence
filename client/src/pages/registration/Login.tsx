@@ -7,23 +7,20 @@ interface RegisterProps {
 }
 
 export const Login: React.FC<RegisterProps> = (props) => {
-    const emailState = useState('');
-    const passState = useState('');
-
      const inputFieldProps = [
          {
-             State: emailState,
+             State: useState(''),
              label: 'Email',
              placeholder: 'example@youremail.com',
              type: 'email'
          },
          {
-             State: passState,
+             State: useState(''),
              label: 'Password',
              placeholder: '',
              type: 'hide',
              secure: true
-         },
+         }
      ];
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
