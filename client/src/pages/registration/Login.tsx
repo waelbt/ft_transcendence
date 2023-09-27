@@ -9,7 +9,6 @@ interface RegisterProps {
 export const Login: React.FC<RegisterProps> = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
-    const [pwdVisibility, setpwdVisibility] = useState('');
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -52,32 +51,14 @@ export const Login: React.FC<RegisterProps> = (props) => {
                         type="email"
                         onChange={setEmail}
                     ></InputField>
-                    <div className="form-label-input">
-                        <label className="form-label" htmlFor="pass">
-                            Password
-                        </label>
-                        <div className="pwd">
-                            <input
-                                className="form-input"
-                                type="pass"
-                                value={pass}
-                                onChange={(e) => setPass(e.target.value)}
-                                placeholder=""
-                                id="pass"
-                                name="pass"
-                            />
-                            <span
-                                className="p-viewer"
-                                onClick={() =>
-                                    pwdVisibility === ''
-                                        ? setpwdVisibility('-slash')
-                                        : setpwdVisibility('')
-                                }
-                            >
-                                <i className={`fa fa-eye${pwdVisibility}`}></i>
-                            </span>
-                        </div>
-                    </div>
+                    <InputField
+                        value={pass}
+                        label="pass"
+                        placeholder=""
+                        type="pass"
+                        onChange={setPass}
+                        secure={true}
+                    ></InputField>
                 </form>
                 <button
                     className="sign-up-btn"

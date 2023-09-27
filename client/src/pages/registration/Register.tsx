@@ -7,12 +7,10 @@ interface RegisterProps {
 }
 
 export const Register: React.FC<RegisterProps> = (props) => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
-    const [pwdVisibility, setpwdVisibility] = useState('');
-
-    const [name, setName] = useState('');
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -62,63 +60,24 @@ export const Register: React.FC<RegisterProps> = (props) => {
                         type="email"
                         onChange={setEmail}
                     ></InputField>
-                    <div className="form-label-input">
-                        <label className="form-label" htmlFor="pass">
-                            Password
-                        </label>
-                        <div className="pwd">
-                            <input
-                                className="form-input"
-                                type="pass"
-                                value={pass}
-                                onChange={(e) => setPass(e.target.value)}
-                                placeholder=""
-                                id="pass"
-                                name="pass"
-                            />
-                            <span
-                                className="p-viewer"
-                                onClick={() =>
-                                    pwdVisibility === ''
-                                        ? setpwdVisibility('-slash')
-                                        : setpwdVisibility('')
-                                }
-                            >
-                                <i className="fa fa-eye"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div className="form-label-input">
-                        <label className="form-label" htmlFor="confirm-pass">
-                            Password
-                        </label>
-                        <div className="pwd">
-                            <input
-                                className="form-input"
-                                type="confirm-pass"
-                                value={confirmPass}
-                                onChange={(e) => setConfirmPass(e.target.value)}
-                                placeholder=""
-                                id="confirm-pass"
-                                name="confirm-pass"
-                            />
-                            <span
-                                className="p-viewer"
-                                onClick={() =>
-                                    pwdVisibility === ''
-                                        ? setpwdVisibility('-slash')
-                                        : setpwdVisibility('')
-                                }
-                            >
-                                <i className={`fa fa-eye${pwdVisibility}`}></i>
-                            </span>
-                        </div>
-                    </div>
+                    <InputField
+                        value={pass}
+                        label="pass"
+                        placeholder=""
+                        type="pass"
+                        onChange={setPass}
+                        secure={true}
+                    ></InputField>
+                    <InputField
+                        value={confirmPass}
+                        label="confirm-pass"
+                        placeholder=""
+                        type="confirm-pass"
+                        onChange={setConfirmPass}
+                        secure={true}
+                    ></InputField>
                 </form>
-                <button
-                    className="sign-up-btn"
-                    // onClick={() => props.onFormSwitch('login')}
-                >
+                <button className="sign-up-btn">
                     <span className="button-text-btn-text">Sign up</span>
                 </button>
                 <div
