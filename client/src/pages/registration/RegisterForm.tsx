@@ -1,33 +1,33 @@
 import React from 'react';
-import './form.scss';
 import InputField from './InputField';
+import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
-    onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
+    onFormSwitch: (formName: string) => void;
 };
 
 export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
     const inputFieldProps = [
         {
             label: 'Full name',
-            placeholder: 'Wael boutzougarte',
-            type: 'text'
+            type: 'text',
+            placeholder: 'Wael boutzougarte'
         },
         {
             label: 'Email',
-            placeholder: 'example@youremail.com',
-            type: 'email'
+            type: 'email',
+            placeholder: 'example@youremail.com'
         },
         {
             label: 'Password',
-            placeholder: '',
             type: 'hide',
+            placeholder: '',
             secure: true
         },
         {
             label: 'Confirm Password',
-            placeholder: '',
             type: 'hide',
+            placeholder: '',
             secure: true
         }
     ];

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './form.scss';
+import React from 'react';
+import './LoginRegisterForm.scss';
 import InputField from './InputField';
 
 type RegisterFormProps = {
@@ -10,13 +10,13 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
     const inputFieldProps = [
         {
             label: 'Email',
-            placeholder: 'example@youremail.com',
-            type: 'email'
+            type: 'email',
+            placeholder: 'example@youremail.com'
         },
         {
             label: 'Password',
-            placeholder: '',
             type: 'hide',
+            placeholder: '',
             secure: true
         }
     ];

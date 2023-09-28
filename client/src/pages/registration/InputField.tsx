@@ -1,16 +1,17 @@
 import React, { ChangeEvent, useState } from 'react';
+import './InputField.scss';
 
 type InputFieldProps = {
     label: string;
-    placeholder?: string;
     type: string;
+    placeholder?: string;
     secure?: boolean;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
     label,
-    placeholder,
     type,
+    placeholder,
     secure
 }) => {
     const [visible, setvisible] = useState(false);
@@ -29,13 +30,13 @@ const InputField: React.FC<InputFieldProps> = ({
             )}
             <div className="pwd">
                 <input
-                    className="form-input" // remove id and use classname
+                    className="form-input"
                     type={visible ? 'text' : type}
                     value={state}
                     onChange={handleChange}
                     placeholder={placeholder}
                     id={state}
-                    name={label.toLowerCase()} // hadi 5assha tbdl ndir name li kay iban achno hadak l input
+                    name={label.toLowerCase()}
                 />
                 {secure ? (
                     <span
