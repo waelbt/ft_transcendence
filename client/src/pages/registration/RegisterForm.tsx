@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './form.scss';
 import InputField from './InputField';
 
-interface RegisterProps {
+type RegisterFormProps = {
     onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
-}
+};
 
-export const Login: React.FC<RegisterProps> = (props) => {
+export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
     const inputFieldProps = [
         {
-            State: useState(''),
+            label: 'Full name',
+            placeholder: 'Wael boutzougarte',
+            type: 'text'
+        },
+        {
             label: 'Email',
             placeholder: 'example@youremail.com',
             type: 'email'
         },
         {
-            State: useState(''),
             label: 'Password',
+            placeholder: '',
+            type: 'hide',
+            secure: true
+        },
+        {
+            label: 'Confirm Password',
             placeholder: '',
             type: 'hide',
             secure: true
         }
     ];
+
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
     };
@@ -33,18 +43,15 @@ export const Login: React.FC<RegisterProps> = (props) => {
                     <InputField {...props} key={index} />
                 ))}
             </form>
-            <button
-                className="sign-up-btn"
-                // onClick={() => props.onFormSwitch('login')}
-            >
-                <span className="button-text-btn-text">Log in</span>
+            <button className="form-btn">
+                <span className="button-text">Sign up</span>
             </button>
             <div
-                className="login-label"
-                onClick={() => props.onFormSwitch('register')}
+                className="form-label"
+                onClick={() => props.onFormSwitch('login')}
             >
-                Don't have an account?{' '}
-                <span className="login-link">Register here</span>
+                already have an account?{' '}
+                <span className="form-link">Log-in</span>
             </div>
         </React.Fragment>
     );

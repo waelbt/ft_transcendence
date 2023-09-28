@@ -1,22 +1,20 @@
 import React, { ChangeEvent, useState } from 'react';
 
-interface InputFieldProps {
-    State: [string, (value: string) => void];
+type InputFieldProps = {
     label: string;
     placeholder?: string;
     type: string;
     secure?: boolean;
-}
+};
 
 const InputField: React.FC<InputFieldProps> = ({
-    State,
     label,
     placeholder,
     type,
     secure
 }) => {
     const [visible, setvisible] = useState(false);
-    const [state, SetState] = State;
+    const [state, SetState] = useState('');
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;

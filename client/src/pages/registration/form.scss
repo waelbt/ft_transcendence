@@ -63,7 +63,7 @@
     }
 }
 
-.sign-up-btn {
+.form-btn {
     // leading-trim: both;
     // text-edge: cap;
     display: flex;
@@ -75,7 +75,7 @@
     border: none;
     border-radius: 3.4375rem;
     background: #304194;
-    .button-text-btn-text {
+    .button-text {
         color: #fff;
         text-align: center;
         font-family: $font-Bomb-Sound;
@@ -87,11 +87,10 @@
 
     &:hover {
         background-color: #f20553;
-        //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
     }
 }
 
-.login-label {
+.form-label {
     color: #fff;
     text-align: center;
     font-family: $font-Acme;
@@ -99,7 +98,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    .login-link {
+    .form-link {
         color: #f20553;
         font-family: $font-Acme;
         font-size: 1.125rem;

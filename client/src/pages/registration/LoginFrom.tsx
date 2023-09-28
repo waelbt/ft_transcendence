@@ -2,34 +2,19 @@ import React, { useState } from 'react';
 import './form.scss';
 import InputField from './InputField';
 
-interface RegisterProps {
+type RegisterFormProps = {
     onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
-}
+};
 
-export const Register: React.FC<RegisterProps> = (props) => {
+export const LoginForm: React.FC<RegisterFormProps> = (props) => {
     const inputFieldProps = [
         {
-            State: useState(''),
-            label: 'Full name',
-            placeholder: 'Wael boutzougarte',
-            type: 'text'
-        },
-        {
-            State: useState(''),
             label: 'Email',
             placeholder: 'example@youremail.com',
             type: 'email'
         },
         {
-            State: useState(''),
             label: 'Password',
-            placeholder: '',
-            type: 'hide',
-            secure: true
-        },
-        {
-            State: useState(''),
-            label: 'Confirm Password',
             placeholder: '',
             type: 'hide',
             secure: true
@@ -47,15 +32,15 @@ export const Register: React.FC<RegisterProps> = (props) => {
                     <InputField {...props} key={index} />
                 ))}
             </form>
-            <button className="sign-up-btn">
-                <span className="button-text-btn-text">Sign up</span>
+            <button className="form-btn">
+                <span className="button-text">Log in</span>
             </button>
             <div
-                className="login-label"
-                onClick={() => props.onFormSwitch('login')}
+                className="form-label"
+                onClick={() => props.onFormSwitch('register')}
             >
-                already have an account?{' '}
-                <span className="login-link">Log-in</span>
+                Don't have an account?{' '}
+                <span className="form-link">Register here</span>
             </div>
         </React.Fragment>
     );
