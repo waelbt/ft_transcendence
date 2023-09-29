@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginFrom';
 import './index.scss';
@@ -9,6 +10,25 @@ function Registration() {
     const toggleFormm = (formName: string) => {
         setCurrentForm(formName);
     };
+
+    useEffect(() => {
+        const dataToSend = {
+            name: "YourName",
+            password: "YourPassword",
+            email: "YourEmail@example.com"
+          };
+          
+          fetch('http://172.19.0.3:3000/auth/signup/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+          })
+            .then(res => res.json())
+            .then(responseData => console.log(responseData))
+            .catch(() => console.error('Error zzz'));
+    }, [])
 
     return (
         <div className="register">

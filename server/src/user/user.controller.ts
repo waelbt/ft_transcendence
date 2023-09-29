@@ -9,5 +9,5 @@ export class UserController {
     @Get ('/me')
     getMe(@Req() req: Request) {
         return req.user;
-    } 
+    }
 }

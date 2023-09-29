@@ -6,17 +6,44 @@ volumes:
       type: none
       o: bind
       device: ./client/
+  server:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./server/
+networks:
+  backendNet:
+    driver: bridge
 services:
- client:
-   build: 
+  client:
+    build: 
       context: ./client/
-   container_name: client
-   ports:
+    container_name: client
+    ports:
      - 8000:8000
-   volumes:
+    depends_on:
+      - server
+    volumes:
     - client:/client
-   tty: true
-  dev-db:
+    networks:
+      - backendNet
+    tty: true
+  server:
+    build:
+      context: ./server/
+    container_name: nest-docker-postgres
+    environment:
+      - PORT=8000
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+    volumes:
+      - server:/server
+    networks:
+      - backendNet
+  database:
     image: postgres:13
     ports:
       - 5434:5432
@@ -26,3 +53,4 @@ services:
       POSTGRES_DB: nest
     networks:
       - backendNet
+    
