@@ -19,22 +19,22 @@ body {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.73rem;
+    gap: 2.3125rem;
 
     .register-header {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.2rem;
+        gap: 0.5rem;
         .register-header-text {
             color: #ffec47;
             text-align: center;
             font-family: $font-Bomb-Sound;
-            font-size: 1.5rem;
+            font-size: 3rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            letter-spacing: 0.0675rem;
+            letter-spacing: 0.135rem;
         }
     }
     .register-container {
@@ -42,7 +42,7 @@ body {
         padding: 2.25rem;
         flex-direction: column;
         align-items: center;
-        gap: 0.2rem;
+        gap: 0.5rem;
         border-radius: 1.5rem;
         background: rgba(113, 199, 216, 0.8);
         box-shadow: 0.625rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.2);
@@ -56,7 +56,7 @@ body {
                 display: flex;
                 // width: 10.75rem;
                 border: none;
-                padding: 0.75rem;
+                padding: 1.1rem 1.5rem;
                 justify-content: center;
                 align-items: center;
                 gap: 0.625rem;
@@ -65,19 +65,18 @@ body {
             .intra-btn {
                 background: #304194;
                 .intra-btn-logo {
-                    width: 1.25rem;
-                    height: 1rem;
+                    width: 1.875rem;
+                    height: 1.5rem;
                     flex-shrink: 0;
-                    background-size: contain;
                     background-image: url('../../devicon_24.svg');
+                    background-size: contain;
                     background-repeat: no-repeat;
                 }
                 .intra-btn-text {
                     color: #fff;
                     text-align: center;
                     font-family: $font-Inter;
-                    // font-size: 0.9375rem;
-                    font-size: 0.75rem;
+                    font-size: 0.9375rem;
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
@@ -91,8 +90,8 @@ body {
                 background: #fff;
 
                 .google-btn-logo {
-                    width: 1.25rem; // note :remove duplicated style
-                    height: 1rem;
+                    width: 1.875rem;
+                    height: 1.5rem;
                     background-image: url('../../devicon_google.svg');
                     background-size: contain;
                     background-repeat: no-repeat;
@@ -101,7 +100,7 @@ body {
                     color: #3686f7;
                     text-align: center;
                     font-family: Inter;
-                    font-size: 0.75rem;
+                    font-size: 1.0625rem;
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
@@ -141,23 +140,75 @@ body {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.1875rem;
+            gap: 0.4rem;
+            height: 2rem;
             .or-separator-line {
-                width: 5rem;
+                width: 4rem;
                 height: 0.0625rem;
                 background: rgba(255, 255, 255, 0.7);
                 box-shadow: 0rem 0.25rem 0.25rem 0rem rgba(0, 0, 0, 0.25);
                 background-image: url('../../Line.svg');
             }
             .or-separator-text {
-                line-height: normal;
                 color: #fff;
                 text-align: center;
-                font-family: Inter;
-                font-size: 1rem;
+                font-family: $font-Inter;
+                font-size: 1.2rem;
                 font-style: normal;
-                font-weight: 500;
+                // font-weight: 500;
                 line-height: normal;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .register {
+        gap: 0.73rem;
+        .register-header {
+            gap: 0.2rem;
+            .register-header-text {
+                font-size: 1.5rem;
+                letter-spacing: 0.0675rem;
+            }
+        }
+        .register-container {
+            padding: 2.25rem;
+            gap: 0.2rem;
+            .third-party-btns {
+                gap: 1.5rem;
+                .default {
+                    padding: 0.75rem;
+                    gap: 0.625rem;
+                }
+                .intra-btn {
+                    .intra-btn-logo {
+                        width: 1.25rem;
+                        height: 1rem;
+                    }
+                    .intra-btn-text {
+                        font-size: 0.75rem;
+                    }
+                }
+                .google-btn {
+                    .google-btn-logo {
+                        width: 1.25rem; // note :remove duplicated style
+                        height: 1rem;
+                    }
+                    .google-btn-text {
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+            .or-separator {
+                gap: 0.3rem;
+                .or-separator-line {
+                    width: 3rem;
+                    height: 0.0625rem;
+                }
+                .or-separator-text {
+                    font-size: 1rem;
+                }
             }
         }
     }

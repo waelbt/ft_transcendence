@@ -12,13 +12,13 @@
             0rem 0.0625rem 0.125rem rgba(16, 24, 40, 0.05);
         font-family: $font-Acme;
         font-size: 0.875rem;
-        line-height: 1.25rem;
         font-style: normal;
         font-weight: 400;
+        line-height: 1.25rem;
     }
     .form-input {
         display: flex;
-        padding: 0.75rem 3.5rem 0.75rem 0.625rem;
+        padding: 1.125rem 3.5rem 1.125rem 0.625rem;
         justify-content: center;
         align-items: center;
         gap: 0.625rem;
@@ -26,9 +26,9 @@
         border: 0.125rem solid #304194;
         background: #fff;
         color: #304194;
-        width: 11.875rem;
+        width: 24.5625rem;
         font-family: $font-Acme;
-        font-size: 0.875rem;
+        font-size: 1.125rem;
         font-style: normal;
         font-weight: 400;
         line-height: 1.5rem; /* 133.333% */
@@ -58,6 +58,26 @@
 
         .fa-eye {
             color: #304194;
+        }
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .form-label-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        .form-label {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        .form-input {
+            padding: 0.75rem 3.5rem 0.75rem 0.625rem;
+            gap: 0.625rem;
+            width: 11.875rem;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
         }
     }
 }
