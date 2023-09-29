@@ -44,7 +44,7 @@ const InputField: React.FC<InputFieldProps> = ({
                         onClick={() => setvisible(!visible)}
                     >
                         <i
-                            className={`fa fa-eye${visible ? '' : '-slash'}`}
+                            className={`fa fa-eye${visible ? '-slash' : ''}`}
                         ></i>
                     </span>
                 ) : null}
