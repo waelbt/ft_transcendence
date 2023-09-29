@@ -8,14 +8,12 @@
 }
 
 .form-btn {
-    // leading-trim: both;
-    // text-edge: cap;
     display: flex;
     margin: 1rem 0rem;
-    padding: 0.6rem 9rem;
+    padding: 0.5rem 5.625rem;
     justify-content: center;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.3125rem;
     border: none;
     border-radius: 3.4375rem;
     background: #304194;
@@ -23,7 +21,7 @@
         color: #fff;
         text-align: center;
         font-family: $font-Bomb-Sound;
-        font-size: 2.25rem;
+        font-size: 1.5rem;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -38,14 +36,14 @@
     color: #fff;
     text-align: center;
     font-family: $font-Acme;
-    font-size: 1.125rem;
+    font-size: 0.75rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     .form-link {
         color: #f20553;
         font-family: $font-Acme;
-        font-size: 1.125rem;
+        font-size: 0.75rem;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -54,4 +52,3 @@
         }
     }
 }
-
