@@ -19,12 +19,14 @@ function Registration() {
             <div className="register-container">
                 <div className="third-party-btns">
                     <button className="intra-btn default">
-                        <span className="intra-btn-logo"></span>
-                        <span className="intra-btn-text">Network</span>
+                        <span className="intra-btn-logo default-logo"></span>
+                        <span className="intra-btn-text default-text">
+                            Network
+                        </span>
                     </button>
                     <button className="google-btn default">
-                        <span className="google-btn-logo"></span>
-                        <span className="google-btn-text">
+                        <span className="google-btn-logo default-logo "></span>
+                        <span className="google-btn-text default-text">
                             G<span className="r">o</span>
                             <span className="y">o</span>
                             <span>g</span>
@@ -35,7 +37,7 @@ function Registration() {
                 </div>
                 <div className="or-separator">
                     <span className="or-separator-line"></span>
-                    <p className="or-separator-text">or</p>
+                    or
                     <span className="or-separator-line"></span>
                 </div>{' '}
                 {currentForm === 'login' ? (

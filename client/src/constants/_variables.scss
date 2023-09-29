@@ -1,22 +1,28 @@
-$background-image: '../../background_image.svg';
-
-@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
-$font-Acme: 'Acme', sans-serif;
-
-@import url('https://fonts.googleapis.com/css2?family=Acme&family=Inter:wght@500&display=swap');
-$font-Inter: 'Inter', sans-serif;
-
 @import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Inter:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 
+//fonts
+
+$font-Bomb-Sound: 'The Bomb Sound', sans-serif;
+$font-Acme: 'Acme', sans-serif;
+$font-Inter: 'Inter', sans-serif;
 @font-face {
     font-family: 'The Bomb Sound';
     src: url('../../The Bomb Sound.ttf') format('truetype');
-    /* Add additional font formats if available */
 }
 
-$font-Bomb-Sound: 'The Bomb Sound', sans-serif;
+// colors
 
-// $primary-red: #7a0000;
+$primary-pink: #f20553;
+$primary-blue: #304194;
+
+// svgs
+$background-image: '../../background_image.svg';
+$intra-logo: '../../devicon_24.svg';
+$google-default-logo: '../../devicon_google.svg';
+$google-white-logo: '../../white_google.svg';
+$line: '../../Line.svg';
 
 // $secondary-red: #e08b88;
 // $tertiary-red: #3002001c;

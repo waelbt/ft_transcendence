@@ -54,7 +54,6 @@ body {
 
             .default {
                 display: flex;
-                // width: 10.75rem;
                 border: none;
                 padding: 1.1rem 1.5rem;
                 justify-content: center;
@@ -62,48 +61,41 @@ body {
                 gap: 0.625rem;
                 border-radius: 2.9375rem;
             }
+            .default-text {
+                text-align: center;
+                font-family: $font-Inter;
+                font-size: 0.9375rem;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+            }
+            .default-logo {
+                width: 1.875rem;
+                height: 1.5rem;
+                flex-shrink: 0;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
             .intra-btn {
-                background: #304194;
+                background: $primary-blue;
                 .intra-btn-logo {
-                    width: 1.875rem;
-                    height: 1.5rem;
-                    flex-shrink: 0;
-                    background-image: url('../../devicon_24.svg');
-                    background-size: contain;
-                    background-repeat: no-repeat;
+                    background-image: url($intra-logo);
                 }
                 .intra-btn-text {
                     color: #fff;
-                    text-align: center;
-                    font-family: $font-Inter;
-                    font-size: 0.9375rem;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
                 }
                 &:hover {
-                    background-color: #f20553;
-                    //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
+                    background-color: $primary-pink;
                 }
             }
             .google-btn {
                 background: #fff;
 
                 .google-btn-logo {
-                    width: 1.875rem;
-                    height: 1.5rem;
-                    background-image: url('../../devicon_google.svg');
-                    background-size: contain;
-                    background-repeat: no-repeat;
+                    background-image: url($google-default-logo);
                 }
                 .google-btn-text {
                     color: #3686f7;
-                    text-align: center;
-                    font-family: Inter;
-                    font-size: 1.0625rem;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
                     .r {
                         color: #ff302f;
                     }
@@ -115,24 +107,17 @@ body {
                     }
                 }
                 &:hover {
-                    background-color: #f20553;
+                    background-color: $primary-pink;
 
                     .google-btn-logo {
-                        background-image: url('../../white_google.svg');
+                        background-image: url($google-white-logo);
                     }
                     .google-btn-text {
                         color: #ffffff;
-                        .r {
-                            color: #ffffff;
-                        }
-                        .y {
-                            color: #ffffff;
-                        }
-                        .g {
+                        * {
                             color: #ffffff;
                         }
                     }
-                    //background-color: rgb(43, 137, 250); /* Change to your desired hover color */
                 }
             }
         }
@@ -142,21 +127,19 @@ body {
             align-items: center;
             gap: 0.4rem;
             height: 2rem;
+            color: #fff;
+            text-align: center;
+            font-family: $font-Inter;
+            font-size: 1.2rem;
+            font-style: normal;
+            // font-weight: 500;
+            line-height: normal;
             .or-separator-line {
                 width: 4rem;
                 height: 0.0625rem;
                 background: rgba(255, 255, 255, 0.7);
                 box-shadow: 0rem 0.25rem 0.25rem 0rem rgba(0, 0, 0, 0.25);
-                background-image: url('../../Line.svg');
-            }
-            .or-separator-text {
-                color: #fff;
-                text-align: center;
-                font-family: $font-Inter;
-                font-size: 1.2rem;
-                font-style: normal;
-                // font-weight: 500;
-                line-height: normal;
+                background-image: url($line);
             }
         }
     }

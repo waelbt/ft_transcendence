@@ -23,15 +23,15 @@
         align-items: center;
         gap: 0.625rem;
         border-radius: 0.75rem;
-        border: 0.125rem solid #304194;
+        border: 0.125rem solid $primary-blue;
         background: #fff;
-        color: #304194;
+        color: $primary-blue;
         width: 24.5625rem;
         font-family: $font-Acme;
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 400;
-        line-height: 1.5rem; /* 133.333% */
+        line-height: 1.5rem;
         -webkit-text-security: none;
         &:focus {
             &::placeholder {
@@ -57,7 +57,7 @@
         }
 
         .fa-eye {
-            color: #304194;
+            color: $primary-blue;
         }
     }
 }
