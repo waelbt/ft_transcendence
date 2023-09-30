@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "prisma:dev:deploy": "prisma migrate deploy",
-    "db:dev:rm": "docker compose rm database client server -s -f -v",
-    "db:dev:up": "docker compose up -d",
+    "db:dev:rm": "docker compose rm database -s -f -v",
+    "db:dev:up": "docker compose up database -d",
     "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 2 && npm run prisma:dev:deploy",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

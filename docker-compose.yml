@@ -1,12 +1,14 @@
 version: "3.4"
 volumes:
   client:
+    name: client
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ./client/
   server:
+    name: server
     driver: local
     driver_opts:
       type: none
@@ -33,14 +35,15 @@ services:
     build:
       context: ./server/
     container_name: nest-docker-postgres
-    environment:
-      - PORT=8000
     ports:
-      - '3000:3000'
+      - 3000:3000
     depends_on:
       - database
     volumes:
       - server:/server
+    environment:
+      - DATABASE_URL=postgresql://postgres:123@database:5434/nest?schema=public
+      - JWT_secret=secretJWTforTrandandan
     networks:
       - backendNet
   database:

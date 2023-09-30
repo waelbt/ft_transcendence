@@ -13,27 +13,29 @@ function Registration() {
 
     useEffect(() => {
         const dataToSend = {
-            name: "YourName",
-            password: "YourPassword",
-            email: "YourEmail@example.com"
-          };
-          
-          fetch('http://172.19.0.3:3000/auth/signup/', {
+            email: 'YourEmail@example.com',
+            password: 'YourPassword',
+            FullName: 'YourName'
+        }; 
+
+        console.log(JSON.stringify(dataToSend));
+
+        fetch('http://localhost:3000/auth/signup/', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(dataToSend)
-          })
-            .then(res => res.json())
-            .then(responseData => console.log(responseData))
+        })
+            .then((res) => res.json())
+            .then((responseData) => console.log(responseData))
             .catch(() => console.error('Error zzz'));
-    }, [])
+    }, []);
 
     return (
         <div className="register">
             <div className="register-header">
-                <div className="register-header-text">How want to play</div>
+                <div className="register-header-text">who want to play</div>
                 <div className="register-header-text">Video games?</div>
             </div>
             <div className="register-container">
