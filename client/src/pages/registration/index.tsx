@@ -13,10 +13,12 @@ function Registration() {
 
     useEffect(() => {
         const dataToSend = {
-            password: 'YourPassword',
             email: 'YourEmail@example.com',
+            password: 'YourPassword',
             FullName: 'YourName'
-        };
+        }; 
+
+        console.log(JSON.stringify(dataToSend));
 
         fetch('http://localhost:3000/auth/signup/', {
             method: 'POST',
@@ -33,7 +35,7 @@ function Registration() {
     return (
         <div className="register">
             <div className="register-header">
-                <div className="register-header-text">How want to play</div>
+                <div className="register-header-text">who want to play</div>
                 <div className="register-header-text">Video games?</div>
             </div>
             <div className="register-container">

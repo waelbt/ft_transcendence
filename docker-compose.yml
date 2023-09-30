@@ -41,6 +41,9 @@ services:
       - database
     volumes:
       - server:/server
+    environment:
+      - DATABASE_URL=postgresql://postgres:123@database:5434/nest?schema=public
+      - JWT_secret=secretJWTforTrandandan
     networks:
       - backendNet
   database:
