@@ -8,7 +8,6 @@ RUN npm install
 
 RUN npm install --save-dev vite
 
-
 COPY . .
 
 EXPOSE 8000

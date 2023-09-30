@@ -13,22 +13,22 @@ function Registration() {
 
     useEffect(() => {
         const dataToSend = {
-            name: "YourName",
-            password: "YourPassword",
-            email: "YourEmail@example.com"
-          };
-          
-          fetch('http://172.19.0.3:3000/auth/signup/', {
+            password: 'YourPassword',
+            email: 'YourEmail@example.com',
+            FullName: 'YourName'
+        };
+
+        fetch('http://localhost:3000/auth/signup/', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(dataToSend)
-          })
-            .then(res => res.json())
-            .then(responseData => console.log(responseData))
+        })
+            .then((res) => res.json())
+            .then((responseData) => console.log(responseData))
             .catch(() => console.error('Error zzz'));
-    }, [])
+    }, []);
 
     return (
         <div className="register">
