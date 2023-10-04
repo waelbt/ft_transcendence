@@ -16,11 +16,12 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
         reset
         // getValues
     } = useForm();
-    const onSubmit = async () => {
+    const onSubmit = async (data : any) => {
         // TODO: submit to server
-        // ...
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        // ... 
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log(data);
+        
         reset();
     };
     // const [email, setEmail] = useState('');
@@ -36,7 +37,7 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
                     register={register('email')}
                 />
                 <InputField
-                    label="password"
+                    label="Password"
                     type="hide"
                     register={register('password')}
                     secure
