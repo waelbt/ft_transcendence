@@ -39,9 +39,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
     return (
         <React.Fragment>
             <form className="register-form" onSubmit={handleSubmit}>
-                {inputFieldProps.map((props, index) => (
+                {/* {inputFieldProps.map((props, index) => (
                     <InputField {...props} key={index} />
-                ))}
+                ))} */}
             </form>
             <button className="form-btn">
                 <span className="button-text">Sign up</span>
