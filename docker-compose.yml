@@ -24,36 +24,34 @@ services:
     container_name: client
     ports:
      - 8000:8000
-    depends_on:
-      - server
     volumes:
     - client:/client
     networks:
       - backendNet
     tty: true
-  server:
-    build:
-      context: ./server/
-    container_name: nest-docker-postgres
-    ports:
-      - 3000:3000
-    depends_on:
-      - database
-    volumes:
-      - server:/server
-    environment:
-      - DATABASE_URL=postgresql://postgres:123@database:5434/nest?schema=public
-      - JWT_secret=secretJWTforTrandandan
-    networks:
-      - backendNet
+  # server:
+  #   build:
+  #     context: ./server/
+  #   container_name: nest-docker-postgres
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - database
+  #   volumes:
+  #     - server:/server
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:123@database:5434/nest?schema=public
+  #     - JWT_secret=secretJWTforTrandandan
+  #   networks:
+  #     - backendNet
   database:
     image: postgres:13
     ports:
-      - 5434:5432
+      - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
+      POSTGRES_USER: poza
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transcendence
     networks:
       - backendNet
     

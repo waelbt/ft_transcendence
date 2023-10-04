@@ -4,6 +4,11 @@ import { IsEmail, IsNotEmpty, IsString, isEmail, isNotEmpty } from "class-valida
 export class AuthDto {
 
     @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    fullName: string;
+    
+    @ApiProperty()
     @IsEmail()
     @IsNotEmpty()
     email: string;
@@ -13,8 +18,4 @@ export class AuthDto {
     @IsNotEmpty()
     password: string;
 
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    FullName: string;
 }

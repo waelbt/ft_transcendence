@@ -11,26 +11,26 @@ function Registration() {
         setCurrentForm(formName);
     };
 
-    useEffect(() => {
-        // const dataToSend = {
-        //     email: 'YourEmail@example.com',
-        //     password: 'YourPassword',
-        //     FullName: 'YourName'
-        // }; 
+    // useEffect(() => {
+    //     const dataToSend = {
+    //         email: 'YourEmail@example.com',
+    //         password: 'YourPassword',
+    //         FullName: 'YourName'
+    //     }; 
 
-        // console.log(JSON.stringify(dataToSend));
+    //     console.log(JSON.stringify(dataToSend));
 
-        // fetch('http://localhost:3000/auth/signup/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(dataToSend)
-        // })
-        //     .then((res) => res.json())
-        //     .then((responseData) => console.log(responseData))
-        //     .catch(() => console.error('Error zzz'));
-    }, []);
+    //     fetch('http://localhost:3000/auth/signup/', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(dataToSend)
+    //     })
+    //         .then((res) => res.json())
+    //         .then((responseData) => console.log(responseData))
+    //         .catch(() => console.error('Error zzz'));
+    // }, []);
 
     return (
         <div className="register">
