@@ -1,15 +1,11 @@
-FROM node:alpine
+FROM node:18
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY . /app/
 
 RUN npm install
 
-COPY . .
+RUN npm install -g prisma
 
-RUN npm run build
-
-RUN npx prisma generate
-
-CMD [ "npm", "run", "start:dev" ]
+EXPOSE 4000

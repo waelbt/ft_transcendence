@@ -11,5 +11,3 @@ RUN npm install --save-dev vite
 COPY . .
 
 EXPOSE 8000
-
-CMD ["npm", "start"]
