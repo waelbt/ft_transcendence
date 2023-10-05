@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { AuthDto } from "./dto";
+import { AuthDto, AuthDtoSignIn } from "./dto";
 import * as argon from 'argon2';
 
 @Injectable({})
@@ -12,25 +12,21 @@ export class AuthService {
         private jwt:JwtService,
         private config: ConfigService) {}
 
-    async signUp(dto: AuthDto) {
-        console.log('in signup');
-        console.log(dto);
+    async signUp(AuthDto: AuthDto) {
         //genrate the password hash
-        console.log(dto.password);
-        const hash = await argon.hash(dto.password);
-        console.log('argon');
+        console.log("in in signIn");
+        console.log(AuthDto.password);
+        const hash = await argon.hash(AuthDto.password);
         //save the new user in the db
         try{
-            console.log('try')
             const user = await this.PrismaOrmService.user.create({
                 data: {
-                    email: dto.email,
+                    fullName: AuthDto.fullName,
+                    email: AuthDto.email,
                     HashPassword: hash,
-                    FullName: dto.FullName,
                 },
             });
             //we need to return a token.
-            console.log('in return ');
             return this.signToken(user.id, user.email);
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -43,17 +39,18 @@ export class AuthService {
         }
     }
 
-    async signIn(dto: AuthDto) {
+    async signIn(AuthDtoSignIn: AuthDtoSignIn) {
+        console.log("in in logIn");
         //find the user by email in db
         const user = await this.PrismaOrmService.user.findUnique({
             where: {
-                email: dto.email,
+                email: AuthDtoSignIn.email,
             },
         });
         //if user does not exist throw exception
         if (!user) throw new ForbiddenException ('Credentials incorrect');
         //compare passwords
-        const PasswordMatches = await argon.verify(user.HashPassword, dto.password);
+        const PasswordMatches = await argon.verify(user.HashPassword, AuthDtoSignIn.password);
         //if (password invalid) we throw exception
         if (!PasswordMatches) throw new ForbiddenException ('Credentials incorrect');
         //we need to return a token.
@@ -70,7 +67,6 @@ export class AuthService {
             sub: userId,//use a unique identifier for a sub field
             email,
         };
-        console.log('im in')
         const secret = this.config.get('JWT_secret');
 
         const token = await this.jwt.signAsync(
@@ -80,7 +76,6 @@ export class AuthService {
                 secret: secret,
             },
         );
-        console.log(token);
         return {
             access_token: token,
         };
