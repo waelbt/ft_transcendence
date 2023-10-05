@@ -1,10 +1,15 @@
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import './index.scss';
 import React, { useState } from 'react';
 
 type AlertProps = {
     children?: React.ReactNode;
     type: string;
-    message?: string;
+    message:
+        | string
+        | FieldError
+        | Merge<FieldError, FieldErrorsImpl<any>>
+        | undefined;
 };
 
 export default function Alert({
@@ -21,7 +26,7 @@ export default function Alert({
         }
     };
 
-    const handleClose = (e) => {
+    const handleClose = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         setIsShow(false);
     };
@@ -45,8 +50,8 @@ export default function Alert({
                         fill="white"
                     />
                     <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
                         d="M16 0C16 0 19.2544 0 22.2283 1.25786C22.2283 1.25786 25.0998 2.47242 27.3137 4.68629C27.3137 4.68629 29.5276 6.90016 30.7421 9.7717C30.7421 9.7717 32 12.7456 32 16C32 16 32 19.2544 30.7421 22.2283C30.7421 22.2283 29.5276 25.0998 27.3137 27.3137C27.3137 27.3137 25.0998 29.5276 22.2283 30.7421C22.2283 30.7421 19.2544 32 16 32C16 32 12.7456 32 9.7717 30.7421C9.7717 30.7421 6.90016 29.5276 4.68629 27.3137C4.68629 27.3137 2.47242 25.0998 1.25787 22.2283C1.25787 22.2283 0 19.2544 0 16C0 16 0 12.7456 1.25787 9.7717C1.25787 9.7717 2.47243 6.90016 4.68629 4.68629C4.68629 4.68629 6.90016 2.47242 9.7717 1.25786C9.7717 1.25786 12.7456 0 16 0ZM16 2.46154C16 2.46154 13.2448 2.46154 10.7306 3.52495C10.7306 3.52495 8.30124 4.55248 6.42686 6.42686C6.42686 6.42686 4.55249 8.30124 3.52495 10.7306C3.52495 10.7306 2.46154 13.2448 2.46154 16C2.46154 16 2.46154 18.7552 3.52495 21.2694C3.52495 21.2694 4.55248 23.6988 6.42686 25.5731C6.42686 25.5731 8.30124 27.4475 10.7306 28.475C10.7306 28.475 13.2448 29.5385 16 29.5385C16 29.5385 18.7552 29.5385 21.2694 28.475C21.2694 28.475 23.6988 27.4475 25.5731 25.5731C25.5731 25.5731 27.4475 23.6988 28.475 21.2694C28.475 21.2694 29.5385 18.7552 29.5385 16C29.5385 16 29.5385 13.2448 28.475 10.7306C28.475 10.7306 27.4475 8.30124 25.5731 6.42686C25.5731 6.42686 23.6988 4.55248 21.2694 3.52495C21.2694 3.52495 18.7552 2.46154 16 2.46154Z"
                         fill="white"
                     />
@@ -55,7 +60,7 @@ export default function Alert({
             {children ? (
                 renderElAlert()
             ) : (
-                <span className="message">{message}</span>
+                <span className="message">{(typeof message === "string") ? message : ''}</span>
             )}
         </div>
     );

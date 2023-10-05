@@ -2,11 +2,7 @@ import './App.scss';
 import Registration from './pages/registration/';
 
 function App() {
-    return (
-        <>
-            <Registration />
-        </>
-    );
+    return <Registration />;
 }
 
 export default App;

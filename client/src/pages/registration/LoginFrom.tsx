@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import InputField from './InputField';
+import Alert from '../../components/Alert';
 import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
@@ -12,30 +13,35 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
         register,
         // setValue,
         handleSubmit,
-        // formState: { errors, isSubmitting },
+        formState: { errors },
         reset
         // getValues
     } = useForm();
     const onSubmit = async (data: FieldValues) => {
-        const dataToSend = {
-            email: data.email,
-            password: data.password,
-            FullName: "yyy"
-        };
+        // const dataToSend = {
+        //     email: data.email,
+        //     password: data.password,
+        //     FullName: "yyy"
+        // };
+        console.log(data);
 
-        fetch('http://localhost:4000/auth/signin/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then((res) => res.json())
-            .then((responseData) => console.log(responseData))
-            .catch(() => console.error('Error zzz'));
+        // fetch('http://localhost:4000/auth/signin/', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(dataToSend)
+        // })
+        //     .then((res) => res.json())
+        //     .then((responseData) => console.log(responseData))
+        //     .catch(() => console.error('Error zzz'));
 
         reset();
     };
+
+    useEffect(() => {
+        console.log('error : ', errors);
+    }, [errors]);
     // const [email, setEmail] = useState('');
     // const [pass, setPass] = useState('');
     // Wrap the FormLabelInput component with forwardRef so that we can access its DOM instance.
@@ -44,16 +50,38 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
             <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
                 <InputField
                     label="Email"
-                    type="email"
+                    type="text"
                     placeholder="example@youremail.com"
-                    register={register('email')}
+                    register={register('email', {
+                        required: 'Email address is required!',
+                        pattern: {
+                            value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                            message: 'Please enter a valid email address.'
+                        }
+                    })}
                 />
                 <InputField
                     label="Password"
                     type="hide"
-                    register={register('password')}
+                    register={register('password', {
+                        required: 'Password is required!',
+                        maxLength: {
+                            value: 40,
+                            message: 'Password must be less then 40 characters'
+                        },
+                        minLength: {
+                            value: 5,
+                            message: 'Password must be at least 5 characters'
+                        }
+                    })}
                     secure
                 />
+                {Object.keys(errors).length ? (
+                    <Alert
+                        type="error"
+                        message={errors[Object.keys(errors)[0]]?.message}
+                    />
+                ) : null}
                 <button className="form-btn">
                     <span className="button-text">Log in</span>
                 </button>
