@@ -32,9 +32,17 @@ services:
     container_name: client
     ports:
      - 8000:8000
+    volumes:
+      - client-volume:/client
     depends_on:
       - server
-    command: sh start.sh
 networks:
   transcendence:
     driver: bridge
+volumes:
+  client-volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./client/

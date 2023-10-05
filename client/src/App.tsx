@@ -1,10 +1,8 @@
 import './App.scss';
-import Registration from './pages/registration/' 
+import Registration from './pages/registration/';
 
 function App() {
-    return (
-        <Registration></Registration>
-    );
+    return <Registration />;
 }
 
 export default App;
