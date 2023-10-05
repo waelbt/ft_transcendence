@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useEffect } from 'react';
+import Alert from '../../components/Alert';
 import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginFrom';
 import './index.scss';
@@ -16,7 +16,7 @@ function Registration() {
     //         email: 'YourEmail@example.com',
     //         password: 'YourPassword',
     //         FullName: 'YourName'
-    //     }; 
+    //     };
 
     //     console.log(JSON.stringify(dataToSend));
 
@@ -67,6 +67,7 @@ function Registration() {
                 ) : (
                     <RegisterForm onFormSwitch={toggleFormm} />
                 )}{' '}
+                <Alert type="error" message="Email address is required!" />
             </div>
         </div>
     );

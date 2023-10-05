@@ -1,0 +1,53 @@
+/* The alert message box */
+@import '../../constants/variables';
+
+//remove px from this file
+.alert {
+    position: absolute;
+    top: 2%;
+    right: 1%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    padding: 6px;
+    align-items: center;
+    border-radius: 12px;
+    font-family: $font-Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 33.6px */
+    letter-spacing: 0.2px;
+    border: solid;
+}
+.message {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+.error {
+    background: #ff4747 !important;
+    background-color: #f8d7da;
+    border-color: #ffffff;
+}
+
+/* The close button */
+.closebtn {
+    display: flex;
+    padding: 10px;
+    align-items: flex-start;
+    gap: 10px;
+    width: 32px;
+    height: 32px;
+    fill: #fff;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
+.hide {
+    display: none;
+}
