@@ -15,7 +15,7 @@ function Registration() {
         const dataToSend = {
             email: 'YourEmail@example.com',
             password: 'YourPassword',
-            FullName: 'YourName'
+            fullName: 'YourName'
         }; 
 
         console.log(JSON.stringify(dataToSend));

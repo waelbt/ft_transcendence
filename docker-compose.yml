@@ -8,6 +8,8 @@ services:
       POSTGRES_USER: poza
       POSTGRES_PASSWORD: password
       POSTGRES_DB: transcendence
+    ports:
+      - 5432:5432
     restart: always
     container_name: DB_Postgres
   server:
@@ -17,7 +19,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./server/src:/app/src
+      - ./server/:/app/
     ports:
       - 4000:4000
       - 5555:5555
