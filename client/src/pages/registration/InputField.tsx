@@ -21,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
     return (
         <div className="form-label-input">
             {label && (
-                <label className="form-label" htmlFor={label.toLowerCase()}>
+                <label className="form-label">
                     {label}
                 </label>
             )}

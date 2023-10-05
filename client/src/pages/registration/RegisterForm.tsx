@@ -8,21 +8,33 @@ type RegisterFormProps = {
 };
 
 export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
-    // const [data, setData] = useState<FieldValues>({});
     const {
         register,
         // setValue,
         handleSubmit,
-        // formState: { errors },
+        formState: { errors, isSubmitting },
         // formState: { errors, isSubmitting },
         reset
         // getValues
     } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        // TODO: submit to server
-        // ...
-        console.log(data);
+        const dataToSend = {
+            email: data.email,
+            password: data.password,
+            FullName: data.fullName
+        };
+
+        fetch('http://localhost:4000/auth/signup/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((res) => res.json())
+            .then((responseData) => console.log(responseData))
+            .catch(() => console.error('Error zzz'));
 
         reset();
     };
@@ -34,33 +46,24 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     label="Full name"
                     type="text"
                     placeholder="Wael boutzougarte"
-                    register={
-                        (register('FullName'),
-                        {
-                            required: 'Full name is required'
-                        })
-                    }
+                    register={register('fullName', {
+                        required: 'Full name is required'
+                    })}
                 />
                 <InputField
                     label="Email"
                     type="email"
                     placeholder="example@youremail.com"
-                    register={
-                        (register('email'),
-                        {
-                            required: 'Email is required'
-                        })
-                    }
+                    register={register('email', {
+                        required: 'Email is required'
+                    })}
                 />
                 <InputField
                     label="Password"
                     type="hide"
-                    register={
-                        (register('password'),
-                        {
-                            required: 'password is required'
-                        })
-                    }
+                    register={register('password', {
+                        required: 'password is required'
+                    })}
                     secure
                 />
                 <InputField
@@ -68,15 +71,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     type="hide"
                     register={register('confirmPassword', {
                         required: 'Confirm password is required'
-                        // validate: (value) =>
-                        //     value === getValues('password') ||
-                        //     'Passwords must match Confirm password'
                     })}
                     secure
                 />
                 <button
                     className="form-btn"
-                    // disabled={isSubmitting}
+                    disabled={isSubmitting}
                     type="submit"
                 >
                     <span className="button-text">Sign up</span>
@@ -92,28 +92,3 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
         </React.Fragment>
     );
 };
-
-// const inputFieldProps = [
-//     {
-//         label: 'Full name',
-//         type: 'text',
-//         placeholder: 'Wael boutzougarte'
-//     },
-//     {
-//         label: 'Email',
-//         type: 'email',
-//         placeholder: 'example@youremail.com'
-//     },
-//     {
-//         label: 'Password',
-//         type: 'hide',
-//         placeholder: '',
-//         secure: true
-//     },
-//     {
-//         label: 'Confirm Password',
-//         type: 'hide',
-//         placeholder: '',
-//         secure: true
-//     }
-// ];

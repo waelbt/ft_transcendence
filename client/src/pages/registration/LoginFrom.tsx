@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type FieldValues } from 'react-hook-form';
 import InputField from './InputField';
 import './LoginRegisterForm.scss';
 
@@ -16,12 +16,24 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
         reset
         // getValues
     } = useForm();
-    const onSubmit = async (data : any) => {
-        // TODO: submit to server
-        // ... 
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log(data);
-        
+    const onSubmit = async (data: FieldValues) => {
+        const dataToSend = {
+            email: data.email,
+            password: data.password,
+            FullName: "yyy"
+        };
+
+        fetch('http://localhost:4000/auth/signin/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((res) => res.json())
+            .then((responseData) => console.log(responseData))
+            .catch(() => console.error('Error zzz'));
+
         reset();
     };
     // const [email, setEmail] = useState('');
@@ -33,7 +45,7 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
                 <InputField
                     label="Email"
                     type="email"
-                    placeholder='example@youremail.com'
+                    placeholder="example@youremail.com"
                     register={register('email')}
                 />
                 <InputField
