@@ -1,23 +1,31 @@
-version: "3.4"
-volumes:
-  client:
-    name: client
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./client/
-  server:
-    name: server
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./server/
-networks:
-  backendNet:
-    driver: bridge
+version: '3.8'
 services:
+  DB_Postgres:
+    image: postgres
+    networks:
+      - transcendence
+    environment:
+      POSTGRES_USER: poza
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transcendence
+    restart: always
+    container_name: DB_Postgres
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    networks:
+      - transcendence
+    volumes:
+      - ./server/src:/app/src
+    ports:
+      - 4000:4000
+      - 5555:5555
+    depends_on:
+      - DB_Postgres
+
+    command: sh start.sh
+    container_name: server_backEnd
   client:
     build: 
       context: ./client/
@@ -25,33 +33,9 @@ services:
     ports:
      - 8000:8000
     volumes:
-    - client:/client
-    networks:
-      - backendNet
-    tty: true
-  # server:
-  #   build:
-  #     context: ./server/
-  #   container_name: nest-docker-postgres
-  #   ports:
-  #     - 3000:3000
-  #   depends_on:
-  #     - database
-  #   volumes:
-  #     - server:/server
-  #   environment:
-  #     - DATABASE_URL=postgresql://postgres:123@database:5434/nest?schema=public
-  #     - JWT_secret=secretJWTforTrandandan
-  #   networks:
-  #     - backendNet
-  database:
-    image: postgres:13
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: poza
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: transcendence
-    networks:
-      - backendNet
-    
+      - ./client/:/app/
+    depends_on:
+      - server
+networks:
+  transcendence:
+    driver: bridge

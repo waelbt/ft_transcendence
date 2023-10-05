@@ -23,7 +23,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
         // TODO: submit to server
         // ...
         console.log(data);
-        
 
         reset();
     };
@@ -36,7 +35,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     type="text"
                     placeholder="Wael boutzougarte"
                     register={
-                        (register('fullName'),
+                        (register('FullName'),
                         {
                             required: 'Full name is required'
                         })

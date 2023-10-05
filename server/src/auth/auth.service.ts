@@ -13,10 +13,15 @@ export class AuthService {
         private config: ConfigService) {}
 
     async signUp(dto: AuthDto) {
+        console.log('in signup');
+        console.log(dto);
         //genrate the password hash
+        console.log(dto.password);
         const hash = await argon.hash(dto.password);
+        console.log('argon');
         //save the new user in the db
         try{
+            console.log('try')
             const user = await this.PrismaOrmService.user.create({
                 data: {
                     email: dto.email,
@@ -25,6 +30,7 @@ export class AuthService {
                 },
             });
             //we need to return a token.
+            console.log('in return ');
             return this.signToken(user.id, user.email);
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -32,6 +38,7 @@ export class AuthService {
                     throw new ForbiddenException('Credentials taken');
                 }
             }
+            console.log(error);
             throw error;
         }
     }
@@ -63,6 +70,7 @@ export class AuthService {
             sub: userId,//use a unique identifier for a sub field
             email,
         };
+        console.log('im in')
         const secret = this.config.get('JWT_secret');
 
         const token = await this.jwt.signAsync(
@@ -72,6 +80,7 @@ export class AuthService {
                 secret: secret,
             },
         );
+        console.log(token);
         return {
             access_token: token,
         };

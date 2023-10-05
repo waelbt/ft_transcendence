@@ -6,7 +6,7 @@ export class AuthDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    fullName: string;
+    FullName: string;
     
     @ApiProperty()
     @IsEmail()
