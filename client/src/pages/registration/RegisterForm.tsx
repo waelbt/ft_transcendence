@@ -21,9 +21,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
 
     const onSubmit = async (data: FieldValues) => {
         const dataToSend = {
+            fullName: data.fullName,
             email: data.email,
-            password: data.password,
-            FullName: data.fullName
+            password: data.password
         };
 
         fetch('http://localhost:4000/auth/signup/', {
@@ -35,7 +35,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
         })
             .then((res) => res.json())
             .then((responseData) => console.log(responseData))
-            .catch(() => console.error('Error zzz'));
+            .catch((error) => console.error(error));
 
         reset();
     };

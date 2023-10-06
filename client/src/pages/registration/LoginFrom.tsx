@@ -18,23 +18,21 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
         // getValues
     } = useForm();
     const onSubmit = async (data: FieldValues) => {
-        // const dataToSend = {
-        //     email: data.email,
-        //     password: data.password,
-        //     FullName: "yyy"
-        // };
-        console.log(data);
+        const dataToSend = {
+            email: data.email,
+            password: data.password
+        };
 
-        // fetch('http://localhost:4000/auth/signin/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(dataToSend)
-        // })
-        //     .then((res) => res.json())
-        //     .then((responseData) => console.log(responseData))
-        //     .catch(() => console.error('Error zzz'));
+        fetch('http://localhost:4000/auth/signin/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((res) => res.json())
+            .then((responseData) => console.log(responseData))
+            .catch((error) => console.error(error));
 
         reset();
     };

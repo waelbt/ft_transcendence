@@ -21,6 +21,11 @@ export class AuthDto {
 
 export class AuthDtoSignIn {
     @ApiProperty()
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     password: string;
