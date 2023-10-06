@@ -73,12 +73,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     })}
                     secure
                 />
-                {Object.keys(errors).length ? (
+                {/* {Object.keys(errors).length ? (
                     <Alert
                         type="error"
                         message={errors[Object.keys(errors)[0]]?.message}
                     />
-                ) : null}
+                ) : null} */}
                 <button
                     className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}
                     disabled={isSubmitting}

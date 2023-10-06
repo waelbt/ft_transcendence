@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import InputField from './InputField';
-import Alert from '../components/Alert';
+// import Alert from '../components/Alert';
 import { api as axios } from '../Api/';
 import './LoginRegisterForm.scss';
 
@@ -62,12 +62,12 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
                     })}
                     secure
                 />
-                {Object.keys(errors).length ? (
+                {/* {Object.keys(errors).length ? (
                     <Alert
                         type="error"
                         message={errors[Object.keys(errors)[0]]?.message}
                     />
-                ) : null}
+                ) : null} */}
                 <button
                     className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}
                     disabled={isSubmitting}
