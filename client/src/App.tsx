@@ -1,5 +1,5 @@
 import './App.scss';
-import Registration from './pages/registration/';
+import Registration from './registration/';
 
 function App() {
     return <Registration />;

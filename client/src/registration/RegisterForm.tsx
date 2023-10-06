@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InputField from './InputField';
-import Alert from '../../components/Alert';
+import Alert from '../components/Alert';
 import './LoginRegisterForm.scss';
 import { useForm, type FieldValues } from 'react-hook-form';
 

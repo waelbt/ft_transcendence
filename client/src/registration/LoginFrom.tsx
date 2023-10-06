@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import InputField from './InputField';
-import Alert from '../../components/Alert';
+import Alert from '../components/Alert';
 import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
