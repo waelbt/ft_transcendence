@@ -31,6 +31,10 @@
             background-color: $primary-pink;
         }
     }
+    .disabled-btn {
+        background-color: #2b2424;
+        cursor: not-allowed;
+    }
 }
 
 .form-label {

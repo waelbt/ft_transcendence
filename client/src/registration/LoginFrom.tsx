@@ -2,47 +2,35 @@ import React, { useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import InputField from './InputField';
 import Alert from '../components/Alert';
+import { api as axios } from '../Api/';
 import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
-    onFormSwitch: (formName: string) => void; // Define the onFormSwitch prop
+    onFormSwitch: (formName: string) => void;
 };
 
 export const LoginForm: React.FC<RegisterFormProps> = (props) => {
     const {
         register,
-        // setValue,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         reset
-        // getValues
     } = useForm();
+
     const onSubmit = async (data: FieldValues) => {
-        const dataToSend = {
-            email: data.email,
-            password: data.password
-        };
-
-        fetch('http://localhost:4000/auth/signin/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then((res) => res.json())
-            .then((responseData) => console.log(responseData))
-            .catch((error) => console.error(error));
-
+        try { 
+            // await new Promise((resolve) => setTimeout(resolve, 1000))
+            const response = await axios.post('/auth/signin/', data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
         reset();
     };
 
     useEffect(() => {
         console.log('error : ', errors);
     }, [errors]);
-    // const [email, setEmail] = useState('');
-    // const [pass, setPass] = useState('');
-    // Wrap the FormLabelInput component with forwardRef so that we can access its DOM instance.
     return (
         <React.Fragment>
             <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
@@ -80,7 +68,11 @@ export const LoginForm: React.FC<RegisterFormProps> = (props) => {
                         message={errors[Object.keys(errors)[0]]?.message}
                     />
                 ) : null}
-                <button className="form-btn">
+                <button
+                    className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}
+                    disabled={isSubmitting}
+                    type="submit"
+                >
                     <span className="button-text">Log in</span>
                 </button>
             </form>

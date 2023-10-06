@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import InputField from './InputField';
 import Alert from '../components/Alert';
-import './LoginRegisterForm.scss';
+import { api as axios } from '../Api/';
 import { useForm, type FieldValues } from 'react-hook-form';
+import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
@@ -11,32 +12,22 @@ type RegisterFormProps = {
 export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
     const {
         register,
-        // setValue,
         handleSubmit,
         formState: { errors, isSubmitting },
-        // formState: { errors, isSubmitting },
         reset,
         getValues
     } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        const dataToSend = {
-            fullName: data.fullName,
-            email: data.email,
-            password: data.password
-        };
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        const { confirmPassword, ...newData } = data;
 
-        fetch('http://localhost:4000/auth/signup/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then((res) => res.json())
-            .then((responseData) => console.log(responseData))
-            .catch((error) => console.error(error));
-
+        try {
+            const response = await axios.post('/auth/signup/', newData);
+            console.dir(response);
+        } catch (error) {
+            console.error(error);
+        }
         reset();
     };
 
@@ -89,7 +80,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     />
                 ) : null}
                 <button
-                    className="form-btn"
+                    className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}
                     disabled={isSubmitting}
                     type="submit"
                 >
