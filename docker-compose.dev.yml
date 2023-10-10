@@ -1,0 +1,49 @@
+version: '3.8'
+
+networks:
+  transcendence:
+    driver: bridge
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client:/app
+      - client-node-modules:/app/node_modules
+    networks:
+      - transcendence
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/app
+      - server-node-modules:/app/node_modules
+    networks:
+      - transcendence
+    command: sh start.sh
+    container_name: server_backEnd
+
+  DB_Postgres:
+    image: postgres
+    networks:
+      - transcendence
+    environment:
+      POSTGRES_USER: poza
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transcendence
+    ports:
+      - 5432:5432
+    restart: always
+    container_name: DB_Postgres
+
+volumes:
+  client-node-modules:
+  server-node-modules:
