@@ -52,13 +52,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./client
+      device: /goinfre/${USER}/ft_transcendence/client
   server-vol:
     name: server_volume
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ./server
+      device: /goinfre/${USER}/ft_transcendence/server
   client-node-modules:
   server-node-modules:
