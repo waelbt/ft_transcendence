@@ -6,32 +6,34 @@ networks:
 
 services:
   client:
+    container_name: client
     build:
       context: ./client
       dockerfile: Dockerfile.dev
     ports:
       - "8000:8000"
     volumes:
-      - ./client:/app
+      - client-vol:/app
       - client-node-modules:/app/node_modules
     networks:
       - transcendence
 
   server:
+    container_name: server
     build:
       context: ./server
       dockerfile: Dockerfile.dev
     ports:
       - "4000:4000"
     volumes:
-      - ./server:/app
+      - server-vol:/app
       - server-node-modules:/app/node_modules
     networks:
       - transcendence
     command: sh start.sh
-    container_name: server_backEnd
 
   DB_Postgres:
+    container_name: DB_Postgres
     image: postgres
     networks:
       - transcendence
@@ -42,8 +44,21 @@ services:
     ports:
       - 5432:5432
     restart: always
-    container_name: DB_Postgres
 
 volumes:
+  client-vol:
+    name: client_volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./client
+  server-vol:
+    name: server_volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./server
   client-node-modules:
   server-node-modules:
