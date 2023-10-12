@@ -1,8 +1,8 @@
 import './App.scss';
-import Registration from './registration/';
+import AllRoutes from './Routes';
 
 function App() {
-    return <Registration />;
+    return <AllRoutes/>;
 }
 
 export default App;

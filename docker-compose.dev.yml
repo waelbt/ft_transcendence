@@ -13,8 +13,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - client-vol:/app
-      - client-node-modules:/app/node_modules
+      - /goinfre/${USER}/ft_transcendence/client:/client
+      - client-node-modules:/client/node_modules
     networks:
       - transcendence
 
@@ -26,8 +26,8 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - server-vol:/app
-      - server-node-modules:/app/node_modules
+      - /goinfre/${USER}/ft_transcendence/server:/client
+      - server-node-modules:/client/node_modules
     networks:
       - transcendence
     command: sh start.sh
@@ -46,19 +46,5 @@ services:
     restart: always
 
 volumes:
-  client-vol:
-    name: client_volume
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /goinfre/${USER}/ft_transcendence/client
-  server-vol:
-    name: server_volume
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /goinfre/${USER}/ft_transcendence/server
   client-node-modules:
   server-node-modules:

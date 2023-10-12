@@ -1,47 +1,39 @@
-import React from 'react';
-import InputField from './InputField';
-import Alert from '../components/Alert';
-import { api as axios } from '../Api/';
+import React, { useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
+import InputField from '../../src/Components/Registration/Components/InputField';
+// import Alert from '../components/Alert';
+import { api as axios } from '../../src/Api';
 import './LoginRegisterForm.scss';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
 };
 
-export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
+export const LoginForm: React.FC<RegisterFormProps> = (props) => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
-        getValues
+        reset
     } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        const { confirmPassword, ...newData } = data;
-
         try {
-            const response = await axios.post('/auth/signup/', newData);
-            console.dir(response);
+            // await new Promise((resolve) => setTimeout(resolve, 1000))
+            const response = await axios.post('/auth/signin/', data);
+            console.log(response.data);
         } catch (error) {
             console.error(error);
         }
         reset();
     };
 
+    useEffect(() => {
+        console.log('error : ', errors);
+    }, [errors]);
     return (
         <React.Fragment>
             <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
-                <InputField
-                    label="Full name"
-                    type="text"
-                    placeholder="Wael boutzougarte"
-                    register={register('fullName', {
-                        required: 'Full name is required'
-                    })}
-                />
                 <InputField
                     label="Email"
                     type="text"
@@ -58,18 +50,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     label="Password"
                     type="hide"
                     register={register('password', {
-                        required: 'password is required'
-                    })}
-                    secure
-                />
-                <InputField
-                    label="Confirm Password"
-                    type="hide"
-                    register={register('confirmPassword', {
-                        required: 'Confirm password is required',
-                        validate: (value) =>
-                            value === getValues('password') ||
-                            'Passwords must match confirm password'
+                        required: 'Password is required!',
+                        maxLength: {
+                            value: 40,
+                            message: 'Password must be less then 40 characters'
+                        },
+                        minLength: {
+                            value: 5,
+                            message: 'Password must be at least 5 characters'
+                        }
                     })}
                     secure
                 />
@@ -84,15 +73,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                     disabled={isSubmitting}
                     type="submit"
                 >
-                    <span className="button-text">Sign up</span>
+                    <span className="button-text">Log in</span>
                 </button>
             </form>
             <div
                 className="form-label"
-                onClick={() => props.onFormSwitch('login')}
+                onClick={() => props.onFormSwitch('register')}
             >
-                already have an account?{' '}
-                <span className="form-link">Log-in</span>
+                Don't have an account?{' '}
+                <span className="form-link">Register here</span>
             </div>
         </React.Fragment>
     );
