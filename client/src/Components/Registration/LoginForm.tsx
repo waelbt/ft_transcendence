@@ -1,7 +1,6 @@
 import { FormComponent } from './Components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
 import { api as axios } from '../../Api/';
-// import './Components/FormComponent/index.scss'
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
@@ -10,7 +9,6 @@ type RegisterFormProps = {
 export const LoginForm = (props : RegisterFormProps) => {
     const onSubmit = async (data: FieldValues) => {
         try {
-            // await new Promise((resolve) => setTimeout(resolve, 1000))
             const response = await axios.post('/auth/signin/', data);
             console.log(response.data);
         } catch (error) {
@@ -20,10 +18,10 @@ export const LoginForm = (props : RegisterFormProps) => {
 
     const fields = [
         {
-            label: 'Email',
-            type: 'text',
-            placeholder: 'example@youremail.com',
-            name: 'email',
+            label: "Email",
+            type: "text",
+            placeholder: "example@youremail.com",
+            name: "email",
             validation: {
                 required: 'Email address is required!',
                 pattern: {
@@ -33,12 +31,21 @@ export const LoginForm = (props : RegisterFormProps) => {
             }
         },
         {
-            label: 'Password',
-            type: 'password', //hide
-            name: 'password',
+            label: "Password",
+            type: "password",
+            name: "password",
             validation: {
-                required: 'Password is required!'
-            }
+                required: 'Password is required!',
+                maxLength: {
+                    value: 40,
+                    message: 'Password must be less than 40 characters'
+                },
+                minLength: {
+                    value: 5,
+                    message: 'Password must be at least 5 characters'
+                }
+            },
+            secure: true
         }
     ];
 

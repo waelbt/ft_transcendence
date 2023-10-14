@@ -34,14 +34,11 @@ const InputField: React.FC<InputFieldProps> = ({
                 />
                 {secure ? (
                     <span
-                        className="p-viewer"
+                        className={`${visible ? 'closed' : 'eye'}`}
                         onClick={() => setvisible(!visible)}
                     >
-                        <i
-                            className={`fa fa-eye${visible ? '-slash' : ''}`}
-                        ></i>
                     </span>
-                ) : null}
+                ) : null} 
             </div>
         </div>
     );

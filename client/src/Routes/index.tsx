@@ -9,6 +9,12 @@ const router = createBrowserRouter([
 ]);
 
 
+// path: "/",
+// lazy: async () => {
+//   let { Login } = await import("../Components/Login");
+//   return { Component: Login };
+// },
+
 export default function AllRoutes() {
     return (<RouterProvider router={router} />);
 }

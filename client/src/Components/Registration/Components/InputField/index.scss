@@ -43,21 +43,48 @@
             opacity: initial;
             color: #5d5e63;
         }
-        &[type='hide'] {
-            -webkit-text-security: square;
+        &[type='password'] {
+            font-family: Verdana;
+            font-size: 1.951rem;
+            padding: 0.651rem 3.5rem 0.651rem 0.625rem;
         }
     }
     .pwd {
         position: relative;
-        .p-viewer {
+
+        .eye {
             z-index: 9999;
             position: absolute;
-            top: 35%;
+            top: 22%;
             right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            flex-shrink: 0;
+            background: url(#{$EyeClosedIcon}) 50% / cover no-repeat;
         }
 
-        .fa-eye {
-            color: $primary-blue;
+        .closed {
+            z-index: 9999;
+            position: absolute;
+            top: 22%;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            flex-shrink: 0;
+            background: url(#{$EyeIcon}) 50% / cover no-repeat;
+        }
+
+        @media (max-width: 530px) {
+            .eye {
+                top: 27%; // Adjust position, size or any other property as per your requirements
+                width: 1.5rem; // Reduced size for smaller screens
+                height: 1.5rem; // Reduced size for smaller screens
+            }
+            .closed {
+                top: 27%; // Adjust position, size or any other property as per your requirements
+                width: 1.5rem; // Reduced size for smaller screens
+                height: 1.5rem; // Reduced size for smaller screens
+            }
         }
     }
 }
@@ -78,6 +105,11 @@
             width: 11.875rem;
             font-size: 0.875rem;
             line-height: 1.5rem;
+            &[type='password'] {
+                font-family: Verdana;
+                font-size: 1.4rem;
+                padding: 0.651rem 3.5rem 0.651rem 0.625rem;
+            }
         }
     }
 }

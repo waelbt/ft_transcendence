@@ -11,13 +11,6 @@ type FormProps = {
     errors?: any;
 };
 
-{
-    /* <form onSubmit={handleSubmit((data) => {
-    onSubmit(data)
-    reset();
-})}> */
-}
-
 export const FormComponent: React.FC<FormProps> = ({
     fields,
     onSubmit,
@@ -27,24 +20,27 @@ export const FormComponent: React.FC<FormProps> = ({
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting }
+        formState: { errors, isSubmitting },
+        watch
     } = useForm({ defaultValues });
 
     useEffect(() => {
-        console.log('error : ', errors);
     }, [errors]);
 
     return (
         <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
-            {fields.map((field, idx) => (
-                <InputField
-                    key={idx}
-                    label={field.label}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    register={register(field.name, field.validation)}
-                />
-            ))}
+            {fields.map((field, idx) => {
+                return (
+                    <InputField
+                        key={idx}
+                        label={field.label}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        register={register(field.name, field.validation)}
+                        secure={field.secure}
+                    />
+                );
+            })}
             {/* {Object.keys(errors).length && <Alert type="error" message={errors[Object.keys(errors)[0]]?.message} />} */}
             <button
                 className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}

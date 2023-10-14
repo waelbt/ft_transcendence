@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// import RegisterForm from './RegisterForm';
 import { LoginForm } from './LoginForm';
+import { RegisterForm } from './RegisterForm';
 import './index.scss';
 
 function Registration() {
@@ -40,11 +40,11 @@ function Registration() {
                     or
                     <span className="or-separator-line"></span>
                 </div>{' '}
-                {/* {currentForm === 'login' ? ( */}
-                <LoginForm onFormSwitch={toggleFormm} />
-                {/* ) : ( */}
-                {/* <RegisterForm onFormSwitch={toggleFormm} /> */}
-                {/* )}{' '} */}
+                {currentForm === 'login' ? (
+                    <LoginForm onFormSwitch={toggleFormm} />
+                ) : (
+                    <RegisterForm onFormSwitch={toggleFormm} />
+                )}{' '}
             </div>
         </div>
     );
