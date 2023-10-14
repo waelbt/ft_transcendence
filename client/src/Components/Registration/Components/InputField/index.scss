@@ -60,7 +60,7 @@
             width: 2rem;
             height: 2rem;
             flex-shrink: 0;
-            background: url(#{$EyeClosedIcon}) 50% / cover no-repeat;
+            background: url(#{$EyeIcon}) 50% / cover no-repeat;
         }
 
         .closed {
@@ -71,7 +71,7 @@
             width: 2rem;
             height: 2rem;
             flex-shrink: 0;
-            background: url(#{$EyeIcon}) 50% / cover no-repeat;
+            background: url(#{$EyeClosedIcon}) 50% / cover no-repeat;
         }
 
         @media (max-width: 530px) {

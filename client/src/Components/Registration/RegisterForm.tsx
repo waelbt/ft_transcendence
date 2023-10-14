@@ -11,11 +11,12 @@ export const RegisterForm = (props: RegisterFormProps) => {
         const { confirmPassword, ...newData } = data;
         try {
             const response = await axios.post('/auth/signup/', newData);
-            console.dir(response);
+            console.log(response.status);
         } catch (error) {
             console.error(error);
         }
     };
+
 
     const fields = [
         {
@@ -42,7 +43,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         },
         {
             label: "Password",
-            type: "hide",
+            type: "password",
             name: "password",
             validation: {
                 required: 'Password is required!',
@@ -59,11 +60,10 @@ export const RegisterForm = (props: RegisterFormProps) => {
         },
         {
             label: "Confirm Password",
-            type: "hide",
+            type: "password",
             name: "confirmPassword",
             validation: {
                 required: 'Confirm password is required',
-                // validate: (value, getValues) => value === getValues('password') || 'Passwords must match confirm password'
             },
             secure: true
         }

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
+import toast from 'react-hot-toast';
 import './index.scss';
-// import Alert from '../Alert';
 
 type FormProps = {
     fields: any[];
@@ -15,20 +15,35 @@ export const FormComponent: React.FC<FormProps> = ({
     fields,
     onSubmit,
     defaultValues = {}
-    // errors = {}
 }) => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        watch
+        getValues
     } = useForm({ defaultValues });
 
-    useEffect(() => {
-    }, [errors]);
-
     return (
-        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+        <form
+            className="register-form"
+            onSubmit={handleSubmit((data) => {
+                const firstErrorKey = Object.keys(errors)[0];
+                const confirmPassword = getValues('confirmPassword');
+
+                console.log(confirmPassword);
+                if (
+                    firstErrorKey &&
+                    typeof errors[firstErrorKey]?.message === 'string'
+                )
+                    toast.error(errors[firstErrorKey]?.message as string);
+                else if (
+                    confirmPassword &&
+                    confirmPassword != getValues('password')
+                )
+                    toast.error('Passwords must match confirm password');
+                else onSubmit(data);
+            })}
+        >
             {fields.map((field, idx) => {
                 return (
                     <InputField
@@ -41,7 +56,6 @@ export const FormComponent: React.FC<FormProps> = ({
                     />
                 );
             })}
-            {/* {Object.keys(errors).length && <Alert type="error" message={errors[Object.keys(errors)[0]]?.message} />} */}
             <button
                 className={`form-btn ${isSubmitting ? 'disabled-btn' : ''}`}
                 disabled={isSubmitting}

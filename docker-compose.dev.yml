@@ -26,7 +26,7 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - /goinfre/${USER}/ft_transcendence/server:/client
+      - /goinfre/${USER}/ft_transcendence/server:/server
       - server-node-modules:/client/node_modules
     networks:
       - transcendence

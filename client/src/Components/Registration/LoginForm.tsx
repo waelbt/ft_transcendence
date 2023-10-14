@@ -10,7 +10,7 @@ export const LoginForm = (props : RegisterFormProps) => {
     const onSubmit = async (data: FieldValues) => {
         try {
             const response = await axios.post('/auth/signin/', data);
-            console.log(response.data);
+            console.log(response.status);
         } catch (error) {
             console.error(error);
         }

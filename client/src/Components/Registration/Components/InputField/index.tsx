@@ -20,11 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
     return (
         <div className="form-label-input">
-            {label && (
-                <label className="form-label">
-                    {label}
-                </label>
-            )}
+            {label && <label className="form-label">{label}</label>}
             <div className="pwd">
                 <input
                     className="form-input"
@@ -36,9 +32,8 @@ const InputField: React.FC<InputFieldProps> = ({
                     <span
                         className={`${visible ? 'closed' : 'eye'}`}
                         onClick={() => setvisible(!visible)}
-                    >
-                    </span>
-                ) : null} 
+                    ></span>
+                ) : null}
             </div>
         </div>
     );
