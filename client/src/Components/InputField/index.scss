@@ -1,4 +1,4 @@
-@import '../../../../constants/variables';
+@import '../../constants/variables';
 
 .form-label-input {
     display: flex;
@@ -73,6 +73,7 @@
             flex-shrink: 0;
             background: url(#{$EyeClosedIcon}) 50% / cover no-repeat;
         }
+
 
         @media (max-width: 530px) {
             .eye {

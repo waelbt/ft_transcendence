@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import toast from 'react-hot-toast';
@@ -23,14 +23,12 @@ export const FormComponent: React.FC<FormProps> = ({
         getValues
     } = useForm({ defaultValues });
 
-    return (
-        <form
-            className="register-form"
-            onSubmit={handleSubmit((data) => {
-                const firstErrorKey = Object.keys(errors)[0];
+    useEffect(() => {
+        if (isSubmitting) {
+            const firstErrorKey = Object.keys(errors)[0];
                 const confirmPassword = getValues('confirmPassword');
 
-                console.log(confirmPassword);
+                toast.dismiss();
                 if (
                     firstErrorKey &&
                     typeof errors[firstErrorKey]?.message === 'string'
@@ -41,8 +39,12 @@ export const FormComponent: React.FC<FormProps> = ({
                     confirmPassword != getValues('password')
                 )
                     toast.error('Passwords must match confirm password');
-                else onSubmit(data);
-            })}
+        }
+    }, [errors, isSubmitting])
+    return (
+        <form
+            className="register-form"
+            onSubmit={handleSubmit(onSubmit)}
         >
             {fields.map((field, idx) => {
                 return (

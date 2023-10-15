@@ -1,4 +1,4 @@
-import { FormComponent } from './Components/FormComponent';
+import { FormComponent } from '../../Components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
 import { api as axios } from '../../Api/';
 
@@ -6,7 +6,7 @@ type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
 };
 
-export const LoginForm = (props : RegisterFormProps) => {
+export const LoginForm = (props: RegisterFormProps) => {
     const onSubmit = async (data: FieldValues) => {
         try {
             const response = await axios.post('/auth/signin/', data);
@@ -18,10 +18,10 @@ export const LoginForm = (props : RegisterFormProps) => {
 
     const fields = [
         {
-            label: "Email",
-            type: "text",
-            placeholder: "example@youremail.com",
-            name: "email",
+            label: 'Email',
+            type: 'text',
+            placeholder: 'example@youremail.com',
+            name: 'email',
             validation: {
                 required: 'Email address is required!',
                 pattern: {
@@ -31,9 +31,9 @@ export const LoginForm = (props : RegisterFormProps) => {
             }
         },
         {
-            label: "Password",
-            type: "password",
-            name: "password",
+            label: 'Password',
+            type: 'password',
+            name: 'password',
             validation: {
                 required: 'Password is required!',
                 maxLength: {

@@ -1,4 +1,4 @@
-import { FormComponent } from './Components/FormComponent';
+import { FormComponent } from '../../Components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
 import { api as axios } from '../../Api/';
 
@@ -17,22 +17,21 @@ export const RegisterForm = (props: RegisterFormProps) => {
         }
     };
 
-
     const fields = [
         {
-            label: "Full name",
-            type: "text",
-            placeholder: "Wael boutzougarte",
-            name: "fullName",
+            label: 'Full name',
+            type: 'text',
+            placeholder: 'Wael boutzougarte',
+            name: 'fullName',
             validation: {
                 required: 'Full name is required'
             }
         },
         {
-            label: "Email",
-            type: "text",
-            placeholder: "example@youremail.com",
-            name: "email",
+            label: 'Email',
+            type: 'text',
+            placeholder: 'example@youremail.com',
+            name: 'email',
             validation: {
                 required: 'Email address is required!',
                 pattern: {
@@ -42,9 +41,9 @@ export const RegisterForm = (props: RegisterFormProps) => {
             }
         },
         {
-            label: "Password",
-            type: "password",
-            name: "password",
+            label: 'Password',
+            type: 'password',
+            name: 'password',
             validation: {
                 required: 'Password is required!',
                 maxLength: {
@@ -59,11 +58,11 @@ export const RegisterForm = (props: RegisterFormProps) => {
             secure: true
         },
         {
-            label: "Confirm Password",
-            type: "password",
-            name: "confirmPassword",
+            label: 'Confirm Password',
+            type: 'password',
+            name: 'confirmPassword',
             validation: {
-                required: 'Confirm password is required',
+                required: 'Confirm password is required'
             },
             secure: true
         }
