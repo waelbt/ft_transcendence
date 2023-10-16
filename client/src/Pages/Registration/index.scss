@@ -15,19 +15,19 @@ body {
     overflow: hidden; /* Prevent background image from overflowing */
 }
 
-.register {
+.card {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     gap: 2.3125rem;
 
-    .register-header {
+    .header {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
-        .register-header-text {
-            color: #ffec47;
+        .text {
+            color: $primary-yellow;
             text-align: center;
             font-family: $font-Bomb-Sound;
             font-size: 3rem;
@@ -37,17 +37,17 @@ body {
             letter-spacing: 0.135rem;
         }
     }
-    .register-container {
+    .card-container {
         display: flex;
         padding: 2.25rem;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
         border-radius: 1.5rem;
         background: rgba(113, 199, 216, 0.8);
         box-shadow: 0.625rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.2);
 
-        .third-party-btns {
+        .buttons {
             display: flex;
             align-items: flex-start;
             gap: 1.5rem;

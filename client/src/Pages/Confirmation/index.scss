@@ -1,0 +1,140 @@
+@import '../../constants/variables';
+
+.header {
+    color: var(--white-100, #fff);
+    text-align: center;
+    font-family: $font-Acme;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.0675rem;
+}
+
+.avatar-container {
+    display: flex;
+    width: 84%;
+    align-items: center;
+    gap: 2rem;
+    color: var(--white-100, #fff);
+    .section1 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        .avatar-uploader {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #ffffff;
+            overflow: hidden;
+        }
+
+        .image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .text {
+            font-family: $font-Acme;
+            font-size: 0.75rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.03375rem;
+        }
+    }
+    .section2 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        .avatar-uploader-btn {
+            display: flex;
+            padding: 0.75rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.625rem;
+            border: none;
+            border-radius: 3.4375rem;
+            background: var(--white-100, #fff);
+            color: var(--Primary-Text-Color, #304194);
+            text-align: center;
+            font-family: $font-Acme;
+            font-size: 0.75rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .avatar-select {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            .text {
+                color: var(--white-100, #fff);
+                font-family: Acme;
+                font-size: 1rem;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 140%; /* 1.4rem */
+                letter-spacing: 0.0125rem;
+            }
+            .list {
+                list-style: none;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 0;
+                .item {
+                    width: 2.3125rem;
+                    height: 2.3125rem;
+                    flex-shrink: 0;
+                    border-radius: 2.3125rem;
+                    border: 1px solid var(--white-100, #fff);
+                    background:
+                        url('https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg'),
+                        lightgray 50% / cover no-repeat;
+                }
+            }
+        }
+    }
+}
+
+.confirm-button {
+    background-color: $primary-pink !important;
+    &:hover {
+        background-color: $dark-pink !important;
+    }
+}
+
+.skip-button {
+    display: flex;
+    margin-top: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.6rem 10.264rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    border: none;
+    border-radius: 3.4375rem;
+    background: none;
+    color: #fff;
+    text-align: center;
+    font-family: $font-Bomb-Sound;
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    &:hover {
+        border: dashed;
+    }
+    &:active {
+        border: solid;
+        background: white;
+        color: $primary-pink;
+    }
+}

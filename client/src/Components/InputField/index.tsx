@@ -9,13 +9,12 @@ type InputFieldProps = {
     secure?: boolean;
 };
 
-const InputField: React.FC<InputFieldProps> = ({
+function InputField({
     label,
     type,
     placeholder,
     register,
-    secure
-}) => {
+    secure} : InputFieldProps){
     const [visible, setvisible] = useState(false);
 
     return (

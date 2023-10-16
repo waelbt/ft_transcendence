@@ -11,13 +11,12 @@ function Registration() {
     };
 
     return (
-        <div className="register">
-            <div className="register-header">
-                <div className="register-header-text">who want to play</div>
-                <div className="register-header-text">Video games?</div>
+        <div className="card">
+            <div className="header">
+                <div className="text">who want to play<br/>Video games?</div>
             </div>
-            <div className="register-container">
-                <div className="third-party-btns">
+            <div className="card-container">
+                <div className="buttons">
                     <button className="intra-btn default">
                         <span className="intra-btn-logo default-logo"></span>
                         <span className="intra-btn-text default-text">

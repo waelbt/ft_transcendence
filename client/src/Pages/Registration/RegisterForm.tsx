@@ -1,4 +1,4 @@
-import { FormComponent } from '../../Components/FormComponent';
+import FormComponent from '../../Components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
 import { api as axios } from '../../Api/';
 
@@ -70,7 +70,17 @@ export const RegisterForm = (props: RegisterFormProps) => {
 
     return (
         <>
-            <FormComponent fields={fields} onSubmit={onSubmit} />
+            <FormComponent
+                fields={fields}
+                onSubmit={onSubmit}
+                btn={
+                    {
+                        style: '',
+                        type: 'submit',
+                        text: 'Sign up'
+                    }
+                }
+            />
             <div
                 className="form-label"
                 onClick={() => props.onFormSwitch('login')}

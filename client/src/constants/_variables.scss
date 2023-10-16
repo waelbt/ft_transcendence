@@ -3,7 +3,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 @import 'animate.css';
 
-
 //fonts
 
 $font-Bomb-Sound: 'The Bomb Sound', sans-serif;
@@ -11,23 +10,25 @@ $font-Acme: 'Acme', sans-serif;
 $font-Inter: 'Inter', sans-serif;
 @font-face {
     font-family: 'The Bomb Sound';
-    src: url('../../The Bomb Sound.ttf') format('truetype');
+    src: url('../../assets/fonts/The Bomb Sound.ttf') format('truetype');
 }
 
 // colors
 
 $primary-pink: #f20553;
+$dark-pink: #9a234b;
 $primary-blue: #304194;
+$primary-yellow: #ffec47;
 
 // svgs
 $background-image: '../../background_image.svg';
-$intra-logo: '../../devicon_24.svg';
-$google-default-logo: '../../devicon_google.svg';
-$google-white-logo: '../../white_google.svg';
-$line: '../../Line.svg';
-$EyeIcon: '../../Eye-f.svg';
-$EyeClosedIcon: '../../EyeClosed-f.svg';
-
+$intra-logo: '../../assets/logos/devicon_24.svg';
+$google-default-logo: '../../assets/logos/devicon_google.svg';
+$google-white-logo: '../../assets/logos/white_google.svg';
+$line: '../../assets/Line.svg';
+$EyeIcon: '../../assets/icons/Eye.svg';
+$EyeClosedIcon: '../../assets/icons/EyeClosed.svg';
+$ImgPlaceHolder: '../../assets/icons/ImageSquare.svg';
 
 // $secondary-red: #e08b88;
 // $tertiary-red: #3002001c;
@@ -84,3 +85,4 @@ $EyeClosedIcon: '../../EyeClosed-f.svg';
 // .text-green {
 //   color: $primary-green;
 // }
+
