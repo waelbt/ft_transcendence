@@ -1,11 +1,19 @@
-import Avatar from '../../Components/Avatar';
+import { useRef, useState } from 'react';
 import FormComponent from '../../Components/FormComponent';
 import './index.scss';
 
 function Confirmation() {
+    const [path, setPath] = useState('');
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const onSubmit = async () => {
         console.log('define later');
     };
+
+    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setPath(event.target.value);
+
+    //     console.log('value is:', event.target.value);
+    // };
 
     const fields = [
         {
@@ -28,15 +36,41 @@ function Confirmation() {
                 <div className="header">Choose a profile picture</div>
                 <div className="avatar-container">
                     <div className="section1">
-                        {/* <Avatar src="" /> */}
-                        <div className="avatar-uploader">
-                            <img
-                                src="https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg"
-                                alt="Avatar"
-                                className="image"
-                            />
+                        <div className='avatar'>
+                            <label //
+                                htmlFor="file-upload"
+                                className="uploader"
+                            >
+                                {path != '' ? (
+                                    <img
+                                        src={path}
+                                        alt="Avatar"
+                                        className="image"
+                                    />
+                                ) : (
+                                    <input
+                                        className="placeholder"
+                                        id="file-upload"
+                                        type="file"
+                                        // onChange={handleChange}
+                                        onChange={() => {
+                                            const file =
+                                                inputRef.current?.files?.[0];
+                                            if (file) {
+                                                console.log(file);
+                                                const fileURL =
+                                                    URL.createObjectURL(file);
+                                                console.log(fileURL);
+                                                setPath(fileURL);
+                                            }
+                                        }}
+                                        ref={inputRef}
+                                    />
+                                )}
+                            </label>
+                            <div className="cancel-avatar"></div>
                         </div>
-                        <span className='text'>
+                        <span className="text">
                             Max size: 4MB
                             <br />
                             Supported format: PNG, JPG
@@ -51,10 +85,10 @@ function Confirmation() {
                                 Or choose one of our defaults
                             </span>
                             <ul className="list">
-                                <li className='item'></li>
-                                <li className='item'></li>
-                                <li className='item'></li>
-                                <li className='item'></li>
+                                <li className="item"></li>
+                                <li className="item"></li>
+                                <li className="item"></li>
+                                <li className="item"></li>
                             </ul>
                         </div>
                     </div>

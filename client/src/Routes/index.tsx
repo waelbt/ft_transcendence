@@ -5,14 +5,13 @@ import Confirmation from '../Pages/Confirmation';
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Registration/>
+        element: <Registration />
     },
     {
         path: '/Confirm',
-        element: <Confirmation/>
+        element: <Confirmation />
     }
 ]);
-
 
 // path: "/",
 // lazy: async () => {
@@ -21,5 +20,5 @@ const router = createBrowserRouter([
 // },
 
 export default function AllRoutes() {
-    return (<RouterProvider router={router} />);
+    return <RouterProvider router={router} />;
 }
