@@ -8,7 +8,7 @@ import * as argon from 'argon2';
 
 @Injectable({})
 export class AuthService {
-    constructor (private PrismaOrmService:PrismaOrmService, 
+    constructor (private PrismaOrmService:PrismaOrmService,
         private jwt:JwtService,
         private config: ConfigService) {}
 

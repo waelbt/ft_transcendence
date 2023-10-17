@@ -19,7 +19,7 @@ export class UsersService {
   }
 
   findOneUser(id: number) {
-    return (this.prisma.user.findUnique({ 
+    return (this.prisma.user.findUnique({
       where: { id },
     }));
   }
