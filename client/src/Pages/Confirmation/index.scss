@@ -23,8 +23,8 @@
         align-items: flex-start;
         gap: 1rem;
         .avatar {
+            position: relative;
             .uploader {
-                position: relative;
                 width: 100px;
                 height: 100px;
                 border-radius: 50%;
@@ -42,7 +42,29 @@
                     border: 2px dashed $primary-pink;
                 }
             }
-
+            .cancel {
+                position: absolute;
+                z-index: 1;
+                bottom: -33%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                // width: 1.875rem;
+                // height: 1.875rem;
+                border: 2px solid rgba(113, 199, 216, 0.8);
+                padding: 0.5rem;
+                justify-content: center;
+                align-items: center;
+                gap: 0.625rem;
+                border-radius: 3.125rem;
+                background: #ff4747;
+                .trash-icon {
+                    width: 1.125rem;
+                    height: 1.125rem;
+                    flex-shrink: 0;
+                    background: url($TrashIcon) 50% / cover no-repeat;
+                }
+            }
             .image,
             .placeholder {
                 width: 100%;
@@ -75,17 +97,17 @@
         }
         .avatar-uploader-btn {
             display: flex;
-            padding: 0.75rem;
+            padding: 0.9rem;
             justify-content: center;
             align-items: center;
             gap: 0.625rem;
-            border: 1px solid rgba($primary-blue, 0.7);;
+            border: 1px solid rgba($primary-blue, 0.4);
             border-radius: 3.4375rem;
             background: var(--white-100, #fff);
             color: var(--Primary-Text-Color, #304194);
             text-align: center;
             font-family: $font-Acme;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
@@ -112,15 +134,23 @@
                 align-items: flex-start;
                 gap: 0.75rem;
                 padding: 0;
+                .selected {
+                    border: 2px solid white;
+                }
                 .item {
-                    width: 2.3125rem;
-                    height: 2.3125rem;
+                    width: 2.813rem;
+                    height: 2.813rem;
                     flex-shrink: 0;
-                    border-radius: 2.3125rem;
-                    border: 1px solid var(--white-100, #fff);
-                    background:
-                        url('https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg'),
-                        lightgray 50% / cover no-repeat;
+                    border-radius: 2.813rem;
+                    padding: 0.1rem;
+                    .default-avatar {
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            border-radius: 50%;
+                        }
+                    }
                 }
             }
         }

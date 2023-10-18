@@ -1,54 +1,59 @@
-import { useEffect, useState, useRef } from 'react';
-import { Spring } from 'react-spring/renderprops';
+import { useState, useEffect, FC } from 'react';
 
-const Animation = () => {
-    const pathRef = useRef<SVGCircleElement | null>(null);
-    const [offset, setOffset] = useState<number>(0);
+interface ProgressRingProps {
+    radius: number;
+    stroke: number;
+    progress: number;
+}
 
-    useEffect(() => {
-        console.log(offset);
-        if (pathRef.current) setOffset(pathRef.current.getTotalLength());
-    }, [offset]);
+const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
+    const normalizedRadius = radius - stroke * 2;
+    const circumference = normalizedRadius * 2 * Math.PI;
+    const strokeDashoffset = circumference - (progress / 100) * circumference;
 
     return (
-        <div>
-            {offset ? (
-                <Spring
-                    from={{ x: offset }}
-                    to={{ x: 0 }}
-                    config={{ tension: 4, friction: 0.5, precision: 0.1 }}
-                >
-                    {(props) => (
-                        <svg>
-                            <circle
-                                strokeDashoffset={props.x}
-                                strokeDasharray={offset}
-                                strokeWidth="3"
-                                cx="50"
-                                cy="90"
-                                r="40"
-                                stroke="#f20553"
-                                fill="none"
-                                ref={pathRef}
-                            />
-                        </svg>
-                    )}
-                </Spring>
-            ) : (
-                <svg>
-                    <circle
-                        strokeWidth="3"
-                        cx="100"
-                        cy="50"
-                        r="40"
-                        stroke="none"
-                        fill="none"
-                        ref={pathRef}
-                    />
-                </svg>
-            )}
-        </div>
+        <svg
+            height={radius * 2}
+            width={radius * 2}
+            style={{
+                transition: 'stroke-dashoffset 0.35s',
+                transform: 'rotate(-90deg)',
+                transformOrigin: '50% 50%'
+            }}
+        >
+            <circle
+                stroke="red"
+                fill="transparent"
+                strokeWidth={stroke}
+                strokeDasharray={`${circumference} ${circumference}`}
+                style={{ strokeDashoffset }}
+                r={normalizedRadius}
+                cx={radius}
+                cy={radius}
+            />
+        </svg>
     );
 };
 
-export default Animation;
+const Loader: FC = () => {
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        // emulating progress
+        const interval = setInterval(() => {
+            setProgress((prevProgress) => {
+                const newProgress = prevProgress + 10;
+                if (newProgress === 100) {
+                    clearInterval(interval);
+                }
+                return newProgress;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval); // Clear interval on unmount
+    }, []);
+
+    return <ProgressRing radius={60} stroke={4} progress={progress} />;
+};
+
+export default Loader;
