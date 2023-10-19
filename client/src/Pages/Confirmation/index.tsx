@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-// import AvatarOptionsContext from './AvatarOptionsContext';
+import Loader from '../../Components/Animation';
 import FormComponent from '../../Components/FormComponent';
 import './index.scss';
 
@@ -7,7 +7,7 @@ function Confirmation() {
     const [path, setPath] = useState('');
     const [isUploaded, setqIsUploaded] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
-        null    
+        null
     );
     const [isImageLoading, setIsImageLoading] = useState(!!path);
     const inputRef2 = useRef<HTMLInputElement | null>(null);
@@ -24,15 +24,15 @@ function Confirmation() {
             reader.onloadend = () => {
                 setPath(reader.result as string);
                 setqIsUploaded(true);
-                setIsImageLoading(true);  // Set loading to true when a new image is uploaded
+                setIsImageLoading(true); // Set loading to true when a new image is uploaded
             };
             reader.readAsDataURL(file);
         }
-    }
+    };
 
     useEffect(() => {
         if (isImageLoading) {
-            console.log("loaded");
+            console.log('loaded');
             // Your logic to update the Loader progress based on image loading, if needed
         }
     }, [isImageLoading]);
@@ -65,20 +65,22 @@ function Confirmation() {
                         <div className="avatar">
                             <label
                                 htmlFor="file-upload"
-                                className={`uploader ${
+                                className={`uploader  ${
                                     isUploaded ? 'has-image' : ''
                                 }`}
                             >
+                                <Loader width={50} />
+
                                 {path ? (
                                     <img
                                         src={path}
                                         loading="lazy"
                                         alt="Avatar"
-                                        className="image"
+                                        className="image child"
                                     />
                                 ) : (
                                     <input
-                                        className="placeholder"
+                                        className="placeholder child"
                                         id="file-upload"
                                         type="file"
                                         onChange={handleFileChange}
@@ -172,5 +174,3 @@ function Confirmation() {
 }
 
 export default Confirmation;
-
-

@@ -11,6 +11,9 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
     const circumference = normalizedRadius * 2 * Math.PI;
     const strokeDashoffset = circumference - (progress / 100) * circumference;
 
+
+    console.log("log : ", strokeDashoffset);
+
     return (
         <svg
             height={radius * 2}
@@ -26,7 +29,8 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
                 fill="transparent"
                 strokeWidth={stroke}
                 strokeDasharray={`${circumference} ${circumference}`}
-                style={{ strokeDashoffset }}
+                style={{ strokeDashoffset, transition: '.3s' }}
+                //r={60}
                 r={normalizedRadius}
                 cx={radius}
                 cy={radius}
@@ -35,7 +39,7 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
     );
 };
 
-const Loader: FC = () => {
+const Loader: FC<{width:number}> = ({width}) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
