@@ -1,13 +1,15 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // import AvatarOptionsContext from './AvatarOptionsContext';
 import FormComponent from '../../Components/FormComponent';
 import './index.scss';
 
 function Confirmation() {
     const [path, setPath] = useState('');
+    const [isUploaded, setqIsUploaded] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
-        null
+        null    
     );
+    const [isImageLoading, setIsImageLoading] = useState(!!path);
     const inputRef2 = useRef<HTMLInputElement | null>(null);
     const inputRef1 = useRef<HTMLInputElement | null>(null);
     const onSubmit = async () => {
@@ -17,10 +19,23 @@ function Confirmation() {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const fileURL = URL.createObjectURL(file);
-            setPath(fileURL);
+            const reader = new FileReader();
+
+            reader.onloadend = () => {
+                setPath(reader.result as string);
+                setqIsUploaded(true);
+                setIsImageLoading(true);  // Set loading to true when a new image is uploaded
+            };
+            reader.readAsDataURL(file);
         }
-    };
+    }
+
+    useEffect(() => {
+        if (isImageLoading) {
+            console.log("loaded");
+            // Your logic to update the Loader progress based on image loading, if needed
+        }
+    }, [isImageLoading]);
 
     const avatarData = [
         {
@@ -48,10 +63,16 @@ function Confirmation() {
                 <div className="avatar-container">
                     <div className="section1">
                         <div className="avatar">
-                            <label htmlFor="file-upload" className="uploader">
+                            <label
+                                htmlFor="file-upload"
+                                className={`uploader ${
+                                    isUploaded ? 'has-image' : ''
+                                }`}
+                            >
                                 {path ? (
                                     <img
                                         src={path}
+                                        loading="lazy"
                                         alt="Avatar"
                                         className="image"
                                     />
@@ -65,9 +86,18 @@ function Confirmation() {
                                     />
                                 )}
                             </label>
-                            <span className="cancel">
-                                <a className='trash-icon'></a>
-                            </span>
+                            {isUploaded ? (
+                                <span
+                                    className="cancel-avatar"
+                                    onClick={() => {
+                                        setSelectedItemIndex(null);
+                                        setqIsUploaded(false);
+                                        setPath('');
+                                    }}
+                                >
+                                    <a className="trash-icon"></a>
+                                </span>
+                            ) : null}
                         </div>
                         <span className="text">
                             Max size: 4MB
@@ -88,8 +118,6 @@ function Confirmation() {
                                 ref={inputRef2}
                             />
                         </label>
-
-                        {/* Choose image */}
                         <div className="avatar-select">
                             <span className="text">
                                 Or choose one of our defaults
@@ -104,6 +132,7 @@ function Confirmation() {
                                         }`}
                                         key={index}
                                         onClick={() => {
+                                            setqIsUploaded(true);
                                             setPath(avatar.src);
                                             setSelectedItemIndex(index);
                                         }}
@@ -143,3 +172,5 @@ function Confirmation() {
 }
 
 export default Confirmation;
+
+

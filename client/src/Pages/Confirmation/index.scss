@@ -37,20 +37,35 @@
                 background: url(#{$ImgPlaceHolder}) 50% / cover no-repeat;
                 background-size: 1.625rem;
                 padding: 0.15rem;
-
+                transition: 0s border;
                 &:hover {
                     border: 2px dashed $primary-pink;
+                    transition-delay: 0.3s;
+                }
+                .image,
+                .placeholder {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+                .placeholder {
+                    opacity: 0; /* hides the input while keeping it functional */
                 }
             }
-            .cancel {
+            .has-image {
+                border: none;
+                &:hover{
+                    border: none;
+                }
+            }
+            .cancel-avatar {
                 position: absolute;
                 z-index: 1;
                 bottom: -33%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 display: flex;
-                // width: 1.875rem;
-                // height: 1.875rem;
                 border: 2px solid rgba(113, 199, 216, 0.8);
                 padding: 0.5rem;
                 justify-content: center;
@@ -64,17 +79,6 @@
                     flex-shrink: 0;
                     background: url($TrashIcon) 50% / cover no-repeat;
                 }
-            }
-            .image,
-            .placeholder {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-            .placeholder {
-                opacity: 0; /* hides the input while keeping it functional */
             }
         }
 
@@ -231,3 +235,19 @@
 //     background: #ff4747;
 //     // background: url(#{$ImgPlaceHolder}) 50% / cover no-repeat;
 // }
+
+
+
+// Responsive Images:
+// You can use the srcSet and sizes attributes in React to create responsive images:
+
+// jsx
+
+// <img srcSet="image-320w.jpg 320w,
+//              image-480w.jpg 480w,
+//              image-800w.jpg 800w"
+//      sizes="(max-width: 320px) 280px,
+//             (max-width: 480px) 440px,
+//             800px"
+//      src="image.jpg"
+//      alt="Description" />
