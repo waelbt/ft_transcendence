@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import Loader from '../../Components/Animation';
 import FormComponent from '../../Components/FormComponent';
 import './index.scss';
+import progress, { FetchProgressData } from 'fetch-progress';
+
 
 function Confirmation() {
     const [path, setPath] = useState('');
@@ -9,14 +11,17 @@ function Confirmation() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
         null
     );
-    const [isImageLoading, setIsImageLoading] = useState(!!path);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [loadPercentage, setLoadPercentage] = useState<number>(0);
     const inputRef2 = useRef<HTMLInputElement | null>(null);
     const inputRef1 = useRef<HTMLInputElement | null>(null);
+    const AvatarRef = useRef<HTMLDivElement | null>(null);
     const onSubmit = async () => {
         console.log('define later');
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setqIsUploaded(false);
         const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -24,36 +29,60 @@ function Confirmation() {
             reader.onloadend = () => {
                 setPath(reader.result as string);
                 setqIsUploaded(true);
-                setIsImageLoading(true); // Set loading to true when a new image is uploaded
+                // setIsImageLoading(true); // Set loading to true when a new image is uploaded
             };
             reader.readAsDataURL(file);
         }
     };
 
     useEffect(() => {
-        if (isImageLoading) {
-            console.log('loaded');
-            // Your logic to update the Loader progress based on image loading, if needed
-        }
-    }, [isImageLoading]);
+        const controller = new AbortController();
+        const signal = controller.signal;
 
+        fetch(path, { signal })
+            .then(
+               progress({
+                    onProgress: (progressData: FetchProgressData) => {
+                        const percentage =
+                            (progressData.transferred / progressData.total) * 100;
+                        console.log(`${loadPercentage.toFixed(2)}}%`);
+                        setLoadPercentage(percentage);
+                    }
+                })
+            )
+            .then((response) => response.blob())
+            .then((blob) => {
+                setLoading(false);
+                const objectURL = URL.createObjectURL(blob);
+                if (AvatarRef && AvatarRef.current)
+                    AvatarRef.current.style.background = `url(${objectURL}) 50% / cover no-repeat`;
+            })
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Fetch error:', error);
+                }
+            });
+
+        return () => controller.abort(); // Abort fetch on component unmount
+    }, [[path]]);
     const avatarData = [
         {
-            src: 'https://cdn.intra.42.fr/users/b8020f118bb6ae2ddbe38dee79a28de6/messaada.jpeg'
+            src: '../public/background_image.svg'
         },
         {
-            src: 'https://cdn.intra.42.fr/users/16f57cd33893f2096bae128c18a051c1/lchokri.jpg'
+            src: '../public/background_image.svg'
         },
         {
-            src: 'https://cdn.intra.42.fr/users/65d4ab347afbc68c28f17ad22405d2e8/ibouchaf.JPG'
+            src: '../public/background_image.svg'
         },
         {
-            src: 'https://cdn.intra.42.fr/users/3fe187b98b948c31ae17b534ea656927/omanar.jpg'
+            src: '../public/background_image.svg'
         }
     ];
 
     return (
-        // <AvatarOptionsContext.Provider value={{ path, setPath }}>
         <div className="card">
             <div className="header">
                 <div className="text">One step ahead</div>
@@ -62,31 +91,27 @@ function Confirmation() {
                 <div className="header">Choose a profile picture</div>
                 <div className="avatar-container">
                     <div className="section1">
-                        <div className="avatar">
+                        <div className="animation child">
+                            <Loader
+                                controller={
+                                    isUploaded && selectedItemIndex == null
+                                }
+                            />
+                        </div>
+                        <div className="avatar child" ref={AvatarRef}>
                             <label
                                 htmlFor="file-upload"
                                 className={`uploader  ${
                                     isUploaded ? 'has-image' : ''
                                 }`}
                             >
-                                <Loader width={50} />
-
-                                {path ? (
-                                    <img
-                                        src={path}
-                                        loading="lazy"
-                                        alt="Avatar"
-                                        className="image child"
-                                    />
-                                ) : (
-                                    <input
-                                        className="placeholder child"
-                                        id="file-upload"
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        ref={inputRef1}
-                                    />
-                                )}
+                                <input
+                                    className="placeholder child"
+                                    id="file-upload"
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    ref={inputRef1}
+                                />
                             </label>
                             {isUploaded ? (
                                 <span
@@ -169,7 +194,6 @@ function Confirmation() {
                 </button>
             </div>
         </div>
-        // </AvatarOptionsContext.Provider>
     );
 }
 

@@ -1,3 +1,5 @@
 class name l toast
-check why i should useref in the avatar case 
 test the avatar compo with eye png
+list item doesn't trigger the animation event
+understand the animation logic
+check if i need to use usecallback in the components that i already implemented 

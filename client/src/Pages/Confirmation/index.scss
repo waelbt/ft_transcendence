@@ -25,11 +25,16 @@
         gap: 1rem;
         .child {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+        }
+        .animation {
+            position: absolute;
+            top: -13px;
+            left: -13px;
         }
         .avatar {
+            border-radius: 50%;
             position: relative;
             .uploader {
                 width: 100px;
@@ -40,16 +45,15 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                overflow: hidden;
                 background: url(#{$ImgPlaceHolder}) 50% / cover no-repeat;
+                overflow: hidden;
                 background-size: 1.625rem;
                 padding: 0.15rem;
                 transition: 0s border;
                 &:hover {
-                    border: 2px dashed $primary-pink;
+                    border-color: $primary-pink;
                     transition-delay: 0.3s;
                 }
-                .image,
                 .placeholder {
                     width: 80%;
                     height: 80%;
@@ -62,9 +66,7 @@
             }
             .has-image {
                 border: none;
-                &:hover {
-                    border: none;
-                }
+                background: none;
             }
             .cancel-avatar {
                 position: absolute;
@@ -79,7 +81,7 @@
                 align-items: center;
                 gap: 0.625rem;
                 border-radius: 3.125rem;
-                background: #ff4747;
+                background: #ff0000;
                 .trash-icon {
                     width: 1.125rem;
                     height: 1.125rem;

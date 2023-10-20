@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from 'react';
+import { useRef, useState, useEffect, useCallback, FC } from 'react';
 
 interface ProgressRingProps {
     radius: number;
@@ -11,8 +11,6 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
     const circumference = normalizedRadius * 2 * Math.PI;
     const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-
-    console.log("log : ", strokeDashoffset);
 
     return (
         <svg
@@ -29,7 +27,7 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
                 fill="transparent"
                 strokeWidth={stroke}
                 strokeDasharray={`${circumference} ${circumference}`}
-                style={{ strokeDashoffset, transition: '.3s' }}
+                style={{ strokeDashoffset, transition: '.1s' }}
                 //r={60}
                 r={normalizedRadius}
                 cx={radius}
@@ -39,25 +37,41 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
     );
 };
 
-const Loader: FC<{width:number}> = ({width}) => {
+const Loader: FC<{ controller: boolean }> = ({ controller }) => {
     const [progress, setProgress] = useState(0);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        // emulating progress
-        const interval = setInterval(() => {
-            setProgress((prevProgress) => {
-                const newProgress = prevProgress + 10;
-                if (newProgress === 100) {
-                    clearInterval(interval);
-                }
-                return newProgress;
-            });
-        }, 1000);
-
-        return () => clearInterval(interval); // Clear interval on unmount
+    const reset = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current); // clear the interval
+            intervalRef.current = null; // reset the interval ref
+        }
+        setProgress(0); // reset progress to 0
     }, []);
 
-    return <ProgressRing radius={60} stroke={4} progress={progress} />;
+    useEffect(() => {
+        if (controller) {
+            reset();
+            intervalRef.current = setInterval(() => {
+                setProgress((prevProgress) => {
+                    const newProgress = prevProgress + 10;
+                    if (newProgress === 100) {
+                        clearInterval(intervalRef.current as NodeJS.Timeout); // clear the interval when progress reaches 100
+                    }
+                    return newProgress;
+                });
+            }, 1000);
+
+            return () => {
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current); // clear the interval on unmount
+                }
+            };
+        } else
+            reset();
+    }, [controller , reset]);
+
+    return <ProgressRing radius={66} stroke={4} progress={progress} />;
 };
 
 export default Loader;

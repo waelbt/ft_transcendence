@@ -12,66 +12,51 @@ function Avatar(props: AvatarProps) {
 
 export default Avatar;
 
-
 // import React, { useState, useEffect, FC } from 'react';
-// import Loader from './Loader';  // Import the Loader component from its file
+// import progress from 'fetch-progress';
 
-// const Avatar: FC = () => {
-//     const [isUploaded, setIsUploaded] = useState(false);
-//     const [path, setPath] = useState('');
-//     const [isImageLoading, setIsImageLoading] = useState(!!path);
+// interface AvatarProps {
+//   imageUrl: string;
+// }
 
-//     const handleImageLoad = () => {
-//         setIsImageLoading(false);
-//     };
+// const Avatar: FC<AvatarProps> = ({ imageUrl }) => {
+//   const [loading, setLoading] = useState<boolean>(true);
+//   const [loadPercentage, setLoadPercentage] = useState<number>(0);
 
-//     const handleFileChange = (event) => {
-//         const file = event.target.files[0];
-//         if (file) {
-//             const reader = new FileReader();
-//             reader.onloadend = () => {
-//                 setPath(reader.result as string);
-//                 setIsUploaded(true);
-//                 setIsImageLoading(true);  // Set loading to true when a new image is uploaded
-//             };
-//             reader.readAsDataURL(file);
+//   useEffect(() => {
+//     const controller = new AbortController();
+//     const signal = controller.signal;
+
+//     fetch(imageUrl, { signal })
+//       .then(progress({
+//         onProgress: (progressEvent) => {
+//           const percentage = (progressEvent.loaded / progressEvent.total) * 100;
+//           setLoadPercentage(percentage);
+//         },
+//       }))
+//       .then(response => response.blob())
+//       .then(blob => {
+//         setLoading(false);
+//         const objectURL = URL.createObjectURL(blob);
+//         document.getElementById('avatar-image')?.src = objectURL;  // Using optional chaining in case the element is not found
+//       })
+//       .catch(error => {
+//         if (error.name === 'AbortError') {
+//           console.log('Fetch aborted');
+//         } else {
+//           console.error('Fetch error:', error);
 //         }
-//     };
+//       });
 
-//     useEffect(() => {
-//         if (isImageLoading) {
-//             // Your logic to update the Loader progress based on image loading, if needed
-//         }
-//     }, [isImageLoading]);
+//     return () => controller.abort();  // Abort fetch on component unmount
+//   }, [imageUrl]);
 
-//     return (
-//         <div className="avatar">
-//             <label
-//                 htmlFor="file-upload"
-//                 className={`uploader ${isUploaded ? 'has-image' : ''}`}
-//             >
-//                 {path ? (
-//                     <>
-//                         <img
-//                             src={path}
-//                             loading="lazy"
-//                             alt="Avatar"
-//                             className="image"
-//                             onLoad={handleImageLoad}  // Attach the load event handler
-//                         />
-//                         {isImageLoading && <Loader />}  // Conditionally render the Loader
-//                     </>
-//                 ) : (
-//                     <input
-//                         className="placeholder"
-//                         id="file-upload"
-//                         type="file"
-//                         onChange={handleFileChange}
-//                     />
-//                 )}
-//             </label>
-//         </div>
-//     );
+//   return (
+//     <div>
+//       {loading && <div>Loading: {loadPercentage.toFixed(2)}%</div>}
+//       <img id="avatar-image" alt="avatar" />
+//     </div>
+//   );
 // };
 
 // export default Avatar;
