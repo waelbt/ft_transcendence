@@ -6,6 +6,7 @@ import { PrismaOrmModule } from 'src/prisma-orm/prisma-orm.module';
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
-  imports: [PrismaOrmModule]
+  imports: [PrismaOrmModule],
+  exports: [UsersService]
 })
 export class UsersModule {}
