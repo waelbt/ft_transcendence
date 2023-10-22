@@ -1,16 +1,15 @@
-import FormComponent from '../../Components/FormComponent';
+import FormComponent from '../../components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
-import { api as axios } from '../../Api/';
+import { api as axios } from '../../api';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
 };
 
-export const RegisterForm = (props: RegisterFormProps) => {
+export const LoginForm = (props: RegisterFormProps) => {
     const onSubmit = async (data: FieldValues) => {
-        const { confirmPassword, ...newData } = data;
         try {
-            const response = await axios.post('/auth/signup/', newData);
+            const response = await axios.post('/auth/signin/', data);
             console.log(response.status);
         } catch (error) {
             console.error(error);
@@ -18,15 +17,6 @@ export const RegisterForm = (props: RegisterFormProps) => {
     };
 
     const fields = [
-        {
-            label: 'Full name',
-            type: 'text',
-            placeholder: 'Wael boutzougarte',
-            name: 'fullName',
-            validation: {
-                required: 'Full name is required'
-            }
-        },
         {
             label: 'Email',
             type: 'text',
@@ -56,15 +46,6 @@ export const RegisterForm = (props: RegisterFormProps) => {
                 }
             },
             secure: true
-        },
-        {
-            label: 'Confirm Password',
-            type: 'password',
-            name: 'confirmPassword',
-            validation: {
-                required: 'Confirm password is required'
-            },
-            secure: true
         }
     ];
 
@@ -73,17 +54,15 @@ export const RegisterForm = (props: RegisterFormProps) => {
             <FormComponent
                 fields={fields}
                 onSubmit={onSubmit}
-                btn={
-                    {
-                        style: '',
-                        type: 'submit',
-                        text: 'Sign up'
-                    }
-                }
+                btn={{
+                    style: '',
+                    type: 'submit',
+                    text: 'Log in'
+                }}
             />
             <div
                 className="form-label"
-                onClick={() => props.onFormSwitch('login')}
+                onClick={() => props.onFormSwitch('register')}
             >
                 Don't have an account?{' '}
                 <span className="form-link">Register here</span>

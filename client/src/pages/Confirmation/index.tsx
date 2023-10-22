@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import Loader from '../../Components/Animation';
-import FormComponent from '../../Components/FormComponent';
+import Loader from '../../components/Animation';
+import FormComponent from '../../components/FormComponent';
 import './index.scss';
 import progress, { FetchProgressData } from 'fetch-progress';
-
 
 function Confirmation() {
     const [path, setPath] = useState('');
@@ -41,10 +40,11 @@ function Confirmation() {
 
         fetch(path, { signal })
             .then(
-               progress({
+                progress({
                     onProgress: (progressData: FetchProgressData) => {
                         const percentage =
-                            (progressData.transferred / progressData.total) * 100;
+                            (progressData.transferred / progressData.total) *
+                            100;
                         console.log(`${loadPercentage.toFixed(2)}}%`);
                         setLoadPercentage(percentage);
                     }
