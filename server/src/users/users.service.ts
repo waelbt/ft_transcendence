@@ -19,6 +19,7 @@ export class UsersService {
   }
 
   findOneUser(id: number) {
+    console.log(`this is the ${id}`);
     return (this.prisma.user.findUnique({
       where: { id },
     }));

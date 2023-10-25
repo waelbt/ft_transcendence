@@ -14,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
 import { UsersModule } from './users/users.module';
+import { ChatGateway } from './chat/chat.gateway';
 
 @Module({
   imports: [
@@ -22,5 +23,6 @@ import { UsersModule } from './users/users.module';
     PrismaOrmModule,
     UsersModule,
   ],
+  providers: [ChatGateway],
 })
 export class AppModule {}
