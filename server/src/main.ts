@@ -6,19 +6,7 @@ import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-cl
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-<<<<<<< HEAD
-  const app = await NestFactory.create(AppModule, { cors: { origin: '*', } });
-   const corsOptions = {
-    origin: ['*'],
-    // [
-    //   'http://localhost:4000',
-    //   'http://localhost:8000',
-    //  ],
-    credentials: true,
-  };
-=======
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors: {origin: '*',}});
->>>>>>> back-end
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
   }) );

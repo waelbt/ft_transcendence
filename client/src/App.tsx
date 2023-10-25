@@ -1,61 +1,62 @@
-import { create } from 'zustand';
+import AllRoutes from './Routes';
+import { Toaster } from 'react-hot-toast';
 
-interface countProbs {
-    count: number;
-    inc: (event: React.MouseEvent<HTMLElement>) => void;
-}
-
-const useStore = create<countProbs>((set) => ({
-    count: 1,
-    inc: (e) => {
-        console.log(e);
-        set((state) => 
-        {
-            console.log(state);
-            return {
-                count: (state.count + 1)
-            }
-        });
-    }
-}));
-
-function Counter() {
-    const { count, inc } = useStore();
+function App() {
     return (
-        <div className="counter">
-            <span>{count}</span>
-            <button onClick={inc}>one up</button>
-        </div>
+        <>
+            <AllRoutes />
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                toastOptions={{
+                    duration: 3000
+                }}
+            />
+        </>
     );
 }
 
-export default function App() {
-    return (
-        <div className="code">
-            <div className="code-container">
-                {/* <PrismCode className="language-jsx" children={code} /> */}
-                <Counter />
-            </div>
-        </div>
-    );
-}
+export default App;
 
-// import AllRoutes from './Routes';
-// import { Toaster } from 'react-hot-toast';
+// import { create } from 'zustand';
 
-// function App() {
+// interface countProbs {
+//     count: number;
+//     inc: (event: React.MouseEvent<HTMLElement>) => void;
+// }
+
+// const useStore = create<countProbs>((set) => ({
+//     count: 1,
+//     inc: (e) => {
+//         console.log(e);
+//         set((state) => 
+//         {
+//             console.log(state);
+//             return {
+//                 count: (state.count + 1)
+//             }
+//         });
+//     }
+// }));
+
+// function Counter() {
+//     const { count, inc } = useStore();
 //     return (
-//         <>
-//             <AllRoutes />
-//             <Toaster
-//                 position="top-center"
-//                 reverseOrder={false}
-//                 toastOptions={{
-//                     duration: 3000
-//                 }}
-//             />
-//         </>
+//         <div className="counter">
+//             <span>{count}</span>
+//             <button onClick={inc}>one up</button>
+//         </div>
 //     );
 // }
 
-// export default App;
+// export default function App() {
+//     return (
+//         <div className="code">
+//             <div className="code-container">
+//                 {/* <PrismCode className="language-jsx" children={code} /> */}
+//                 <Counter />
+//             </div>
+//         </div>
+//     );
+// }
+
