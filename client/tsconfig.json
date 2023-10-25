@@ -20,6 +20,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "deprecated/registration", "deprecated/AvatarOptionsContext.tsx"],
+    "include": ["src/**/*", "types/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

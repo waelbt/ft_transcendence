@@ -15,3 +15,8 @@ NOTE TEAM:
     -  docker compose -f docker-compose.dev.yml  up 
     - if a docker error accured related to volumes go to -> docker desktop -> setting -> Resources -> FILE SHARING and add /goinfre/${USER}/ft_transcendence/server && /goinfre/${USER}/ft_transcendence/client 
     - good luck and wait the server container to get ready 
+
+
+
+
+    https://nextui.org/docs/components/avatar
