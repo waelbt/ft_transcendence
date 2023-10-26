@@ -37,7 +37,7 @@ const ProgressRing: FC<ProgressRingProps> = ({ radius, stroke, progress }) => {
     );
 };
 
-const Loader: FC<{ controller: boolean }> = ({ controller }) => {
+const ProgressRingLoader: FC<{ controller: boolean }> = ({ controller }) => {
     const [progress, setProgress] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -74,4 +74,4 @@ const Loader: FC<{ controller: boolean }> = ({ controller }) => {
     return <ProgressRing radius={66} stroke={4} progress={progress} />;
 };
 
-export default Loader;
+export default ProgressRingLoader;

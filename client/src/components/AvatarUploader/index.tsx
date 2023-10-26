@@ -1,7 +1,7 @@
 import './index.scss';
 
-import { useEffect, FC, useRef, useState } from 'react';
-import progress, { FetchProgressData } from 'fetch-progress';
+import React, { useEffect, FC, useRef } from 'react';
+// import progress, { FetchProgressData } from 'fetch-progress';
 
 // import progress from 'fetch-progress';
 
@@ -14,7 +14,7 @@ interface AvatarProps {
 const AvatarUploader: FC<AvatarProps> = ({ imageUrl, onchange, reset }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     // const [loading, setLoading] = useState<boolean>(true);
-    const [loadPercentage, setLoadPercentage] = useState<number>(0);
+    // const [_, setLoadPercentage] = useState<number>(0);
 
     // Call the function to upload the image
 
@@ -27,28 +27,28 @@ const AvatarUploader: FC<AvatarProps> = ({ imageUrl, onchange, reset }) => {
                 ? `url(${imageUrl}) 50% / cover no-repeat`
                 : '';
         }
-        if (imageUrl) {
-            let currentPercentage = 0;
+        // if (imageUrl) {
+        //     let currentPercentage = 0;
         
-            // Function to simulate progress every 100ms
-            const interval = setInterval(() => {
-                currentPercentage += 10; // Increment percentage by 10%
-                setLoadPercentage(currentPercentage);
-                console.log(`${currentPercentage.toFixed(2)}%`);
+        //     // Function to simulate progress every 100ms
+        //     const interval = setInterval(() => {
+        //         currentPercentage += 10; // Increment percentage by 10%
+        //         setLoadPercentage(currentPercentage);
+        //         console.log(`${currentPercentage.toFixed(2)}%`);
 
-                if (currentPercentage >= 100) {
-                    clearInterval(interval); // Stop the interval when 100% is reached
-                }
-            }, 100); // 100ms interval for a total of 1 second to reach 100%
+        //         if (currentPercentage >= 100) {
+        //             clearInterval(interval); // Stop the interval when 100% is reached
+        //         }
+        //     }, 100); // 100ms interval for a total of 1 second to reach 100%
 
-            return () => {clearInterval(interval)}; // Clear interval on component unmount
-        }
+        //     return () => {clearInterval(interval)}; // Clear interval on component unmount
+        // }
     }, [[imageUrl]]);
 
     return (
         <>
             {/* <div className="animation child">
-                <Loader controller={isUploaded && selectedItemIndex == null} />
+                <ProgressRingLoader controller={isUploaded && selectedItemIndex == null} />
             </div> */}
             <div className="avatar child" ref={containerRef}>
                 <label

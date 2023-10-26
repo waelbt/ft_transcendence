@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Loader from '../../components/Animation';
+import Loader from '../../components/ProgressRingLoader';
 import FormComponent from '../../components/FormComponent';
 import './index.scss';
 import progress, { FetchProgressData } from 'fetch-progress';

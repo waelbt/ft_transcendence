@@ -1,12 +1,34 @@
 import FormComponent from '../../components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
 import { api as axios } from '../../api';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosResponse, AxiosError } from 'axios';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
 };
 
+// type loginResponse = {
+//     response: AxiosResponse<FieldValues>;
+//     data: FieldValues;
+//     error: AxiosError;
+// };
+
 export const LoginForm = (props: RegisterFormProps) => {
+    // const mutation = useMutation<loginResponse, AxiosError, FieldValues>(
+    //     (data) => axios.post('/auth/signin/', data),
+    //     {
+    //         onSuccess: (data) => {
+    //             console.log('Login successful', data);
+    //         },
+    //         onError: (error) => {
+    //             console.error('Login failed', error);
+    //         }
+    //     }
+    // );
+
+    // ...res\
+
     const onSubmit = async (data: FieldValues) => {
         try {
             const response = await axios.post('/auth/signin/', data);

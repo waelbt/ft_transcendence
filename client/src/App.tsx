@@ -1,9 +1,24 @@
 import AllRoutes from './Routes';
 import { Toaster } from 'react-hot-toast';
+import {
+    QueryOptions,
+    QueryClient,
+    QueryClientProvider
+} from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+            cacheTime: Infinity
+        } as QueryOptions
+    }
+});
 
 function App() {
     return (
-        <>
+        // ask gpt later abt the provider oders
+        <QueryClientProvider client={queryClient}>
             <AllRoutes />
             <Toaster
                 position="top-center"
@@ -12,51 +27,10 @@ function App() {
                     duration: 3000
                 }}
             />
-        </>
+        </QueryClientProvider>
     );
 }
 
 export default App;
 
-// import { create } from 'zustand';
-
-// interface countProbs {
-//     count: number;
-//     inc: (event: React.MouseEvent<HTMLElement>) => void;
-// }
-
-// const useStore = create<countProbs>((set) => ({
-//     count: 1,
-//     inc: (e) => {
-//         console.log(e);
-//         set((state) => 
-//         {
-//             console.log(state);
-//             return {
-//                 count: (state.count + 1)
-//             }
-//         });
-//     }
-// }));
-
-// function Counter() {
-//     const { count, inc } = useStore();
-//     return (
-//         <div className="counter">
-//             <span>{count}</span>
-//             <button onClick={inc}>one up</button>
-//         </div>
-//     );
-// }
-
-// export default function App() {
-//     return (
-//         <div className="code">
-//             <div className="code-container">
-//                 {/* <PrismCode className="language-jsx" children={code} /> */}
-//                 <Counter />
-//             </div>
-//         </div>
-//     );
-// }
 
