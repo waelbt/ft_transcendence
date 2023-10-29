@@ -1,6 +1,8 @@
 import FormComponent from '../../components/FormComponent';
 import { useRegister, RegisterData } from '../../hooks/authHooks';
 import { type FieldValues } from 'react-hook-form';
+// import { SubmitHandler } from 'react-hook-form';
+
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
@@ -10,7 +12,10 @@ export const RegisterForm = (props: RegisterFormProps) => {
     const { mutate } = useRegister();
 
     const onSubmit = async (data: FieldValues) => {
-        const { confirmPassword, ...newData } = data;
+        const entries = Object.entries(data);
+        const newEntries = entries.slice(0, -1);
+        const newData = Object.fromEntries(newEntries);
+        console.log(data);
         console.log(newData);
         mutate(newData as RegisterData);
     };

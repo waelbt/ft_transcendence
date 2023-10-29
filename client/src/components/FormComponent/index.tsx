@@ -1,4 +1,4 @@
-import  { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import toast from 'react-hot-toast';
@@ -12,17 +12,18 @@ type FormProps = {
     errors?: any;
 };
 
-function FormComponent ({
+function FormComponent({
     fields,
     btn,
     onSubmit,
     defaultValues = {}
-} : FormProps) {
+}: FormProps) {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        getValues
+        getValues,
+        reset
     } = useForm({ defaultValues });
 
     useEffect(() => {
@@ -68,6 +69,6 @@ function FormComponent ({
             </button>
         </form>
     );
-};
+}
 
 export default FormComponent;
