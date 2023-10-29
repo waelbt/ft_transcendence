@@ -1,44 +1,30 @@
 import FormComponent from '../../components/FormComponent';
+import { useRegister, RegisterData } from '../../hooks/authHooks';
 import { type FieldValues } from 'react-hook-form';
-import { api as axios } from '../../api';
-import { useMutation } from '@tanstack/react-query';
-import { AxiosResponse, AxiosError } from 'axios';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
 };
 
-// type loginResponse = {
-//     response: AxiosResponse<FieldValues>;
-//     data: FieldValues;
-//     error: AxiosError;
-// };
-
-export const LoginForm = (props: RegisterFormProps) => {
-    // const mutation = useMutation<loginResponse, AxiosError, FieldValues>(
-    //     (data) => axios.post('/auth/signin/', data),
-    //     {
-    //         onSuccess: (data) => {
-    //             console.log('Login successful', data);   
-    //         },
-    //         onError: (error) => {
-    //             console.error('Login failed', error);
-    //         }
-    //     }
-    // );
-
-    // ...res\
+export const RegisterForm = (props: RegisterFormProps) => {
+    const { mutate } = useRegister();
 
     const onSubmit = async (data: FieldValues) => {
-        try {
-            const response = await axios.post('/auth/signin/', data);
-            console.log(response.status);
-        } catch (error) {
-            console.error(error);
-        }
+        const { confirmPassword, ...newData } = data;
+        console.log(newData);
+        mutate(newData as RegisterData);
     };
 
     const fields = [
+        {
+            label: 'Full name',
+            type: 'text',
+            placeholder: 'Wael boutzougarte',
+            name: 'fullName',
+            validation: {
+                required: 'Full name is required'
+            }
+        },
         {
             label: 'Email',
             type: 'text',
@@ -68,6 +54,15 @@ export const LoginForm = (props: RegisterFormProps) => {
                 }
             },
             secure: true
+        },
+        {
+            label: 'Confirm Password',
+            type: 'password',
+            name: 'confirmPassword',
+            validation: {
+                required: 'Confirm password is required'
+            },
+            secure: true
         }
     ];
 
@@ -79,12 +74,12 @@ export const LoginForm = (props: RegisterFormProps) => {
                 btn={{
                     style: '',
                     type: 'submit',
-                    text: 'Log in'
+                    text: 'Sign up'
                 }}
             />
             <div
                 className="form-label"
-                onClick={() => props.onFormSwitch('register')}
+                onClick={() => props.onFormSwitch('login')}
             >
                 Don't have an account?{' '}
                 <span className="form-link">Register here</span>

@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Registration from './pages/Registration';
-import Confirmation from './pages/Confirmation';
+import Registration from './pages/Auth';
+import Confirmation from './pages/ProfileCompletion';
 
 const router = createBrowserRouter([
     {

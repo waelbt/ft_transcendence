@@ -7,6 +7,7 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -18,6 +19,9 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+    useEffect(() => {
+        console.log(import.meta.env.VITE_BASE_URL);
+    }, [import.meta.env.VITE_APP_BASE_URL])
     return (
         // ask gpt later abt the provider oders
         <QueryClientProvider client={queryClient}>
