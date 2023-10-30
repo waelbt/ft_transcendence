@@ -10,10 +10,10 @@ const router = createBrowserRouter([
     {
         path: '/Confirm',
         element: <Confirmation />
-    }
+    },
     {
         path: '*',
-        element: <Confirmation />
+        element: <div>not found</div>
     }
 ]);
 
