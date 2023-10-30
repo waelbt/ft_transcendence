@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Auth from './pages/Auth';
-import Confirmation from './pages/ProfileCompletion';
+import ProfileCompletion from './pages/ProfileCompletion';
 
 const router = createBrowserRouter([
     {
@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/Confirm',
-        element: <Confirmation />
+        element: <ProfileCompletion />
     },
     {
         path: '*',

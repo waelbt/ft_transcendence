@@ -3,7 +3,7 @@ import FormComponent from '../../components/FormComponent';
 import AvatarUploader from '../../components/AvatarUploader';
 import './index.scss';
 
-function Confirmation() {
+function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [_, setqIsUploaded] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
@@ -125,4 +125,4 @@ function Confirmation() {
     );
 }
 
-export default Confirmation;
+export default ProfileCompletion;

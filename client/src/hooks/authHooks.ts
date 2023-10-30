@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { api as axios } from '../axios-utils';
+import {useNavigate } from 'react-router-dom'
 
 export interface RegisterData {
     fullName: string;
@@ -35,10 +36,11 @@ async function signIn(loginData: LoginData): Promise<UserData> {
 }
 
 export const useLogin = () => {
+    const navigate = useNavigate();
     return useMutation<UserData, Error, LoginData>({
         mutationFn: signIn,
         onSuccess: () => {
-            console.log('ok');
+            navigate('Confirm');
         }
     });
 };
