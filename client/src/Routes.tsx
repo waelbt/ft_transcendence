@@ -1,14 +1,18 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Registration from './pages/Auth';
+import Auth from './pages/Auth';
 import Confirmation from './pages/ProfileCompletion';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Registration />
+        element: <Auth />
     },
     {
         path: '/Confirm',
+        element: <Confirmation />
+    }
+    {
+        path: '*',
         element: <Confirmation />
     }
 ]);
