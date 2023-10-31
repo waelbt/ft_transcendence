@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import FormComponent from '../../components/FormComponent';
 import { useRegister, RegisterData } from '../../hooks/authHooks';
 import { type FieldValues } from 'react-hook-form';
@@ -7,7 +8,7 @@ type RegisterFormProps = {
 };
 
 export const RegisterForm = (props: RegisterFormProps) => {
-    const { mutate } = useRegister();
+    const { mutate, isSuccess } = useRegister();
 
     const onSubmit = async (data: FieldValues) => {
         const entries = Object.entries(data);
@@ -15,6 +16,12 @@ export const RegisterForm = (props: RegisterFormProps) => {
         const newData = Object.fromEntries(newEntries);
         mutate(newData as RegisterData);
     };
+
+    useEffect(() => {
+        if (isSuccess)
+            props.onFormSwitch('login')
+    }, [isSuccess]) 
+
 
     const fields = [
         {

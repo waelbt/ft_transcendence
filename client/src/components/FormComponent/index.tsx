@@ -23,7 +23,7 @@ function FormComponent({
         handleSubmit,
         formState: { errors, isSubmitting },
         getValues,
-        reset
+
     } = useForm({ defaultValues });
 
     useEffect(() => {
