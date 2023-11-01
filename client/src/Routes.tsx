@@ -1,36 +1,51 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Auth from './pages/Auth';
-import ProfileCompletion from './pages/ProfileCompletion';
+import { ProtectRoutes } from './hooks/ProtectRoutes';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Auth />
+        lazy: async () => {
+            let { Auth } = await import('./pages/Auth');
+            return { Component: Auth };
+        },
+    },
+    {
+        path: '/ProfileCompletion',
+        lazy: async () => {
+            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            return { Component: ProfileCompletion };
+        },
     },
     {
         path: '/',
-        children: [
+        // lazy: async () => {
+        //     let { ProfileCompletion } = await import('./pages/Layouts');
+        //     return { Component: ProfileCompletion };
+        // },
+        children: [ // lazy
             {
-                path: '/Confirm',
-                element: <ProfileCompletion />
+                path: 'lobby',
+                element: <div>lobby</div>
             },
             {
-                path: '/Home',
-                element: <div>div</div>
+                path: 'chat',
+                element: <div>chat</div>
+            },
+            {
+                path: 'game',
+                element: <div>game</div>
+            },
+            {
+                path: 'profile', // params 
+                element: <div>profile</div>
+            },
+            {
+                path: '*',
+                element: <div>not found</div>
             }
         ]
     },
-    {
-        path: '*',
-        element: <div>not found</div>
-    }
 ]);
-
-// path: "/",
-// lazy: async () => {
-//   let { Login } = await import("../Components/Login");
-//   return { Component: Login };
-// },
 
 export default function AllRoutes() {
     return <RouterProvider router={router} />;

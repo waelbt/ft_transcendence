@@ -3,7 +3,7 @@ import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
 import './index.scss';
 
-function Registration() {
+export function Auth() {
     const [currentForm, setCurrentForm] = useState('login');
 
     const toggleFormm = (formName: string) => {
@@ -49,4 +49,3 @@ function Registration() {
     );
 }
 
-export default Registration;

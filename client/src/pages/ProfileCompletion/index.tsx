@@ -3,7 +3,7 @@ import FormComponent from '../../components/FormComponent';
 import AvatarUploader from '../../components/AvatarUploader';
 import './index.scss';
 
-function ProfileCompletion() {
+export function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [upload, setUpload] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
@@ -127,5 +127,3 @@ function ProfileCompletion() {
         </div>
     );
 }
-
-export default ProfileCompletion;
