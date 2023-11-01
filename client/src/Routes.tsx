@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ProtectRoutes } from './hooks/ProtectRoutes';
 
 const router = createBrowserRouter([
     {
@@ -7,14 +6,16 @@ const router = createBrowserRouter([
         lazy: async () => {
             let { Auth } = await import('./pages/Auth');
             return { Component: Auth };
-        },
+        }
     },
     {
         path: '/ProfileCompletion',
         lazy: async () => {
-            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            let { ProfileCompletion } = await import(
+                './pages/ProfileCompletion'
+            ); // conditional rendring in home page
             return { Component: ProfileCompletion };
-        },
+        }
     },
     {
         path: '/',
@@ -22,29 +23,49 @@ const router = createBrowserRouter([
         //     let { ProfileCompletion } = await import('./pages/Layouts');
         //     return { Component: ProfileCompletion };
         // },
-        children: [ // lazy
+        children: [
+            // lazy
             {
-                path: 'lobby',
-                element: <div>lobby</div>
+                path: '/lobby',
+                lazy: async () => {
+                    let { Lobby } = await import('./pages/Lobby'); // conditional rendring in home page
+                    return { Component: Lobby };
+                }
             },
             {
-                path: 'chat',
-                element: <div>chat</div>
+                path: '/chat',
+                lazy: async () => {
+                    let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
+                    return { Component: Chat };
+                }
             },
             {
-                path: 'game',
-                element: <div>game</div>
+                path: '/game',
+                lazy: async () => {
+                    let { Game } = await import('./pages/Game'); // conditional rendring in home page
+                    return { Component: Game };
+                }
             },
             {
-                path: 'profile', // params 
-                element: <div>profile</div>
+                path: '/profile', // search before implement
+                lazy: async () => {
+                    let { Profile } = await import('./pages/Profile'); // conditional rendring in home page
+                    return { Component: Profile };
+                }
+            },
+            {
+                path: '/setting', // search before implement
+                lazy: async () => {
+                    let { Setting } = await import('./pages/Setting'); // conditional rendring in home page
+                    return { Component: Setting };
+                }
             },
             {
                 path: '*',
                 element: <div>not found</div>
             }
         ]
-    },
+    }
 ]);
 
 export default function AllRoutes() {
