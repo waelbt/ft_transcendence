@@ -5,7 +5,7 @@ import './index.scss';
 
 function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const [_, setqIsUploaded] = useState(false);
+    const [upload, setUpload] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
         null
     );
@@ -19,13 +19,15 @@ function ProfileCompletion() {
         if (file) {
             const objectURL = URL.createObjectURL(file);
             setImagePath(objectURL);
+            setUpload(true);
         }
     };
 
     const reset = () => {
-        setqIsUploaded(false);
+        setUpload(false);
         setImagePath(null);
     };
+
     const avatarData = [
         {
             src: '../public/background_image.svg'
@@ -52,6 +54,7 @@ function ProfileCompletion() {
                     <div className="section1">
                         <AvatarUploader
                             imageUrl={imagePath}
+                            upload={upload}
                             onchange={handleFileChange}
                             reset={reset}
                         />
@@ -87,7 +90,7 @@ function ProfileCompletion() {
                                         }`}
                                         key={index}
                                         onClick={() => {
-                                            setqIsUploaded(true);
+                                            setUpload(false);
                                             setImagePath(avatar.src);
                                             setSelectedItemIndex(index);
                                         }}

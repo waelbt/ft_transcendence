@@ -20,6 +20,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/**/*", "types/**/*"],
+    "include": ["src/**/*", "types/**/*", "deprecated/UploadHooks.ts"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

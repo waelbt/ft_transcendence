@@ -8,8 +8,17 @@ const router = createBrowserRouter([
         element: <Auth />
     },
     {
-        path: '/Confirm',
-        element: <ProfileCompletion />
+        path: '/',
+        children: [
+            {
+                path: '/Confirm',
+                element: <ProfileCompletion />
+            },
+            {
+                path: '/Home',
+                element: <div>div</div>
+            }
+        ]
     },
     {
         path: '*',
