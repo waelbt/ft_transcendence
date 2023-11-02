@@ -1,17 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 
+const textShadowPlugin = function ({ addUtilities }) {
+    const newUtilities = {
+        '.text-shadow-custom': {
+            textShadow:
+                '0rem 0rem 0rem #f4ebff, 0rem 0.0625rem 0.125rem rgba(16, 24, 40, 0.05)'
+        }
+    };
+    addUtilities(newUtilities, ['responsive', 'hover']);
+};
+
 module.exports = {
     content: ['./src/**/*.{js,jsx,ts,tsx}'],
     theme: {
         extend: {
             backgroundImage: {
-                'custom-image': "url('../background_image.svg')",
-                'custom-blue': 'rgba(113, 199, 216, 0.8)'
+                'custom-image': "url('../background_image.svg')"
             },
+            backgroundColor: { 'blue-opacity-80': 'rgba(113, 199, 216, 0.7)' },
             colors: {
                 pink: '#f20553',
-                'dark-pink': '#9a234b',
-                blue: '#304194',
+                darkPink: '#9a234b',
+                PrimaryBlue: '#304194',
                 yellow: '#ffec47'
             },
             fontFamily: {
@@ -33,5 +43,5 @@ module.exports = {
             }
         }
     },
-    plugins: []
+    plugins: [textShadowPlugin]
 };

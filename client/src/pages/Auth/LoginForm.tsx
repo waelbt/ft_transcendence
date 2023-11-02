@@ -58,11 +58,11 @@ export const LoginForm = (props: RegisterFormProps) => {
                 }}
             />
             <div
-                className="form-label"
+                className="text-white font-Acme text-base font-normal leading-normal"
                 onClick={() => props.onFormSwitch('register')}
             >
                 Don't have an account?{' '}
-                <span className="form-link">Register here</span>
+                <span className="text-pink hover:underline">Register here</span>
             </div>
         </>
     );

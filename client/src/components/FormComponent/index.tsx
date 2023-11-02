@@ -44,7 +44,7 @@ function FormComponent({
         }
     }, [errors, isSubmitting]);
     return (
-        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+        <form className="flex flex-col items-center space-y-3" onSubmit={handleSubmit(onSubmit)}>
             {fields.map((field, idx) => {
                 return (
                     <InputField
@@ -58,9 +58,10 @@ function FormComponent({
                 );
             })}
             <button
-                className={`form-btn ${btn.style} ${
-                    isSubmitting ? 'disabled-btn' : ''
-                }`}
+            // ${
+                // isSubmitting ? 'cursor-not-allowed bg-darkPink' : ''
+            // }`
+                className={`flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink`}
                 type={btn.type}
                 disabled={isSubmitting}
             >

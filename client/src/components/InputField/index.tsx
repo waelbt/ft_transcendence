@@ -19,11 +19,34 @@ function InputField({
     const [visible, setvisible] = useState(false);
 
     return (
-        <div className="form-label-input">
-            {label && <label className="form-label">{label}</label>}
-            <div className="pwd">
+        <div className="flex flex-col items-start space-y-1">
+            {label && (
+                <label
+                    className="text-white text-shadow font-Acme text-base font-normal"
+                    style={{ lineHeight: '1.25rem' }}
+                >
+                    {label}
+                </label>
+            )}
+            <div className="relative">
                 <input
-                    className="form-input"
+                    className="flex 
+                    py-2.5 pr-14 pl-2.5 
+                    justify-center 
+                    items-center 
+                    gap-2.5 
+                    rounded-lg 
+                    bg-white 
+                    text-PrimaryBlue 
+                    font-Acme 
+                    text-xl 
+                    font-normal 
+                    "
+                    style={{
+                        lineHeight: '1.5rem',
+                        border: '0.125rem solid #304194'
+                    }}
+                    // custom-width
                     type={visible ? 'text' : type}
                     placeholder={placeholder}
                     {...register}
