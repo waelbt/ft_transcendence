@@ -1,5 +1,5 @@
 import ProgressRingLoader from '../ProgressRingLoader';
-import './index.scss';
+// import './index.scss';
 
 import React, { useEffect, FC, useRef, useState } from 'react';
 

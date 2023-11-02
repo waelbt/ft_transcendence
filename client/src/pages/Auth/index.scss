@@ -1,19 +1,5 @@
-@import '../../constants/variables';
+// @import '../../constants/variables';
 
-body {
-    margin: 0;
-    padding: 0;
-    background:
-        url(#{$background-image}),
-        lightgray 50% / cover no-repeat;
-    backdrop-filter: blur(5px);
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Prevent background image from overflowing */
-}
 
 .card {
     display: inline-flex;

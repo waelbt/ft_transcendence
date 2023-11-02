@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.scss';
+// import './index.scss';
 
 type InputFieldProps = {
     label: string;
@@ -14,7 +14,8 @@ function InputField({
     type,
     placeholder,
     register,
-    secure} : InputFieldProps){
+    secure
+}: InputFieldProps) {
     const [visible, setvisible] = useState(false);
 
     return (
@@ -36,6 +37,6 @@ function InputField({
             </div>
         </div>
     );
-};
+}
 
 export default InputField;

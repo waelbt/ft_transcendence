@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import FormComponent from '../../components/FormComponent';
 import AvatarUploader from '../../components/AvatarUploader';
-import './index.scss';
+// import './index.scss';
+import '../Auth/index.scss';
 
 export function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);

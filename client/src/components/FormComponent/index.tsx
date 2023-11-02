@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import toast from 'react-hot-toast';
-import './index.scss';
+// import './index.scss';
 
 type FormProps = {
     fields: any[];
@@ -22,8 +22,7 @@ function FormComponent({
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        getValues,
-
+        getValues
     } = useForm({ defaultValues });
 
     useEffect(() => {
