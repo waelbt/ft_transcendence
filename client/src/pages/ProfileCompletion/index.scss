@@ -1,10 +1,10 @@
-@import '../../constants/variables';
+// @import '../../constants/variables';
 
 
 .header {
     color: var(--white-100, #fff);
     text-align: center;
-    font-family: $font-Acme;
+    // font-family: $font-Acme;
     font-size: 1.5rem;
     font-style: normal;
     font-weight: 400;
@@ -26,7 +26,7 @@
         gap: 1rem;
 
         .text {
-            font-family: $font-Acme;
+            // font-family: $font-Acme;
             font-size: 0.75rem;
             font-style: normal;
             font-weight: 400;
@@ -48,18 +48,18 @@
             justify-content: center;
             align-items: center;
             gap: 0.625rem;
-            border: 1px solid rgba($primary-blue, 0.4);
+            // border: 1px solid rgba($primary-blue, 0.4);
             border-radius: 3.4375rem;
             background: var(--white-100, #fff);
             color: var(--Primary-Text-Color, #304194);
             text-align: center;
-            font-family: $font-Acme;
+            // font-family: $font-Acme;
             font-size: 0.8rem;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
             &:hover {
-                border-color: $primary-blue;
+                // border-color: $primary-blue;
             }
         }
         .avatar-select {
@@ -105,9 +105,9 @@
 }
 
 .confirm-button {
-    background-color: $primary-pink !important;
+    // background-color: $primary-pink !important;
     &:hover {
-        background-color: $dark-pink !important;
+        // background-color: $dark-pink !important;
     }
 }
 
@@ -125,7 +125,7 @@
     background: none;
     color: #fff;
     text-align: center;
-    font-family: $font-Bomb-Sound;
+    // font-family: $font-Bomb-Sound;
     font-size: 2.25rem;
     font-style: normal;
     font-weight: 400;
@@ -136,7 +136,7 @@
     &:active {
         border: solid;
         background: white;
-        color: $primary-pink;
+        // color: $primary-pink;
     }
 }
 

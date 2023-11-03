@@ -50,9 +50,9 @@ export function Auth() {
                         </span>
                     </button>
                     {/* google button */}
-                    <button className="bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom">
+                    <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-PrimaryBlue">
                         <svg
-                            className="w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
+                            className="nested w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
                             xmlns="http://www.w3.org/2000/svg"
                             width="28"
                             height="27"
@@ -89,12 +89,13 @@ export function Auth() {
                                 />
                             </g>
                         </svg>
-                        <span className="text-[#3686f7] text-center font-inter text-sm font-semibold">
-                            G<span className="text-[#ff302f]">o</span>
-                            <span className="text-[#ffba40]">o</span>
-                            <span>g</span>
-                            <span className="text-[#20b15a]">l</span>
-                            <span className="text-[#ff302f]">e</span>
+                        <span className="nested text-[#3686f7] text-center font-inter text-sm font-semibol">
+                            <span className="nested text-[#3686f7]">G</span>
+                            <span className="nested text-[#ff302f]">o</span>
+                            <span className="nested text-[#ffba40]">o</span>
+                            <span className="nested">g</span>
+                            <span className="nested text-[#20b15a]">l</span>
+                            <span className="nested text-[#ff302f]">e</span>
                         </span>
                     </button>
                 </div>

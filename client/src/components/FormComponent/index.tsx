@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import toast from 'react-hot-toast';
-// import './index.scss';
+
 
 type FormProps = {
     fields: any[];

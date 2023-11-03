@@ -47,7 +47,7 @@ const AvatarUploader: FC<AvatarProps> = ({
 
     return (
         <>
-            <div className="animation child">
+            <div className="absolute top-0 left-0">
                 {upload ? (
                     <ProgressRingLoader
                         radius={66}
@@ -56,13 +56,21 @@ const AvatarUploader: FC<AvatarProps> = ({
                     />
                 ) : null}
             </div>
-            <div className="avatar child" ref={containerRef}>
+            <div
+                className="rounded-full absolute top-0 left-0"
+                ref={containerRef}
+            >
                 <label
                     htmlFor="file-upload"
-                    className={`uploader  ${imageUrl ? 'has-image' : ''}`}
+                    className={`w-25 h-25 rounded-full border-2 border-dashed border-white cursor-pointer flex items-center justify-center bg-cover bg-no-repeat bg-center overflow-hidden p-0.5 transition-border duration-0
+                     ${imageUrl ? 'border-0 bg-transparent' : ''}`}
+                    style={{
+                        // backgroundImage: 'url(../../assets/icons/ImageSquare.svg)',
+                        backgroundSize: '1.625rem'
+                    }}
                 >
                     <input
-                        className="placeholder child"
+                        className="w-[80%] h-[80%] object-cover rounded-full absolute top-0 left-0 hidden"
                         id="file-upload"
                         type="file"
                         onChange={onchange}

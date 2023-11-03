@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import FormComponent from '../../components/FormComponent';
 import AvatarUploader from '../../components/AvatarUploader';
-// import './index.scss';
-import '../Auth/index.scss';
+import './index.scss';
+// import '../Auth/index.scss';
 
 export function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);
@@ -45,26 +45,33 @@ export function ProfileCompletion() {
     ];
 
     return (
-        <div className="card">
-            <div className="header">
-                <div className="text">One step ahead</div>
+        <div className="inline-flex flex-col items-center gap-9">
+            <div className="text-center text-yellow text-6xl font-BombSound">
+                One step ahead
             </div>
-            <div className="card-container">
-                <div className="header">Choose a profile picture</div>
+            <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-80 shadow-custom">
+                <div
+                    className="text-white text-center font-Acme text-3xl font-normal"
+                    style={{ letterSpacing: '0.0675rem' }}
+                >
+                    Choose a profile picture
+                </div>
+                {/* <div className="flex w-[84%] items-center gap-8 text-white"> */}
                 <div className="avatar-container">
-                    <div className="section1">
+                    <div className="relative flex flex-col gap-4">
                         <AvatarUploader
                             imageUrl={imagePath}
                             upload={upload}
                             onchange={handleFileChange}
                             reset={reset}
                         />
-                        <span className="text">
+                        <span className="font-Acme text-sm font-normal tracking-tighter">
                             Max size: 4MB
                             <br />
                             Supported format: PNG, JPG
                         </span>
                     </div>
+                    {/* <div className="flex flex-col items-start gap-2"> */}
                     <div className="section2">
                         <label
                             htmlFor="inputTag"
@@ -72,6 +79,7 @@ export function ProfileCompletion() {
                         >
                             Choose image
                             <input
+                                className="hidden"
                                 id="inputTag"
                                 type="file"
                                 onChange={handleFileChange}
@@ -121,6 +129,8 @@ export function ProfileCompletion() {
                         text: 'Confim'
                     }}
                 />
+
+                {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
                 <button className="skip-button" type="submit">
                     Skip
                 </button>
