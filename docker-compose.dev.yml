@@ -13,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /goinfre/aaouni/ft_transcendence/client:/app
+      - ./client:/app
       - client-node-modules:/client/node_modules
     networks:
       - transcendence

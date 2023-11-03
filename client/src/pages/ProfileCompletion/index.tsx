@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import FormComponent from '../../components/FormComponent';
 import AvatarUploader from '../../components/AvatarUploader';
-import './index.scss';
-// import '../Auth/index.scss';
 
 export function ProfileCompletion() {
     const [imagePath, setImagePath] = useState<string | null>(null);
@@ -46,7 +44,7 @@ export function ProfileCompletion() {
 
     return (
         <div className="inline-flex flex-col items-center gap-9">
-            <div className="text-center text-yellow text-6xl font-BombSound">
+            {/* <div className="text-center text-yellow text-6xl font-BombSound">
                 One step ahead
             </div>
             <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-80 shadow-custom">
@@ -56,8 +54,7 @@ export function ProfileCompletion() {
                 >
                     Choose a profile picture
                 </div>
-                {/* <div className="flex w-[84%] items-center gap-8 text-white"> */}
-                <div className="avatar-container">
+                <div className="flex w-[84%] items-center gap-8 text-white">
                     <div className="relative flex flex-col gap-4">
                         <AvatarUploader
                             imageUrl={imagePath}
@@ -71,11 +68,10 @@ export function ProfileCompletion() {
                             Supported format: PNG, JPG
                         </span>
                     </div>
-                    {/* <div className="flex flex-col items-start gap-2"> */}
-                    <div className="section2">
+                    <div className="flex flex-col items-start gap-2">
                         <label
                             htmlFor="inputTag"
-                            className="avatar-uploader-btn"
+                            className="flex p-2.25 justify-center items-center gap-2.5 rounded-full bg-white text-primary-text-color text-center text-xs font-normal"
                         >
                             Choose image
                             <input
@@ -128,12 +124,12 @@ export function ProfileCompletion() {
                         type: 'submit',
                         text: 'Confim'
                     }}
-                />
+                /> */}
 
                 {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
-                <button className="skip-button" type="submit">
+                {/* <button className="skip-button" type="submit">
                     Skip
-                </button>
+                </button> */}
             </div>
         </div>
     );

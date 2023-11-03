@@ -22,7 +22,8 @@ module.exports = {
                 pink: '#f20553',
                 darkPink: '#9a234b',
                 PrimaryBlue: '#304194',
-                yellow: '#ffec47'
+                yellow: '#ffec47',
+                'primary-blue-40': 'rgba(var(--primary-blue), 0.4)'
             },
             fontFamily: {
                 BombSound: ['The Bomb Sound', 'sans-serif'],
