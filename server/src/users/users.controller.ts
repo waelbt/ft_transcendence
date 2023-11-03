@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path'
 
 @ApiTags('users')
 @Controller('users')
@@ -14,6 +17,32 @@ export class UsersController {
   @ApiCreatedResponse()
   createUser(@Body() createUserDto: CreateUserDto) {
     return (this.usersService.createUser(createUserDto));
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: '/home/sel-ouaf/ft_transcendence/server/uploads',
+
+      filename: (req, file, callback) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+
+        const nameWithoutExtension = file.originalname.split('.')[0];
+
+        const ext = extname(file.originalname);
+
+        const filename = `${nameWithoutExtension}-${uniqueName}${ext}`;
+
+        callback(null, filename);
+      },
+    })
+  }))
+
+  handleUpload(@UploadedFile() file: Express.Multer.File) {
+
+    console.log('file', file);
+
+    return ('This endpoint will handle file upload...');
   }
 
   @Get()

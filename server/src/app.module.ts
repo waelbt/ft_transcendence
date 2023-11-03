@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
 import { UsersModule } from './users/users.module';
 import { ChatGateway } from './chat/chat.gateway';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ChatGateway } from './chat/chat.gateway';
     AuthModule,
     PrismaOrmModule,
     UsersModule,
+    MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
   ],
   providers: [ChatGateway],
 })
