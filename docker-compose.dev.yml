@@ -13,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./client:/app
+      - ./client:/client
       - client-node-modules:/client/node_modules
     networks:
       - transcendence

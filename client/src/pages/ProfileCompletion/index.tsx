@@ -27,26 +27,27 @@ export function ProfileCompletion() {
         setImagePath(null);
     };
 
-    const avatarData = [
-        {
-            src: '../public/background_image.svg'
-        },
-        {
-            src: '../public/background_image.svg'
-        },
-        {
-            src: '../public/background_image.svg'
-        },
-        {
-            src: '../public/background_image.svg'
-        }
-    ];
+    // const avatarData = [
+    //     {
+    //         src: '../public/background_image.svg'
+    //     },
+    //     {
+    //         src: '../public/background_image.svg'
+    //     },
+    //     {
+    //         src: '../public/background_image.svg'
+    //     },
+    //     {
+    //         src: '../public/background_image.svg'
+    //     }
+    // ];
 
     return (
         <div className="inline-flex flex-col items-center gap-9">
-            {/* <div className="text-center text-yellow text-6xl font-BombSound">
+            <div className="text-center text-yellow text-6xl font-BombSound">
                 One step ahead
             </div>
+
             <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-80 shadow-custom">
                 <div
                     className="text-white text-center font-Acme text-3xl font-normal"
@@ -54,6 +55,33 @@ export function ProfileCompletion() {
                 >
                     Choose a profile picture
                 </div>
+                <div className="flex w-96 items-center gap-9">
+                    <div className="flex flex-col items-start gap-4">
+                        <AvatarUploader
+                            imageUrl={imagePath}
+                            upload={upload}
+                            onchange={handleFileChange}
+                            reset={reset}
+                        />
+                        <span className="text-white font-Acme text-sm font-normal tracking-tighter">
+                            Max size :&ensp;4MB
+                            <br />
+                            Supported format :&ensp;PNG, JPG
+                        </span>
+                    </div>
+                    {/* <div>
+
+                    </div> */}
+                </div>
+                {/* <AvatarUploader
+                    imageUrl={imagePath}
+                    upload={upload}
+                    onchange={handleFileChange}
+                    reset={reset}
+                /> */}
+            </div>
+            {/*
+                
                 <div className="flex w-[84%] items-center gap-8 text-white">
                     <div className="relative flex flex-col gap-4">
                         <AvatarUploader
@@ -126,11 +154,10 @@ export function ProfileCompletion() {
                     }}
                 /> */}
 
-                {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
-                {/* <button className="skip-button" type="submit">
+            {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
+            {/* <button className="skip-button" type="submit">
                     Skip
                 </button> */}
-            </div>
         </div>
     );
 }

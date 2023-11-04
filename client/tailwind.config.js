@@ -41,6 +41,9 @@ module.exports = {
             },
             width: {
                 7.5: '1.875rem'
+            },
+            strokeWidth: {
+                2: '2'
             }
         }
     },
