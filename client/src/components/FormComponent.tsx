@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import InputField from '../InputField';
+import InputField from './InputField';
 import toast from 'react-hot-toast';
 
 type FormProps = {
@@ -59,10 +59,11 @@ function FormComponent({
                     />
                 );
             })}
-            <button
+            <button 
                 // ${
                 // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
-                // }`
+                // }` 
+                // ? style the disabled state
                 className={`flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-primary-blue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink`}
                 type={btn.type}
                 disabled={isSubmitting}

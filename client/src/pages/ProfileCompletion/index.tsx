@@ -8,9 +8,10 @@ export function ProfileCompletion() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
         null
     );
+    
 
+    // ! define this 
     const onSubmit = async () => {
-        console.log('define later');
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +28,7 @@ export function ProfileCompletion() {
         setImagePath(null);
     };
 
-    const avatarData = [
+    const avatarData = [ // ! add default avatar + add them into the tailwind config js
         {
             src: '../public/background_image.svg'
         },
@@ -137,81 +138,6 @@ export function ProfileCompletion() {
                     Skip
                 </button>
             </div>
-            {/*
-                
-                <div className="flex w-[84%] items-center gap-8 text-white">
-                    <div className="relative flex flex-col gap-4">
-                        <AvatarUploader
-                            imageUrl={imagePath}
-                            upload={upload}
-                            onchange={handleFileChange}
-                            reset={reset}
-                        />
-                        <span className="font-Acme text-sm font-normal tracking-tighter">
-                            Max size: 4MB
-                            <br />
-                            Supported format: PNG, JPG
-                        </span>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                        <label
-                            htmlFor="inputTag"
-                            className="flex p-2.25 justify-center items-center gap-2.5 rounded-full bg-white text-primary-text-color text-center text-xs font-normal"
-                        >
-                            Choose image
-                            <input
-                                className="hidden"
-                                id="inputTag"
-                                type="file"
-                                onChange={handleFileChange}
-                            />
-                        </label>
-                        <div className="avatar-select">
-                            <span className="text">
-                                Or choose one of our defaults
-                            </span>
-                            <ul className="list">
-                                {avatarData.map((avatar, index) => (
-                                    <li
-                                        className={`item${
-                                            index === selectedItemIndex
-                                                ? ' selected'
-                                                : ''
-                                        }`}
-                                        key={index}
-                                        onClick={() => {
-                                            setUpload(false);
-                                            setImagePath(avatar.src);
-                                            setSelectedItemIndex(index);
-                                        }}
-                                    >
-                                        <span className="default-avatar">
-                                            <img src={avatar.src} />
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <FormComponent
-                    fields={[
-                        {
-                            label: 'Nickname',
-                            type: 'text',
-                            placeholder: 'dos404',
-                            name: 'Nickname'
-                        }
-                    ]}
-                    onSubmit={onSubmit}
-                    btn={{
-                        style: 'confirm-button',
-                        type: 'submit',
-                        text: 'Confim'
-                    }}
-                /> */}
-
-            {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-primary-blue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
         </div>
     );
 }

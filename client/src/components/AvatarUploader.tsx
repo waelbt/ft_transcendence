@@ -3,8 +3,8 @@
 
 // import React, { useEffect, FC, useRef, useState } from 'react';
 import React, { useEffect, FC, useRef, useState } from 'react';
-import ProgressRingLoader from '../ProgressRingLoader';
-import { api as axios } from '../../axios-utils'; // nsmiha request
+import ProgressRingLoader from './ProgressRingLoader';
+import { api as axios } from '../axios-utils'; // nsmiha request
 interface AvatarProps {
     imageUrl: string | null;
     upload: boolean;
@@ -12,6 +12,7 @@ interface AvatarProps {
     reset: () => void;
 }
 
+// !add the upload endpoint + fix logic 
 const AvatarUploader: FC<AvatarProps> = ({
     imageUrl,
     upload,

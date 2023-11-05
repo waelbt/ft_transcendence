@@ -9,6 +9,8 @@ type InputFieldProps = {
     secure?: boolean;
 };
 
+
+// ! add the eye icons
 function InputField({
     label,
     type,

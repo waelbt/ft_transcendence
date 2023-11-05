@@ -18,10 +18,8 @@ export const RegisterForm = (props: RegisterFormProps) => {
     };
 
     useEffect(() => {
-        if (isSuccess)
-            props.onFormSwitch('login')
-    }, [isSuccess]) 
-
+        if (isSuccess) props.onFormSwitch('login');
+    }, [isSuccess]);
 
     const fields = [
         {
