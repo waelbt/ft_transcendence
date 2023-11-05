@@ -37,7 +37,7 @@ function InputField({
                     gap-2.5 
                     rounded-lg 
                     bg-white 
-                    text-PrimaryBlue 
+                    text-primary-blue 
                     font-Acme 
                     text-xl 
                     font-normal 

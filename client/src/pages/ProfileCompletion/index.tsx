@@ -27,20 +27,20 @@ export function ProfileCompletion() {
         setImagePath(null);
     };
 
-    // const avatarData = [
-    //     {
-    //         src: '../public/background_image.svg'
-    //     },
-    //     {
-    //         src: '../public/background_image.svg'
-    //     },
-    //     {
-    //         src: '../public/background_image.svg'
-    //     },
-    //     {
-    //         src: '../public/background_image.svg'
-    //     }
-    // ];
+    const avatarData = [
+        {
+            src: '../public/background_image.svg'
+        },
+        {
+            src: '../public/background_image.svg'
+        },
+        {
+            src: '../public/background_image.svg'
+        },
+        {
+            src: '../public/background_image.svg'
+        }
+    ];
 
     return (
         <div className="inline-flex flex-col items-center gap-9">
@@ -48,7 +48,7 @@ export function ProfileCompletion() {
                 One step ahead
             </div>
 
-            <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-80 shadow-custom">
+            <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-70 shadow-custom">
                 <div
                     className="text-white text-center font-Acme text-3xl font-normal"
                     style={{ letterSpacing: '0.0675rem' }}
@@ -69,16 +69,73 @@ export function ProfileCompletion() {
                             Supported format :&ensp;PNG, JPG
                         </span>
                     </div>
-                    {/* <div>
-
-                    </div> */}
+                    <div className="flex flex-col items-start gap-4">
+                        <label
+                            htmlFor="inputTag"
+                            className="flex p-3 justify-center items-center gap-2.5 rounded-full bg-white text-primary-blue text-center text-Acme text-xs font-normal hover:border-2 border-primary-blue"
+                        >
+                            Choose image
+                            <input
+                                className="hidden"
+                                id="inputTag"
+                                type="file"
+                                onChange={handleFileChange}
+                            />
+                        </label>
+                        <div className="flex flex-col items-start">
+                            <span className="text-white font-Acme text-base font-normal leading-7 tracking-wide">
+                                Or choose one of our defaults
+                            </span>
+                            <ul className="list-none flex items-start gap-3 p-0">
+                                {avatarData.map((avatar, index) => (
+                                    <li
+                                        className={`w-11 h-11 flex-shrink-0 rounded-full p-[0.1rem] ${
+                                            index === selectedItemIndex
+                                                ? 'border-2 border-solid border-white'
+                                                : ''
+                                        }`}
+                                        key={index}
+                                        onClick={() => {
+                                            setUpload(false);
+                                            setImagePath(avatar.src);
+                                            setSelectedItemIndex(index);
+                                        }}
+                                    >
+                                        <img
+                                            className="w-full h-full object-cover rounded-full"
+                                            src={avatar.src}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                {/* <AvatarUploader
-                    imageUrl={imagePath}
-                    upload={upload}
-                    onchange={handleFileChange}
-                    reset={reset}
-                /> */}
+                <FormComponent
+                    fields={[
+                        {
+                            label: 'Nickname',
+                            type: 'text',
+                            placeholder: 'dos404',
+                            name: 'Nickname'
+                        }
+                    ]}
+                    onSubmit={onSubmit}
+                    btn={{
+                        style: 'bg-pink hover:bg-dark-pink',
+                        type: 'submit',
+                        text: 'Confim'
+                    }}
+                />
+                <button
+                    className="
+                        flex mt-2 ml-auto mr-auto py-1.5 px-32 justify-center items-center space-x-2.5 rounded-full
+                        bg-none text-white border-dashed border-white text-center font-BombSound text-2xl
+                        font-normal leading-normal hover:border-2 active:border-solid active:bg-white active:text-pink"
+                    type="submit"
+                >
+                    Skip
+                </button>
             </div>
             {/*
                 
@@ -154,10 +211,7 @@ export function ProfileCompletion() {
                     }}
                 /> */}
 
-            {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
-            {/* <button className="skip-button" type="submit">
-                    Skip
-                </button> */}
+            {/* flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-primary-blue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink */}
         </div>
     );
 }

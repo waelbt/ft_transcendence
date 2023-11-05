@@ -17,13 +17,14 @@ module.exports = {
             backgroundImage: {
                 'custom-image': "url('../background_image.svg')"
             },
-            backgroundColor: { 'blue-opacity-80': 'rgba(113, 199, 216, 0.7)' },
+            backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {
                 pink: '#f20553',
-                darkPink: '#9a234b',
-                PrimaryBlue: '#304194',
+                'dark-pink': '#9a234b',
+                'primary-blue': '#304194',
                 yellow: '#ffec47',
-                'primary-blue-40': 'rgba(var(--primary-blue), 0.4)'
+                'primary-blue-40': 'rgba(var(--primary-blue), 0.4)',
+                'blue-opacity-80': 'rgba(113, 199, 216, 0.8)'
             },
             fontFamily: {
                 BombSound: ['The Bomb Sound', 'sans-serif'],

@@ -16,10 +16,10 @@ export function Auth() {
                 <br />
                 Video games?
             </div>
-            <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-80 shadow-custom">
+            <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-70 shadow-custom">
                 <div className="flex items-start gap-6">
                     {/* 42 button */}
-                    <button className="bg-PrimaryBlue flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-pink">
+                    <button className="bg-primary-blue flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-pink">
                         <svg
                             className="w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
                             xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ export function Auth() {
                         </span>
                     </button>
                     {/* google button */}
-                    <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-PrimaryBlue">
+                    <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-primary-blue">
                         <svg
                             className="nested w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
                             xmlns="http://www.w3.org/2000/svg"

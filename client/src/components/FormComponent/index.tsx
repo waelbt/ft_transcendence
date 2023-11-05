@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import toast from 'react-hot-toast';
 
-
 type FormProps = {
     fields: any[];
     btn: any;
@@ -44,7 +43,10 @@ function FormComponent({
         }
     }, [errors, isSubmitting]);
     return (
-        <form className="flex flex-col items-center space-y-3" onSubmit={handleSubmit(onSubmit)}>
+        <form
+            className="flex flex-col items-center space-y-3"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             {fields.map((field, idx) => {
                 return (
                     <InputField
@@ -58,10 +60,10 @@ function FormComponent({
                 );
             })}
             <button
-            // ${
-                // isSubmitting ? 'cursor-not-allowed bg-darkPink' : ''
-            // }`
-                className={`flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-PrimaryBlue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink`}
+                // ${
+                // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
+                // }`
+                className={`flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 border-0 rounded-full bg-primary-blue text-white text-center font-BombSound text-2xl font-normal leading-normal ${btn.style} hover:bg-pink`}
                 type={btn.type}
                 disabled={isSubmitting}
             >
