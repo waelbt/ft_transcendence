@@ -60,7 +60,7 @@ export function Auth() {
                         >
                             <g
                                 id="devicon:google"
-                                clip-path="url(#clip0_177_1312)"
+                                clipPath="url(#clip0_177_1312)"
                             >
                                 <path
                                     id="Vector"
@@ -112,8 +112,8 @@ export function Auth() {
                             x2="64"
                             y2="0.5"
                             stroke="#ffffff"
-                            stroke-opacity="0.7"
-                            stroke-width="1"
+                            strokeOpacity="0.7"
+                            strokeWidth="1"
                         />
                     </svg>
                     or
@@ -129,8 +129,8 @@ export function Auth() {
                             x2="64"
                             y2="0.5"
                             stroke="#ffffff"
-                            stroke-opacity="0.7"
-                            stroke-width="1"
+                            strokeOpacity="0.7"
+                            strokeWidth="1"
                         />
                     </svg>
                 </div>{' '}

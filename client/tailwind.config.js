@@ -35,7 +35,7 @@ module.exports = {
                 custom: '0.625rem 1.25rem 0.5rem 0rem rgba(0, 0, 0, 0.2)'
             },
             // spacing: {
-            //     'custom-gap': '0.625rem'
+            //     4.5: '18px' // Add custom spacing for 18px
             // },
             borderRadius: {
                 custom: '2.9375rem'

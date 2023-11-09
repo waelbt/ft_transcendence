@@ -8,11 +8,9 @@ export function ProfileCompletion() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
         null
     );
-    
 
-    // ! define this 
-    const onSubmit = async () => {
-    };
+    // ! define this
+    const onSubmit = async () => {};
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -28,7 +26,8 @@ export function ProfileCompletion() {
         setImagePath(null);
     };
 
-    const avatarData = [ // ! add default avatar + add them into the tailwind config js
+    const avatarData = [
+        // ! add default avatar + add them into the tailwind config js
         {
             src: '../public/background_image.svg'
         },
@@ -123,7 +122,10 @@ export function ProfileCompletion() {
                     ]}
                     onSubmit={onSubmit}
                     btn={{
-                        style: 'bg-pink hover:bg-dark-pink',
+                        style: 'flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center \
+                        space-x-2.5 rounded-full  bg-pink hover:bg-dark-pink bg-none text-white \
+                        text-center font-BombSound text-2xl\
+                        font-normal leading-normal',
                         type: 'submit',
                         text: 'Confim'
                     }}
