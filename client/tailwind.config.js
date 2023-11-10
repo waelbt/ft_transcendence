@@ -15,7 +15,7 @@ module.exports = {
     theme: {
         extend: {
             backgroundImage: {
-                'custom-image': "url('../background_image.svg')"
+                'main': "url('../background_image.svg')"
             },
             backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {
