@@ -15,7 +15,8 @@ module.exports = {
     theme: {
         extend: {
             backgroundImage: {
-                'main': "url('../background_image.svg')"
+                main: "url('../background_image.svg')",
+                'bmo-sitting' : "url('./src/assets/bimo-sitting.png')"
             },
             backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {
@@ -24,7 +25,8 @@ module.exports = {
                 'primary-blue': '#304194',
                 yellow: '#ffec47',
                 'primary-blue-40': 'rgba(var(--primary-blue), 0.4)',
-                'blue-opacity-80': 'rgba(113, 199, 216, 0.8)'
+                'blue-opacity-80': 'rgba(113, 199, 216, 0.8)',
+                'dark-blue': '#171E30'
             },
             fontFamily: {
                 BombSound: ['The Bomb Sound', 'sans-serif'],

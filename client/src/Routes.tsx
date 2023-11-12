@@ -9,20 +9,11 @@ const router = createBrowserRouter([
         }
     },
     {
-        path: '/ProfileCompletion',
-        lazy: async () => {
-            let { ProfileCompletion } = await import(
-                './pages/ProfileCompletion'
-            ); // conditional rendring in home page
-            return { Component: ProfileCompletion };
-        }
-    },
-    {
         path: '/',
-        // lazy: async () => {
-        //     let { ProfileCompletion } = await import('./pages/Layouts');
-        //     return { Component: ProfileCompletion };
-        // },
+        lazy: async () => {
+            let { Layout } = await import('./pages/Layout');
+            return { Component: Layout };
+        },
         children: [
             // lazy
             {

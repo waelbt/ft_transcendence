@@ -89,6 +89,7 @@ export const useLogin = () => {
         },
         onError: (error) => {
             toast.error(error.message);
+            navigate('Lobby'); // ! temporairement
         }
     });
 };
