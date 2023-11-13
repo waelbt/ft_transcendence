@@ -15,8 +15,10 @@ module.exports = {
     theme: {
         extend: {
             backgroundImage: {
-                main: "url('../background_image.svg')",
-                'bmo-sitting' : "url('./src/assets/bimo-sitting.png')"
+                primary: "url('../primary.svg')",
+                secondary: "url('../secondary.svg')",
+                'sidebar-img1': "url('./src/assets/sidebarImage1.png')",
+                'sidebar-img2': "url('./src/assets/sidebarImage2.png')"
             },
             backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {

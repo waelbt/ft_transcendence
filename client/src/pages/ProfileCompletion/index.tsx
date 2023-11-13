@@ -44,7 +44,7 @@ export function ProfileCompletion() {
     ];
 
     return (
-        <div className="fixed top-0 left-0 w-full z-50 flex justify-center items-center h-screen overflow-hidden bg-main  bg-cover bg-no-repeat backdrop-blur-sm">
+        <div className="fixed top-0 left-0 w-full z-50 flex justify-center items-center h-screen overflow-hidden bg-primary  bg-cover bg-no-repeat backdrop-blur-sm">
             <div className="inline-flex flex-col items-center gap-9">
                 <div className="text-center text-yellow text-6xl font-BombSound">
                     One step ahead
