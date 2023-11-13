@@ -7,10 +7,13 @@ export function Layout() {
             {false ? (
                 <ProfileCompletion />
             ) : (
-                <div className="fixed top-0 left-0 w-full z-50 flex justify-center items-center h-screen overflow-hidden bg-secondary bg-cover bg-no-repeat backdrop-blur">
+                <>
+                    <div className="fixed top-0 left-0 w-full flex justify-center items-center h-screen overflow-hidden bg-secondary bg-cover bg-no-repeat blur opacity-60 -z-10">
+                        {' '}
+                    </div>
                     <div className="flex">
-                        <div className="fixed top-28 left-0 inline-flex flex-col gap-2.5">
-                            <div className="relative p-3 pl-0 items-start rounded bg-dark-blue mb-5">
+                        <div className="fixed top-28 left-0 inline-flex flex-col gap-14">
+                            <div className="relative p-3 pl-0 items-start rounded bg-dark-blue space-y-4">
                                 <div className="relative flex w-64 py-3 pl-6 pr-0 items-center gap-4 hover:bg-[#008D90]">
                                     <div className="w-6 h-6 shrink-0">
                                         <svg
@@ -652,11 +655,11 @@ export function Layout() {
                                         Setting
                                     </p>
                                 </div>
-                                <div className="absolute top-[-40px] right-[-60px] w-[172px] h-[179px] flex-shrink-0 bg-sidebar-img2 bg-cover bg-no-repeat"></div>
+                                <div className="absolute top-[-50px] right-[-80px] w-[172px] h-[179px] flex-shrink-0 bg-sidebar-img2 bg-cover bg-no-repeat"></div>
                             </div>
                             <div className="p-2.5 pl-0 pr-[2px] items-start rounded bg-dark-blue">
-                                <div className="relative flex w-64 py-3 pl-6 pr-0 items-center gap-4 hover:bg-[#F20505]">
-                                    <div className="absolute top-[-35px] right-[-40px] w-36 h-32 flex-shrink-0 bg-sidebar-img1 bg-cover bg-no-repeat"></div>
+                                <div className="relative flex w-64 py-3 pl-8 pr-0 items-center gap-4 hover:bg-[#F20505]">
+                                    <div className="absolute top-[-35px] right-[-50px] w-32  h-28 flex-shrink-0 bg-sidebar-img1 bg-cover bg-no-repeat"></div>
                                     <div className="w-6 h-6 shrink-0">
                                         <svg
                                             width="24"
@@ -694,7 +697,7 @@ export function Layout() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

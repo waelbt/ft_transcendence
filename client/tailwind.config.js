@@ -16,7 +16,7 @@ module.exports = {
         extend: {
             backgroundImage: {
                 primary: "url('../primary.svg')",
-                secondary: "url('../secondary.svg')",
+                secondary: "url('../secondary.jpeg')",
                 'sidebar-img1': "url('./src/assets/sidebarImage1.png')",
                 'sidebar-img2': "url('./src/assets/sidebarImage2.png')"
             },
