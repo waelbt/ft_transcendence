@@ -2,9 +2,9 @@
 // import './index.scss';
 
 // import React, { useEffect, FC, useRef, useState } from 'react';
-import React, { useEffect, FC, useRef, useState } from 'react';
+import React, { useEffect, FC, useRef } from 'react';
 import ProgressRingLoader from './ProgressRingLoader';
-import { api as axios } from '../axios-utils'; // nsmiha request
+// import { api as axios } from '../axios-utils'; // nsmiha request
 interface AvatarProps {
     imageUrl: string | null;
     upload: boolean;
@@ -15,7 +15,7 @@ interface AvatarProps {
 // !add the upload endpoint + fix logic 
 const AvatarUploader: FC<AvatarProps> = ({
     imageUrl,
-    upload,
+    // upload,
     onchange,
     reset
 }) => {
@@ -77,7 +77,7 @@ const AvatarUploader: FC<AvatarProps> = ({
             <label
                 ref={containerRef}
                 htmlFor="file-uploader"
-                className={`flex items-start gap-2 relative p-8 border-2 border-dashed border-white rounded-full hover:border-pink uploader  ${
+                className={`flex items-start gap-2 relative p-12 border-2 border-dashed border-white rounded-full hover:border-pink uploader  ${
                     imageUrl ? 'border-none' : ''
                 }`}
             >
@@ -85,7 +85,7 @@ const AvatarUploader: FC<AvatarProps> = ({
                     style={
                         'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                     }
-                    radius={41}
+                    radius={54}
                     stroke={2}
                     progress={0}
                 />

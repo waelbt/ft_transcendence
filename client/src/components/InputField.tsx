@@ -32,7 +32,7 @@ function InputField({
             <div className="relative">
                 <input
                     className="flex 
-                    py-2.5 pr-14 pl-2.5 
+                    py-2.5 pr-28 pl-2.5 
                     justify-center 
                     items-center 
                     gap-2.5 

@@ -18,7 +18,7 @@ module.exports = {
                 primary: "url('../primary.svg')",
                 secondary: "url('../secondary.jpeg')",
                 'sidebar-img1': "url('./src/assets/sidebarImage1.png')",
-                'sidebar-img2': "url('./src/assets/sidebarImage2.png')"
+                'sidebar-img2': "url('./src/assets/sidebarImage2.png')",
             },
             backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {
