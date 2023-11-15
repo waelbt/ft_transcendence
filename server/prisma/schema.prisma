@@ -16,4 +16,5 @@ model User {
   fullName String
   email String @unique
   HashPassword String
+  hashRefreshToken String
 }

@@ -1,4 +1,4 @@
-sleep 30
+sleep 10
 
 prisma generate
 
