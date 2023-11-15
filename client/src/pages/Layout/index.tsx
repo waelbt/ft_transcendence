@@ -6,7 +6,7 @@ import { ProfileCompletion } from '../ProfileCompletion';
 export function Layout() {
     return (
         <>
-            {true ? (
+            {false ? (
                 <ProfileCompletion />
             ) : (
                 <>
