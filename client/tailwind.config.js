@@ -18,7 +18,7 @@ module.exports = {
                 primary: "url('../primary.svg')",
                 secondary: "url('../secondary.jpeg')",
                 'sidebar-img1': "url('./src/assets/sidebarImage1.png')",
-                'sidebar-img2': "url('./src/assets/sidebarImage2.png')",
+                'sidebar-img2': "url('./src/assets/sidebarImage2.png')"
             },
             backgroundColor: { 'blue-opacity-70': 'rgba(113, 199, 216, 0.7)' },
             colors: {
@@ -28,7 +28,8 @@ module.exports = {
                 yellow: '#ffec47',
                 'primary-blue-40': 'rgba(var(--primary-blue), 0.4)',
                 'blue-opacity-80': 'rgba(113, 199, 216, 0.8)',
-                'dark-blue': '#171E30'
+                'dark-blue': '#171E30',
+                'teal-blue': '#008D90'
             },
             fontFamily: {
                 BombSound: ['The Bomb Sound', 'sans-serif'],
@@ -52,5 +53,5 @@ module.exports = {
             }
         }
     },
-    plugins: [textShadowPlugin]
+    plugins: [textShadowPlugin, require('daisyui')]
 };
