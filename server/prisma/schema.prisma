@@ -13,8 +13,10 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  fullName String
   email String @unique
   HashPassword String
-  hashRefreshToken String
+  Avatar String
+  nickName String @unique
+  fullName String
+  status Boolean  @default(true)
 }
