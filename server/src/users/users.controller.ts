@@ -12,6 +12,11 @@ import { extname } from 'path'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('me')
+  sayHi(){
+    console.log('Welcom To our Website again');
+  }
+
   @Post()
   @ApiCreatedResponse()
   createUser(@Body() createUserDto: CreateUserDto) {

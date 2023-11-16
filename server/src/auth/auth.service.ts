@@ -1,19 +1,78 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { AuthDto, AuthDtoSignIn } from "./dto";
 import * as argon from 'argon2';
+import { UsersService } from "src/users/users.service";
 
 @Injectable({})
 export class AuthService {
     constructor (private PrismaOrmService:PrismaOrmService,
         private jwt:JwtService,
-        private config: ConfigService) {}
+        private config: ConfigService,
+        private usersService: UsersService) {}
 
-        
+        async setUpTokens(@Req() req, @Res() res){
+            const user = this.usersService.findOneUser(req.userId);
+            if (!user)
+                this.usersService.createUser(req.user);
+            this.generateATRT(res, user);
+            if (user)
+                res.redirect('users/me');
+            else
+                res.redirect('chihaja');
+        }
 
+        async refreshToken(@Req() req, @Res() res){
+            this.matchRefreshToken(req);
+            const user = await this.usersService.findOneUser(req.userId);
+            this.generateATRT(res, user);
+        }
+
+        logout(@Res() res){
+            res.clearcookie('accessToken');
+            res.clearcookie('refreshToken');
+            res.redirect('/login');
+        }
+
+        async matchRefreshToken(@Req() req){
+            const refreshToken = req.cookie['refresh_token'];
+            try{
+                const payload = this.jwt.verify(refreshToken);
+            }
+            catch(err){
+                throw new UnauthorizedException('No Valid Token');
+            }
+        }
+
+        async generateATRT(@Res() res, user: any){
+            const [access_token, refreshToken] = await Promise.all([
+                this.jwt.signAsync(
+                 {
+                    sub: (await user).id,
+                    email: (await user).email,
+                 },
+                 {
+                    secret: this.config.get('JWT_secret'),
+                    expiresIn: '15m',
+                 },
+                ),
+                this.jwt.signAsync(
+                 {
+                    sub: (await user).id,
+                    email: (await user).email,
+                 },
+                 {
+                    secret: this.config.get('R_JWT_secret'),
+                    expiresIn: '7d',
+                 },
+                ),
+            ]);
+            res.cookie('accessToken', access_token, { httpOnly: true, secure : true});
+            res.cookie('refreshToken', refreshToken, { httpOnly: true, secure : true});
+        }
 }
 /*
    async signUp(AuthDto: AuthDto) {
