@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
+import { api as axios } from '../../axios-utils'; // nsmiha request
+
 
 export function Auth() {
     const [currentForm, setCurrentForm] = useState('login');
@@ -53,7 +55,10 @@ export function Auth() {
                                 </span>
                             </button>
                             {/* google button */}
-                            <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-primary-blue">
+                            <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-primary-blue" onClick={async () => {
+                                const res = await axios.get('/auth/google');
+                                console.log("response :       ", res);
+                            }}>
                                 <svg
                                     className="nested w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
                                     xmlns="http://www.w3.org/2000/svg"

@@ -4,7 +4,6 @@
 // import React, { useEffect, FC, useRef, useState } from 'react';
 import React, { useEffect, FC, useRef } from 'react';
 import ProgressRingLoader from './ProgressRingLoader';
-// import { api as axios } from '../axios-utils'; // nsmiha request
 interface AvatarProps {
     imageUrl: string | null;
     upload: boolean;
