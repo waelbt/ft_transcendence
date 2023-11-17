@@ -3,6 +3,8 @@ import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
+    userId: number;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()

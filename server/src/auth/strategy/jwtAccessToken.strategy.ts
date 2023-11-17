@@ -1,13 +1,9 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
+import { User } from "@prisma/client";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { UsersService } from "src/users/users.service";
-
-type jwtPayload = {
-    sub: number;
-    email: string;
-};
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(
@@ -23,10 +19,10 @@ export class JwtStrategy extends PassportStrategy(
     }
     
     // just change the above function that used directly Prisma service and instead use the function findOneUser from UserService module
-    async validate(payload: jwtPayload) {
-        const user = this.usersService.findOneUser(payload.sub);
-        if (!user)
-            throw new UnauthorizedException;
+    async validate(payload: User) {
+        // const user = this.usersService.findOneUser(payload);
+        // if (!user)
+        //     throw new UnauthorizedException;
         return payload;
     }
 }

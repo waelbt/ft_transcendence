@@ -6,37 +6,42 @@ import { refreshTokenGuard } from "src/common/guards";
 import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators";
 import { Request } from "express";
 import { JwtStrategy } from "./strategy";
+import { AuthGuard } from "@nestjs/passport";
+import { UsersService } from "src/users/users.service";
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-    constructor(private AuthService: AuthService) {}
+    constructor(private AuthService: AuthService,
+        private usersService: UsersService) {}
     
     @Get('google')
-    @Public()
+    @UseGuards(AuthGuard('google'))
     google(){}
 
     @Get('/google/callback')
-    @Public()
+    @UseGuards(AuthGuard('google'))
     async googleLogin(@Req() req, @Res() res){
-        this.AuthService.setUpTokens(req, res);
+        await this.AuthService.setUpTokens(req, res);
     }
 
     @Get('42')
-    @Public()
+    @UseGuards(AuthGuard('42'))
     Intra(){}
 
     @Get('intra/callback')
-    @Public()
+    @UseGuards(AuthGuard('42'))
     async intraLogin(@Req() req, @Res() res){
-        this.AuthService.setUpTokens(req, res);
+        await this.AuthService.setUpTokens(req, res);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        this.refreshToken(req, res);
+        await this.refreshToken(req, res);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get('logout')
     async logout(@Res() res){
         this.AuthService.logout(res);

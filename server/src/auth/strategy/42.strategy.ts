@@ -1,25 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy, VerifiedCallback } from "passport-jwt";
+import { Strategy } from 'passport-42';
 
 
 @Injectable()
-export class googleStrategy extends PassportStrategy(
+export class intrastrategy extends PassportStrategy(
     Strategy, 
     '42'
     ) {
     constructor (config: ConfigService){
         super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: process.env.JWT_secret,
-            clientID: config.get('Google_Client_Id'),
-            ClientSecret: config.get('Google_Secret'),
-            callbackURL: 'http://localhost:4000/google/redirect',
+            clientID: config.get('intra_Client_Id'),
+            ClientSecret: config.get('intra_Secret'),
+            callbackURL: 'http://localhost:4000/auth/intra/callback',
+            scope: ['profile'],
         })
     }
-    async validate(profile: any, done: VerifiedCallback): Promise<any> {
+    async validate(accessToken : string, refreshToken : string, profile : any): Promise<any> {
         const user = {
             userId: profile.id,
             email: profile._json.email,
@@ -27,6 +25,7 @@ export class googleStrategy extends PassportStrategy(
             Avatar: profile._json.image.versions.medium,
             nickName: profile.username,
         }
+        console.log(profile);
         return (user);
     }
 }

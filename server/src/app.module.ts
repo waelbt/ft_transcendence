@@ -29,11 +29,6 @@ import { JwtModule } from '@nestjs/jwt';
     MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
-  providers: [ChatGateway, 
-    {
-      provide: APP_GUARD,
-      useClass: accessTokenGuard,
-    },
-  ],
+  providers: [ChatGateway,],
 })
 export class AppModule {}
