@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 
 // todo: store svgs in components
 export function Auth() {
-    const handleIntraClick = async (endpoint : string) => {
+    const handleIntraClick = async (endpoint: string) => {
         try {
             // Make a GET request to the Intra endpoint
             const response = await axios.get(endpoint);
@@ -11,10 +11,8 @@ export function Auth() {
             console.log(response);
             // You could navigate the user to another route or perform other actions
         } catch (error) {
-            toast.error(
-                `Error fetching Intra data: ${error}`
-            );
-        }        }
+            toast.error(`Error fetching Intra data: ${error}`);
+        }
     };
     return (
         <>
@@ -29,7 +27,7 @@ export function Auth() {
                             <div className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900">
                                 <button
                                     className="justify-start items-center gap-[11px] flex "
-                                    onClick={async () => handleIntraClick('')} 
+                                    onClick={() => handleIntraClick('/endpoint')}
                                 >
                                     <svg
                                         width="20"
@@ -113,7 +111,7 @@ export function Auth() {
                                     </svg>
                                     <div
                                         className="font-mona text-center text-black text-[14px] font-semibold"
-                                        onClick={async () => handleIntraClick('')} 
+                                        onClick={() => handleIntraClick('/endpoint')}
                                     >
                                         Continute with Intra
                                     </div>
