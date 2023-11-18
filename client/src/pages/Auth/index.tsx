@@ -1,162 +1,125 @@
-import { useState } from 'react';
-import { LoginForm } from './LoginForm';
-import { RegisterForm } from './RegisterForm';
-import { api as axios } from '../../axios-utils'; // nsmiha request
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
-
+// todo: store svgs in components
 export function Auth() {
-    const [currentForm, setCurrentForm] = useState('login');
-
-    const toggleFormm = (formName: string) => {
-        setCurrentForm(formName);
+    const handleIntraClick = async (endpoint : string) => {
+        try {
+            // Make a GET request to the Intra endpoint
+            const response = await axios.get(endpoint);
+            // Handle the response as needed
+            console.log(response);
+            // You could navigate the user to another route or perform other actions
+        } catch (error) {
+            toast.error(
+                `Error fetching Intra data: ${error}`
+            );
+        }        }
     };
-
     return (
         <>
-            <div className="fixed top-0 left-0 w-full h-screen overflow-hidden bg-primary bg-cover bg-no-repeat blur-sm -z-10"></div>
-            <div className="flex w-full h-screen justify-center items-center">
-                <div className="inline-flex flex-col items-center gap-9">
-                    <div className="text-center text-yellow text-6xl font-BombSound">
-                        who want to play
-                        <br />
-                        Video games?
-                    </div>
-                    <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-70 shadow-custom">
-                        <div className="flex items-start gap-6">
-                            {/* 42 button */}
-                            <button className="bg-primary-blue flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-pink">
-                                <svg
-                                    className="w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="30"
-                                    height="25"
-                                    viewBox="0 0 30 25"
-                                >
-                                    <g id="Group">
-                                        <path
-                                            id="Vector"
-                                            d="M5.52321 6.79123L0 13.0794V15.6349V18.1874H5.53125H11.0625V21.3437V24.5L13.8161 24.4939L16.567 24.4848L16.575 18.7882L16.5804 13.0947H11.0571H5.53125L8.66518 9.51753C10.3902 7.55362 12.8705 4.71754 14.183 3.2202L16.567 0.5H13.808H11.0491L5.52321 6.79123Z"
-                                            fill="white"
-                                        />
-                                        <path
-                                            id="Vector_2"
-                                            d="M18.9375 3.64125C18.9375 5.3673 18.9455 6.78229 18.9536 6.78229C18.9616 6.78229 20.2018 5.37339 21.7098 3.64735L24.4527 0.515453L24.4554 3.67174V6.82803L21.6964 9.96907L18.9375 13.1101V16.242V19.377H21.6964H24.4554V16.242V13.1101L27.2277 9.95383L30 6.79754V3.6504V0.500204H24.4687H18.9375V3.64125Z"
-                                            fill="white"
-                                        />
-                                        <path
-                                            id="Vector_3"
-                                            d="M27.2277 16.2359L24.4688 19.377H27.2357H30V16.2359C30 14.5068 29.9973 13.0949 29.992 13.0949C29.9893 13.0949 28.7437 14.5068 27.2277 16.2359Z"
-                                            fill="white"
-                                        />
-                                    </g>
-                                </svg>
-                                <span className="text-white text-center font-inter text-sm font-semibold">
-                                    Network
-                                </span>
-                            </button>
-                            {/* google button */}
-                            <button className="intra-button bg-white flex border-0 px-6 py-3 justify-center items-center gap-2 rounded-custom hover:bg-primary-blue" onClick={async () => {
-                                const res = await axios.get('/auth/google');
-                                console.log("response :       ", res);
-                            }}>
-                                <svg
-                                    className="nested w-7.5 h-6 flex-shrink-0 bg-contain bg-no-repeat"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="28"
-                                    height="27"
-                                    viewBox="0 0 28 27"
-                                >
-                                    <g
-                                        id="devicon:google"
-                                        clipPath="url(#clip0_177_1312)"
-                                    >
-                                        <path
-                                            id="Vector"
-                                            d="M9.90495 0.888661C7.20723 1.82452 4.88072 3.60082 3.26715 5.95665C1.65358 8.31247 0.837996 11.1237 0.940197 13.9773C1.0424 16.8309 2.057 19.5765 3.83497 21.8109C5.61293 24.0452 8.06055 25.6505 10.8183 26.391C13.0541 26.9679 15.3965 26.9932 17.6442 26.4648C19.6805 26.0075 21.563 25.0291 23.1075 23.6256C24.715 22.1203 25.8819 20.2052 26.4825 18.0864C27.1352 15.7822 27.2514 13.3592 26.8221 11.0031H14.2671V16.2112H21.5382C21.3928 17.0418 21.0814 17.8346 20.6226 18.5421C20.1637 19.2496 19.5669 19.8572 18.8677 20.3287C17.9799 20.9162 16.979 21.3114 15.9293 21.4888C14.8766 21.6846 13.7969 21.6846 12.7442 21.4888C11.6771 21.2685 10.6678 20.8281 9.7805 20.1958C8.35487 19.1866 7.28443 17.753 6.7219 16.0994C6.15003 14.4148 6.15003 12.5886 6.7219 10.904C7.12232 9.72318 7.78426 8.64807 8.65831 7.75889C9.65856 6.72266 10.9249 5.98195 12.3184 5.61804C13.7119 5.25413 15.1787 5.28108 16.5579 5.69593C17.6354 6.02652 18.6207 6.60439 19.4351 7.38343C20.255 6.5678 21.0734 5.75007 21.8904 4.93022C22.3123 4.48936 22.7721 4.0696 23.1877 3.61819C21.9443 2.46124 20.4849 1.56093 18.893 0.968817C15.9941 -0.0837824 12.8222 -0.11207 9.90495 0.888661Z"
-                                            fill="white"
-                                        />
-                                        <path
-                                            id="Vector_2"
-                                            d="M9.90555 0.887733C12.8225 -0.113678 15.9944 -0.0861352 18.8936 0.96578C20.4857 1.56191 21.9445 2.46656 23.1862 3.62781C22.7643 4.07922 22.3192 4.50109 21.8889 4.93984C21.0705 5.75687 20.2527 6.57109 19.4357 7.3825C18.6213 6.60346 17.636 6.02559 16.5585 5.695C15.1798 5.27869 13.713 5.25019 12.3191 5.61261C10.9253 5.97503 9.65814 6.71438 8.6568 7.74953C7.78274 8.63871 7.1208 9.71381 6.72039 10.8946L2.34766 7.50906C3.91283 4.40524 6.62283 2.03106 9.90555 0.887733Z"
-                                            fill="#E33629"
-                                        />
-                                        <path
-                                            id="Vector_3"
-                                            d="M1.18734 10.8637C1.42219 9.69882 1.8124 8.57077 2.34749 7.50977L6.72023 10.9037C6.14835 12.5883 6.14835 14.4146 6.72023 16.0991C5.26335 17.2241 3.80578 18.3548 2.34749 19.491C1.00836 16.8254 0.599946 13.7883 1.18734 10.8637Z"
-                                            fill="#F8BD00"
-                                        />
-                                        <path
-                                            id="Vector_4"
-                                            d="M14.2685 11H26.8235C27.2528 13.356 27.1366 15.7791 26.4839 18.0833C25.8832 20.2021 24.7164 22.1171 23.1089 23.6225C21.6977 22.5214 20.2802 21.4287 18.8691 20.3277C19.5687 19.8557 20.1658 19.2474 20.6247 18.5392C21.0836 17.8309 21.3947 17.0373 21.5395 16.2059H14.2685C14.2664 14.472 14.2685 12.736 14.2685 11Z"
-                                            fill="#587DBD"
-                                        />
-                                        <path
-                                            id="Vector_5"
-                                            d="M2.3457 19.4915C3.80398 18.3665 5.26156 17.2359 6.71844 16.0996C7.28208 17.7538 8.35406 19.1875 9.78125 20.196C10.6713 20.8254 11.6828 21.2622 12.7513 21.4785C13.8039 21.6743 14.8837 21.6743 15.9364 21.4785C16.9861 21.3011 17.987 20.9059 18.8748 20.3184C20.2859 21.4195 21.7034 22.5121 23.1146 23.6132C21.5703 25.0175 19.6878 25.9965 17.6513 26.4545C15.4036 26.9829 13.0612 26.9576 10.8254 26.3807C9.05711 25.9086 7.40541 25.0763 5.97383 23.9359C4.45872 22.7328 3.22117 21.2168 2.3457 19.4915Z"
-                                            fill="#319F43"
-                                        />
-                                    </g>
-                                </svg>
-                                <span className="nested text-[#3686f7] text-center font-inter text-sm font-semibol">
-                                    <span className="nested text-[#3686f7]">
-                                        G
-                                    </span>
-                                    <span className="nested text-[#ff302f]">
-                                        o
-                                    </span>
-                                    <span className="nested text-[#ffba40]">
-                                        o
-                                    </span>
-                                    <span className="nested">g</span>
-                                    <span className="nested text-[#20b15a]">
-                                        l
-                                    </span>
-                                    <span className="nested text-[#ff302f]">
-                                        e
-                                    </span>
-                                </span>
-                            </button>
+            <div className="flex">
+                <div className="w-[40%] h-screen overflow-hidden bg-auth-sidebar-image bg-cover bg-no-repeat"></div>
+                <div className="bg-white flex-col w-full justify-center items-start gap-2.5 inline-flex ">
+                    <div className="flex flex-col justify-start items-start ml-36 gap-8">
+                        <div className="font-mona font-bold text-custom">
+                            Sign in to Laughtale
                         </div>
-                        <div className="flex justify-center items-center gap-1 h-8 text-white text-center font-inter text-lg font-normal leading-normal">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="64"
-                                height="1"
-                                viewBox="0 0 64 1"
-                            >
-                                <line
-                                    x1="0"
-                                    y1="0.5"
-                                    x2="64"
-                                    y2="0.5"
-                                    stroke="#ffffff"
-                                    strokeOpacity="0.7"
-                                    strokeWidth="1"
-                                />
-                            </svg>
-                            or
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="64"
-                                height="1"
-                                viewBox="0 0 64 1"
-                            >
-                                <line
-                                    x1="0"
-                                    y1="0.5"
-                                    x2="64"
-                                    y2="0.5"
-                                    stroke="#ffffff"
-                                    strokeOpacity="0.7"
-                                    strokeWidth="1"
-                                />
-                            </svg>
-                        </div>{' '}
-                        {currentForm === 'login' ? (
-                            <LoginForm onFormSwitch={toggleFormm} />
-                        ) : (
-                            <RegisterForm onFormSwitch={toggleFormm} />
-                        )}{' '}
+                        <div className="py-2 flex-col justify-start items-start gap-3 inline-flex">
+                            <div className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900">
+                                <button
+                                    className="justify-start items-center gap-[11px] flex "
+                                    onClick={async () => handleIntraClick('')} 
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <g clip-path="url(#clip0_854_2339)">
+                                            <path
+                                                d="M6.96721 0.657779C4.9689 1.35101 3.24556 2.66679 2.05032 4.41184C0.855082 6.1569 0.250946 8.23925 0.326651 10.353C0.402355 12.4668 1.15391 14.5006 2.47092 16.1557C3.78794 17.8108 5.60099 18.9999 7.64377 19.5484C9.2999 19.9757 11.035 19.9945 12.7 19.6031C14.2083 19.2643 15.6028 18.5396 16.7469 17.5C17.9376 16.3849 18.802 14.9663 19.2469 13.3968C19.7304 11.69 19.8164 9.89519 19.4985 8.14997H10.1985V12.0078H15.5844C15.4768 12.6231 15.2461 13.2103 14.9062 13.7344C14.5663 14.2585 14.1242 14.7086 13.6063 15.0578C12.9487 15.493 12.2073 15.7857 11.4297 15.9172C10.6499 16.0622 9.85011 16.0622 9.07033 15.9172C8.27995 15.7539 7.53227 15.4277 6.87502 14.9593C5.819 14.2118 5.02608 13.1498 4.6094 11.925C4.18579 10.6771 4.18579 9.32437 4.6094 8.07653C4.906 7.20187 5.39632 6.40549 6.04377 5.74684C6.7847 4.97926 7.72273 4.43059 8.75495 4.16102C9.78718 3.89146 10.8737 3.91142 11.8953 4.21872C12.6935 4.4636 13.4233 4.89165 14.0266 5.46872C14.6339 4.86455 15.2401 4.25882 15.8453 3.65153C16.1578 3.32497 16.4985 3.01403 16.8063 2.67965C15.8852 1.82265 14.8042 1.15575 13.625 0.717154C11.4777 -0.0625493 9.12811 -0.0835031 6.96721 0.657779Z"
+                                                fill="white"
+                                            />
+                                            <path
+                                                d="M6.96709 0.657806C9.12781 -0.08398 11.4774 -0.0635778 13.6249 0.715618C14.8043 1.1572 15.8848 1.82731 16.8046 2.68749C16.4921 3.02187 16.1624 3.33437 15.8437 3.65937C15.2374 4.26458 14.6317 4.8677 14.0265 5.46874C13.4232 4.89168 12.6933 4.46362 11.8952 4.21874C10.8739 3.91037 9.78743 3.88925 8.75493 4.15772C7.72243 4.42618 6.78383 4.97384 6.04209 5.74062C5.39464 6.39927 4.90432 7.19564 4.60772 8.07031L1.36865 5.56249C2.52804 3.26337 4.53545 1.50472 6.96709 0.657806Z"
+                                                fill="#E33629"
+                                            />
+                                            <path
+                                                d="M0.509419 8.04688C0.683388 7.18402 0.972428 6.34843 1.36879 5.5625L4.60786 8.07656C4.18425 9.3244 4.18425 10.6772 4.60786 11.925C3.52869 12.7583 2.449 13.5958 1.36879 14.4375C0.376842 12.463 0.0743142 10.2133 0.509419 8.04688Z"
+                                                fill="#F8BD00"
+                                            />
+                                            <path
+                                                d="M10.1984 8.14844H19.4984C19.8164 9.89366 19.7303 11.6885 19.2469 13.3953C18.8019 14.9648 17.9376 16.3834 16.7469 17.4984C15.7016 16.6828 14.6516 15.8734 13.6063 15.0578C14.1245 14.7082 14.5668 14.2576 14.9067 13.733C15.2467 13.2084 15.4771 12.6205 15.5844 12.0047H10.1984C10.1969 10.7203 10.1984 9.43437 10.1984 8.14844Z"
+                                                fill="#587DBD"
+                                            />
+                                            <path
+                                                d="M1.36719 14.4375C2.4474 13.6042 3.52708 12.7667 4.60625 11.925C5.02376 13.1504 5.81782 14.2124 6.875 14.9594C7.5343 15.4256 8.28359 15.7492 9.075 15.9094C9.85477 16.0545 10.6546 16.0545 11.4344 15.9094C12.2119 15.778 12.9533 15.4853 13.6109 15.05C14.6562 15.8657 15.7062 16.675 16.7516 17.4907C15.6076 18.5309 14.2132 19.2561 12.7047 19.5954C11.0397 19.9868 9.30457 19.968 7.64844 19.5407C6.3386 19.1909 5.11512 18.5744 4.05469 17.7297C2.93239 16.8385 2.01568 15.7156 1.36719 14.4375Z"
+                                                fill="#319F43"
+                                            />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_854_2339">
+                                                <rect
+                                                    width="20"
+                                                    height="20"
+                                                    fill="white"
+                                                />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                    <div className="font-mona text-center text-white text-[14px] font-semibold">
+                                        Sign in to Google
+                                    </div>
+                                </button>
+                            </div>
+                            <div className="w-full">
+                                <div className="flex items-center justify-center">
+                                    <div className="flex-grow border-t border-gray-300"></div>
+                                    <span className="flex-shrink mx-4 text-gray-600">
+                                        or
+                                    </span>
+                                    <div className="flex-grow border-t border-gray-300"></div>
+                                </div>
+                            </div>
+                            <div className="px-32 py-5 bg-white rounded-[47px] justify-center items-center gap-2.5 inline-flex border border-black  hover:opacity-60 transition-opacity hover:bg-gray-100">
+                                <button className="justify-start items-center gap-[11px] flex">
+                                    <svg
+                                        width="31"
+                                        height="18"
+                                        viewBox="0 0 31 18"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <g id="Group">
+                                            <path
+                                                id="Vector"
+                                                d="M6.02321 4.95629L0.5 9.41042V11.2206V13.0286H6.03125H11.5625V15.2643V17.5L14.3161 17.4957L17.067 17.4892L17.075 13.4541L17.0804 9.42122H11.5571H6.03125L9.16518 6.88742C10.8902 5.49632 13.3705 3.48742 14.683 2.42681L17.067 0.500002H14.308H11.5491L6.02321 4.95629Z"
+                                                fill="black"
+                                            />
+                                            <path
+                                                id="Vector_2"
+                                                d="M19.4368 2.72485C19.4368 3.94746 19.4448 4.94975 19.4528 4.94975C19.4609 4.94975 20.7011 3.95179 22.2091 2.72917L24.9519 0.510743L24.9546 2.74645V4.98215L22.1957 7.20706L19.4368 9.43196V11.6504V13.871H22.1957H24.9546V11.6504V9.43196L27.7269 7.19626L30.4993 4.96055V2.73133V0.499943H24.968H19.4368V2.72485Z"
+                                                fill="black"
+                                            />
+                                            <path
+                                                id="Vector_3"
+                                                d="M27.7279 11.6461L24.969 13.871H27.736H30.5002V11.6461C30.5002 10.4213 30.4976 9.42116 30.4922 9.42116C30.4895 9.42116 29.244 10.4213 27.7279 11.6461Z"
+                                                fill="black"
+                                            />
+                                        </g>
+                                    </svg>
+                                    <div
+                                        className="font-mona text-center text-black text-[14px] font-semibold"
+                                        onClick={async () => handleIntraClick('')} 
+                                    >
+                                        Continute with Intra
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

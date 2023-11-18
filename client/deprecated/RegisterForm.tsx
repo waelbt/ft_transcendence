@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import FormComponent from '../../components/FormComponent';
-import { useRegister, RegisterData } from '../../hooks/authHooks';
+import FormComponent from '../src/components/FormComponent';
+import { useRegister, RegisterData } from '../src/hooks/authHooks';
 import { type FieldValues } from 'react-hook-form';
 
 type RegisterFormProps = {
@@ -77,7 +77,8 @@ export const RegisterForm = (props: RegisterFormProps) => {
             <FormComponent
                 fields={fields}
                 onSubmit={onSubmit}
-                btn={{ // TODO: store this in a custom style proprty
+                btn={{
+                    // TODO: store this in a custom style proprty
                     style: 'flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 \
                             border-0 rounded-full bg-primary-blue text-white text-center font-BombSound \
                             text-2xl font-normal leading-normal hover:bg-pink ',

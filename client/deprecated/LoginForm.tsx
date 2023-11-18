@@ -1,6 +1,6 @@
-import FormComponent from '../../components/FormComponent';
+import FormComponent from '../src/components/FormComponent';
 import { type FieldValues } from 'react-hook-form';
-import { LoginData, useLogin } from '../../hooks/authHooks';
+import { LoginData, useLogin } from '../src/hooks/authHooks';
 
 type RegisterFormProps = {
     onFormSwitch: (formName: string) => void;
@@ -51,7 +51,8 @@ export const LoginForm = (props: RegisterFormProps) => {
             <FormComponent
                 fields={fields}
                 onSubmit={onSubmit}
-                btn={{ // TODO: store this in a custom style proprty
+                btn={{
+                    // TODO: store this in a custom style proprty
                     style: 'flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 \
                             border-0 rounded-full bg-primary-blue text-white text-center font-BombSound \
                             text-2xl font-normal leading-normal hover:bg-pink ',
