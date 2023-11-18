@@ -53,5 +53,5 @@ module.exports = {
             }
         }
     },
-    plugins: [textShadowPlugin, require('daisyui')]
+    plugins: [textShadowPlugin]
 };

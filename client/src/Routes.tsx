@@ -10,10 +10,10 @@ const router = createBrowserRouter([
     },
     {
         path: '/',
-        lazy: async () => {
-            let { Layout } = await import('./pages/Layout');
-            return { Component: Layout };
-        },
+        // lazy: async () => {
+            // let { Layout } = await import('./pages/Layout');
+            // return { Component: Layout };
+        // },
         children: [
             // lazy
             {
