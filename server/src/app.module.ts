@@ -16,6 +16,12 @@ import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
 import { UsersModule } from './users/users.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { MulterModule } from '@nestjs/platform-express';
+import { APP_GUARD } from '@nestjs/core';
+import { accessTokenGuard } from './common/guards';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './auth/strategy';
+import { ConversationsModule } from './conversations/conversations.module';
+import { ConversationsService } from './conversations/conversations.service';
 
 @Module({
   imports: [
@@ -24,7 +30,15 @@ import { MulterModule } from '@nestjs/platform-express';
     PrismaOrmModule,
     UsersModule,
     MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
+    ConversationsModule,
+    // JwtModule.register({secret: process.env.JWT_secret}),
   ],
-  providers: [ChatGateway],
+  providers: [ChatGateway, 
+    {
+      provide: APP_GUARD,
+      useClass: accessTokenGuard,
+    },
+    // JwtStrategy,
+  ],
 })
 export class AppModule {}

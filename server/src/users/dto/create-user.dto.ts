@@ -19,4 +19,5 @@ export class CreateUserDto {
     @MinLength(7)
     HashPassword: string;
 
+    hashRefreshToken: string;
 }

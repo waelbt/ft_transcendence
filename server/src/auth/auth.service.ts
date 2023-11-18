@@ -12,11 +12,13 @@ export class AuthService {
         private jwt:JwtService,
         private config: ConfigService) {}
 
-    async signUp(AuthDto: AuthDto) {
+        
+
+}
+/*
+   async signUp(AuthDto: AuthDto) {
         //genrate the password hash
-        console.log("in in signIn");
-        console.log(AuthDto.password);
-        const hash = await argon.hash(AuthDto.password);
+        const hash = await this.hashData(AuthDto.password);
         //save the new user in the db
         try{
             const user = await this.PrismaOrmService.user.create({
@@ -24,10 +26,13 @@ export class AuthService {
                     fullName: AuthDto.fullName,
                     email: AuthDto.email,
                     HashPassword: hash,
+                    hashRefreshToken: '',
                 },
             });
             //we need to return a token.
-            return this.signToken(user.id, user.email);
+            const token = await this.getTokens(user.id, user.email);
+            await this.updateRefrshToken(user.id, user.hashRefreshToken);
+            return token;
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
@@ -49,37 +54,89 @@ export class AuthService {
         });
         //if user does not exist throw exception
         if (!user) throw new ForbiddenException ('Credentials incorrect');
-        //compare passwords
+        //compare passwords 
         const PasswordMatches = await argon.verify(user.HashPassword, AuthDtoSignIn.password);
         //if (password invalid) we throw exception
         if (!PasswordMatches) throw new ForbiddenException ('Credentials incorrect');
         //we need to return a token.
-        return this.signToken(user.id, user.email);
+        const token = await this.getTokens(user.id, user.email);
+        await this.updateRefrshToken(user.id, user.hashRefreshToken);
+        return token;
     }
 
+    hashData(data: string) {
+        return argon.hash(data);
+    }
     // getUser(){
     //     return (this.PrismaOrmService.user.findMany({select: { email: true, FullName: true, id: true}}));
     // }
 
     //function that gives each user a jwt
-    async signToken(userId: number, email: string): Promise<{access_token}> {
-        const payload = {
-            sub: userId,//use a unique identifier for a sub field
-            email,
-        };
-        const secret = this.config.get('JWT_secret');
-
-        const token = await this.jwt.signAsync(
-            payload,
+    async getTokens(userId: number, email: string): Promise<{access_token, refreshToken}> {
+        const [access_token, refreshToken] = await Promise.all([
+           this.jwt.signAsync(
             {
-                expiresIn: '15m', 
-                secret: secret,
+                sub: userId,
+                email,
             },
-        );
+            {
+                secret: this.config.get('JWT_secret'),
+                expiresIn: '15m',
+            },
+           ),
+           this.jwt.signAsync(
+            {
+                sub: userId,
+                email,
+            },
+            {
+                secret: this.config.get('R_JWT_secret'),
+                expiresIn: '7d',
+            },
+           ),
+        ]);
         return {
-            access_token: token,
-        };
+            access_token,
+            refreshToken,
+        }
     }
-}
+    async  updateRefrshToken(userId: number, refreshToken: string) {
+        const hashedRefreshToken = await this.hashData(refreshToken);
+        await this.PrismaOrmService.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                hashRefreshToken: hashedRefreshToken,
+            },
+        });
+    }
+    async logout(userId: number){
+        await this.PrismaOrmService.user.updateMany({
+            where: {
+                id: userId,
+                hashRefreshToken: {
+                    not: null,
+                },
+            },
+            data: {
+                hashRefreshToken: null,
+            },
 
+        })
+    }
+    async refreshTokens(userId: number, refreshToken: string) {
+        const user = await this.PrismaOrmService.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        if (!user || !user.hashRefreshToken) throw new ForbiddenException("Access Denied");
+        const refreshTokenMatch = await argon.verify(refreshToken, user.hashRefreshToken);
+        if (!refreshTokenMatch) throw new ForbiddenException("Access Denied");
+        const token = await this.getTokens(user.id, user.email);
+        await this.updateRefrshToken(user.id, user.hashRefreshToken);
+        return token;
+    }
+*/
 //search about refresh token

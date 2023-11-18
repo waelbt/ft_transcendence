@@ -3,7 +3,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtGuard } from 'src/auth/guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path'
@@ -46,7 +45,6 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
   findAllUser() {
@@ -54,7 +52,6 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
   async findOneUser(@Param('id', ParseIntPipe) id: number) {
@@ -65,7 +62,6 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse()
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
@@ -73,7 +69,6 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
   removeUser(@Param('id') id: string) {
