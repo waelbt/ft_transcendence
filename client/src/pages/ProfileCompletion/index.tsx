@@ -1,148 +1,78 @@
-import { useState } from 'react';
-import FormComponent from '../../components/FormComponent';
-import AvatarUploader from '../../components/AvatarUploader';
-
-// ! fix later when the project ends
 export function ProfileCompletion() {
-    const [imagePath, setImagePath] = useState<string | null>(null);
-    const [upload, setUpload] = useState(false);
-    const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
-        null
-    );
-
-    // ! define this
-    const onSubmit = async () => {};
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const objectURL = URL.createObjectURL(file);
-            setImagePath(objectURL);
-            setUpload(true);
-        }
-    };
-
-    const reset = () => {
-        setUpload(false);
-        setImagePath(null);
-    };
-
-    const avatarData = [
-        // ! add default avatar + add them into the tailwind config js
-        {
-            src:'./src/assets/defaultPicture3.jpg'
-        },
-        {
-            src:'./src/assets/defaultPicture3.jpg'
-        },
-        {
-            src:'./src/assets/defaultPicture3.jpg'
-        }
-    ];
-
     return (
         <>
-            <div className="fixed top-0 left-0 w-full  h-screen overflow-hidden bg-primary bg-cover bg-no-repeat blur-sm -z-10"></div>
-            <div className="flex w-full h-screen justify-center items-center">
-                <div className="inline-flex flex-col items-center gap-9">
-                    <div className="text-center text-yellow text-6xl font-BombSound">
-                        One step ahead
-                    </div>
-
-                    <div className="flex p-9 flex-col items-center gap-4 rounded-3xl bg-blue-opacity-70 shadow-custom">
-                        <div
-                            className="text-white text-center font-Acme text-3xl font-normal"
-                            style={{ letterSpacing: '0.0675rem' }}
-                        >
-                            Choose a profile picture
-                        </div>
-                        <div className="flex w-96 items-center gap-7">
-                            <div className="flex flex-col items-start gap-4">
-                                <AvatarUploader
-                                    imageUrl={imagePath}
-                                    upload={upload}
-                                    onchange={handleFileChange}
-                                    reset={reset}
-                                />
-                                <span className="text-white font-Acme text-sm font-normal tracking-tighter">
-                                    Max size :&ensp;4MB
-                                    <br />
-                                    Supported format :&ensp;PNG, JPG
-                                </span>
-                            </div>
-                            <div className="flex flex-col items-start gap-3">
-                                <label
-                                    htmlFor="inputTag"
-                                    className="flex p-3 justify-center items-center gap-2.5 rounded-full bg-white text-primary-blue text-center font-Acme text-base font-normal hover:border-2 border-primary-blue"
-                                >
-                                    Choose image
-                                    <input
-                                        className="hidden"
-                                        id="inputTag"
-                                        type="file"
-                                        onChange={handleFileChange}
-                                    />
-                                </label>
-                                <div className="flex flex-col items-start">
-                                    <span className="text-white font-Acme text-base font-normal leading-7 tracking-wide">
-                                        Or choose one of our defaults
-                                    </span>
-                                    <ul className="list-none flex items-start gap-3 p-0">
-                                        {avatarData.map((avatar, index) => (
-                                            <li
-                                                className={`w-11 h-11 flex-shrink-0 rounded-full p-[0.1rem] ${
-                                                    index === selectedItemIndex
-                                                        ? 'border-2 border-solid border-white'
-                                                        : ''
-                                                }`}
-                                                key={index}
-                                                onClick={() => {
-                                                    setUpload(false);
-                                                    setImagePath(avatar.src);
-                                                    setSelectedItemIndex(index);
-                                                }}
-                                            >
-                                                <img
-                                                    className="w-full h-full object-cover rounded-full"
-                                                    src={avatar.src}
-                                                />
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <FormComponent
-                            fields={[
-                                {
-                                    label: 'Nickname',
-                                    type: 'text',
-                                    placeholder: 'dos404',
-                                    name: 'Nickname'
-                                }
-                            ]}
-                            onSubmit={onSubmit}
-                            btn={{
-                                style: 'flex mt-2 ml-auto mr-auto py-2.5 px-32 justify-center items-center \
-                    space-x-2.5 rounded-full  bg-pink hover:bg-dark-pink bg-none text-white \
-                    text-center font-BombSound text-2xl\
-                    font-normal leading-normal',
-                                type: 'submit',
-                                text: 'Confim'
-                            }}
-                        />
-                        <button
-                            className="
-                    flex mt-2 ml-auto mr-auto py-2 px-[135px] justify-center items-center space-x-2.5 rounded-full
-                    bg-none text-white border-dashed border-white text-center font-BombSound text-2xl
-                    font-normal leading-normal hover:border-2 active:border-solid active:bg-white active:text-pink"
-                            type="submit"
-                        >
-                            Skip
-                        </button>
-                    </div>
+            <div className="flex flex-col h-screen shadow-2xl">
+                {' '}
+                {/* Use full height of the screen */}
+                {/* Content */}
+                <div className="flex-grow shadow-custom z-0">
+                    {' '}
+                    {/* This will make the div take up all available space */}
+                    {/* Add your content here */}
                 </div>
+                {/* Footer */}
+                <div className="h-1/4 w-screen -z-1 bg-footer-image bg-cover bg-no-repeat"></div>
             </div>
         </>
     );
+}
+
+{
+    /* <div className="w-[1728px] h-[795px] bg-white shadow flex-col justify-center items-start inline-flex"> */
+}
+{
+    /* <div className="self-stretch px-[27px] py-[42px] justify-start items-center gap-2.5 inline-flex">
+        <div className="text-black text-[19px] font-bold font-['Lemonada']">LaughTale</div>
+    </div>
+    <div className="self-stretch h-[673px] px-[27px] py-[42px] bg-white flex-col justify-center items-center gap-2.5 inline-flex">
+        <div className="w-[742px] px-[47px] pb-[131px] flex-col justify-start items-start gap-1.5 flex">
+            <div className="w-[648px] h-[101px] px-3.5 py-px flex-col justify-center items-start gap-3 flex">
+                <div className="text-neutral-900 text-[35px] font-bold font-['Open Sans']">Welcome! Let’s create your profile</div>
+                <div className="text-zinc-600 text-xl font-normal font-['Open Sans']">Let others get to know you better!</div>
+            </div>
+            <div className="w-[648px] h-[229px] pr-3.5 py-px justify-start items-center gap-3 inline-flex">
+                <div className="w-[163px] h-[184px] px-2.5 py-[3px] flex-col justify-center items-start gap-[13px] inline-flex">
+                    <div className="text-black text-lg font-bold font-['Open Sans']">Add an avatar</div>
+                    <div className="justify-start items-start gap-2.5 inline-flex">
+                        <div className="w-[26px] pl-0.5 py-px bg-white justify-center items-center flex">
+                            <div className="w-6 h-6 relative flex-col justify-start items-start flex" />
+                        </div>
+                    </div>
+                </div>
+                <div className="w-[120px] h-[59px] relative" />
+                <div className="w-[457px] flex-col justify-start items-start gap-0.5 inline-flex">
+                    <div className="p-3 bg-white rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex">
+                        <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">Choose image</div>
+                    </div>
+                    <div className="flex-col justify-start items-start gap-[7px] flex">
+                        <div className="flex-col justify-start items-start gap-[21px] flex">
+                            <div className="text-neutral-400 text-base font-normal font-['Acme'] leading-snug tracking-tight">Or choose one of our defaults</div>
+                        </div>
+                        <div className="w-[234px] justify-start items-start gap-3 inline-flex">
+                            <img className="w-[37px] h-[37px] rounded-full border border-white" src="https://via.placeholder.com/37x37" />
+                            <img className="w-[37px] h-[37px] rounded-full border border-white" src="https://via.placeholder.com/37x37" />
+                            <img className="w-[37px] h-[37px] rounded-full border border-white" src="https://via.placeholder.com/37x37" />
+                            <img className="w-[37px] h-[37px] rounded-full border border-white" src="https://via.placeholder.com/37x37" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="py-px flex-col justify-start items-start gap-[15px] flex">
+                <div className="h-[62px] flex-col justify-start items-start gap-3 flex">
+                    <div className="flex-col justify-start items-start gap-4 flex">
+                        <div className="text-black text-lg font-bold font-['Open Sans'] leading-tight">Nickname </div>
+                        <div className="w-[385px] pl-[5px] pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center inline-flex">
+                            <div className="w-[250px] text-zinc-600 text-lg font-normal font-['Acme'] leading-normal">dos404</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-[606px] h-[49px] flex-col justify-end items-end gap-3 flex">
+                    <div className="p-3 bg-black rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex">
+                        <div className="w-[89px] text-center text-white text-[19px] font-normal font-['Acme']">continue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> */
 }
