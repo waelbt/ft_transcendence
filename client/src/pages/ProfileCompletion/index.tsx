@@ -1,14 +1,39 @@
+import InputField from '../../components/InputField';
+
+// ! combine the nickname and submit section into a resuable from
 export function ProfileCompletion() {
     return (
         <>
             <div className="flex flex-col h-screen shadow-2xl">
-                {' '}
-                {/* Use full height of the screen */}
                 {/* Content */}
-                <div className="flex-grow shadow-custom z-0">
-                    {' '}
-                    {/* This will make the div take up all available space */}
-                    {/* Add your content here */}
+                <div className="flex flex-col flex-grow shadow-custom z-0">
+                    {/* Header */}
+                    <div className="px-7 py-8 justify-start items-center gap-2.5 inline-flex">
+                        <div className="text-black text-lg font-lemonada font-bold">
+                            LaughTale
+                        </div>
+                    </div>
+                    <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
+                        <div className="px-3.5 py-px flex-col justify-start items-start gap-1.5 flex">
+                            {/* Header */}
+                            <div className=" flex-col justify-center items-start gap-3 inline-flex">
+                                <div className="text-neutral-900 text-[35px] font-bold font-openSans">
+                                    Welcome! Let’s create your profile
+                                </div>
+                                <div className="text-zinc-600 text-xl font-normal font-openSans">
+                                    Let others get to know you better!
+                                </div>
+                            </div>
+                            {/* avatar section */}
+                            <div></div>
+                            {/* nickname section */}
+                            <div>
+                                <InputField label="Nickname"/>
+                            </div>
+                            {/* submit putton section */}
+                            <div></div>
+                        </div>
+                    </div>
                 </div>
                 {/* Footer */}
                 <div className="h-1/4 w-screen -z-1 bg-footer-image bg-cover bg-no-repeat"></div>

@@ -11,8 +11,8 @@ const router = createBrowserRouter([
     {
         path: '/',
         lazy: async () => {
-            let { Layout } = await import('./pages/Layout');
-            return { Component: Layout };
+            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            return { Component: ProfileCompletion };
         },
         children: [
             // lazy

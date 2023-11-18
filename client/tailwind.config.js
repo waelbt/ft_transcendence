@@ -5,7 +5,11 @@ module.exports = {
     theme: {
         extend: {
             backgroundImage: {
-                'auth-sidebar-image': "url('../auth-sidebar-image.jpg')"
+                'auth-sidebar-image': "url('../auth-sidebar-image.jpg')",
+                'footer-image': "url('../footer-image.jpg')"
+            },
+            boxShadow: {
+                custom: '0 0 80px rgba(0, 0, 0, 1)' // Custom shadow with blur 80
             },
             fontSize: {
                 custom: [
@@ -22,7 +26,9 @@ module.exports = {
                     'Helvetica',
                     'Arial',
                     'sans-serif'
-                ]
+                ],
+                lemonada: ["'Lemonada'"],
+                openSans: ['Open Sans', 'sans-serif']
             }
         }
     },
@@ -30,16 +36,6 @@ module.exports = {
 };
 
 // /** @type {import('tailwindcss').Config} */
-
-// const textShadowPlugin = function ({ addUtilities }) {
-//     const newUtilities = {
-//         '.text-shadow-custom': {
-//             textShadow:
-//                 '0rem 0rem 0rem #f4ebff, 0rem 0.0625rem 0.125rem rgba(16, 24, 40, 0.05)'
-//         }
-//     };
-//     addUtilities(newUtilities, ['responsive', 'hover']);
-// };
 
 // module.exports = {
 //     content: ['./src/**/*.{js,jsx,ts,tsx}'],
