@@ -24,10 +24,10 @@ export class AuthService {
                 await this.usersService.createUser(req.user);
             }
             await this.generateATRT(res, req.user);
-            if (isUser)
-                res.redirect('http://localhost:4000/auth/ana');
-            else
-                res.redirect('chihaja');
+            if (isUser)//not a new user 
+                res.redirect('http://localhost:4000/auth/ana');//redirect to home
+            else//new user need to go to complete profile
+                res.redirect('chihaja');//link for complete profile
         }
 
         async refreshToken(@Req() req, @Res() res){
@@ -35,21 +35,18 @@ export class AuthService {
             const user = await this.usersService.getOneUser(foundUser);
             console.log(user.email);
             await this.generateATRT(res, user);
-            console.log("sdfdsdf");
         }
 
         logout(@Res() res){
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            res.redirect('/auth');
+            res.redirect('/auth/google');
         }
 
         async matchRefreshToken(@Req() req){
             const refreshToken = req.cookies['refreshToken'];
-            console.log('hiii: ', refreshToken);
             try{
                 const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
-                console.log('fsfdsdsf:', payload);
                 return payload;
             }
             catch(err){
