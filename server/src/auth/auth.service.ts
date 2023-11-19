@@ -24,10 +24,10 @@ export class AuthService {
                 await this.usersService.createUser(req.user);
             }
             await this.generateATRT(res, req.user);
-            if (isUser)//not a new user 
-                res.redirect('http://localhost:4000/auth/ana');//redirect to home
-            else//new user need to go to complete profile
-                res.redirect('chihaja');//link for complete profile
+            if (isUser)
+                res.redirect('http://localhost:8000/auth/ana'); // home
+            else
+                res.redirect('http://localhost:8000/auth/ana'); //profile
         }
 
         async refreshToken(@Req() req, @Res() res){
