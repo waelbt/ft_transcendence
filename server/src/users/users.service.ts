@@ -21,12 +21,12 @@ export class UsersService {
 
   async findOneUser(User: User) {
 
+    // console.log(User.email);
     const user = await this.prisma.user.findUnique({
       where: { id : User.id,
                 email : User.email 
               },
     });
-    console.log('user is : ', user.email);
     return user ? true : false;
   }
 
