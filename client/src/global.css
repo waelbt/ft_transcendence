@@ -8,19 +8,24 @@
 @import 'animate.css';
 
 @font-face {
-    font-family: 'The Bomb Sound';
-    src: url('./assets/fonts/The Bomb Sound.ttf') format('truetype');
+    font-family: 'Mona Sans';
+    src:
+        url('./assets/fonts/Mona-Sans.woff2') format('woff2'),
+        url('./assets/fonts/Mona-Sans.woff') format('woff');
 }
 
-/* ! add the blur effect to the background */
+@font-face {
+    font-family: 'Open Sans';
+    src: url('./assets/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Open Sans Italic';
+    src: url('./assets/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Lemonada&display=swap');
 body {
-    @apply m-0 p-0 bg-black;
+    @apply m-0 p-0 bg-white;
 }
-
-.intra-button:hover path,
-.intra-button:hover .nested {
-    /* Your hover styles here, e.g.: */
-    fill: white !important;
-    color: white !important; /* This will override other color styles on hover */
-}
-

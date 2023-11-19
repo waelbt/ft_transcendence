@@ -1,6 +1,6 @@
 // import { Outlet } from 'react-router-dom';
 import { ProfileCompletion } from '../ProfileCompletion';
-// import SideBar from '../../components/SideBar';
+import SideBar from '../../components/SideBar';
 
 // border border-white
 // ! extract component navbar/sidebar/notification.....
@@ -12,7 +12,7 @@ export function Layout() {
             ) : (
                 <>
                     <div className="fixed top-0 left-0 w-full flex justify-center items-center h-screen overflow-hidden bg-secondary bg-cover bg-no-repeat blur opacity-60 -z-10"></div>
-                    {/* <div className="fixed top-28 left-0 inline-flex flex-col gap-14">
+                    <div className="fixed top-28 left-0 inline-flex flex-col gap-14">
                         <SideBar />
                         <div className="p-2.5 pl-0 pr-[2px] items-start rounded  bg-dark-blue">
                             <div className="relative flex w-64 py-3 pl-8 pr-0 items-center gap-4 hover:bg-[#F20505]">
@@ -52,18 +52,18 @@ export function Layout() {
                                 </p>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
                     <nav className="bg-dark-blue shadow">
                         <div className="ml-auto px-4 sm:px-6 lg:px-8">
-                            {/* <div className="flex justify-between h-20">
+                            <div className="flex justify-between h-20">
                                 <div className="relative flex items-center justify-center flex-1">
-                                    <div className="absolute -top-[120px] left-1/2 transform -translate-x-60 w-full h-full">
+                                    <div className="absolute -top-3 left-1/2 transform -translate-x-[15%]  w-full h-full">
                                         <img
                                             src="./src/assets/navbar-jake.png"
                                             alt="navbar_jake"
                                         />
                                     </div>
-                                    <div className="w-[80%] max-w-md">
+                                    <div className="w-[20%] max-w-md">
                                         <label
                                             htmlFor="search"
                                             className="sr-only"
@@ -71,27 +71,12 @@ export function Layout() {
                                             Search
                                         </label>
                                         <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <svg
-                                                    className="h-5 w-5 text-gray-400"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm-6-8a6 6 0 1112 0 6 6 0 01-12 0z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </div>
                                             <input
                                                 id="search"
                                                 name="search"
-                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                                placeholder="Search"
-                                                type="search"
+                                                className="block w-full font-Acme pl-10 pr-3 py-2 border border-[#665323] rounded-md leading-5 bg-[#ffcf3d] text-[#665629] placeholder-[#665323] focus:outline-none focus:placeholder-[#665323] focus:ring-1 focus:ring-indigo-dark-blue focus:border-indigo-dark-blue"
+                                                placeholder="Search users and rooms"
+                                                type="search"   
                                             />
                                         </div>
                                     </div>
@@ -149,7 +134,7 @@ export function Layout() {
                                         </div>
                                     </div>
                                 </div>
-                            </div> */}
+                            </div> 
                         </div>
                     </nav>
                 </>

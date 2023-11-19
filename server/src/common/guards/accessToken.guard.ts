@@ -1,7 +1,6 @@
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
-import { ExtractJwt } from "passport-jwt";
 
 @Injectable()
 export class accessTokenGuard extends AuthGuard('jwt') {
