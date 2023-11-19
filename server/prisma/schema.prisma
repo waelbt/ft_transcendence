@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id
   email String @unique
-  HashPassword String
-  Avatar String
+  HashPassword String?
+  Avatar String?
   nickName String @unique
   fullName String
   status Boolean  @default(true)

@@ -6,6 +6,10 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nest
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path'
+import { User } from '@prisma/client';
+import { AuthGuard } from "@nestjs/passport";
+import { jwtGuard } from 'src/auth/authGuard';
+
 
 @ApiTags('users')
 @Controller('users')
@@ -19,8 +23,8 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return (this.usersService.createUser(createUserDto));
+  createUser(@Body() user: User) {
+    return (this.usersService.createUser(user));
   }
 
   @Post('upload')
@@ -59,24 +63,24 @@ export class UsersController {
   @Get(':id')
   @ApiBearerAuth()
   @ApiOkResponse()
-  async findOneUser(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOneUser(id);
-    if (!user)
-      throw new NotFoundException(`user with the  id ${id} does not exist`);
-    return (user);
+  async findOneUser(@Param('id', ParseIntPipe) user: User) {
+    const findUser = await this.usersService.findOneUser(user);
+    if (!findUser)
+      throw new NotFoundException(`User with the  id ${user.id} does not exist`);
+    return (findUser);
   }
 
   @Patch(':id')
   @ApiBearerAuth()
   @ApiCreatedResponse()
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return (this.usersService.updateUser(Number(id), updateUserDto));
+    return (this.usersService.updateUser(String(id), updateUserDto));
   }
 
   @Delete(':id')
   @ApiBearerAuth()
   @ApiOkResponse()
   removeUser(@Param('id') id: string) {
-    return (this.usersService.removeUser(Number(id)));
+    return (this.usersService.removeUser(String(id)));
   }
 }

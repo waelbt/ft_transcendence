@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { AuthDto, AuthDtoSignIn } from "./dto";
 import * as argon from 'argon2';
 import { UsersService } from "src/users/users.service";
+import { User } from "@prisma/client";
 
 @Injectable({})
 export class AuthService {
@@ -15,57 +16,66 @@ export class AuthService {
         private usersService: UsersService) {}
 
         async setUpTokens(@Req() req, @Res() res){
-            const user = this.usersService.findOneUser(req.userId);
-            if (!user)
-                this.usersService.createUser(req.user);
-            this.generateATRT(res, user);
-            if (user)
-                res.redirect('users/me');
+            console.log('here = ', req.user);
+            var isUser = await this.usersService.findOneUser(req.user);
+            if (!isUser)
+            {
+                console.log('im in create user');
+                await this.usersService.createUser(req.user);
+            }
+            await this.generateATRT(res, req.user);
+            if (isUser)
+                res.redirect('http://localhost:4000/auth/ana');
             else
                 res.redirect('chihaja');
         }
 
         async refreshToken(@Req() req, @Res() res){
-            this.matchRefreshToken(req);
-            const user = await this.usersService.findOneUser(req.userId);
-            this.generateATRT(res, user);
+            const foundUser = await this.matchRefreshToken(req);
+            const user = await this.usersService.getOneUser(foundUser);
+            console.log(user.email);
+            await this.generateATRT(res, user);
+            console.log("sdfdsdf");
         }
 
         logout(@Res() res){
-            res.clearcookie('accessToken');
-            res.clearcookie('refreshToken');
-            res.redirect('/login');
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.redirect('/auth');
         }
 
         async matchRefreshToken(@Req() req){
-            const refreshToken = req.cookie['refresh_token'];
+            const refreshToken = req.cookies['refreshToken'];
+            console.log('hiii: ', refreshToken);
             try{
-                const payload = this.jwt.verify(refreshToken);
+                const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
+                console.log('fsfdsdsf:', payload);
+                return payload;
             }
             catch(err){
                 throw new UnauthorizedException('No Valid Token');
             }
         }
 
-        async generateATRT(@Res() res, user: any){
+        async generateATRT(@Res() res, user: User){
             const [access_token, refreshToken] = await Promise.all([
                 this.jwt.signAsync(
                  {
-                    sub: (await user).id,
-                    email: (await user).email,
+                    sub: user.id,
+                    email: user.email,
                  },
                  {
                     secret: this.config.get('JWT_secret'),
                     expiresIn: '15m',
                  },
                 ),
-                this.jwt.signAsync(
+                this.jwt.sign(
                  {
-                    sub: (await user).id,
-                    email: (await user).email,
+                    sub: user.id,
+                    email: user.email,
                  },
                  {
-                    secret: this.config.get('R_JWT_secret'),
+                    secret: this.config.get('JWT_secret'),
                     expiresIn: '7d',
                  },
                 ),
