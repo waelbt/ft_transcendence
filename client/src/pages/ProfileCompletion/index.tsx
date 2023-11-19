@@ -14,24 +14,35 @@ export function ProfileCompletion() {
                         </div>
                     </div>
                     <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
-                        <div className="px-3.5 py-px flex-col justify-start items-start gap-1.5 flex">
+                        <div className="px-3.5 py-px flex-col justify-start items-start gap-4 flex">
                             {/* Header */}
-                            <div className=" flex-col justify-center items-start gap-3 inline-flex">
-                                <div className="text-neutral-900 text-[35px] font-bold font-openSans">
+                            <div className=" flex-col justify-center items-start inline-flex gap-2">
+                                <div className="text-neutral-900 text-3xl font-bold font-sans">
                                     Welcome! Let’s create your profile
                                 </div>
-                                <div className="text-zinc-600 text-xl font-normal font-openSans">
+                                <div className="text-zinc-600 text-xl font-normal font-sans">
                                     Let others get to know you better!
                                 </div>
                             </div>
                             {/* avatar section */}
-                            <div></div>
-                            {/* nickname section */}
-                            <div>
-                                <InputField label="Nickname"/>
+                            <div className="">
+                                <div className=''>
+
+								</div>
+								<div className=''>
+
+								</div>
                             </div>
+                            {/* nickname section */}
+                            <InputField label="Nickname" />
                             {/* submit putton section */}
-                            <div></div>
+                            <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
+                                <button className="bg-black rounded-[55px] justify-center items-center gap-3 inline-flex hover:bg-gray-500">
+                                    <div className="py-3.5 px-5 text-center text-white text-sm font-bold font-sans">
+                                        Continue
+                                    </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

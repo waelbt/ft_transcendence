@@ -14,29 +14,24 @@ function InputField({
     label,
     type,
     placeholder,
-    register
-} // secure
-: InputFieldProps) {
+    register // secure
+}: InputFieldProps) {
     // const [visible, setvisible] = useState(false);
 
     return (
-        <div className="flex-col justify-start items-start gap-4 inline-flex">
-            {label && (
-                <label className="text-black text-lg font-bold font-openSans leading-tight">
-                    {label}
+        <>
+            <div className="flex flex-col justify-start items-start gap-1.5">
+                <label className="text-black text-lg font-bold font-sans leading-tight">
+                    {label}{' '}
                 </label>
-            )}
-            <input
-                className="
-                pl-[5px] pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center inline-flex
-                    "
-
-                // custom-width
-                type={type}
-                placeholder={placeholder}
-                {...register}
-            />
-        </div>
+                <input
+                    className="w-[385px] pl-1 pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center text-black text-lg font-normal font-sans leading-normal !outline-none"
+                    type={type}
+                    placeholder={placeholder}
+                    {...register}
+                />
+            </div>
+        </>
     );
 }
 

@@ -28,7 +28,8 @@ module.exports = {
                     'sans-serif'
                 ],
                 lemonada: ["'Lemonada'"],
-                openSans: ['Open Sans', 'sans-serif']
+                sans: ['Open Sans'],
+                'sans-italic': ['Open Sans Italic'],
             }
         }
     },
