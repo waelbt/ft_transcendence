@@ -4,16 +4,31 @@ import { GoogleIcon, IntraIcon } from '../../assets/icons';
 
 // todo: store svgs in components
 export function Auth() {
-    const handleClick = async (endpoint: string) => {
-        try {
-            // Make a GET request to the Intra endpoint
-            const response = await axios.get(endpoint);
-            // Handle the response as needed
-            console.log(response);
-            // You could navigate the user to another route or perform other actions
-        } catch (error) {
-            toast.error(`Error fetching Intra data: ${error}`);
-        }
+    const handleClick = async () => {
+        window.location.href = `http://localhost:4000/auth/google`;
+        // // try {
+        // //     // Make a GET request to the Intra endpoint
+        // //     const response = await axios.get(endpoint);
+        // //     // Handle the response as needed
+        // //     console.log(response);
+        // //     // You could navigate the user to another route or perform other actions
+        // // } catch (error) {
+        // //     toast.error(`Error fetching Intra data: ${error}`);
+        // // }
+        // fetch('http://localhost:4000/auth/google')
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         return response.text(); // or response.json() if the response is JSON
+        //     })
+        //     .then((data) => {
+        //         console.log(data);
+        //         // Process the data here
+        //     })
+        //     .catch((error) => {
+        //         toast.error(`Error fetching Intra data: ${error}`);
+        //     });
     };
     return (
         <>
@@ -29,17 +44,16 @@ export function Auth() {
                         </div>
                         <div className="py-2 flex-col justify-start items-start gap-3 inline-flex">
                             {/*google btn*/}
-                            <div className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900">
-                                <button
+                            <a className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900" href="http://localhost:4000/auth/google">
+                                <div
                                     className="justify-start items-center gap-[11px] flex "
-                                    onClick={() => handleClick('/endpoint')}
                                 >
                                     <GoogleIcon />
                                     <div className="font-mona text-center text-white text-[14px] font-semibold">
                                         Sign in to Google
                                     </div>
-                                </button>
-                            </div>
+                                </div>
+                            </a>
                             <div className="w-full">
                                 <div className="flex items-center justify-center">
                                     <div className="flex-grow border-t border-gray-300"></div>
@@ -55,7 +69,7 @@ export function Auth() {
                                     <IntraIcon />
                                     <div
                                         className="font-mona text-center text-black text-[14px] font-semibold"
-                                        onClick={() => handleClick('/endpoint')}
+                                        onClick={() => handleClick('/auth/42')}
                                     >
                                         Continue with Intra
                                     </div>
