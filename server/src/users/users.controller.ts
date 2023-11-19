@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path'
 import { User } from '@prisma/client';
 import { AuthGuard } from "@nestjs/passport";
+import { jwtGuard } from 'src/auth/authGuard';
 
 
 @ApiTags('users')
@@ -15,7 +16,6 @@ import { AuthGuard } from "@nestjs/passport";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @UseGuards(AuthGuard('jwt'))
   @Get('me')
   sayHi(){
     console.log('Welcom To our Website again');
@@ -27,7 +27,6 @@ export class UsersController {
     return (this.usersService.createUser(user));
   }
 
-  // @UseGuards(AuthGuard('jwt'))
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({

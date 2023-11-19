@@ -8,6 +8,7 @@ import { Request } from "express";
 import { JwtStrategy } from "./strategy";
 import { AuthGuard } from "@nestjs/passport";
 import { UsersService } from "src/users/users.service";
+import { jwtGuard } from "./authGuard";
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -16,35 +17,44 @@ export class AuthController {
         private usersService: UsersService) {}
     
     @Get('google')
+    @Public()
     @UseGuards(AuthGuard('google'))
     google(){}
 
     @Get('/google/callback')
+    @Public()
     @UseGuards(AuthGuard('google'))
     async googleLogin(@Req() req, @Res() res){
         await this.AuthService.setUpTokens(req, res);
     }
 
     @Get('42')
+    @Public()
     @UseGuards(AuthGuard('42'))
     Intra(){}
 
     @Get('intra/callback')
+    @Public()
     @UseGuards(AuthGuard('42'))
     async intraLogin(@Req() req, @Res() res){
         await this.AuthService.setUpTokens(req, res);
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        await this.refreshToken(req, res);
+        await this.AuthService.refreshToken(req, res);
+        res.send('seccess');
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Get('logout')
     async logout(@Res() res){
         this.AuthService.logout(res);
+    }
+
+    @Get('ana')
+    ana(@Res() res){
+        console.log('ssssss');
+        res.send('ok');
     }
     // @Public()
     // @Post('signup')

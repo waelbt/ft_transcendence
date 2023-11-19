@@ -9,7 +9,7 @@
 // })
 // export class AppModule {}
 
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
@@ -19,6 +19,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { APP_GUARD } from '@nestjs/core';
 import { accessTokenGuard } from './common/guards';
 import { JwtModule } from '@nestjs/jwt';
+import { Middlware } from './auth/middlware/file.middlware';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -29,6 +31,16 @@ import { JwtModule } from '@nestjs/jwt';
     MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
-  providers: [ChatGateway,],
+  providers: [ChatGateway,
+    {
+      provide: APP_GUARD,
+      useClass: accessTokenGuard,
+    },
+  ],
 })
-export class AppModule {}
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(Middlware).forRoutes(UsersController);
+  }
+}

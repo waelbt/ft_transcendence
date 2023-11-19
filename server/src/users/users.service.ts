@@ -26,8 +26,16 @@ export class UsersService {
                 email : User.email 
               },
     });
-
+    console.log('user is : ', user.email);
     return user ? true : false;
+  }
+
+  async getOneUser(User: User){
+    return (await this.prisma.user.findUnique({
+      where: { id : User.id,
+                email : User.email 
+              },
+    }));
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {

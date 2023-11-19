@@ -12,17 +12,20 @@ export class JwtStrategy extends PassportStrategy(
     ) {
     constructor (private PrismaOrmService: PrismaOrmService, private usersService: UsersService) {
         super ({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                (request) => {
+                  return request.cookies['accessToken'];
+                },
+              ]),
             secretOrKey: process.env.JWT_secret,
         });
     }
     
     // just change the above function that used directly Prisma service and instead use the function findOneUser from UserService module
     async validate(payload: User) {
-        // const user = this.usersService.findOneUser(payload);
-        // if (!user)
-        //     throw new UnauthorizedException;
+        const user = this.usersService.findOneUser(payload);
+        if (!user)
+            throw new UnauthorizedException;
         return payload;
     }
 }

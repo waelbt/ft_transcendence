@@ -25,27 +25,32 @@ export class AuthService {
             }
             await this.generateATRT(res, req.user);
             if (isUser)
-                res.redirect('http://localhost:4000/users/me');
+                res.redirect('http://localhost:4000/auth/ana');
             else
                 res.redirect('chihaja');
         }
 
         async refreshToken(@Req() req, @Res() res){
-            await this.matchRefreshToken(req);
-            const user = await this.usersService.findOneUser(req.userId);
-            await this.generateATRT(res, req.user);
+            const foundUser = await this.matchRefreshToken(req);
+            const user = await this.usersService.getOneUser(foundUser);
+            console.log(user.email);
+            await this.generateATRT(res, user);
+            console.log("sdfdsdf");
         }
 
         logout(@Res() res){
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            res.redirect('/users/me');
+            res.redirect('/auth');
         }
 
         async matchRefreshToken(@Req() req){
-            const refreshToken = req.cookie['refresh_token'];
+            const refreshToken = req.cookies['refreshToken'];
+            console.log('hiii: ', refreshToken);
             try{
-                const payload = await this.jwt.verify(refreshToken);
+                const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
+                console.log('fsfdsdsf:', payload);
+                return payload;
             }
             catch(err){
                 throw new UnauthorizedException('No Valid Token');
@@ -64,13 +69,13 @@ export class AuthService {
                     expiresIn: '15m',
                  },
                 ),
-                this.jwt.signAsync(
+                this.jwt.sign(
                  {
                     sub: user.id,
                     email: user.email,
                  },
                  {
-                    secret: this.config.get('R_JWT_secret'),
+                    secret: this.config.get('JWT_secret'),
                     expiresIn: '7d',
                  },
                 ),
