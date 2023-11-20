@@ -34,7 +34,6 @@ const ProgressRingLoader: FC<ProgressRingProps> = ({
                     strokeWidth={stroke}
                     strokeDasharray={`${circumference} ${circumference}`}
                     style={{ strokeDashoffset, transition: '.1s' }}
-                    //r={60}
                     r={normalizedRadius}
                     cx={radius}
                     cy={radius}

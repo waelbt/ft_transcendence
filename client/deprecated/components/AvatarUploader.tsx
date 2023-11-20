@@ -19,7 +19,7 @@ const AvatarUploader: FC<AvatarProps> = ({
     reset
 }) => {
     const containerRef = useRef<HTMLLabelElement | null>(null);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    // const intervalRef = useRef<NodeJS.Timeout | null>(null);
     // const [progress, setProgress] = useState(0);
 
     // const post = () => {
@@ -75,7 +75,7 @@ const AvatarUploader: FC<AvatarProps> = ({
         <>
             <label
                 ref={containerRef}
-                htmlFor="file-uploader"
+                // htmlFor="avatar-inpuut-section"
                 className={`flex items-start gap-2 relative p-12 border-2 border-dashed border-white rounded-full hover:border-pink uploader  ${
                     imageUrl ? 'border-none' : ''
                 }`}
@@ -164,7 +164,7 @@ const AvatarUploader: FC<AvatarProps> = ({
                     </span>
                 )}
                 <input
-                    id="file-uploader"
+                    id="avatar-inpuut-section"
                     type="file"
                     className="hidden"
                     onChange={(e) => {
