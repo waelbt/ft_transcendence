@@ -16,12 +16,12 @@
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('./assets/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+    src: url('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Open Sans Italic';
-    src: url('./assets/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    src: url('./assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
 

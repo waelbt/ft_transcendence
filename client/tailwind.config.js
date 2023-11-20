@@ -29,7 +29,10 @@ module.exports = {
                 ],
                 lemonada: ["'Lemonada'"],
                 sans: ['Open Sans'],
-                'sans-italic': ['Open Sans Italic'],
+                'sans-italic': ['Open Sans Italic']
+            },
+            colors: {
+                'primary-pink': '#f20553'
             }
         }
     },

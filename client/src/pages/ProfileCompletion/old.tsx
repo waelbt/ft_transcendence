@@ -30,13 +30,13 @@ export function ProfileCompletion() {
     const avatarData = [
         // ! add default avatar + add them into the tailwind config js
         {
-            src:'./src/assets/defaultPicture3.jpg'
+            src: './src/assets/defaultPicture3.jpg'
         },
         {
-            src:'./src/assets/defaultPicture3.jpg'
+            src: './src/assets/defaultPicture3.jpg'
         },
         {
-            src:'./src/assets/defaultPicture3.jpg'
+            src: './src/assets/defaultPicture3.jpg'
         }
     ];
 
