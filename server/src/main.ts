@@ -12,15 +12,15 @@ async function bootstrap() {
     whitelist: true,
   }) );
 
-  // const config = new DocumentBuilder()
-  // .setTitle('Laughtale')
-  // .setDescription('Laughtale API description')
-  // .setVersion('1.0')
-  // .addTag('Laughtale')
-  // .addBearerAuth()
-  // .build();
-  // const document = SwaggerModule.createDocument(app, config);
-  // SwaggerModule.setup('/', app, document);
+  const config = new DocumentBuilder()
+  .setTitle('Laughtale')
+  .setDescription('Laughtale API description')
+  .setVersion('1.0')
+  .addTag('Laughtale')
+  .addBearerAuth()
+  .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/', app, document);
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));

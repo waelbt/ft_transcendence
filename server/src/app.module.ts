@@ -32,10 +32,10 @@ import { UsersController } from './users/users.controller';
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
   providers: [ChatGateway,
-    {
-      provide: APP_GUARD,
-      useClass: accessTokenGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: accessTokenGuard,
+    // },
   ],
 })
 
