@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Req } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
@@ -76,9 +76,17 @@ export class UsersService {
         }),
       ),
   );
-  // const theUser = this.getOneUser(User);
-  User.Avatar = imageData.data.url;
-  this.updateUser(User.id, User);
-  return imageData;
+    // const theUser = this.getOneUser(User);
+    // User.Avatar = imageData.data.url;
+    this.updateUser(User.id, User);
+    return imageData.data.url;
+  }
+
+  async userInfo(@Req() req){
+    const isUser = this.findOneUser(req.user);
+    if (isUser)
+      throw new NotFoundException(`User does not exist`);
+    //update user avatar and nickName if the front send them if not do not do anything
+    return this.getOneUser(req.user);
   }
 }
