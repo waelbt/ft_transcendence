@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id String @id
+  id String @id @unique
   email String @unique
   HashPassword String?
   Avatar String?
