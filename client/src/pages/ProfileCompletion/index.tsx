@@ -1,30 +1,18 @@
 import { useState } from 'react';
-import AvatarUploader from '../../components/AvatarUploader';
+import Avatar from '../../components/Avatar';
 import InputField from '../../components/InputField';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { IconContext } from 'react-icons';
+import ProgressRingLoader from '../../components/ProgressRingLoader';
+import { DEFAULT_PATH } from '../../constants';
+import useUpload from '../../hooks/UploadImageHook';
 
 // ! combine the nickname and submit section into a resuable from
 export function ProfileCompletion() {
-    const [show, setShow] = useState<boolean>(false);
-    const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
-        null
-    );
-    // const [upload, setUpload] = useState(false);
+    const [showDefault, setShowDefault] = useState<boolean>(false);
+    const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const onchange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const objectURL = URL.createObjectURL(file);
-            setImagePath(objectURL);
-        }
-    };
-
-    const reset = () => {
-        setImagePath(null);
-        setSelectedItemIndex(null);
-    };
-
+    const { uploading, progress, error, success, uploadData } = useUpload();
     return (
         <>
             <IconContext.Provider
@@ -58,18 +46,46 @@ export function ProfileCompletion() {
                                         Add an avatar
                                     </span>
                                     <div className=" pr-3.5 py-px justify-start items-start gap-10 inline-flex">
-                                        {/* uploader section */}
-                                        <div className="flex flex-col items-start gap-4">
-                                            <AvatarUploader
-                                                imageUrl={imagePath}
-                                                upload={
-                                                    selectedItemIndex
-                                                        ? false
-                                                        : true
+                                        <input
+                                            className="hidden"
+                                            id="inputTag"
+                                            type="file"
+                                            onChange={(event) => {
+                                                const file =
+                                                    event.target.files?.[0];
+                                                if (file) {
+                                                    const objectURL =
+                                                        URL.createObjectURL(
+                                                            file
+                                                        );
+                                                    setImagePath(objectURL);
+                                                    uploadData(objectURL);
                                                 }
-                                                onchange={onchange}
-                                                reset={reset}
+                                            }}
+                                        />
+                                        {/* uploader section */}
+                                        <div className="relative">
+                                            <Avatar
+                                                imageUrl={imagePath}
+                                                onCLick={(event) => {
+                                                    event.stopPropagation(); // This stops the event from reaching the label
+                                                    setImagePath(null);
+                                                    setSelectedItemIndex(-1);
+                                                }}
                                             />
+                                            <label
+                                                className="absolute top-0 left-0 w-full h-full"
+                                                htmlFor="inputTag"
+                                            >
+                                                <ProgressRingLoader
+                                                    style={
+                                                        'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                                                    }
+                                                    radius={62}
+                                                    stroke={2}
+                                                    progress={progress}
+                                                />
+                                            </label>
                                         </div>
                                         {/* btn and default section */}
                                         <div className="flex-col justify-start items-start gap-1.5 inline-flex">
@@ -80,12 +96,6 @@ export function ProfileCompletion() {
                                             >
                                                 <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">
                                                     Choose image
-                                                    <input //! redha meli tssali 
-                                                        className="hidden"
-                                                        id="inputTag"
-                                                        type="file"
-                                                        onChange={onchange}
-                                                    />
                                                 </div>
                                             </label>
                                             {/* default */}
@@ -93,10 +103,12 @@ export function ProfileCompletion() {
                                                 <div
                                                     className="inline-flex justify-content items-center gap-1 "
                                                     onClick={() =>
-                                                        setShow(!show)
+                                                        setShowDefault(
+                                                            !showDefault
+                                                        )
                                                     }
                                                 >
-                                                    {show ? (
+                                                    {showDefault ? (
                                                         <IoIosArrowForward />
                                                     ) : (
                                                         <IoIosArrowDown />
@@ -109,7 +121,9 @@ export function ProfileCompletion() {
                                                 </div>
                                                 <ul
                                                     className={`list-none flex items-start gap-3 p-0  ${
-                                                        show ? 'hidden' : ''
+                                                        showDefault
+                                                            ? 'hidden'
+                                                            : ''
                                                     }`}
                                                 >
                                                     {Array.from(
@@ -125,7 +139,7 @@ export function ProfileCompletion() {
                                                                 key={index}
                                                                 onClick={() => {
                                                                     setImagePath(
-                                                                        `./src/assets/images/default${
+                                                                        `${DEFAULT_PATH}${
                                                                             index +
                                                                             1
                                                                         }.png`
@@ -137,7 +151,7 @@ export function ProfileCompletion() {
                                                             >
                                                                 <img
                                                                     className="w-full h-full object-cover rounded-full"
-                                                                    src={`./src/assets/images/default${
+                                                                    src={`${DEFAULT_PATH}${
                                                                         index +
                                                                         1
                                                                     }.png`}
