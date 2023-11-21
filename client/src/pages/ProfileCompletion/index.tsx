@@ -10,20 +10,21 @@ export function ProfileCompletion() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number | null>(
         null
     );
-    const [upload, setUpload] = useState(false);
+    // const [upload, setUpload] = useState(false);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onchange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             const objectURL = URL.createObjectURL(file);
             setImagePath(objectURL);
-            setUpload(true);
         }
     };
+
     const reset = () => {
-        setUpload(false);
         setImagePath(null);
+        setSelectedItemIndex(null);
     };
+
     return (
         <>
             <IconContext.Provider
@@ -61,8 +62,12 @@ export function ProfileCompletion() {
                                         <div className="flex flex-col items-start gap-4">
                                             <AvatarUploader
                                                 imageUrl={imagePath}
-                                                upload={upload}
-                                                onchange={handleFileChange}
+                                                upload={
+                                                    selectedItemIndex
+                                                        ? false
+                                                        : true
+                                                }
+                                                onchange={onchange}
                                                 reset={reset}
                                             />
                                         </div>
@@ -75,18 +80,16 @@ export function ProfileCompletion() {
                                             >
                                                 <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">
                                                     Choose image
-                                                    <input
+                                                    <input //! redha meli tssali 
                                                         className="hidden"
                                                         id="inputTag"
                                                         type="file"
-                                                        onChange={
-                                                            handleFileChange
-                                                        }
+                                                        onChange={onchange}
                                                     />
                                                 </div>
                                             </label>
                                             {/* default */}
-                                            <div className="flex-col justify-start items-start gap-0 inline-flex">
+                                            <div className="flex-col justify-start items-start gap-0.5 inline-flex">
                                                 <div
                                                     className="inline-flex justify-content items-center gap-1 "
                                                     onClick={() =>
@@ -121,7 +124,6 @@ export function ProfileCompletion() {
                                                                 }`}
                                                                 key={index}
                                                                 onClick={() => {
-                                                                    // setUpload(false);
                                                                     setImagePath(
                                                                         `./src/assets/images/default${
                                                                             index +
