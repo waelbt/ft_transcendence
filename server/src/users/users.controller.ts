@@ -47,7 +47,7 @@ export class UsersController {
         throw new InvalidFileException('No file provided.');
       }
       console.log(file);
-      return this.usersService.uploadAvatar(file, req);
+      return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {
         throw new HttpException({ statusCode: HttpStatus.BAD_REQUEST, message: error.message }, HttpStatus.BAD_REQUEST);
@@ -57,10 +57,14 @@ export class UsersController {
     }
   }
 
+  @Delete('/delete/image')
+  async deleteImage(path: string){
+    return await this.usersService.deleteImage(path);
+  }
   
   @Get('/info')
-  UserInfo(@Req() req, dto: P_N_Dto){
-    return this.usersService.userInfo(req, dto);    
+  async UserInfo(@Req() req, dto: P_N_Dto){
+    return await this.usersService.userInfo(req, dto);    
   }
 
   @Get()

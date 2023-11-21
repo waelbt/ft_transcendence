@@ -11,7 +11,7 @@ import { multerOptions } from './multer/multer.config';
 @Module({
   controllers: [UsersController],
   providers: [UsersService, JwtService],
-  imports: [HttpModule ,PrismaOrmModule, MulterModule.register(multerOptions),],
+  imports: [HttpModule ,PrismaOrmModule, MulterModule.register(multerOptions)],
   exports: [UsersService]
 })
 export class UsersModule {}

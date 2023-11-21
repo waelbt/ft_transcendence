@@ -5,6 +5,7 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
 import { P_N_Dto } from './dto/completeProfile.dto';
+import * as fs from 'fs';
 
 
 
@@ -12,7 +13,7 @@ import { P_N_Dto } from './dto/completeProfile.dto';
 export class UsersService {
 
   constructor(private readonly httpService: HttpService,
-    private prisma: PrismaOrmService) {}
+    private prisma: PrismaOrmService,) {}
   
   createUser(user: User) {
     return (this.prisma.user.create({
@@ -70,6 +71,28 @@ export class UsersService {
     this.updateUser(req.user.id, req.user);
     console.log('path is : ', file.path);
     return file.path;
+  }
+
+  async deleteImage(path:string){
+    try {
+      await this.deleteFile(path);
+      return 'File deleted successfully';
+    } catch (error) {
+      return `Error deleting file: ${error.message}`;
+    }
+    
+  }
+
+  deleteFile(filePath: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
   }
 
   async userInfo(@Req() req, dto: P_N_Dto){
