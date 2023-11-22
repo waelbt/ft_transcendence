@@ -1,0 +1,1 @@
+export const DEFAULT_PATH = './src/assets/images/default';
