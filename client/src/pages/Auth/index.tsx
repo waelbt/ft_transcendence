@@ -4,32 +4,6 @@ import { GoogleIcon, IntraIcon } from '../../assets/icons';
 
 // todo: store svgs in components
 export function Auth() {
-    const handleClick = async () => {
-        window.location.href = `http://localhost:4000/auth/google`;
-        // // try {
-        // //     // Make a GET request to the Intra endpoint
-        // //     const response = await axios.get(endpoint);
-        // //     // Handle the response as needed
-        // //     console.log(response);
-        // //     // You could navigate the user to another route or perform other actions
-        // // } catch (error) {
-        // //     toast.error(`Error fetching Intra data: ${error}`);
-        // // }
-        // fetch('http://localhost:4000/auth/google')
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.text(); // or response.json() if the response is JSON
-        //     })
-        //     .then((data) => {
-        //         console.log(data);
-        //         // Process the data here
-        //     })
-        //     .catch((error) => {
-        //         toast.error(`Error fetching Intra data: ${error}`);
-        //     });
-    };
     return (
         <>
             {/*container*/}
@@ -44,15 +18,18 @@ export function Auth() {
                         </div>
                         <div className="py-2 flex-col justify-start items-start gap-3 inline-flex">
                             {/*google btn*/}
-                            <a className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900" href="http://localhost:4000/auth/google">
-                                <div
-                                    className="justify-start items-center gap-[11px] flex "
-                                >
+                            <a
+                                className="px-36 py-5 bg-stone-950 rounded-[47px] justify-center items-center gap-2.5 inline-flex hover:opacity-60 transition-opacity hover:bg-gray-900"
+                                href={`${
+                                    import.meta.env.VITE_BASE_URL
+                                }/auth/google`}
+                            >
+                                <span className="justify-start items-center gap-[11px] flex ">
                                     <GoogleIcon />
                                     <div className="font-mona text-center text-white text-[14px] font-semibold">
                                         Sign in to Google
                                     </div>
-                                </div>
+                                </span>
                             </a>
                             <div className="w-full">
                                 <div className="flex items-center justify-center">
@@ -65,15 +42,17 @@ export function Auth() {
                             </div>
                             {/*intra btn*/}
                             <div className="px-32 py-5 bg-white rounded-[47px] justify-center items-center gap-2.5 inline-flex border border-black  hover:opacity-60 transition-opacity hover:bg-gray-100">
-                                <button className="justify-start items-center gap-[11px] flex">
+                                <a
+                                    className="justify-start items-center gap-[11px] flex"
+                                    href={`${
+                                        import.meta.env.VITE_BASE_URL
+                                    }/auth/42`}
+                                >
                                     <IntraIcon />
-                                    <div
-                                        className="font-mona text-center text-black text-[14px] font-semibold"
-                                        onClick={() => handleClick('/auth/42')}
-                                    >
+                                    <div className="font-mona text-center text-black text-[14px] font-semibold">
                                         Continue with Intra
                                     </div>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

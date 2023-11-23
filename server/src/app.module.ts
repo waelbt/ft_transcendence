@@ -28,14 +28,14 @@ import { UsersController } from './users/users.controller';
     AuthModule,
     PrismaOrmModule,
     UsersModule,
-    MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
+    // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
   providers: [ChatGateway,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: accessTokenGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: accessTokenGuard,
+    },
   ],
 })
 
