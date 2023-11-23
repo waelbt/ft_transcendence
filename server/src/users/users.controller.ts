@@ -31,7 +31,8 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse()
-  createUser(@Body() user: User) {
+  createUser(@Body() user: CreateUserDto) {
+    console.log('userId /////', user)
     return (this.usersService.createUser(user));
   }
 
@@ -97,4 +98,7 @@ export class UsersController {
   removeUser(@Param('id') id: string) {
     return (this.usersService.removeUser(String(id)));
   }
+
+// Close Prisma client when done
+// prisma.$disconnect();
 }

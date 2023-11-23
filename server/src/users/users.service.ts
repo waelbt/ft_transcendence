@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
 import { P_N_Dto } from './dto/completeProfile.dto';
 import * as fs from 'fs';
+import { CreateUserDto } from './dto/create-user.dto';
 
 
 
@@ -15,9 +16,10 @@ export class UsersService {
   constructor(private readonly httpService: HttpService,
     private prisma: PrismaOrmService,) {}
   
-  createUser(user: User) {
+  createUser(user: CreateUserDto) {
+
     return (this.prisma.user.create({
-      data: user
+      data: user,
     }));
   }
 
@@ -100,6 +102,7 @@ export class UsersService {
     if (isUser)
       throw new NotFoundException(`User does not exist`);
     //update user avatar and nickName if the front send them if not do not do anything
+    //serach if the userName exist or not because it's need to be unique
     var user = this.getOneUser(req.user);
     if (dto.Avatar && dto.nickName)
     {

@@ -19,4 +19,7 @@ model User {
   nickName String @unique
   fullName String
   status Boolean  @default(true)
+  F2A    Boolean  @default(false)
+  active Boolean  @default(false)
+  
 }
