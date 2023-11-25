@@ -6,7 +6,7 @@ import {
   OnGatewayInit,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common'
+import { Logger, Req } from '@nestjs/common'
 import { Server } from 'socket.io'
 
 @WebSocketGateway({
