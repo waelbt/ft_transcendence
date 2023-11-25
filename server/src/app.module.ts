@@ -21,6 +21,8 @@ import { accessTokenGuard } from './common/guards';
 import { JwtModule } from '@nestjs/jwt';
 import { Middlware } from './auth/middlware/file.middlware';
 import { UsersController } from './users/controllers/users.controller';
+import { ChatModule } from './chat/chat.module';
+import { RoomService } from './chat/rooms/room.service';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { UsersController } from './users/controllers/users.controller';
     AuthModule,
     PrismaOrmModule,
     UsersModule,
+    ChatModule,
     // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
