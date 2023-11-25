@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -12,14 +12,24 @@ datasource db {
 }
 
 model User {
-  id String @id @unique
-  email String @unique
+  id           String       @id @unique
+  email        String       @unique
   HashPassword String?
-  Avatar String?
-  nickName String @unique
-  fullName String
-  status Boolean  @default(true)
-  F2A    Boolean  @default(false)
-  active Boolean  @default(false)
-  
+  Avatar       String?
+  nickName     String       @unique
+  fullName     String
+  status       Boolean      @default(true)
+  F2A          Boolean      @default(false)
+  active       Boolean      @default(false)
+  friends      Friendship[]
+}
+
+model Friendship {
+  id      String @id
+  userId1 String
+  userId2 String
+  status  String
+  user    User[]
+
+  @@unique([userId1, userId2])
 }

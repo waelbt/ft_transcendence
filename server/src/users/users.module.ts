@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { UsersService } from './services/users.service';
+import { UsersController } from './controllers/users.controller';
 import { PrismaOrmModule } from 'src/prisma-orm/prisma-orm.module';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from './multer/multer.config';
+// import { friendsController } from './controllers/friends.controller';
+// import { friendsService } from './services/friends.service';
 
 
 @Module({

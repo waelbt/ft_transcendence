@@ -20,7 +20,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { accessTokenGuard } from './common/guards';
 import { JwtModule } from '@nestjs/jwt';
 import { Middlware } from './auth/middlware/file.middlware';
-import { UsersController } from './users/users.controller';
+import { UsersController } from './users/controllers/users.controller';
 
 @Module({
   imports: [

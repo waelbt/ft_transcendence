@@ -7,7 +7,7 @@ import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators"
 import { Request } from "express";
 import { JwtStrategy } from "./strategy";
 import { AuthGuard } from "@nestjs/passport";
-import { UsersService } from "src/users/users.service";
+import { UsersService } from "src/users/services/users.service";
 import { jwtGuard } from "./authGuard";
 
 @ApiTags('Authentication')
