@@ -5,7 +5,7 @@ import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { AuthDto, AuthDtoSignIn } from "./dto";
 import * as argon from 'argon2';
-import { UsersService } from "src/users/users.service";
+import { UsersService } from "src/users/services/users.service";
 import { User } from "@prisma/client";
 
 @Injectable({})
@@ -17,7 +17,7 @@ export class AuthService {
 
         async setUpTokens(@Req() req, @Res() res){
             console.log('here = ', req.user);
-            var isUser = await this.usersService.findOneUser(req.user);
+            var isUser = await this.usersService.findOneUser(req.user.id);
             if (!isUser)
             {
                 console.log('im in create user');
@@ -32,7 +32,7 @@ export class AuthService {
 
         async refreshToken(@Req() req, @Res() res){
             const foundUser = await this.matchRefreshToken(req);
-            const user = await this.usersService.getOneUser(foundUser);
+            const user = await this.usersService.getOneUser(foundUser.id);
             console.log(user.email);
             await this.generateATRT(res, user);
         }
