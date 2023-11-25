@@ -4,9 +4,9 @@ import { AxiosError } from 'axios';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
-import { P_N_Dto } from './dto/completeProfile.dto';
+import { P_N_Dto } from '../dto/completeProfile.dto';
 import * as fs from 'fs';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 
 
@@ -27,22 +27,22 @@ export class UsersService {
     return (this.prisma.user.findMany());
   }
 
-  async findOneUser(User: User) {
+  async findOneUser(id: string) {
 
-    // console.log('that a user ; ',User);
+    console.log('that a user ; ',id);
     const user = await this.prisma.user.findUnique({
       where: {
-                email : User.email 
+                id : id
               },
     });
     return user ? true : false;
   }
 
-  async getOneUser(User: User): Promise<User>{
+  async getOneUser(id: string){
     return (await this.prisma.user.findUnique({
-      where: { id : User.id,
-                email : User.email 
-              },
+      where: {
+              id : id,
+            },
     }));
   }
 
@@ -64,7 +64,7 @@ export class UsersService {
     @Req() req,
   ): Promise<any> {
       console.log('jjjjj');
-      const user = await this.findOneUser(req.user);
+      const user = await this.findOneUser(req.user.id);
       if (!user)
         throw new NotFoundException(`User does not exist`);
       console.log('im user');
@@ -98,12 +98,12 @@ export class UsersService {
   }
 
   async userInfo(@Req() req, dto: P_N_Dto){
-    const isUser = this.findOneUser(req.user);
+    const isUser = this.findOneUser(req.user.id);
     if (isUser)
       throw new NotFoundException(`User does not exist`);
     //update user avatar and nickName if the front send them if not do not do anything
     //serach if the userName exist or not because it's need to be unique
-    var user = this.getOneUser(req.user);
+    var user = this.getOneUser(req.user.id);
     if (dto.Avatar && dto.nickName)
     {
       (await user).Avatar = dto.Avatar;

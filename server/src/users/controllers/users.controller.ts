@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from '../services/users.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -13,8 +13,8 @@ import { ParamsTokenFactory } from '@nestjs/core/pipes';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { extname } from 'path';
-import { InvalidFileException } from './multer/file.exception';
-import { P_N_Dto } from './dto/completeProfile.dto';
+import { InvalidFileException } from '../multer/file.exception';
+import { P_N_Dto } from '../dto/completeProfile.dto';
 
 
 @ApiTags('users')
@@ -78,10 +78,11 @@ export class UsersController {
   @Get(':id')
   @ApiBearerAuth()
   @ApiOkResponse()
-  async findOneUser(@Param('id', ParseIntPipe) user: User) {
-    const findUser = await this.usersService.findOneUser(user);
+  async findOneUser(@Param('id') id: string) {
+    console.log('hi im here');
+    const findUser = await this.usersService.getOneUser(id);
     if (!findUser)
-      throw new NotFoundException(`User with the  id ${user.id} does not exist`);
+      throw new NotFoundException(`User with the  id ${id} does not exist`);
     return (findUser);
   }
 
