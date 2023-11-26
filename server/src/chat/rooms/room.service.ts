@@ -4,7 +4,7 @@ import { Room, User, RoomPrivacy } from '@prisma/client'
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { CreateRoomDto } from '../DTOS/create-room.dto';
 import { JoinRoomDto } from '../DTOS/join-room.dto';
-
+import { LeaveRoomDto } from '../DTOS/leave-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -97,8 +97,41 @@ constructor(private readonly prisma: PrismaOrmService){}
                     },
                 },
             },
-        })
+        });
 
         return (room);
+    }
+
+    async leaveRoom(leaveRoomDto: LeaveRoomDto, userId: string) {
+
+        let room = await this.findRoomByTitle(leaveRoomDto.roomTitle);
+
+        room = await this.prisma.room.update({
+            where: {
+                roomTitle: leaveRoomDto.roomTitle,
+            },
+            data : {
+                users: {
+                    disconnect: {
+                        id: userId,
+                    },
+                },
+            },
+            include: {
+                users: true,
+                messages: {
+                    include: {
+                        user: true,
+                    }
+                }
+            },
+        });
+
+        // here i should check if the room has no more users
+        // if yes
+        // i should delete all the messages that belongs to it
+        // and delete the room it self
+        return (room);
+
     }
 }
