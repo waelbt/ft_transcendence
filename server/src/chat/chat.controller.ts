@@ -11,14 +11,14 @@ export class ChatController {
     @Post('createRoom')
     createRoom(@Req() req, @Body() createRoomDto: CreateRoomDto){
 
-        console.log(req.user);
         return (this.roomService.createRoom(createRoomDto, req.user.sub));
     }
 
     @Post('joinRoom')
     joinRoom(@Req() req, @Body() joinRoomDto: JoinRoomDto){
 
-        return (this.roomService.joinRoom(joinRoomDto, req.user.id));
+        console.log(`controller: userid is ${req.user.sub}`)
+        return (this.roomService.joinRoom(joinRoomDto, req.user.sub));
     }
 
 }

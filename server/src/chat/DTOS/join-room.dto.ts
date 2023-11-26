@@ -2,8 +2,11 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class JoinRoomDto {
     
+    @IsString()
+    roomTitle: string;
+
     @IsNumber()
-    roomid: number;
+    roomId: number;
 
     @IsOptional()
     password?: string;

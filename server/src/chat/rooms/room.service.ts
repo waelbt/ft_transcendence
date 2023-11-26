@@ -23,7 +23,9 @@ constructor(private readonly prisma: PrismaOrmService){}
                     isConversation: createRoomDto.isConversation,
                     privacy: createRoomDto.privacy,
                     users: {
-                        connect: {id : userId},
+                        connect: {
+                            id : userId
+                        },
                     }
                 },
                 include : {
@@ -58,14 +60,10 @@ constructor(private readonly prisma: PrismaOrmService){}
     async joinRoom(joinRoomDto: JoinRoomDto, userId: string) {
 
         // check if the room existed and if the user is already joined
+        console.log(joinRoomDto.roomTitle, userId);
         let room = await this.prisma.room.findUnique({
             where: {
-                id: joinRoomDto.roomid,
-                users: {
-                    none: {
-                        id: userId,
-                    },
-                },
+                roomTitle: joinRoomDto.roomTitle,
             },
             select: {
                 privacy: true,
@@ -79,9 +77,10 @@ constructor(private readonly prisma: PrismaOrmService){}
         // else if (room.privacy == 'PROTECTED')
             // should check if the password match 
 
+        console.log(`this is the user id ${userId}`);
         room = await this.prisma.room.update({
             where: {
-                id: joinRoomDto.roomid,
+                roomTitle: joinRoomDto.roomTitle,
             },
             data: {
                 users: {
@@ -100,5 +99,6 @@ constructor(private readonly prisma: PrismaOrmService){}
             },
         })
 
+        return (room);
     }
 }
