@@ -75,7 +75,7 @@ constructor(private readonly prisma: PrismaOrmService){}
         })
 
         if (!room)
-            throw new BadRequestException("Already Joined");
+            throw new NotFoundException('No Exsiting Room With This Id');
         else if (room.privacy == 'PRIVATE')
             throw new BadRequestException("This Room Is Private");
         // else if (room.privacy == 'PROTECTED')
@@ -126,8 +126,8 @@ constructor(private readonly prisma: PrismaOrmService){}
                 messages: {
                     include: {
                         user: true,
-                    }
-                }
+                    },
+                },
             },
         });
 
@@ -145,19 +145,29 @@ constructor(private readonly prisma: PrismaOrmService){}
                 isConversation: false,
                 privacy: {
                     not: RoomPrivacy.PRIVATE,
-                }
+                },
             },
             include: {
                 users: true,
                 messages: true,
-            }
-        })
+            },
+        });
 
         return (rooms);
     }
 
 
-    async getOneRoom(id: number, userId: string) {
+    async getOneRoom(roomId: number, userId: string) {
+
+
+        const tmproom = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            }
+        });
+
+        if (!tmproom)
+            throw new NotFoundException('No Exsiting Room With This Id');
 
         const user = await this.prisma.user.findUnique({
             where: {
@@ -166,7 +176,7 @@ constructor(private readonly prisma: PrismaOrmService){}
             include: {
                 rooms: {
                     where: {
-                        id: id,
+                        id: roomId,
                     }
                 }
             }
@@ -179,7 +189,7 @@ constructor(private readonly prisma: PrismaOrmService){}
 
         const room = await this.prisma.room.findUnique({
             where: {
-                id: id,
+                id: roomId,
             },
             include: {
                 users: true,

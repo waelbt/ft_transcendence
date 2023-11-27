@@ -42,7 +42,7 @@ export class ChatController {
         return await (this.roomService.getOneRoom(id, req.user.sub));
     }
 
-    @Post()
+    @Post('setAdmin')
     async setUserToAdminRoom(@Req() req, @Body() setAdminDto : SetAdminDto) {
 
         return (this.roomService.setUserToAdminRoom(setAdminDto, req.user.sub));
