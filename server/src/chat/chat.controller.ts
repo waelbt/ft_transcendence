@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Param, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './DTOS/create-room.dto';
 import { RoomService } from './rooms/room.service';
 import { JoinRoomDto } from './DTOS/join-room.dto';
@@ -28,9 +28,16 @@ export class ChatController {
         return await (this.roomService.leaveRoom(leaveRoomDto, req.user.sub));
     }
 
-    @Get('getRooms')
+    @Get('rooms')
     async getRooms(@Req() req) {
-        
+     
+        return  await (this.roomService.getRooms());
+
     }
 
+    @Get(':id')
+    async getRoomUsers(@Req() req,  @Param('id', ParseIntPipe) id: number) {
+
+        return await (this.roomService.getOneRoom(id, req.user.sub));
+    }
 }

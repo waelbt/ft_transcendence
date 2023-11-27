@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { Room, User, RoomPrivacy } from '@prisma/client'
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -133,5 +133,60 @@ constructor(private readonly prisma: PrismaOrmService){}
         // and delete the room it self
         return (room);
 
+    }
+
+    async getRooms() {
+        const rooms = await this.prisma.room.findMany({
+            where: {
+                isConversation: false,
+                privacy: {
+                    not: RoomPrivacy.PRIVATE,
+                }
+            },
+            include: {
+                users: true,
+                messages: true,
+            }
+        })
+
+        return (rooms);
+    }
+
+
+    async getOneRoom(id: number, userId: string) {
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                rooms: {
+                    where: {
+                        id: id,
+                    }
+                }
+            }
+        });
+
+        // console.log(user.rooms);
+
+        if (user.rooms.length === 0)
+            throw new BadRequestException(`You are not a member of this room`);
+
+        const room = await this.prisma.room.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                users: true,
+                messages: {
+                    include: {
+                        user: true,
+                    },
+                },
+            },
+        });
+
+        return (room);
     }
 }
