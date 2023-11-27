@@ -5,6 +5,7 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { CreateRoomDto } from '../DTOS/create-room.dto';
 import { JoinRoomDto } from '../DTOS/join-room.dto';
 import { LeaveRoomDto } from '../DTOS/leave-room.dto';
+import { SetAdminDto } from '../DTOS/set-admin-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -26,7 +27,9 @@ constructor(private readonly prisma: PrismaOrmService){}
                         connect: {
                             id : userId
                         },
-                    }
+                    },
+                    owner: [userId],
+                    admins: [userId],
                 },
                 include : {
                     users: true,
@@ -36,6 +39,7 @@ constructor(private readonly prisma: PrismaOrmService){}
         // }
         return (newRoom);
     }
+    
 
     async findRoomByTitle(roomTitle: string) {
         
@@ -188,5 +192,36 @@ constructor(private readonly prisma: PrismaOrmService){}
         });
 
         return (room);
+    }
+
+    async setUserToAdminRoom(setAdminDto: SetAdminDto, userId: string) {
+
+
+        const roomWithAdmins = await this.prisma.room.findUnique({
+            where : {
+                id: setAdminDto.roomId,
+            },
+            select: {
+                admins: true,
+            }
+        });
+
+        let updatedRoom;
+        if (roomWithAdmins.admins.includes(userId))
+        {
+            updatedRoom = await this.prisma.room.updateMany({
+                where: {
+                    id: setAdminDto.roomId,
+                },
+                data :{
+                    admins: {
+                        set: [...roomWithAdmins.admins, setAdminDto.userId],
+                    },
+                },
+            });
+        }
+
+        return (updatedRoom);
+
     }
 }

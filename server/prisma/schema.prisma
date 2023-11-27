@@ -46,6 +46,8 @@ model Room {
   isConversation Boolean
   privacy        RoomPrivacy @default(PUBLIC)
   password       String?
+  owner          String[]
+  admins         String[]
 }
 
 model Message {
