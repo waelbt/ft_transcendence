@@ -4,6 +4,7 @@ import { RoomService } from './rooms/room.service';
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { LeaveRoomDto } from './DTOS/leave-room.dto'
 import { SetAdminDto } from './DTOS/set-admin-room.dto';
+import { KickMemberDto } from './DTOS/kick-member.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -19,7 +20,7 @@ export class ChatController {
     @Post('joinRoom')
     async joinRoom(@Req() req, @Body() joinRoomDto: JoinRoomDto){
 
-        console.log(`controller: userid is ${req.user.sub}`)
+        // console.log(`controller: userid is ${req.user.sub}`)
         return await (this.roomService.joinRoom(joinRoomDto, req.user.sub));
     }
 
@@ -48,4 +49,12 @@ export class ChatController {
         return (this.roomService.setUserToAdminRoom(setAdminDto, req.user.sub));
     }
     
+
+    @Post('kickMember')
+    async kickMember(@Req() req, @Body() kickMemberDto: KickMemberDto){
+
+        return (this.roomService.kickMember(kickMemberDto, req.user.sub))
+
+    }
+
 }

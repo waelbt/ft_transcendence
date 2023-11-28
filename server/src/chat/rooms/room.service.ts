@@ -6,6 +6,7 @@ import { CreateRoomDto } from '../DTOS/create-room.dto';
 import { JoinRoomDto } from '../DTOS/join-room.dto';
 import { LeaveRoomDto } from '../DTOS/leave-room.dto';
 import { SetAdminDto } from '../DTOS/set-admin-room.dto';
+import { KickMemberDto } from '../DTOS/kick-member.dto';
 
 @Injectable()
 export class RoomService {
@@ -232,6 +233,88 @@ constructor(private readonly prisma: PrismaOrmService){}
         }
 
         return (updatedRoom);
+
+    }
+
+    async kickMember(kickMemberDto: KickMemberDto, userId: string) {
+
+        const roomWithAdmins = await this.prisma.room.findUnique({
+            where : {
+                id: kickMemberDto.roomId,
+            },
+            select: {
+                admins: true,
+            }
+        });
+
+        if (roomWithAdmins.admins.includes(userId))
+        {
+            const room = await this.prisma.room.findUnique({
+                where: {
+                    id: kickMemberDto.roomId,
+                },
+                select: {
+                    users: {
+                        where: {
+                            id: kickMemberDto.userId,
+                        },
+                    },
+                }
+            });
+
+            if (room.users.length === 0)
+                throw new BadRequestException('User Is Not A Member In This Chat');
+
+            await this.unsetUserFromAdmins(kickMemberDto.roomId, kickMemberDto.userId);
+
+            const tmpRoom = await this.prisma.room.update({
+                where : {
+                    id: kickMemberDto.roomId,
+                },
+                data : {
+                    users: {
+                        disconnect: {
+                            id: kickMemberDto.userId,
+                        },
+                    },
+                },
+                include: {
+                    users: true,
+                },
+            });
+
+            return (tmpRoom);
+        }
+
+        throw new BadRequestException('Only Admins Can Kick Other Users');
+
+    }
+
+
+    async unsetUserFromAdmins(roomId: number, userId: string) {
+
+        const roomWithAdmins = await this.prisma.room.findUnique({
+            where : {
+                id: roomId,
+            },
+            select: {
+                admins: true,
+            },
+        });
+
+        if (roomWithAdmins.admins.includes(userId))
+        {
+            const room = await this.prisma.room.updateMany({
+                where: {
+                    id: roomId,
+                },
+                data: {
+                    admins: {
+                        set: roomWithAdmins.admins.filter((admin) => admin !== userId),
+                    },
+                },
+            });
+        }
 
     }
 }
