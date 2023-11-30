@@ -30,11 +30,18 @@ export class ChatController {
         return await (this.roomService.leaveRoom(leaveRoomDto, req.user.sub));
     }
 
-    @Get('rooms')
-    async getRooms(@Req() req) {
+    @Get('AllRooms')
+    async getAllRooms() {
      
-        return  await (this.roomService.getRooms());
+        return  await (this.roomService.getAllRooms());
 
+    }
+
+    @Get('myRooms') 
+    async getMyRooms(@Req() req) {
+
+        console.log(req.user);
+        return await (this.getMyRooms(req.user.sub));
     }
 
     @Get(':id')

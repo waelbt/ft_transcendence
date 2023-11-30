@@ -140,7 +140,7 @@ constructor(private readonly prisma: PrismaOrmService){}
 
     }
 
-    async getRooms() {
+    async getAllRooms() {
         const rooms = await this.prisma.room.findMany({
             where: {
                 isConversation: false,
@@ -247,6 +247,7 @@ constructor(private readonly prisma: PrismaOrmService){}
             }
         });
 
+
         if (roomWithAdmins.admins.includes(userId))
         {
             const room = await this.prisma.room.findUnique({
@@ -265,6 +266,8 @@ constructor(private readonly prisma: PrismaOrmService){}
             if (room.users.length === 0)
                 throw new BadRequestException('User Is Not A Member In This Chat');
 
+            if (this.isUserOwner(kickMemberDto.roomId, kickMemberDto.userId))
+                throw new BadRequestException('You Cannot Kick The Chat Owner');
             await this.unsetUserFromAdmins(kickMemberDto.roomId, kickMemberDto.userId);
 
             const tmpRoom = await this.prisma.room.update({
@@ -289,7 +292,6 @@ constructor(private readonly prisma: PrismaOrmService){}
         throw new BadRequestException('Only Admins Can Kick Other Users');
 
     }
-
 
     async unsetUserFromAdmins(roomId: number, userId: string) {
 
@@ -316,5 +318,40 @@ constructor(private readonly prisma: PrismaOrmService){}
             });
         }
 
+    }
+
+
+    async isUserOwner(roomId: number, userId: string) {
+
+        const roomOwner = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            },
+            select: {
+                owner: true,
+            },
+        });
+
+        if (roomOwner.owner.includes(userId))
+            return (true);
+        return (false);
+    }
+
+
+    async getMyRooms(userId: string) {
+
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                rooms: true,
+            },
+        });
+    
+        if (user.rooms.length === 0)
+            throw new NotFoundException('You Did Not Join Any Room Yet');
+        return (user.rooms);
     }
 }
