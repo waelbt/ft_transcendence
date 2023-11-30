@@ -37,7 +37,7 @@ export class ChatController {
 
     }
 
-    @Get('myRooms') 
+    @Get('getmyRooms') 
     async getMyRooms(@Req() req) {
 
         console.log(req.user);
