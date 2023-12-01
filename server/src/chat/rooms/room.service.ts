@@ -7,6 +7,8 @@ import { JoinRoomDto } from '../DTOS/join-room.dto';
 import { LeaveRoomDto } from '../DTOS/leave-room.dto';
 import { SetAdminDto } from '../DTOS/set-admin-room.dto';
 import { KickMemberDto } from '../DTOS/kick-member.dto';
+import { BanMemberDto } from '../DTOS/ban-member-dto';
+import { RemoveBanDto } from '../DTOS/remove-ban-dto';
 
 @Injectable()
 export class RoomService {
@@ -264,7 +266,7 @@ constructor(private readonly prisma: PrismaOrmService){}
             });
 
             if (room.users.length === 0)
-                throw new BadRequestException('User Is Not A Member In This Chat');
+                throw new BadRequestException('User Is Not A Member In This Room');
 
             if (this.isUserOwner(kickMemberDto.roomId, kickMemberDto.userId))
                 throw new BadRequestException('You Cannot Kick The Chat Owner');
@@ -306,6 +308,10 @@ constructor(private readonly prisma: PrismaOrmService){}
 
         if (roomWithAdmins.admins.includes(userId))
         {
+
+            if (this.isUserOwner(roomId, userId))
+                throw new BadRequestException('You Cannot Remove The Chat Owner From Admins');
+
             const room = await this.prisma.room.updateMany({
                 where: {
                     id: roomId,
@@ -321,26 +327,11 @@ constructor(private readonly prisma: PrismaOrmService){}
     }
 
 
-    async isUserOwner(roomId: number, userId: string) {
-
-        const roomOwner = await this.prisma.room.findUnique({
-            where: {
-                id: roomId,
-            },
-            select: {
-                owner: true,
-            },
-        });
-
-        if (roomOwner.owner.includes(userId))
-            return (true);
-        return (false);
-    }
-
-
+    
+    
     async getMyRooms(userId: string) {
 
-
+        
         const user = await this.prisma.user.findUnique({
             where: {
                 id: userId,
@@ -353,5 +344,147 @@ constructor(private readonly prisma: PrismaOrmService){}
         if (user.rooms.length === 0)
             throw new NotFoundException('You Did Not Join Any Room Yet');
         return (user.rooms);
+    }
+
+    async banMember(banMemberDto: BanMemberDto, userId: string) {
+        
+
+        console.log('ban member function');
+        if (await this.isUserAdmin(userId, banMemberDto.roomId))
+        {
+            console.log('user is admin');
+            const toCheck = await this.isUserMember(banMemberDto.roomId, banMemberDto.memberToBanId)
+            if (toCheck)
+                throw new BadRequestException('User Is Not A Member In This Room');
+            else 
+                throw new BadRequestException('user is a member');
+            // const roomWithBanned = await this.prisma.room.findUnique({
+            // where : {
+            //         id: banMemberDto.roomId,
+            //     },
+            //     select: {
+            //         banned: true,
+            //     },
+            // });
+
+            // if (await this.isUserOwner(banMemberDto.roomId, banMemberDto.memberToBanId))
+            //     throw new BadRequestException('You Cannot Ban The Chat Owner');
+            // const updatedRoom = await this.prisma.room.updateMany({
+            //     where: {
+            //         id: banMemberDto.roomId,
+            //     },
+            //     data: {
+            //         banned: {
+            //             set: [...roomWithBanned.banned, banMemberDto.memberToBanId],
+            //         },
+            //     },
+            // });
+
+            // const tmpRoom = await this.prisma.room.update({
+            //     where: {
+            //         id: banMemberDto.roomId,
+            //     },
+            //     data: {
+            //         users: {
+            //             disconnect: {
+            //                 id: banMemberDto.memberToBanId,
+            //             },
+            //         },
+            //     },
+            // });
+
+        } else
+            throw new BadRequestException('Only Admins Can Ban Other Users');
+    }
+
+    async isUserAdmin(userId: string, roomId: number) {
+        
+
+        console.log('admin function');
+        const roomWithAdmins = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            },
+            select: {
+                admins: true,
+            },
+        });
+        
+
+        console.log(roomWithAdmins.admins);
+        console.log(roomWithAdmins.admins.includes(userId));
+        if (roomWithAdmins.admins.includes(userId))
+            return (true);
+        return (false);
+}
+
+    async isUserOwner(roomId: number, userId: string) {
+
+        
+        const roomOwner = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            },
+            select: {
+                owner: true,
+            },
+        });
+        console.log(roomOwner.owner.includes(userId));
+        return (roomOwner.owner.includes(userId));
+    }
+
+    async isUserMember(roomId: number, userId: string) {
+        
+        const room = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            },
+            select: {
+                users: {
+                        where: {
+                            id: userId,
+                        },
+                    },
+                },
+            });
+
+            console.log(room.users);
+
+        if (room.users.length === 0)
+            throw new BadRequestException('User Is Not A Member In This Room');
+        return (1);
+    }
+
+
+    async removeBan(removeBan: RemoveBanDto, userId: string) {
+        console.log('banned function');
+
+        const bannedUsers = await this.prisma.room.findUnique({
+            where: {
+                id: removeBan.roomId,
+            },
+            select: {
+                banned: true,
+            },
+        });
+
+        if (bannedUsers.banned.includes(removeBan.userId))
+        {
+            const room = await this.prisma.room.updateMany({
+                where: {
+                    id: removeBan.roomId,
+                },
+                data: {
+                    banned: {
+                        set: bannedUsers.banned.filter((bannedUser) => bannedUser !== removeBan.userId)
+                    },
+                },
+            });
+
+            return (bannedUsers.banned);
+        }
+        else
+            throw new BadRequestException('User Is Not Banned');
+
     }
 }

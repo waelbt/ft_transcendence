@@ -48,6 +48,7 @@ model Room {
   password       String?
   owner          String[]
   admins         String[]
+  banned         String[]
 }
 
 model Message {

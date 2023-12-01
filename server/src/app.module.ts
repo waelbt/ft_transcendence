@@ -23,6 +23,7 @@ import { Middlware } from './auth/middlware/file.middlware';
 import { UsersController } from './users/controllers/users.controller';
 import { ChatModule } from './chat/chat.module';
 import { RoomService } from './chat/rooms/room.service';
+import { ChatController } from './chat/chat.controller';
 
 @Module({
   imports: [
@@ -34,11 +35,15 @@ import { RoomService } from './chat/rooms/room.service';
     // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
   ],
+  controllers: [
+    ChatController,
+  ],
   providers: [ChatGateway,
     {
       provide: APP_GUARD,
       useClass: accessTokenGuard,
     },
+    RoomService
   ],
 })
 

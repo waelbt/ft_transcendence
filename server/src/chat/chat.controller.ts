@@ -1,12 +1,17 @@
-import { Body, Controller, Get, Post, Req, Param, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Param, ParseIntPipe, NotFoundException, UseGuards } from '@nestjs/common';
 import { CreateRoomDto } from './DTOS/create-room.dto';
 import { RoomService } from './rooms/room.service';
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { LeaveRoomDto } from './DTOS/leave-room.dto'
 import { SetAdminDto } from './DTOS/set-admin-room.dto';
 import { KickMemberDto } from './DTOS/kick-member.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from "express"
+import { BanMemberDto } from './DTOS/ban-member-dto';
+import { RemoveBanDto } from './DTOS/remove-ban-dto';
 
 @Controller('chat')
+@UseGuards(AuthGuard('jwt'))
 export class ChatController {
 
     constructor ( private readonly roomService : RoomService) {}
@@ -37,11 +42,15 @@ export class ChatController {
 
     }
 
-    @Get('getmyRooms') 
-    async getMyRooms(@Req() req) {
+    @Get('myRooms')
+    async getMyRooms(@Req() req, res: Response) {
 
         console.log(req.user);
-        return await (this.getMyRooms(req.user.sub));
+        // const accessToken = req.cookies['accessToken'];
+        // if (!accessToken) {
+        //     return res.status(401).json({ message: 'Unauthorized' });
+        // }
+        return await (this.roomService.getMyRooms(req.user.sub));
     }
 
     @Get(':id')
@@ -64,4 +73,17 @@ export class ChatController {
 
     }
 
+    @Post('banMember')
+    async banMember(@Req() req, @Body() banMemberDto: BanMemberDto) {
+
+        return (this.roomService.banMember(banMemberDto, req.user.sub));
+
+    }
+
+
+    @Post('removeBan')
+    async removeBan(@Req() req, @Body() removeBan: RemoveBanDto) {
+     
+        return (this.roomService.removeBan(removeBan, req.user.sub));
+    }
 }
