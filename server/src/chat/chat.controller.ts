@@ -9,6 +9,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from "express"
 import { BanMemberDto } from './DTOS/ban-member-dto';
 import { RemoveBanDto } from './DTOS/remove-ban-dto';
+import { changeRoomPasswordDto } from './DTOS/change-room-password';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt'))
@@ -75,10 +76,15 @@ export class ChatController {
 
     }
 
-
     @Post('removeBan')
     async removeBan(@Req() req, @Body() removeBan: RemoveBanDto) {
      
         return (this.roomService.removeBan(removeBan, req.user.sub));
+    }
+
+    @Post('changeRoomPassword')
+    async changeRoomPassword(@Req() req, @Body() changeRoomPasswordDto : changeRoomPasswordDto) {
+
+        return (this.roomService.changeRoomPassword(changeRoomPasswordDto, req.user.sub));
     }
 }

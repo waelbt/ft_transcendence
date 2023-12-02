@@ -10,6 +10,7 @@ import { KickMemberDto } from '../DTOS/kick-member.dto';
 import { BanMemberDto } from '../DTOS/ban-member-dto';
 import { RemoveBanDto } from '../DTOS/remove-ban-dto';
 import { hashPassword, verifyPassowrd } from './hash-password';
+import { changeRoomPasswordDto } from '../DTOS/change-room-password';
 
 @Injectable()
 export class RoomService {
@@ -39,10 +40,8 @@ constructor(private readonly prisma: PrismaOrmService){}
                     messages: true,
                 }
             });
-            console.log(newRoom.id);
             if (createRoomDto.privacy === "PROTECTED")
             {
-                console.log(newRoom.id);
                 const password = hashPassword(createRoomDto.password);
                 const roomid = newRoom.id;
                 const room = await this.prisma.room.update({
@@ -58,7 +57,6 @@ constructor(private readonly prisma: PrismaOrmService){}
         // }
         return (newRoom);
     }
-    
 
     async findRoomByTitle(roomTitle: string) {
         
@@ -77,7 +75,6 @@ constructor(private readonly prisma: PrismaOrmService){}
         })
 
         return (existingRoom);
-
     }
 
     async joinRoom(joinRoomDto: JoinRoomDto, userId: string) {
@@ -105,7 +102,6 @@ constructor(private readonly prisma: PrismaOrmService){}
                 throw new BadRequestException('Password Does Not Match');
         }
 
-        console.log(`this is the user id ${userId}`);
         room = await this.prisma.room.update({
             where: {
                 roomTitle: joinRoomDto.roomTitle,
@@ -505,6 +501,41 @@ constructor(private readonly prisma: PrismaOrmService){}
         }
         else
             throw new BadRequestException('User Is Not Banned');
+
+    }
+
+    async changeRoomPassword(changeRoomPasswordDto: changeRoomPasswordDto, userId: string) {
+
+        if (await this.isUserAdmin(userId, changeRoomPasswordDto.roomId))
+        {
+            const room = await this.prisma.room.findUnique({
+                where: {
+                    id: changeRoomPasswordDto.roomId,
+                },
+                select: {
+                    password: true,
+                }
+            });
+
+            const matched = verifyPassowrd(changeRoomPasswordDto.currentPassword, room.password);
+            if (matched)
+            {
+                const newPassword = hashPassword(changeRoomPasswordDto.newPassword);
+                await this.prisma.room.update({
+                    where: {
+                        id: changeRoomPasswordDto.roomId,
+                    },
+                    data: {
+                        password: newPassword,
+                    },
+                });
+                console.log('password changed succefully');
+            }
+            else 
+                throw new BadRequestException("Passowrd Does Not Match");
+        }
+        else
+            throw new BadRequestException("Only Admins And Owners Can Change Room Password");
 
     }
 }
