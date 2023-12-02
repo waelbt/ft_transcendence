@@ -45,11 +45,6 @@ export class ChatController {
     @Get('myRooms')
     async getMyRooms(@Req() req, res: Response) {
 
-        console.log(req.user);
-        // const accessToken = req.cookies['accessToken'];
-        // if (!accessToken) {
-        //     return res.status(401).json({ message: 'Unauthorized' });
-        // }
         return await (this.roomService.getMyRooms(req.user.sub));
     }
 

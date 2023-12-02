@@ -9,6 +9,7 @@ import { SetAdminDto } from '../DTOS/set-admin-room.dto';
 import { KickMemberDto } from '../DTOS/kick-member.dto';
 import { BanMemberDto } from '../DTOS/ban-member-dto';
 import { RemoveBanDto } from '../DTOS/remove-ban-dto';
+import { hashPassword, verifyPassowrd } from './hash-password';
 
 @Injectable()
 export class RoomService {
@@ -20,7 +21,6 @@ constructor(private readonly prisma: PrismaOrmService){}
         // const newRoom = await this.findRoomByTitle(createRoomDto.roomTitle);
         // if (!newRoom)
         // {
-            console.log(` the user id is ${userId}`);
             const newRoom = await this.prisma.room.create({
                 data: {
                     roomTitle: createRoomDto.roomTitle,
@@ -39,6 +39,22 @@ constructor(private readonly prisma: PrismaOrmService){}
                     messages: true,
                 }
             });
+            console.log(newRoom.id);
+            if (createRoomDto.privacy === "PROTECTED")
+            {
+                console.log(newRoom.id);
+                const password = hashPassword(createRoomDto.password);
+                const roomid = newRoom.id;
+                const room = await this.prisma.room.update({
+                    where: {
+                        id: roomid,
+                    },
+                    data : {
+                        password: password,
+                    },
+                });
+
+            }
         // }
         return (newRoom);
     }
@@ -74,15 +90,20 @@ constructor(private readonly prisma: PrismaOrmService){}
             },
             select: {
                 privacy: true,
+                password: true,
             }
-        })
+        });
 
         if (!room)
             throw new NotFoundException('No Exsiting Room With This Id');
         else if (room.privacy == 'PRIVATE')
             throw new BadRequestException("This Room Is Private");
-        // else if (room.privacy == 'PROTECTED')
-            // should check if the password match 
+        else if (room.privacy == 'PROTECTED')
+        {
+            const matched = verifyPassowrd(joinRoomDto.password, room.password);
+            if (!matched)
+                throw new BadRequestException('Password Does Not Match');
+        }
 
         console.log(`this is the user id ${userId}`);
         room = await this.prisma.room.update({
