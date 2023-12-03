@@ -10,6 +10,7 @@ import { Response } from "express"
 import { BanMemberDto } from './DTOS/ban-member-dto';
 import { RemoveBanDto } from './DTOS/remove-ban-dto';
 import { changeRoomPasswordDto } from './DTOS/change-room-password';
+import { MuteUserDto } from './DTOS/mute-user-dto';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt'))
@@ -86,5 +87,10 @@ export class ChatController {
     async changeRoomPassword(@Req() req, @Body() changeRoomPasswordDto : changeRoomPasswordDto) {
 
         return (this.roomService.changeRoomPassword(changeRoomPasswordDto, req.user.sub));
+    }
+
+    @Post('muteUser')
+    async muteUser(@Req() req, @Body() muteUser : MuteUserDto) {
+
     }
 }

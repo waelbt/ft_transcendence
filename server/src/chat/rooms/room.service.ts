@@ -11,11 +11,15 @@ import { BanMemberDto } from '../DTOS/ban-member-dto';
 import { RemoveBanDto } from '../DTOS/remove-ban-dto';
 import { hashPassword, verifyPassowrd } from './hash-password';
 import { changeRoomPasswordDto } from '../DTOS/change-room-password';
+import { MuteUserDto, UnmuteUserDto, unmuteUserDetails } from '../DTOS/mute-user-dto';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class RoomService {
 
-constructor(private readonly prisma: PrismaOrmService){}
+    private mutedUsers: Map<string, unmuteUserDetails> = new Map<string, unmuteUserDetails>();
+
+    constructor(private readonly prisma: PrismaOrmService){}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
 
@@ -536,6 +540,90 @@ constructor(private readonly prisma: PrismaOrmService){}
         }
         else
             throw new BadRequestException("Only Admins And Owners Can Change Room Password");
+
+    }
+
+    async muteUser(muteUserDto: MuteUserDto, userId) {
+
+        if (this.isUserAdmin(userId, muteUserDto.roomId))
+        {
+            const unmuteTime = new Date();
+            unmuteTime.setMinutes(unmuteTime.getMinutes() + muteUserDto.muteDuration);
+            const roomWithMutedUsers = await this.prisma.room.findUnique({
+                where: {
+                    id: muteUserDto.roomId,
+                },
+                select: {
+                    muted: true,
+                },
+            });
+
+            const room = await this.prisma.room.updateMany({
+                where: {
+                    id: muteUserDto.roomId,
+                },
+                data: {
+                    muted: {
+                        set: [...roomWithMutedUsers.muted, muteUserDto.userToMute],
+                    },
+                },
+            });
+
+            const userDetails = new unmuteUserDetails(muteUserDto.roomId, muteUserDto.userToMute, unmuteTime);
+            this.mutedUsers.set(muteUserDto.userToMute, userDetails);
+            return (this.mutedUsers);
+        }
+        else
+            throw new BadRequestException('Only Admins And Owners Can Mute Other Users');
+    }
+
+    async unmuteUser(unmuteUserDto : UnmuteUserDto, userId) {
+
+        if (this.isUserAdmin(userId, unmuteUserDto.roomId))
+        {
+            const roomWithMutedUsers = await this.prisma.room.findUnique({
+                where: {
+                    id: unmuteUserDto.roomId,
+                },
+                select: {
+                    muted: true,
+                },
+            });
+
+            const room = await this.prisma.room.updateMany({
+                where: {
+                    id: unmuteUserDto.roomId,
+                },
+                data: {
+                    muted: {
+                        set: roomWithMutedUsers.muted.filter((mutedUser) => mutedUser !== unmuteUserDto.userToUnmute)
+                    },
+                },
+            });
+
+            this.mutedUsers.delete(unmuteUserDto.userToUnmute);
+        }
+        else
+            throw new BadRequestException('Only Admins And Owners Can UnMute Other Users');
+    }
+
+    @Cron(CronExpression.EVERY_10_SECONDS)
+    async checkUsersToUnmute() {
+
+        this.mutedUsers.forEach((mutedUntil, userId) => {
+            const currentTime = new Date();
+            if (currentTime >= mutedUntil.muteDuration)
+            {
+                const roomWithMutedUsers = this.prisma.room.findUnique({
+                    where: {
+                        id: mutedUntil.roomId,
+                    },
+                    select: {
+                        muted: true,
+                    },
+                });
+            }
+        });
 
     }
 }
