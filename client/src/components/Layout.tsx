@@ -1,4 +1,3 @@
-// import
 import { NavLink, Outlet } from 'react-router-dom';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 import { IconContext } from 'react-icons';
@@ -12,7 +11,7 @@ export function Layout() {
             {false ? (
                 <ProfileCompletion />
             ) : (
-                <>
+                <div className="flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
                             <div className="flex justify-between items-center">
@@ -51,20 +50,18 @@ export function Layout() {
                                         </IconContext.Provider>
                                         {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
                                     </div>
-
-                                    <img
-                                        // ! change the url with the user avatar
-                                        src="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
-                                        // className="w-14 rounded-full ring-2 ring-offset-4 ring-amber-500 "
-                                        className="w-14 rounded-full"
-                                        alt="Avatar"
-                                    />
+                                    <div className="avatar">
+                                        <div className="w-12 rounded-full ring ring-amber-500 ring-offset-base-100 ring-offset-2">
+                                            <img src="https://tecdn.b-cdn.net/img/new/avatars/2.webp" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </nav>
+                    {/* // ! <div className="flex-grow"> add flex-grow to all pages */}
                     <Outlet />
-                </>
+                </div>
             )}
         </>
     );

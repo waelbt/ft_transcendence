@@ -1,17 +1,21 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 interface ProgressRingProps {
     style: string;
+    color?: string;
     radius: number;
     stroke: number;
     progress: number;
+    children?: ReactNode;
 }
 
 const ProgressRingLoader: FC<ProgressRingProps> = ({
     style,
     radius,
     stroke,
-    progress
+    progress,
+    color,
+    children
 }) => {
     const normalizedRadius = radius - stroke * 2;
     const circumference = normalizedRadius * 2 * Math.PI;
@@ -29,11 +33,38 @@ const ProgressRingLoader: FC<ProgressRingProps> = ({
                 }}
             >
                 <circle
-                    stroke="red"
+                    style={{ position: 'relative' }}
+                    stroke="#F6F6F6" // Set your desired color for uncompleted part
+                    fill="transparent"
+                    strokeWidth={stroke}
+                    r={normalizedRadius}
+                    cx={radius}
+                    cy={radius}
+                />
+                <foreignObject
+                    x="0"
+                    y="0"
+                    width={radius * 2}
+                    height={radius * 2}
+                >
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '0%',
+                            transform: 'translate(0, 0%)'
+                        }}
+                    >
+                        {children}
+                    </div>
+                </foreignObject>
+                <circle
+                    stroke={`${color ? color : 'red'} `}
                     fill="transparent"
                     strokeWidth={stroke}
                     strokeDasharray={`${circumference} ${circumference}`}
                     style={{ strokeDashoffset, transition: '.1s' }}
+                    strokeLinecap="round"
                     r={normalizedRadius}
                     cx={radius}
                     cy={radius}
