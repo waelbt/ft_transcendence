@@ -2,6 +2,7 @@ import {
     AchievementIcon,
     JoinIcon,
     LoseCupIcon,
+    RankIcon,
     WinCupIcon
 } from '../../assets/custom-icons';
 import ProgressRingLoader from '../../components/ProgressRingLoader';
@@ -11,7 +12,7 @@ export function Profile() {
         // gap-20
         <div className="flex-grow flex-col justify-center items-center inline-flex">
             {/* profile card */}
-            <div className="px-12 py-2 bg-white rounded-lg border border-neutral-100 flex-col justify-start items-start gap-1.5 inline-flex">
+            <div className="px-12 py-2 bg-white rounded-3xl border border-neutral-100 flex-col justify-start items-start gap-1.5 inline-flex">
                 {/* nickname */}
                 <div className="space-x-2">
                     <span className="text-black text-[22px] font-normal font-['Acme']">
@@ -74,14 +75,25 @@ export function Profile() {
                     </div>
                     {/* level + rank */}
                     <ProgressRingLoader
-                        style={'relative'}
+                        style={''}
                         color="#FFD700"
                         radius={88}
                         stroke={16}
                         progress={50}
                     >
-                        <div className="absolute top-0 left-0 w-[25px] text-neutral-600 text-[9px] font-bold font-['Lato'] leading-none tracking-wide">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="relative">
+                                <RankIcon />
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-400 text-[23px] font-normal font-['Playfair Display SC']">
+                                    15
+                                </div>
+                            </div>
+                        </div>
+                        <div className="absolute top-[14%] left-1/2 transform -translate-x-1/2  text-neutral-600 text-xs font-bold font-['Lato'] leading-none tracking-wide">
                             Level
+                        </div>
+                        <div className="absolute bottom-[15%] left-1/2 transform -translate-x-1/2 text-center text-zinc-500 text-xs font-bold font-['Lato'] leading-none">
+                            5 - 23%
                         </div>
                     </ProgressRingLoader>
                 </div>
