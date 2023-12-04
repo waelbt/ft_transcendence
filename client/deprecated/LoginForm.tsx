@@ -54,7 +54,7 @@ export const LoginForm = (props: RegisterFormProps) => {
                 btn={{
                     // TODO: store this in a custom style proprty
                     style: 'flex mt-2 ml-auto mr-auto py-1.5 px-28 justify-center items-center space-x-2.5 \
-                            border-0 rounded-full bg-primary-blue text-white text-center font-BombSound \
+                           border -0 rounded-full bg-primary-blue text-white text-center font-BombSound \
                             text-2xl font-normal leading-normal hover:bg-pink ',
                     type: 'submit',
                     text: 'Log in'

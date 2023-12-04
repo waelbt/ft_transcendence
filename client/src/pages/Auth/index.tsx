@@ -1,6 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { GoogleIcon, IntraIcon } from '../../assets/icons';
+import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
 
 // todo: store svgs in components
 export function Auth() {
