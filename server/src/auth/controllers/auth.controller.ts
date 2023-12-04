@@ -1,14 +1,16 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { AuthDto, AuthDtoSignIn } from "./dto";
+import { AuthService } from "../services/auth.service";
+import { AuthDto, AuthDtoSignIn } from "../dto";
 import { ApiTags } from "@nestjs/swagger";
 import { refreshTokenGuard } from "src/common/guards";
 import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators";
 import { Request } from "express";
-import { JwtStrategy } from "./strategy";
+import { JwtStrategy } from "../strategy";
 import { AuthGuard } from "@nestjs/passport";
 import { UsersService } from "src/users/services/users.service";
-import { jwtGuard } from "./authGuard";
+import { jwtGuard } from "../authGuard";
+
+
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -25,7 +27,8 @@ export class AuthController {
     @Public()
     @UseGuards(AuthGuard('google'))
     async googleLogin(@Req() req, @Res() res){
-        await this.AuthService.setUpTokens(req, res);
+        console.log('im in callback google');
+        await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
     @Get('42')
@@ -33,11 +36,12 @@ export class AuthController {
     @UseGuards(AuthGuard('42'))
     Intra(){}
 
-    @Get('intra/callback')
+    @Get('/intra/callback')
     @Public()
     @UseGuards(AuthGuard('42'))
     async intraLogin(@Req() req, @Res() res){
-        await this.AuthService.setUpTokens(req, res);
+        console.log('im in callback 42');
+        await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
     @Get('refresh')
@@ -51,11 +55,11 @@ export class AuthController {
         this.AuthService.logout(res);
     }
 
-    @Get('ana')
-    ana(@Res() res){
-        console.log('ssssss');
-        res.send('ok');
-    }
+    // @Get('ana')
+    // ana(@Res() res){
+    //     console.log('ssssss');
+    //     res.send('ok');
+    // }
     // @Public()
     // @Post('signup')
     // signUp(@Body() AuthDto: AuthDto) {

@@ -3,10 +3,15 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { AuthDto, AuthDtoSignIn } from "./dto";
+import { AuthDto, AuthDtoSignIn } from "../dto";
 import * as argon from 'argon2';
 import { UsersService } from "src/users/services/users.service";
 import { User } from "@prisma/client";
+import * as speakeasy from 'speakeasy';
+import * as qrcode from 'qrcode';
+import * as otplib from 'otplib';
+import * as qrcodeLib from 'qrcode';
+
 
 @Injectable({})
 export class AuthService {
@@ -15,13 +20,14 @@ export class AuthService {
         private config: ConfigService,
         private usersService: UsersService) {}
 
-        async setUpTokens(@Req() req, @Res() res){
+        async setUpTokens(@Req() req, @Res() res, id: string){
             console.log('here = ', req.user);
-            var isUser = await this.usersService.findOneUser(req.user.id);
+            console.log(req.user.userId);
+            var isUser = await this.usersService.findOneUser(id);
             if (!isUser)
             {
                 console.log('im in create user');
-                await this.usersService.createUser(req.user);
+                await this.usersService.createUser(req.user, id);
             }
             await this.generateATRT(res, req.user);
             if (isUser)
@@ -80,6 +86,26 @@ export class AuthService {
             res.cookie('accessToken', access_token, { httpOnly: true, secure : true});
             res.cookie('refreshToken', refreshToken, { httpOnly: true, secure : true});
         }
+
+        // async generate2FA(@Req() req){
+        //     const user = this.usersService.getOneUser(req.user.sub);
+        //     console.log('id: ', (await user).id);
+        //     const secret = otplib.authenticator.generateSecret();
+        //     const otpAuthenticator = otplib.authenticator.keyuri((await user).nickName, "sooooo", secret);
+        //     const f2a = await this.PrismaOrmService.user.update({
+        //         where: {id: (await user).id},
+        //         data: {F2A_Secret: secret},
+        //     });
+        //     const qrcode = await qrcodeLib.toDataURL(otpAuthenticator);
+        //     return qrcode;
+        //     // const secret = speakeasy.generateSecret({length: 20});
+        //     // const uri = await qrcode.toDataURL(secret.otpauth_url);
+        //     // console.log("secret: \n", secret);
+        //     // return ({
+        //     //     secret: secret.base32,
+        //     //     uri: uri,
+        //     // })
+        // }
 }
 /*
    async signUp(AuthDto: AuthDto) {

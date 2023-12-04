@@ -16,10 +16,17 @@ export class UsersService {
   constructor(private readonly httpService: HttpService,
     private prisma: PrismaOrmService,) {}
   
-  createUser(user: CreateUserDto) {
+  async createUser(user: any, id: string) {
 
-    return (this.prisma.user.create({
-      data: user,
+    return ( await this.prisma.user.create({
+      data:{
+        id: id,
+        email: user.email,
+        fullName: user.fullName,
+        Avatar: user.avatar,
+        nickName: user.nickName,
+      }
+
     }));
   }
 
