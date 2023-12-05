@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import Avatar from '../../components/Avatar';
-import InputField from '../../components/InputField';
+import {
+    Avatar,
+    ProgressRingLoader,
+    InputField
+} from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { IconContext } from 'react-icons';
-import ProgressRingLoader from '../../components/ProgressRingLoader';
 import { DEFAULT_PATH } from '../../constants';
 import useUpload from '../../hooks/UploadImageHook';
 

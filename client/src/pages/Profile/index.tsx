@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import MatchTable from '../../components/MatchTable';
-import { Match, Player } from '../../../../shared/types';
-import { Column, CellProps } from 'react-table';
+import { MatchTable } from '../../components/';
+import { Match } from '../../../../shared/types';
+import { Column } from 'react-table';
 import { VsIcon } from '../../assets/custom-icons';
-import { Result } from 'postcss';
 
 export function Profile() {
     const [currentView, setCurrentView] = useState<

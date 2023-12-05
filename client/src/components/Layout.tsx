@@ -3,7 +3,7 @@ import { ProfileCompletion } from '../pages/ProfileCompletion';
 import { IconContext } from 'react-icons';
 import { IoIosNotifications } from 'react-icons/io';
 
-export function Layout() {
+function Layout() {
     const navLinks = ['Home', 'Profile', 'Chat', 'Rooms', 'Game']; //! game section is temporary here
 
     return (
@@ -82,3 +82,6 @@ export function Layout() {
     />
   </div> */
 }
+
+
+export default Layout;
