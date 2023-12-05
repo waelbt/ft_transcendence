@@ -1,5 +1,5 @@
 import { useTable, TableOptions } from 'react-table';
-import { Column } from '../../../shared/types';
+import { Column } from 'react-table';
 
 type TableProps<D extends object> = {
     columns: Column<D>[];
@@ -15,34 +15,13 @@ const MatchTable = <D extends object>({
             columns,
             data
         } as TableOptions<D>);
-    <div className="w-[930px] h-[55.50px] justify-center items-center inline-flex">
-        <div className="grow shrink basis-0 self-stretch px-3 py-2.5 bg-neutral-100 justify-center items-center flex">
-            <div className="w-[41px] text-zinc-500 text-sm font-normal font-['Acme'] leading-[18.20px]">
-                Players
-            </div>
-        </div>
-        <div className="w-[107px] self-stretch px-3 py-2.5 bg-neutral-100 justify-center items-center flex">
-            <div className="w-[39px] text-zinc-500 text-xs font-semibold font-['Inter'] leading-none">
-                Result
-            </div>
-        </div>
-        <div className="w-[119px] self-stretch px-3 py-2.5 bg-neutral-100 justify-center items-center flex">
-            <div className="w-[54px] text-zinc-500 text-xs font-semibold font-['Inter'] leading-none">
-                Awarded
-            </div>
-        </div>
-        <div className="grow shrink basis-0 self-stretch px-3 py-2.5 bg-neutral-100 justify-center items-center flex">
-            <div className="w-[29px] text-zinc-500 text-xs font-semibold font-['Inter'] leading-none">
-                Date
-            </div>
-        </div>
-    </div>;
+
     return (
-        <table className="border border-black" {...getTableProps()}>
+        <table {...getTableProps()}>
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr
-                        className=" bg-neutral-100 "
+                        className=" bg-[#F5F5F5]"
                         {...headerGroup.getHeaderGroupProps()}
                     >
                         {headerGroup.headers.map((column) => (
@@ -62,7 +41,7 @@ const MatchTable = <D extends object>({
                     return (
                         <tr
                             {...row.getRowProps()}
-                            className="border border-black"
+                         
                         >
                             {row.cells.map((cell) => {
                                 return (

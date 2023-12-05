@@ -3,60 +3,126 @@
         {
             "id": 1,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "5-0",
+            "result": {
+                "score1": 5,
+                "score2": 0
+            },
             "awarded": "+50 exp",
             "date": "Dec 21, 2023"
         },
         {
             "id": 2,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "1-5",
+             "result": {
+                "score1": 1,
+                "score2": 6
+            },  
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
         {
             "id": 3,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "1-5",
+             "result": {
+                "score1": 5,
+                "score2": 0
+            },  
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
         {
             "id": 4,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "1-5",
+             "result": {
+                "score1": 5,
+                "score2": 0
+            },  
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
         {
             "id": 5,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "1-5",
+             "result": {
+                "score1": 5,
+                "score2": 0
+            },  
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
         {
             "id": 6,
             "players": [
-                { "name": "waelbt", "rating": 9.01 },
-                { "name": "simpzoa", "rating": 8.58 }
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
             ],
-            "result": "1-5",
+             "result": {
+                "score1": 5,
+                "score2": 0
+            },  
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         }
