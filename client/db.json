@@ -35,10 +35,10 @@
                     "rating": 8.58
                 }
             ],
-             "result": {
+            "result": {
                 "score1": 1,
                 "score2": 6
-            },  
+            },
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
@@ -56,10 +56,10 @@
                     "rating": 8.58
                 }
             ],
-             "result": {
+            "result": {
                 "score1": 5,
                 "score2": 0
-            },  
+            },
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
@@ -77,10 +77,10 @@
                     "rating": 8.58
                 }
             ],
-             "result": {
+            "result": {
                 "score1": 5,
                 "score2": 0
-            },  
+            },
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
@@ -98,10 +98,10 @@
                     "rating": 8.58
                 }
             ],
-             "result": {
+            "result": {
                 "score1": 5,
                 "score2": 0
-            },  
+            },
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         },
@@ -119,10 +119,73 @@
                     "rating": 8.58
                 }
             ],
-             "result": {
+            "result": {
                 "score1": 5,
                 "score2": 0
-            },  
+            },
+            "awarded": "+10 exp",
+            "date": "Dec 21, 2023"
+        },
+        {
+            "id": 7,
+            "players": [
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
+            ],
+            "result": {
+                "score1": 5,
+                "score2": 0
+            },
+            "awarded": "+10 exp",
+            "date": "Dec 21, 2023"
+        },
+        {
+            "id": 8,
+            "players": [
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
+            ],
+            "result": {
+                "score1": 5,
+                "score2": 0
+            },
+            "awarded": "+10 exp",
+            "date": "Dec 21, 2023"
+        },
+        {
+            "id": 9,
+            "players": [
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "waelbt",
+                    "rating": 9.01
+                },
+                {
+                    "avatar": "./src/assets/images/default1.png",
+                    "name": "simpzoa",
+                    "rating": 8.58
+                }
+            ],
+            "result": {
+                "score1": 5,
+                "score2": 0
+            },
             "awarded": "+10 exp",
             "date": "Dec 21, 2023"
         }

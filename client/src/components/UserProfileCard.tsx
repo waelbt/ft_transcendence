@@ -7,15 +7,16 @@ import {
 } from '../assets/custom-icons';
 import ProgressRingLoader from './ProgressRingLoader';
 
+// ! add props  
 function UserProfileCard() {
     return (
         <div className="px-12 py-2 bg-white rounded-3xl border border-neutral-100 flex-col justify-start items-start gap-1.5 inline-flex">
             {/* nickname */}
             <div className="space-x-2">
-                <span className="text-black text-[22px] font-normal font-['Acme']">
+                <span className="text-black text-2xl font-normal font-['Acme']">
                     Dos404{' '}
                 </span>
-                <span className="text-neutral-400 text-[22px] font-normal font-['Acme']">
+                <span className="text-neutral-400 text-2xl font-normal font-['Acme']">
                     ( wael boutzougarte )
                 </span>
             </div>

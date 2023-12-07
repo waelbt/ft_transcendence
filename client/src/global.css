@@ -31,3 +31,29 @@
 body {
     @apply m-0 p-0 bg-white;
 }
+
+
+/* !change scroll css to tailwind  */
+.tableScroll {
+    display: block;
+    max-height: 320px; /* Adjust this value as needed */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Styles to ensure the table still looks good */
+.tableScroll table {
+    width: 100%;
+}
+
+.tableScroll th,
+.tableScroll td {
+    padding: 8px; /* Adjust padding as needed */
+}
+
+.tableScroll thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f9f9f9;
+    z-index: 1; /* Ensure header is above other rows */
+}

@@ -1,18 +1,24 @@
-import { useTable, TableOptions } from 'react-table';
-import { Column } from 'react-table';
+import { useTable, TableOptions, Column } from 'react-table';
+
+interface TableStyles {
+    tableStyle?: string;
+    theadStyle?: string;
+    tbodyStyle?: string;
+    trStyle?: string;
+    thStyle?: string;
+    tdStyle?: string;
+}
 
 type TableProps<D extends object> = {
     columns: Column<D>[];
     data: D[];
-    HeaderStyle?: string;
-    BodyStyle?: string;
+    styles?: TableStyles;
 };
 
 const Table = <D extends object>({
     columns,
     data,
-    HeaderStyle,
-    BodyStyle
+    styles = {}
 }: TableProps<D>): JSX.Element => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable<D>({
@@ -21,33 +27,43 @@ const Table = <D extends object>({
         } as TableOptions<D>);
 
     return (
-        <table {...getTableProps()}>
-            <thead className={HeaderStyle ? HeaderStyle : ''}>
+        <table
+            {...getTableProps()}
+            className={`tableScroll ${styles.tableStyle || ''}`}
+        >
+            <thead className={styles.theadStyle || ''}>
                 {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    <tr
+                        {...headerGroup.getHeaderGroupProps()}
+                        className={styles.trStyle || ''}
+                    >
                         {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps()}>
+                            <th
+                                {...column.getHeaderProps()}
+                                className={styles.thStyle || ''}
+                            >
                                 {column.render('Header')}
                             </th>
                         ))}
                     </tr>
                 ))}
             </thead>
-            <tbody
-                className={BodyStyle ? BodyStyle : ''}
-                {...getTableBodyProps()}
-            >
+            <tbody {...getTableBodyProps()} className={styles.tbodyStyle || ''}>
                 {rows.map((row) => {
                     prepareRow(row);
                     return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map((cell) => {
-                                return (
-                                    <td {...cell.getCellProps()}>
-                                        {cell.render('Cell')}
-                                    </td>
-                                );
-                            })}
+                        <tr
+                            {...row.getRowProps()}
+                            className={styles.trStyle || ''}
+                        >
+                            {row.cells.map((cell) => (
+                                <td
+                                    {...cell.getCellProps()}
+                                    className={styles.tdStyle || ''}
+                                >
+                                    {cell.render('Cell')}
+                                </td>
+                            ))}
                         </tr>
                     );
                 })}

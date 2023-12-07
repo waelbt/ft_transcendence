@@ -12,25 +12,25 @@ const MatchTable = () => {
                 Header: 'Players',
                 accessor: 'players',
                 Cell: ({ value }) => (
-                    <div className="px-2.5 py-1.5 justify-center items-center gap-2.5 inline-flex">
+                    <div className="px-10 py-2 justify-center items-center gap-2.5 inline-flex">
                         <div className="p-2.5 justify-center items-center gap-[5px] flex">
                             <img
                                 className="w-4 h-4 relative rounded-[60px] border border-black"
                                 src={value[0].avatar}
                             />
-                            <div className="text-black text-base font-normal font-['Acme'] leading-tight">
+                            <div className="text-black">
                                 {value[0].name} ({value[0].rating})
                             </div>
                         </div>
                         <VsIcon />
                         <div className="p-2.5 justify-center items-center gap-[5px] flex">
-                            <div className="flex-col justify-center items-center gap-[5px] inline-flex">
+                            <div className="flex-col justify-center items-center gap-1 inline-flex">
                                 <img
                                     className="w-4 h-4 relative rounded-[60px] border border-black"
                                     src={value[1].avatar}
                                 />
                             </div>
-                            <div className="text-black text-base font-normal font-['Acme'] leading-tight">
+                            <div className="text-black">
                                 {value[1].name} ({value[1].rating})
                             </div>
                         </div>
@@ -42,14 +42,10 @@ const MatchTable = () => {
                 accessor: 'result',
                 Cell: ({ value }) => {
                     return (
-                        <div className="px-4 justify-center items-center gap-2.5 inline-flex">
+                        <div className="px-10 py-2 justify-center items-center gap-2.5 inline-flex">
                             <div className="flex-col justify-center items-center inline-flex">
-                                <div className="text-zinc-500 text-base font-normal font-['Acme'] leading-tight">
-                                    {value.score1}
-                                </div>
-                                <div className="text-zinc-500 text-base font-normal font-['Acme'] leading-tight">
-                                    {value.score2}
-                                </div>
+                                <span>{value.score1}</span>
+                                <span>{value.score2}</span>
                             </div>
                             <div
                                 className={`w-[15px] h-[15px] rounded flex-col justify-center items-center inline-flex ${
@@ -72,10 +68,8 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         // ! for responsive add md on padding
-                        <div className="pl-4 bg-white flex-col justify-center items-center inline-flex">
-                            <div className="text-zinc-500 text-[15px] font-normal font-['Acme'] leading-tight">
-                                {value}
-                            </div>
+                        <div className="px-10 py-2 bg-white flex-col justify-center items-center inline-flex">
+                            {value}
                         </div>
                     );
                 }
@@ -85,10 +79,8 @@ const MatchTable = () => {
                 accessor: 'date',
                 Cell: ({ value }) => {
                     return (
-                        <div className="px-24 bg-white flex-col justify-center items-center inline-flex">
-                            <div className="text-zinc-500 text-[15px] font-normal font-['Acme'] leading-tight">
-                                {value}
-                            </div>
+                        <div className="px-14 py-2 bg-white flex-col justify-center items-center inline-flex">
+                            {value}
                         </div>
                     );
                 }
@@ -114,7 +106,14 @@ const MatchTable = () => {
         <Table
             columns={columns}
             data={data}
-            HeaderStyle="bg-[#F5F5F5] text-zinc-500 text-sm font-normal font-['Acme'] leading-5"
+            styles={{
+                tableStyle: 'font-normal font-["Acme"]',
+                theadStyle: 'bg-[#F5F5F5] text-zinc-500 text-sm  leading-5',
+                tbodyStyle: 'text-zinc-500 text-base  leading-tight',
+                trStyle: '',
+                thStyle: 'py-2',
+                tdStyle: ''
+            }}
         />
     );
 };
