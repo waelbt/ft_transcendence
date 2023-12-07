@@ -1,9 +1,10 @@
-import { Controller, Get, NotFoundException, Req, Res } from "@nestjs/common";
+import { Controller, Get, NotFoundException, Req, Res, Body, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { twoFAService } from "../services/2FA.services";
 import { UsersService } from "src/users/services/users.service";
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
+import { User } from "@prisma/client";
 
 
 @ApiTags('2fa')
@@ -14,22 +15,44 @@ export class twoFAController{
 
     @Get('generate')
     async generate2FA(@Req() req, @Res() res){
-        const user = this.userService.getOneUser(req.user.sub);
+        const user = await this.userService.getOneUser(req.user.sub);
         if (!user)
             throw new NotFoundException(`User does not exist`);
-        const secret = this.twoFAService.generate2FA((await user).fullName);
-        const otpAuthUrl = speakeasy.otpauthURL({
-            secret: secret,
-            label: `transandance:${(await user).fullName}`,
-            issuer: 'transandance', 
-        });
-    
-        try {
-            const qrCodeDataURL = await qrcode.toDataURL(otpAuthUrl);
-            return res.status(200).json({ qrCode: qrCodeDataURL });
-        } catch (error) {
-            console.error('Error generating QR code:', error);
-            return res.status(500).json({ message: 'Error generating QR code' });
+        // if (user.F2A) {
+        //     return res.status(400).json({ message: '2FA already enabled!' });
+        // }
+        await this.twoFAService.generate2FA(res, user);
+    }
+
+    @Post('enable')
+    async enableTwoFA(@Body() body, @Req() req, @Res() res){
+        const user = await this.userService.getOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException(`User does not exist`);
+        // if (user.F2A) {
+        //     return res.status(400).json({ message: '2FA already enabled!' });
+        // }
+        const token = body;
+        const isValidToken = await this.twoFAService.validateTwoFAToken(token, user.F2A_Secret);
+        if (!isValidToken) {
+            return res.status(401).json({ message: 'Invalid 2FA token' });
         }
+        return res.status(200).json({ message: '2FA enabled successfully'});
+    }
+
+    @Get('isEnable')
+    async isItEnable(@Req() req){
+        const user = await this.userService.getOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException(`User does not exist`);
+        return this.twoFAService.isItEnable(user);
+    }
+
+    @Post('disable')
+    async disable2FA(@Req() req){
+        const user = await this.userService.getOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException(`User does not exist`);
+        await this.twoFAService.disable2FA(user);
     }
 }

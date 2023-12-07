@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, Param, Req, forwardRef } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
@@ -7,14 +7,17 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { P_N_Dto } from '../dto/completeProfile.dto';
 import * as fs from 'fs';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { friendsService } from './friends.service';
+import { BlockService } from './blocked.service';
 
 
 
 @Injectable()
 export class UsersService {
 
-  constructor(private readonly httpService: HttpService,
-    private prisma: PrismaOrmService,) {}
+  constructor(private prisma: PrismaOrmService,
+  @Inject(forwardRef(() => friendsService)) private friendService: friendsService,
+  private blockUsers: BlockService) {}
   
   async createUser(user: any, id: string) {
 
@@ -119,4 +122,15 @@ export class UsersService {
     this.updateUser((await user).id, (await user));
     return user;
   }
+
+  async myInfos(@Req() req ,userId: string){
+    const friends = await this.friendService.listFriends(userId);
+    console.log(friends);
+    const user = await this.getOneUser(userId);
+	console.log(user);
+	const block = await this.blockUsers.listOfBlockedUsers(userId);
+    const info = {user, friends, block};
+    return (info);
+  }
+
 }

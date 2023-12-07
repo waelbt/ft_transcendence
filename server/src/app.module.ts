@@ -21,7 +21,9 @@ import { accessTokenGuard } from './common/guards';
 import { JwtModule } from '@nestjs/jwt';
 import { Middlware } from './auth/middlware/file.middlware';
 import { UsersController } from './users/controllers/users.controller';
+import { ApiCookieAuth } from '@nestjs/swagger';
 
+// @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
