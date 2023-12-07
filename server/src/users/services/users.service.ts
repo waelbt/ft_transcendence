@@ -1,6 +1,6 @@
-import { HttpService } from '@nestjs/axios';
+// import { HttpService } from '@nestjs/axios';
 import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
@@ -13,8 +13,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 @Injectable()
 export class UsersService {
 
-  constructor(private readonly httpService: HttpService,
-    private prisma: PrismaOrmService,) {}
+  constructor( private prisma: PrismaOrmService,) {}
   
   async createUser(user: any, id: string) {
 
