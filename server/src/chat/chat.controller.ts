@@ -10,7 +10,7 @@ import { Response } from "express"
 import { BanMemberDto } from './DTOS/ban-member-dto';
 import { RemoveBanDto } from './DTOS/remove-ban-dto';
 import { changeRoomPasswordDto } from './DTOS/change-room-password';
-import { MuteUserDto } from './DTOS/mute-user-dto';
+import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt'))
@@ -90,7 +90,14 @@ export class ChatController {
     }
 
     @Post('muteUser')
-    async muteUser(@Req() req, @Body() muteUser : MuteUserDto) {
+    async muteUser(@Req() req, @Body() muteUserDto : MuteUserDto) {
 
+        return (this.roomService.muteUser(muteUserDto, req.user.sub));
+    }
+
+    @Post('unmuteUser')
+    async unmuteUser(@Req() req, @Body() unmuteUserDto : UnmuteUserDto) {
+
+        return (this.roomService.unmuteUser(unmuteUserDto, req.user.sub));
     }
 }

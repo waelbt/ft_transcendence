@@ -24,6 +24,7 @@ import { UsersController } from './users/controllers/users.controller';
 import { ChatModule } from './chat/chat.module';
 import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ChatController } from './chat/chat.controller';
     ChatModule,
     // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
+    ScheduleModule.forRoot(),
   ],
   controllers: [
     ChatController,

@@ -11,13 +11,13 @@ import { BanMemberDto } from '../DTOS/ban-member-dto';
 import { RemoveBanDto } from '../DTOS/remove-ban-dto';
 import { hashPassword, verifyPassowrd } from './hash-password';
 import { changeRoomPasswordDto } from '../DTOS/change-room-password';
-import { MuteUserDto, UnmuteUserDto, unmuteUserDetails } from '../DTOS/mute-user-dto';
+import { MuteUserDto, UnmuteUserDto, UnmuteUserDetails } from '../DTOS/mute-user-dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class RoomService {
 
-    private mutedUsers: Map<string, unmuteUserDetails> = new Map<string, unmuteUserDetails>();
+    private mutedUsers: Map<string, UnmuteUserDetails> = new Map<string, UnmuteUserDetails>();
 
     constructor(private readonly prisma: PrismaOrmService){}
 
@@ -545,8 +545,13 @@ export class RoomService {
 
     async muteUser(muteUserDto: MuteUserDto, userId) {
 
+        // console.log("mute function");
+        // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userToMute);
+        // return;
+        // you cannot mute the room owner is working succefully
         if (this.isUserAdmin(userId, muteUserDto.roomId))
         {
+            await this.isUserOwner(muteUserDto.roomId, muteUserDto.userToMute, "Mute");
             const unmuteTime = new Date();
             unmuteTime.setMinutes(unmuteTime.getMinutes() + muteUserDto.muteDuration);
             const roomWithMutedUsers = await this.prisma.room.findUnique({
@@ -569,7 +574,7 @@ export class RoomService {
                 },
             });
 
-            const userDetails = new unmuteUserDetails(muteUserDto.roomId, muteUserDto.userToMute, unmuteTime);
+            const userDetails = new UnmuteUserDetails(muteUserDto.roomId, muteUserDto.userToMute, unmuteTime);
             this.mutedUsers.set(muteUserDto.userToMute, userDetails);
             return (this.mutedUsers);
         }
@@ -607,23 +612,61 @@ export class RoomService {
             throw new BadRequestException('Only Admins And Owners Can UnMute Other Users');
     }
 
+    async isUserMuted(roomId: number, userToCheck: string) {
+
+        const roomWithMutedUsers = await this.prisma.room.findUnique({
+            where: {
+                id: roomId,
+            },
+            select: {
+                muted: true,
+            },
+        });
+
+        if(roomWithMutedUsers.muted.includes(userToCheck))
+            console.log(`user with the id ${userToCheck} is muted`);
+        else
+            console.log(`user with the id ${userToCheck} is not muted`);
+    }
+
     @Cron(CronExpression.EVERY_10_SECONDS)
     async checkUsersToUnmute() {
 
         this.mutedUsers.forEach((mutedUntil, userId) => {
             const currentTime = new Date();
-            if (currentTime >= mutedUntil.muteDuration)
+            if (currentTime >= mutedUntil.mutEDuration)
             {
-                const roomWithMutedUsers = this.prisma.room.findUnique({
-                    where: {
-                        id: mutedUntil.roomId,
-                    },
-                    select: {
-                        muted: true,
-                    },
-                });
+                console.log("in");
+                this.unmuteUserForCron(mutedUntil);
+                console.log(`user with the id ${mutedUntil.userID} is removed automatically from the muted users`);
             }
         });
 
     }
+
+    async unmuteUserForCron( unmuteUser: UnmuteUserDetails) {
+
+        const roomWithMutedUsers = await this.prisma.room.findUnique({
+            where: {
+                id: unmuteUser.roomID,
+            },
+            select: {
+                muted: true,
+            },
+        });
+
+        const room = await this.prisma.room.updateMany({
+            where: {
+                id: unmuteUser.roomID,
+            },
+            data: {
+                muted: {
+                    set: roomWithMutedUsers.muted.filter((mutedUser) => mutedUser !== unmuteUser.userID)
+                },
+            },
+        });
+
+        this.mutedUsers.delete(unmuteUser.userID);
+    }
+
 }

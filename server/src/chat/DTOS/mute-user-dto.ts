@@ -8,7 +8,7 @@ export class MuteUserDto {
     @IsString()
     userToMute: string;
 
-    @IsString()
+    @IsNumber()
     muteDuration: number;
 }
 
@@ -21,14 +21,14 @@ export class UnmuteUserDto {
     userToUnmute: string;
 }
 
-export class unmuteUserDetails {
-    roomId:       number;
-    userId:       string;
-    muteDuration: Date;
+export class UnmuteUserDetails{
+    roomID:       number;
+    userID:       string;
+    mutEDuration: Date;
 
     constructor(roomId: number, userId: string, muteDuration: Date) {
-        this.roomId = roomId;
-        this.userId = userId;
-        this.muteDuration = muteDuration;
+        this.roomID = roomId;
+        this.userID = userId;
+        this.mutEDuration = muteDuration;
     }
 }
