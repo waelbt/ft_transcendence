@@ -41,6 +41,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-openid-connect": "^2.17.1",
+    "nestjs": "^0.0.1",
     "otplib": "^12.0.1",
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
