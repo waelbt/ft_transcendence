@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ProfileCompletion } from '../pages/ProfileCompletion';
+// import { ProfileCompletion } from '../pages/ProfileCompletion';
 import { IconContext } from 'react-icons';
 import { IoIosNotifications } from 'react-icons/io';
 
@@ -8,9 +8,9 @@ function Layout() {
 
     return (
         <>
-            {false ? (
+            {/* {false ? (
                 <ProfileCompletion />
-            ) : (
+            ) : ( */}
                 <div className="flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
@@ -62,7 +62,7 @@ function Layout() {
                     {/* // ! <div className="flex-grow"> add flex-grow to all pages */}
                     <Outlet />
                 </div>
-            )}
+            {/* )} */}
         </>
     );
 }

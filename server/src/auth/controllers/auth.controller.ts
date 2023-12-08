@@ -41,6 +41,7 @@ export class AuthController {
     @UseGuards(AuthGuard('42'))
     async intraLogin(@Req() req, @Res() res){
         console.log('im in callback 42');
+        console.log('logId : ', req.user.id);
         await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 

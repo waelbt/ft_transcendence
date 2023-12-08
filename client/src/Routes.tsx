@@ -9,6 +9,13 @@ const router = createBrowserRouter([
         }
     },
     {
+        path: '/get-started',
+        lazy: async () => {
+            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            return { Component: ProfileCompletion };
+        }
+    },
+    {
         path: '/',
         lazy: async () => {
             let { Layout } = await import('./components');
