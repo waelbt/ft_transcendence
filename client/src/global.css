@@ -6,6 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Acme&family=Inter:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lemonada&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Lemonada:wght@600;700&family=Open+Sans:ital,wght@0,400;0,700;1,600&display=swap');
 @import 'animate.css';
 
 @font-face {
@@ -17,16 +18,15 @@
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+    src: url('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf')
+        format('truetype');
 }
 
 @font-face {
     font-family: 'Open Sans Italic';
-    src: url('./assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    src: url('./assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf')
+        format('truetype');
 }
-
-
-
 
 body {
     @apply m-0 p-0 bg-white;

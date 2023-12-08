@@ -11,8 +11,8 @@ const router = createBrowserRouter([
     {
         path: '/',
         lazy: async () => {
-            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
-            return { Component: ProfileCompletion };
+            let { Layout } = await import('./components/Layout');
+            return { Component: Layout };
         },
         children: [
             // lazy
@@ -49,6 +49,13 @@ const router = createBrowserRouter([
                 lazy: async () => {
                     let { Setting } = await import('./pages/Setting'); // conditional rendring in home page
                     return { Component: Setting };
+                }
+            },
+            {
+                path: '/rooms', // search before implement
+                lazy: async () => {
+                    let { Rooms } = await import('./pages/Rooms'); // conditional rendring in home page
+                    return { Component: Rooms };
                 }
             },
             {

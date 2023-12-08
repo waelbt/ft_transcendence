@@ -15,25 +15,28 @@ import { JwtService } from '@nestjs/jwt';
 import { extname } from 'path';
 import { InvalidFileException } from '../multer/file.exception';
 import { P_N_Dto } from '../dto/completeProfile.dto';
+import { BlockService } from '../services/blocked.service';
 
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
+    private readonly blockService: BlockService,
     private jwt:JwtService,
     private config: ConfigService) {}
 
   @Get('me')
-  sayHi(){
+  sayHi(@Req() req){
     console.log('Welcom To our Website again');
+    return req.user;
   }
 
   @Post()
   @ApiCreatedResponse()
-  createUser(@Body() user: CreateUserDto) {
+  createUser(@Body() user: User) {
     console.log('userId /////', user)
-    return (this.usersService.createUser(user));
+    return (this.usersService.createUser(user, user.id));
   }
 
   @Post('upload')
@@ -100,6 +103,31 @@ export class UsersController {
     return (this.usersService.removeUser(String(id)));
   }
 
+  @Post(':userId/blockUser/:blockedUserId')
+  async blockUser(
+    @Param('userId') userId: string,
+    @Param('blockedUserId') blockedUserId: string){
+      this.blockService.blockUser(userId, blockedUserId);
+  }
+
+  @Post(':userId/unblockUser/:unblockedUserId')
+  async unblockUser(
+    @Param('userId') userId: string,
+    @Param('unblockedUserId') unblockedUserId: string){
+      this.blockService.unblockUser(userId, unblockedUserId);
+    }
+
+  @Get(':userId/canInteractWith/:otherUserId')
+  async canInteractWith(
+    @Param('userId') userId: string,
+    @Param('otherUserId') otherUserId: string): Promise<Boolean>{
+      const isItBlocked = await this.blockService.isUserBlocked(userId, otherUserId);;
+      return isItBlocked ? false : true;
+  }
+  @Get(':userId/blockedUsers')
+  async listOfBlockedUsers(@Param('userId') userId: string){
+    return await this.blockService.listOfBlockedUsers(userId);
+  }
 // Close Prisma client when done
 // prisma.$disconnect();
 }

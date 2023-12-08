@@ -28,12 +28,16 @@
         "react-icons": "^4.12.0",
         "react-router-dom": "^6.16.0",
         "react-spring": "^8.0.27",
+        "react-table": "^7.8.0",
+        "socket.io": "^4.7.2",
+        "socket.io-client": "^4.7.2",
         "zustand": "^4.4.3"
     },
     "devDependencies": {
         "@types/node-sass": "^4.11.5",
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
+        "@types/react-table": "^7.7.18",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vitejs/plugin-react-swc": "^3.3.2",
@@ -48,6 +52,6 @@
         "sass": "^1.68.0",
         "tailwindcss": "^3.3.5",
         "typescript": "^5.0.2",
-        "vite": "^4.4.10"
+        "vite": "^5.0.6"
     }
 }

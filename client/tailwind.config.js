@@ -32,11 +32,12 @@ module.exports = {
                 'sans-italic': ['Open Sans Italic']
             },
             colors: {
-                'primary-pink': '#f20553'
+                'primary-pink': '#f20553',
+                'primary-white': '#F9F9F9'
             }
         }
     },
-    plugins: []
+    plugins: [require('daisyui')],
 };
 
 // /** @type {import('tailwindcss').Config} */

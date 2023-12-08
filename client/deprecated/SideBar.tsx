@@ -655,4 +655,59 @@ function SideBar() {
     );
 }
 
+const note = () => {
+    return (
+        <>
+            <div className="w-[346px] h-[69px] justify-center items-center gap-2.5 inline-flex">
+                <div className="w-[79px] h-[69px] px-2.5 py-[21px] justify-center items-center gap-2.5 flex">
+                    <div className="text-neutral-500 text-xl font-normal font-['Acme']">
+                        Home
+                    </div>
+                </div>
+                <div className="w-[79px] h-[69px] px-2.5 py-[21px] justify-center items-center gap-2.5 flex">
+                    <div className="text-neutral-500 text-xl font-normal font-['Acme']">
+                        Profile
+                    </div>
+                </div>
+                <div className="w-[79px] h-[69px] px-2.5 py-[21px] border-b-4  justify-center items-center gap-2.5 flex">
+                    <div className="text-black text-xl font-normal font-['Acme']">
+                        Chat
+                    </div>
+                </div>
+                <div className="w-[79px] h-[69px] px-2.5 py-[21px] justify-center items-center gap-2.5 flex">
+                    <div className="text-neutral-500 text-xl font-normal font-['Acme']">
+                        Rooms
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+                <a
+                    href="#"
+                    className="text-neutral-500 text-xl font-normal font-['Acme'] active:border-b-4  active:border-black"
+                >
+                    Home
+                </a>
+                <a
+                    href="#"
+                    className="text-neutral-500 text-xl font-normal font-['Acme'] active:border-b-4  active:border-black"
+                >
+                    Profile
+                </a>
+                <a
+                    href="#"
+                    className="text-neutral-500 text-xl font-normal font-['Acme'] active:border-b-4  active:border-black"
+                >
+                    Chat
+                </a>
+                <a
+                    href="#"
+                    className="text-neutral-500 text-xl font-normal font-['Acme'] active:border-b-4  active:border-black"
+                >
+                    Rooms
+                </a>
+            </div>
+        </>
+    );
+};
 export default SideBar;

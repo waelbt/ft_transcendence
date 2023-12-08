@@ -2,7 +2,7 @@ import axios from 'axios';
 // import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export const api = axios.create({
-    baseURL: `${import.meta.env.VITE_BASE_URL}`,
+    baseURL: `http://localhost:4000/`,
     timeout: 10000,
     withCredentials: true,
     headers: {
