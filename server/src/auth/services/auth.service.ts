@@ -22,7 +22,7 @@ export class AuthService {
 
         async setUpTokens(@Req() req, @Res() res, id: string){
             console.log('here = ', req.user);
-            console.log(req.user.userId);
+            // console.log(req.user.userId);
             var isUser = await this.usersService.findOneUser(id);
             if (!isUser)
             {
@@ -31,9 +31,9 @@ export class AuthService {
             }
             await this.generateATRT(res, req.user);
             if (isUser)
-                res.redirect('http://localhost:8000/auth/ana'); // home
+                res.redirect('http://localhost:8000/Profile');
             else
-                res.redirect('http://localhost:8000/auth/ana'); //profile
+                res.redirect('http://localhost:8000/get-started'); 
         }
 
         async refreshToken(@Req() req, @Res() res){
