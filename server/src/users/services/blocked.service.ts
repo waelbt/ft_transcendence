@@ -1,11 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { UsersService } from "./users.service";
 
 @Injectable()
 export class BlockService {
-    constructor(private prisma: PrismaOrmService,
-        private userService: UsersService){}
+    constructor(private prisma: PrismaOrmService){}
     async blockUser(userId: string, blockedUserId: string){
         await this.prisma.block.create({
             data: {
@@ -26,8 +25,8 @@ export class BlockService {
         const block = await this.prisma.block.findFirst({
           where: { 
                 OR: [
-                    {id: userId + blockedUserId },
-                    {id: blockedUserId + userId},
+                    { id: userId + blockedUserId },
+                    { id: blockedUserId + userId },
                 ],
             },
         });

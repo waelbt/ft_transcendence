@@ -18,8 +18,8 @@ export class intrastrategy extends PassportStrategy(
         });
     }
     async validate(accessToken : string, refreshToken : string, profile : any): Promise<any> {
-        // console.log('im in validate 42 strategy');
-        // console.log(profile);
+        console.log('im in validate 42 strategy');
+        console.log(profile);
         const user = {
             id: profile.id,
             email: profile._json.email,

@@ -5,7 +5,13 @@ export interface User {
 	HashPassword: string;
 }
 
+interface Result {
+	score1: number;
+	score2: number;
+  }
+
 export interface Player {
+	avatar: string;
 	name: string;
 	rating: number;
 }
@@ -13,12 +19,7 @@ export interface Player {
 export interface Match {
 	id: number;
 	players: Player[];
-	result: string;
+	result: Result;
 	awarded: string;
 	date: string;
-}
-
-export interface Column<D extends object> {
-	Header: string;
-	accessor: keyof D  | ((data: D) => string); // accessor can be a key of Match or a function that returns a string
 }

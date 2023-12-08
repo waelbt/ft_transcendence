@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException, Param, forwardRef } from "@nestjs/common";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { UsersService } from "./users.service";
+import { BlockService } from "./blocked.service";
 
 @Injectable()
 export class friendsService {
     constructor(private prisma: PrismaOrmService,
-        private userService: UsersService) {}
+    @Inject(forwardRef(() => UsersService)) private userService: UsersService,
+    private blockUser: BlockService) {}
 
     async sendFriendRequest(userId1: string, userId2: string){
         console.log('user1: ', userId1, 'user2: ', userId2);
@@ -40,7 +42,11 @@ export class friendsService {
         await this.checkUsersExistence(userId1, userId2);
 
         //find The friendship Request
-        const friendship = await this.findFirstStatusPending(userId1, userId2);
+        // const friendship = await this.findFirstStatusPending(userId1, userId2);
+
+        const friendship = await this.prisma.friendship.findFirst({
+            where: { userId1:userId2, userId2: userId1, status:'pending' },
+        });
 
         if (!friendship){
             throw new NotFoundException('Friend request not found');
@@ -65,8 +71,12 @@ export class friendsService {
         await this.checkUsersExistence(userId1, userId2);
 
         //find the friendship request
-        const friendship = await this.findFirstStatusPending(userId1, userId2);
-    
+        // const friendship = await this.findFirstStatusPending(userId1, userId2);
+
+        const friendship = await this.prisma.friendship.findFirst({
+            where: { userId1:userId1, userId2: userId2, status:'pending' },
+        });
+
         if (!friendship){
             throw new NotFoundException('Friend request not found');
         }
@@ -202,6 +212,36 @@ export class friendsService {
     
         return !!friendship;
       }
+
+    async typeOfProfile(userId1: string, userId2: string){
+        await this.checkUsersExistence(userId1 ,userId2);
+        const block = await this.blockUser.isUserBlocked(userId1, userId2);
+        if (block)
+            return {message: 'blocked'};
+        const friends = await this.areUsersFriends(userId1, userId2);
+        if (friends)
+            return {message: 'friends'};
+        const pending = await this.isUserPending(userId1, userId2);
+        if (pending)
+            return {message: 'RemovePendingFriend'};
+        const acceptORreject = await this.isUserNeedToAcceptOrReject(userId1, userId2);
+        if (acceptORreject)
+            return {message: 'AcceptOrReject'};
+        // this.listFriends()
+        // return user;
+    }
+
+    async isUserPending(userId1: string, userId2: string){
+        return (await this.prisma.friendship.findFirst({
+            where: {userId1, userId2, status: 'pending'},
+        }));
+    }
+
+    async isUserNeedToAcceptOrReject(userId1: string, userId2: string){
+        return (await this.prisma.friendship.findFirst({
+            where: {userId1: userId2, userId2: userId1, status: 'pending'},
+        }));
+    }
 
     async findFirstStatusPending(userId1: string, userId2: string){
         return (await this.prisma.friendship.findFirst({

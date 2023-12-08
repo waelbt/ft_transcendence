@@ -22,7 +22,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { Middlware } from './auth/middlware/file.middlware';
 import { UsersController } from './users/controllers/users.controller';
 import { GameModule } from './game/game.module';
+import { ApiCookieAuth } from '@nestjs/swagger';
 
+// @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
 @Module({
   imports: [GameModule,
     ConfigModule.forRoot({ isGlobal: true }),

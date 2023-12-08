@@ -17,7 +17,7 @@ async function bootstrap() {
   .setDescription('Laughtale API description')
   .setVersion('1.0')
   .addTag('Laughtale')
-  .addBearerAuth()
+  .addCookieAuth()
   .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
