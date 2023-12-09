@@ -33,6 +33,8 @@ function App() {
             <ReactQueryDevtools />
          </GameProvider > 
         </QueryClientProvider>
+
+        
     );
 }
 

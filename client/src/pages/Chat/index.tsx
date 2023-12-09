@@ -1,21 +1,26 @@
-import React, { Component } from "react";
-import "./chatBody.css";
-import ChatList from "../../components/chat/chatList/ChatList";
+import ConversationSearch from '../../components/chat/conversation/Conversation-Search';
+import ConversationList from '../../components/chat/conversation/Conversation-List.tsx';
+import NewConversation from '../../components/chat/conversation/New-Conversation';
+import ChatTitle from '../../components/chat/chat-title/Chat-Title';
+import MessageList from '../../components/chat/message/Message-List';
+import ChatForm from '../../components/chat/chat-form/Chat-Form';
+import {
+    conversations,
+    selectedConversation
+} from '../../components/chat/data/conversations';
+import { messages } from '../../components/chat/data/messages';
 
-// import ChatContent from "../chatContent/ChatContent";
-// import UserProfile from "../userProfile/UserProfile";
+import './Chat-Shell.css';
 
-class ChatBody extends Component {
-  render(): JSX.Element {
+export function Chat() {
     return (
-      <div className="main__chatbody">
-        <ChatList />
-        {/* <ChatContent />
-        <UserProfile /> */}
-      </div>
+        <div id="chat-container">
+            <ConversationSearch />
+            <ConversationList conversations={conversations} />
+            <NewConversation />
+            <ChatTitle selectedConversation={selectedConversation} />
+            <MessageList messages={messages} />
+            <ChatForm />
+        </div>
     );
-  }
 }
-
-export default ChatBody;
-  
