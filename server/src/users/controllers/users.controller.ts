@@ -15,13 +15,23 @@ export class UsersController {
     private readonly blockService: BlockService,) {}
 
   @Get(':id/me')
-  async myInfos(@Req() req, @Param('id') userId: string){
+  async userInfos(@Req() req, @Param('id') userId: string){
     console.log('Welcom To our Website again');
     if (userId != req.user.sub){
       console.log('user1: ', userId, 'sub: ', req.user.sub);
       throw new UnauthorizedException('You are not allowed to remove this user from friends');
     }
-    return (await this.usersService.myInfos(req, userId));
+    return (await this.usersService.userInfos(req, userId));
+  }
+
+  @Get('me')
+  async myInfos(@Req() req){
+    console.log('Welcom To our Website again');
+    // if (userId != req.user.sub){
+    //   console.log('user1: ', userId, 'sub: ', req.user.sub);
+    //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
+    // }
+    return (await this.usersService.myInfos(req));
   }
 
   @Post()
