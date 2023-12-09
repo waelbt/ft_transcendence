@@ -79,14 +79,14 @@ export function ProfileCompletion() {
                                                 className="absolute top-0 left-0 w-full h-full"
                                                 htmlFor="inputTag"
                                             >
-                                                <ProgressRingLoader
+                                                {/* <ProgressRingLoader
                                                     style={
                                                         'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                                                     }
                                                     radius={62}
                                                     stroke={2}
                                                     progress={progress}
-                                                />
+                                                /> */}
                                             </label>
                                         </div>
                                         {/* btn and default section */}

@@ -33,13 +33,25 @@ type UserState = {
     inGame: boolean;
 };
 
-// Define a type for the store's actions
-type UserActions = {
-    login: (name: string, avatar: string) => void;
-    logout: () => void;
-};
+// // Define a type for the store's actions
+// type UserActions = {
+//     login: (name: string, avatar: string) => void;
+//     logout: () => void;
+// };
 
-export const useUserStore = create<UserState & UserActions>();
+// <UserState & UserActions>
+export const useUserStore = create<UserState>(() => ({
+    isLogged: false,
+    id: '',
+    email: '',
+    avatar: '',
+    nickName: '',
+    fullName: '',
+    createdAt: '',
+    status: false,
+    F2A: false,
+    inGame: false
+}));
 
 // import { create } from 'zustand';
 
