@@ -7,7 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors: {origin: '*',}});
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors: {origin: 'http://localhost:8000', credentials: true}});
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
   }) );
@@ -17,7 +17,7 @@ async function bootstrap() {
   .setDescription('Laughtale API description')
   .setVersion('1.0')
   .addTag('Laughtale')
-  .addBearerAuth()
+  .addCookieAuth()
   .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

@@ -1,25 +1,26 @@
-import { useMutation } from '@tanstack/react-query';
-import { api as axios } from '../axios-utils';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-export interface RegisterData {
-    fullName: string;
-    email: string;
-    password: string;
-}
+// import { useMutation } from '@tanstack/react-query';
+// import { api as axios } from '../axios-utils';
+// import { useNavigate } from 'react-router-dom';
+// import toast from 'react-hot-toast';
 
-export interface LoginData {
-    email: string;
-    password: string;
-}
+// export interface RegisterData {
+//     fullName: string;
+//     email: string;
+//     password: string;
+// }
 
-interface UserData {
-    ok: boolean;
-}
+// export interface LoginData {
+//     email: string;
+//     password: string;
+// }
 
-async function signUp(registerData: RegisterData): Promise<UserData> {
-    return axios.post('/auth/signup', registerData);
-}
+// interface UserData {
+//     ok: boolean;
+// }
+
+// async function signUp(registerData: RegisterData): Promise<UserData> {
+//     return axios.post('/auth/signup', registerData);
+// }
 
 // export const useAddSuperHeroData = () => {
 //     const queryClient = useQueryClient()
@@ -63,33 +64,33 @@ async function signUp(registerData: RegisterData): Promise<UserData> {
 //       /**Optimistic Update End */
 //     })
 
-export const useRegister = () => {
+// export const useRegister = () => {
     
-    return useMutation<UserData, Error, RegisterData>({
-        mutationFn: signUp,
-        onSuccess: () => {
-            toast.success(`Account registered successfully!`);
-        },
-        onError: (error) => {
-            toast.error(error.message);
-        }
-    });
-};
+//     return useMutation<UserData, Error, RegisterData>({
+//         mutationFn: signUp,
+//         onSuccess: () => {
+//             toast.success(`Account registered successfully!`);
+//         },
+//         onError: (error) => {
+//             toast.error(error.message);
+//         }
+//     });
+// };
 
-async function signIn(loginData: LoginData): Promise<UserData> {
-    return axios.post('/auth/signIn/', loginData);
-}
+// async function signIn(loginData: LoginData): Promise<UserData> {
+//     return axios.post('/auth/signIn/', loginData);
+// }
 
-export const useLogin = () => {
-    const navigate = useNavigate();
-    return useMutation<UserData, Error, LoginData>({
-        mutationFn: signIn,
-        onSuccess: () => {
-            navigate('Confirm');
-        },
-        onError: (error) => {
-            toast.error(error.message);
-            navigate('Lobby'); // ! temporairement
-        }
-    });
-};
+// export const useLogin = () => {
+//     const navigate = useNavigate();
+//     return useMutation<UserData, Error, LoginData>({
+//         mutationFn: signIn,
+//         onSuccess: () => {
+//             navigate('Confirm');
+//         },
+//         onError: (error) => {
+//             toast.error(error.message);
+//             navigate('Lobby'); // ! temporairement
+//         }
+//     });
+// };

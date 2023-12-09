@@ -3,6 +3,9 @@ import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
+    @IsString()
+    id: string;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -19,5 +22,8 @@ export class CreateUserDto {
     @MinLength(7)
     HashPassword: string;
 
-    hashRefreshToken: string;
+    Avatar: string;
+
+    @IsString()
+    nickName: string;
 }
