@@ -22,6 +22,7 @@ export class RoomService {
     constructor(private readonly prisma: PrismaOrmService){}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
+        console.log(` createRoom user id is : ${userId}`);
 
         // const newRoom = await this.findRoomByTitle(createRoomDto.roomTitle);
         // if (!newRoom)
@@ -636,12 +637,10 @@ export class RoomService {
             const currentTime = new Date();
             if (currentTime >= mutedUntil.mutEDuration)
             {
-                console.log("in");
                 this.unmuteUserForCron(mutedUntil);
                 console.log(`user with the id ${mutedUntil.userID} is removed automatically from the muted users`);
             }
         });
-
     }
 
     async unmuteUserForCron( unmuteUser: UnmuteUserDetails) {

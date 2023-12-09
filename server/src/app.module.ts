@@ -51,6 +51,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(Middlware).forRoutes(UsersController);
+    consumer.apply(Middlware).forRoutes(UsersController, ChatGateway);
   }
 }
