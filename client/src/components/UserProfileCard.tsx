@@ -7,7 +7,7 @@ import {
 } from '../assets/custom-icons';
 import ProgressRingLoader from './ProgressRingLoader';
 
-// ! add props  
+// ! add props
 function UserProfileCard() {
     return (
         <div className="px-12 py-2 bg-white rounded-3xl border border-neutral-100 flex-col justify-start items-start gap-1.5 inline-flex">

@@ -308,7 +308,7 @@ export function RankIcon() {
     );
 }
 
-export function VsIcon() {
+export function VersusIcon() {
     return (
         <svg
             width="24"

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Match } from '../../../shared/types';
 import { Column } from 'react-table';
-import { VsIcon } from '../assets/custom-icons';
+import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
 
 const MatchTable = () => {
@@ -22,7 +22,7 @@ const MatchTable = () => {
                                 {value[0].name} ({value[0].rating})
                             </div>
                         </div>
-                        <VsIcon />
+                        <VersusIcon />
                         <div className="p-2.5 justify-center items-center gap-[5px] flex">
                             <div className="flex-col justify-center items-center gap-1 inline-flex">
                                 <img
