@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { request } from '../axios-utils';
 // import { persist, createJSONStorage } from "zustand/middleware";
 // import { api } from "../Api/base";
 
@@ -34,13 +35,12 @@ type UserState = {
 };
 
 // // Define a type for the store's actions
-// type UserActions = {
-//     login: (name: string, avatar: string) => void;
-//     logout: () => void;
-// };
+type UserActions = {
+    login: () => Promise<void>;
+    logout: () => void;
+};
 
-// <UserState & UserActions>
-export const useUserStore = create<UserState>(() => ({
+export const useUserStore = create<UserState & UserActions>((set) => ({
     isLogged: false,
     id: '',
     email: '',
@@ -50,47 +50,47 @@ export const useUserStore = create<UserState>(() => ({
     createdAt: '',
     status: false,
     F2A: false,
-    inGame: false
+    inGame: false,
+    login: async () => {
+        const { data } = await request.get('/users/me');
+        // ! user type men 3and simo
+        set({
+            isLogged: true,
+            id: data.user.id,
+            email: data.user.email,
+            avatar: data.user.avatar,
+            nickName: data.user.nickName,
+            fullName: data.user.fullName,
+            createdAt: data.user.createdAt,
+            status: data.user.status,
+            F2A: data.user.F2A,
+            inGame: data.user.inGame
+        });
+    },
+    logout: async () => {
+        // await request.get('/auth/logout');
+        set(
+            {
+                isLogged: false,
+                id: '',
+                email: '',
+                avatar: '',
+                nickName: '',
+                fullName: '',
+                createdAt: '',
+                status: false,
+                F2A: false,
+                inGame: false
+            },
+            true // ? the state update should trigger a re-render of the components that subscribe to the store.
+        );
+    }
 }));
 
-// import { create } from 'zustand';
-
-// interface countProbs {
-//     count: number;
-//     inc: (event: React.MouseEvent<HTMLElement>) => void;
-// }
-
-// const useStore = create<countProbs>((set) => ({
-//     count: 1,
-//     inc: (e) => {
-//         console.log(e);
-//         set((state) =>
-//         {
-//             console.log(state);
-//             return {
-//                 count: (state.count + 1)
-//             }
-//         });
-//     }
-// }));
-
-// function Counter() {
-//     const { count, inc } = useStore();
-//     return (
-//         <div className="counter">
-//             <span>{count}</span>
-//             <button onClick={inc}>one up</button>
-//         </div>
-//     );
-// }
-
-// export default function App() {
-//     return (
-//         <div className="code">
-//             <div className="code-container">
-//                 {/* <PrismCode className="language-jsx" children={code} /> */}
-//                 <Counter />
-//             </div>
-//         </div>
-//     );
+// login: async () => {
+//     const { data } = await request.get('/profile/me');
+//     // ! user type men 3and simo
+//     const user : UserState = data.user;
+//     set({ ...user, isLogged: true });
+//     return user.isLogged;
 // }

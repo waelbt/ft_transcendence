@@ -5,19 +5,21 @@ import {
     RankIcon,
     WinCupIcon
 } from '../assets/custom-icons';
+import { useUserStore } from '../stores';
 import ProgressRingLoader from './ProgressRingLoader';
 
 // ! add props
 function UserProfileCard() {
+    const user = useUserStore();
     return (
         <div className="px-12 py-2 bg-white rounded-3xl border border-neutral-100 flex-col justify-start items-start gap-1.5 inline-flex">
             {/* nickname */}
             <div className="space-x-2">
                 <span className="text-black text-2xl font-normal font-['Acme']">
-                    Dos404{' '}
+                    {user.nickName}{' '}
                 </span>
                 <span className="text-neutral-400 text-2xl font-normal font-['Acme']">
-                    ( wael boutzougarte )
+                    ( {user.fullName} )
                 </span>
             </div>
             {/* section 2 */}
@@ -67,33 +69,35 @@ function UserProfileCard() {
                     <div className="px-1 justify-center items-center gap-1.5 inline-flex">
                         <JoinIcon />
                         <div className=" text-neutral-400 text-sm font-normal font-['Acme']">
-                            Jan 19, 2019
+                            {user.createdAt}
                         </div>
                     </div>
                 </div>
                 {/* level + rank */}
-                <ProgressRingLoader
-                    style={''}
-                    color="#FFD700"
-                    radius={88}
-                    stroke={16}
-                    progress={50}
-                >
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <div className="relative">
-                            <RankIcon />
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-400 text-[23px] font-normal font-['Playfair Display SC']">
-                                15
-                            </div>
-                        </div>
-                    </div>
-                    <div className="absolute top-[14%] left-1/2 transform -translate-x-1/2  text-neutral-600 text-xs font-bold font-['Lato'] leading-none tracking-wide">
+                <div className="relative flex flex-col justift-center items-center gap-0">
+                    <div className="text-neutral-600 text-xl font-bold font-['Lato'] leading-none tracking-wide">
                         Level
                     </div>
-                    <div className="absolute bottom-[15%] left-1/2 transform -translate-x-1/2 text-center text-zinc-500 text-xs font-bold font-['Lato'] leading-none">
+                    <ProgressRingLoader
+                        style={''}
+                        color="#FFD700"
+                        radius={88}
+                        stroke={16}
+                        progress={50}
+                    >
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="relative">
+                                <RankIcon />
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-400 text-[23px] font-normal font-['Playfair Display SC']">
+                                    15
+                                </div>
+                            </div>
+                        </div>
+                    </ProgressRingLoader>
+                    <div className="text-center text-zinc-500 text-xl font-bold font-['Lato'] leading-none">
                         5 - 23%
                     </div>
-                </ProgressRingLoader>
+                </div>
             </div>
         </div>
     );
