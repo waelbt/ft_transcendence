@@ -54,15 +54,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   
   @SubscribeMessage('joinRoom')
   async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
-    
-    console.log('zemla d sockets')
-    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+        const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       throw new WsException(userCheck.message);
-      console.log('zemla d sockets 2')
-    // console.log('in join room');
-    // console.log(user);
-    
     this.logger.log(`the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`);
     const userRoom = await this.roomService.joinRoom(joinRoomDto, userCheck.userData.sub);
     console.log()
