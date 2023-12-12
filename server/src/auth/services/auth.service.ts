@@ -31,9 +31,10 @@ export class AuthService {
             }
             await this.generateATRT(res, req.user);
             if (isUser)
-                res.redirect('http://localhost:8000/Profile');
+                res.redirect('http://localhost:8000/profile');
             else
-                res.redirect('http://localhost:8000/get-started'); 
+                res.redirect('http://localhost:8000/profile'); 
+                // res.redirect('http://localhost:8000/get-started'); 
         }
 
         async refreshToken(@Req() req, @Res() res){

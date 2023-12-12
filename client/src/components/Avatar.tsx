@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 import { IoMdImages } from 'react-icons/io';
 import { IconContext } from 'react-icons';
@@ -8,14 +8,10 @@ interface AvatarProps {
     onCLick: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-// !add the upload endpoint + fix logic
 const Avatar: FC<AvatarProps> = ({ imageUrl, onCLick }) => {
-    const containerRef = useRef<HTMLDivElement | null>(null);
-
     return (
         <>
             <div
-                ref={containerRef}
                 className={`flex items-start gap-2 relative p-14 border-2 border-dashed border-grey-900 rounded-full hover:border-pink uploader cursor-pointer ${
                     imageUrl ? 'border-none' : ''
                 }`}
@@ -43,7 +39,6 @@ const Avatar: FC<AvatarProps> = ({ imageUrl, onCLick }) => {
                     >
                         <div className="w-9 h-9 flex justify-center items-center">
                             {' '}
-                            {/* Adjusted tag and classes for centering */}
                             <IconContext.Provider value={{ color: '#FFFFFF' }}>
                                 <IoTrashOutline size={22} />
                             </IconContext.Provider>
@@ -56,19 +51,3 @@ const Avatar: FC<AvatarProps> = ({ imageUrl, onCLick }) => {
 };
 
 export default Avatar;
-
-// import React, { useEffect, FC, useRef, useState } from 'react';
-// import ProgressRingLoader from './ProgressRingLoader';
-// import axios from 'axios';
-
-// upload: boolean;
-// onchange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-// reset: () => void;
-
-// htmlFor="file-uploader"
-
-{
-    /* <input id="file-uploader" type="file" className="hidden" />; */
-}
-{
-}
