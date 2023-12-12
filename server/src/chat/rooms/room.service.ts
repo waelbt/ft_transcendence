@@ -222,8 +222,6 @@ export class RoomService {
             }
         });
 
-        // console.log(user.rooms);
-
         if (user.rooms.length === 0)
             throw new BadRequestException(`You are not a member of this room`);
 
@@ -560,10 +558,7 @@ export class RoomService {
     }
 
     async muteUser(muteUserDto: MuteUserDto, userId) {
-
-        // console.log("mute function");
         // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userToMute);
-        // return;
         // you cannot mute the room owner is working succefully
         if (this.isUserAdmin(userId, muteUserDto.roomId))
         {
