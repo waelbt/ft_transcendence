@@ -1,0 +1,127 @@
+.main__chatlist {
+    border-right: 1px solid #afafaf;
+    padding: 0 80px 0 0px;
+    height: 100%;
+  }
+
+  #search-container {
+    display: grid;
+    align-items: center;
+    height: 35px;
+    width: 235px;
+    
+    padding: 0 20px;
+}
+
+#search-container input {
+    color: #0f0d0d;
+    border-radius: 5px;
+    border: 1px solid #E0E0E0;
+    background: #FFF;
+    padding-left: 48px;
+    padding-right: 20px;
+    font-size: 1rem;
+}
+#search-container input:focus {
+    border-color: yellow !important;
+  }
+  
+#search-container input::placeholder {
+    color: #404040;
+    font-family: Open Sans;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%; /* 13px */
+    letter-spacing: 0.1px;
+}
+
+.chatlist__items {
+    margin-top: 30px;
+    max-height: calc(100vh - calc(100vh / 2));
+  }
+  
+  .chatlist__item {
+    border-bottom: 1px solid #949494; /* or any color you prefer */
+    padding: 10px;
+  }
+ 
+  .chatlist__item:first-child {
+    margin-top: 0;
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+    position: relative;
+  }
+  .avatar img {
+    max-width: 100%;
+    object-fit: cover;
+  }
+  
+  .chatlist__item .userMeta p {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .chatlist__item .userMeta span {
+    margin: 0;
+    padding: 0;
+    color: #ceccd3;
+    font-weight: 400;
+    font-size: 12px;
+    display: block;
+  }
+  .chatlist__item:hover,
+  .chatlist__item.active {
+    background: #7a7272;
+    border-radius: 10px;
+  }
+  .isOnline {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #ddd;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  .isOnline.active {
+    background-color: tomato;
+  }
+  .avatar-img {
+    overflow: hidden;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .image-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    overflow-x: auto; /* Enable horizontal scrolling */
+  }
+  
+  .image-list-item {
+    margin-right: 10px;
+  }
+  
+  .circular-image {
+    width: 50px; /* Adjust the size of the circular images */
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .circular-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio and cover the circular container */
+  }

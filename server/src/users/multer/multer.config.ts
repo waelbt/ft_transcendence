@@ -6,7 +6,7 @@ import { InvalidFileException } from './file.exception';
 
 export const multerOptions = {
   storage: diskStorage({
-    destination: '/home/hp/Desktop/ft_transcendence/server/uploads',
+    destination: '/home/liltwl/Desktop/ft_transcendence/server/uploads',
     filename: (req, file, callback) => {
         const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
 

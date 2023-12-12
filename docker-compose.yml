@@ -9,12 +9,12 @@ services:
     container_name: client
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
       - ./client:/client
-      - client-node-modules:/client/node_modules
+      # ! - client-node-modules:/client/node_modules (if someone using mac os or windowns uncommment this )
     networks:
       - transcendence
 
@@ -22,12 +22,12 @@ services:
     container_name: server
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
     volumes:
       - ./server:/server
-      - server-node-modules:/server/node_modules
+      # ! - server-node-modules:/server/node_modules ( if someone using mac os or windowns uncommment this )
     networks:
       - transcendence
     command: sh start.sh
@@ -45,6 +45,7 @@ services:
       - 5432:5432
     restart: always
 
-volumes:
-  client-node-modules:
-  server-node-modules:
+# ! if someone using mac os or windowns uncommment this 
+# volumes:
+#   client-node-modules:
+#   server-node-modules:

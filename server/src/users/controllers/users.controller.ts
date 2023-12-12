@@ -1,39 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { User } from '@prisma/client';
-import { AuthGuard } from "@nestjs/passport";
-import { jwtGuard } from 'src/auth/authGuard';
-import { fileURLToPath } from 'url';
-import { ParamsTokenFactory } from '@nestjs/core/pipes';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { extname } from 'path';
 import { InvalidFileException } from '../multer/file.exception';
 import { P_N_Dto } from '../dto/completeProfile.dto';
+import { BlockService } from '../services/blocked.service';
 
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
-    private jwt:JwtService,
-    private config: ConfigService) {}
+    private readonly blockService: BlockService,) {}
+
+  @Get(':id/me')
+  async userInfos(@Req() req, @Param('id') userId: string){
+    console.log('Welcom To our Website again');
+    if (userId != req.user.sub){
+      console.log('user1: ', userId, 'sub: ', req.user.sub);
+      throw new UnauthorizedException('You are not allowed to remove this user from friends');
+    }
+    return (await this.usersService.userInfos(req, userId));
+  }
 
   @Get('me')
-  sayHi(){
+  async myInfos(@Req() req){
     console.log('Welcom To our Website again');
+    // if (userId != req.user.sub){
+    //   console.log('user1: ', userId, 'sub: ', req.user.sub);
+    //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
+    // }
+    return (await this.usersService.myInfos(req));
   }
 
   @Post()
   @ApiCreatedResponse()
-  createUser(@Body() user: CreateUserDto) {
+  createUser(@Body() user: User) {
     console.log('userId /////', user)
-    return (this.usersService.createUser(user));
+    return (this.usersService.createUser(user, user.id));
   }
 
   @Post('upload')
@@ -100,6 +105,51 @@ export class UsersController {
     return (this.usersService.removeUser(String(id)));
   }
 
+  @Post(':userId/blockUser/:blockedUserId')
+  async blockUser(
+    @Req() req,
+    @Param('userId') userId: string,
+    @Param('blockedUserId') blockedUserId: string){
+      if (userId != req.user.sub){
+        console.log('user1: ', userId, 'sub: ', req.user.sub);
+        throw new UnauthorizedException('You are not allowed to reject this friend request');
+    }
+      this.blockService.blockUser(userId, blockedUserId);
+  }
+
+  @Post(':userId/unblockUser/:unblockedUserId')
+  async unblockUser(
+    @Req() req,
+    @Param('userId') userId: string,
+    @Param('unblockedUserId') unblockedUserId: string){
+      if (userId != req.user.sub){
+        console.log('user1: ', userId, 'sub: ', req.user.sub);
+        throw new UnauthorizedException('You are not allowed to reject this friend request');
+    }
+      this.blockService.unblockUser(userId, unblockedUserId);
+    }
+
+  @Get(':userId/canInteractWith/:otherUserId')
+  async canInteractWith(
+    @Req() req,
+    @Param('userId') userId: string,
+    @Param('otherUserId') otherUserId: string): Promise<Boolean>{
+      if (userId != req.user.sub){
+        console.log('user1: ', userId, 'sub: ', req.user.sub);
+        throw new UnauthorizedException('You are not allowed to reject this friend request');
+    }
+      const isItBlocked = await this.blockService.isUserBlocked(userId, otherUserId);;
+      return isItBlocked ? false : true;
+  }
+
+  @Get(':userId/blockedUsers')
+  async listOfBlockedUsers(@Req() req, @Param('userId') userId: string){
+    if (userId != req.user.sub){
+      console.log('user1: ', userId, 'sub: ', req.user.sub);
+      throw new UnauthorizedException('You are not allowed to reject this friend request');
+    }
+    return await this.blockService.listOfBlockedUsers(userId);
+  }
 // Close Prisma client when done
 // prisma.$disconnect();
 }
