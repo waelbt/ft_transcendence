@@ -83,28 +83,43 @@ export class RoomService {
     }
 
     async joinRoom(joinRoomDto: JoinRoomDto, userId: string) {
-
+        
+        console.log('zbiiiii');
         // check if the room existed and if the user is already joined
-        console.log(joinRoomDto.roomTitle, userId);
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                rooms: true,
+            },
+        });
+
+        // console.log(joinRoomDto.roomTitle, userId);
+        
         let room = await this.prisma.room.findUnique({
             where: {
                 roomTitle: joinRoomDto.roomTitle,
             },
-            select: {
-                privacy: true,
-                password: true,
-            }
+            // select: {
+            //     privacy: true,
+            //     password: true,
+            // }
         });
-
         if (!room)
-            throw new NotFoundException('No Exsiting Room With This Id');
+            return ({ message: 'No Existing Room With This Id', state: false});
+        if (!user.rooms.includes(room))
+            return({message: 'Already Joined', state: false, joinedRoom: room});
+
+        // if (!room)
+        //     throw new NotFoundException('No Exsiting Room With This Id');
         else if (room.privacy == 'PRIVATE')
-            throw new BadRequestException("This Room Is Private");
+            return ({message: 'This Room Is Private', state: false});
         else if (room.privacy == 'PROTECTED')
         {
             const matched = verifyPassowrd(joinRoomDto.password, room.password);
             if (!matched)
-                throw new BadRequestException('Password Does Not Match');
+                return ({message: 'Password Does Not Match', state: false});
         }
 
         room = await this.prisma.room.update({
@@ -128,7 +143,7 @@ export class RoomService {
             },
         });
 
-        return (room);
+        return ({joinedRoom: room, state: true});
     }
 
     async leaveRoom(leaveRoomDto: LeaveRoomDto, userId: string) {
@@ -160,7 +175,7 @@ export class RoomService {
         // if yes
         // i should delete all the messages that belongs to it
         // and delete the room it self
-        return (room);
+        return ({joinedRoom: room, state: true});
 
     }
 
