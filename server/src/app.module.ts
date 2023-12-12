@@ -1,9 +1,3 @@
-// import { Module } from '@nestjs/common';
-// import { ConfigModule } from '@nestjs/config';
-// import { AuthModule } from './auth/auth.module';
-// import { UserModule } from './user/user.module';
-// import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
-
 // @Module({
 //   imports: [ConfigModule.forRoot({isGlobal: true,}), AuthModule, UserModule, PrismaOrmModule],
 // })
@@ -26,7 +20,10 @@ import { Middlware } from './auth/middlware/file.middlware';
 import { UsersController } from './users/controllers/users.controller';
 import { GameModule } from './game/game.module';
 import { ApiCookieAuth } from '@nestjs/swagger';
-
+import { ChatModule } from './chat/chat.module';
+import { RoomService } from './chat/rooms/room.service';
+import { ChatController } from './chat/chat.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 // @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
 @Module({
   imports: [GameModule,
@@ -37,19 +34,25 @@ import { ApiCookieAuth } from '@nestjs/swagger';
     MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     ConversationsModule,
     // JwtModule.register({secret: process.env.JWT_secret}),
+    ChatModule,
     // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
+    ScheduleModule.forRoot(),
+  ],
+  controllers: [
+    ChatController,
   ],
   providers: [ChatGateway,
     {
       provide: APP_GUARD,
       useClass: accessTokenGuard,
     },
+    RoomService
   ],
 })
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(Middlware).forRoutes(UsersController);
+    consumer.apply(Middlware).forRoutes(UsersController, ChatGateway);
   }
 }
