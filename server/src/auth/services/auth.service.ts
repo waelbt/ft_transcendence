@@ -51,6 +51,7 @@ export class AuthService {
 
         async matchRefreshToken(@Req() req){
             const refreshToken = req.cookies['refreshToken'];
+            console.log('helloooo');
             try{
                 const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
                 return payload;
