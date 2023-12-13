@@ -31,9 +31,10 @@ export class AuthService {
             }
             await this.generateATRT(res, req.user);
             if (isUser)
-                res.redirect('http://localhost:8000/Profile');
+                res.redirect('http://localhost:8000/profile');
             else
-                res.redirect('http://localhost:8000/get-started'); 
+                res.redirect('http://localhost:8000/profile'); 
+                // res.redirect('http://localhost:8000/get-started'); 
         }
 
         async refreshToken(@Req() req, @Res() res){
@@ -51,6 +52,7 @@ export class AuthService {
 
         async matchRefreshToken(@Req() req){
             const refreshToken = req.cookies['refreshToken'];
+            console.log('helloooo');
             try{
                 const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
                 return payload;

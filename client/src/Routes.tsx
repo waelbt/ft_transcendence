@@ -11,7 +11,9 @@ const router = createBrowserRouter([
     {
         path: '/get-started',
         lazy: async () => {
-            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            let { ProfileCompletion } = await import(
+                './pages/ProfileCompletion'
+            );
             return { Component: ProfileCompletion };
         }
     },
@@ -30,20 +32,20 @@ const router = createBrowserRouter([
                     return { Component: Lobby };
                 }
             },
-            {
-                path: '/chat',
-                lazy: async () => {
-                    let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
-                    return { Component: Chat };
-                }
-            },
-            {
-                path: '/game',
-                lazy: async () => {
-                    let { Game } = await import('./pages/Game'); // conditional rendring in home page
-                    return { Component: Game };
-                }
-            },
+            // {
+            //     path: '/chat',
+            //     lazy: async () => {
+            //         let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
+            //         return { Component: Chat };
+            //     }
+            // },
+            // {
+            //     path: '/game',
+            //     lazy: async () => {
+            //         let { Game } = await import('./pages/Game'); // conditional rendring in home page
+            //         return { Component: Game };
+            //     }
+            // },
             {
                 path: '/profile', // search before implement
                 lazy: async () => {

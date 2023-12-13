@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { UserProfileCard, MatchTable, Achievements } from '../../components/';
+// import { request } from '../../axios-utils';
 
 export function Profile() {
     const [currentView, setCurrentView] = useState<
         'achievements' | 'Completed Games'
     >('achievements');
 
+    // useEffect(() => {
+    //     request.get('/users/me').then((response) => console.log(response)).catch(error => console.log(error));
+    // }, []);
     return (
         // gap-20
         <div className="flex-grow flex-col justify-center items-center inline-flex gap-14">

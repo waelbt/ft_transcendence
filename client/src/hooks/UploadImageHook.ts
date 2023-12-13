@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { api as axios } from '../axios-utils';
+import { request } from '../axios-utils';
 
 const useUpload = () => {
     const [uploading, setUploading] = useState(false);
@@ -7,14 +7,14 @@ const useUpload = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
-    const uploadData = async (url : string) => {
+    const uploadData = async (url: string) => {
         setUploading(true);
         setError(null);
 
         try {
             var formData = new FormData();
             formData.append('file', url);
-            await axios.post('users/upload', formData, {
+            await request.post('users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
