@@ -8,3 +8,4 @@ export { default as ProgressRingLoader } from './ProgressRingLoader';
 export { default as UserProfileCard } from './UserProfileCard';
 export { default as Table } from './Table';
 export { default as Achievements } from './Achievements';
+export { default as UserMenu } from './UserMenu';

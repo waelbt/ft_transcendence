@@ -32,26 +32,56 @@ const router = createBrowserRouter([
                     return { Component: Lobby };
                 }
             },
-            // {
-            //     path: '/chat',
-            //     lazy: async () => {
-            //         let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
-            //         return { Component: Chat };
-            //     }
-            // },
-            // {
-            //     path: '/game',
-            //     lazy: async () => {
-            //         let { Game } = await import('./pages/Game'); // conditional rendring in home page
-            //         return { Component: Game };
-            //     }
-            // },
+            {
+                path: '/chat',
+                lazy: async () => {
+                    let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
+                    return { Component: Chat };
+                }
+            },
+            {
+                path: '/game',
+                lazy: async () => {
+                    let { Game } = await import('./pages/Game'); // conditional rendring in home page
+                    return { Component: Game };
+                }
+            },
             {
                 path: '/profile', // search before implement
                 lazy: async () => {
                     let { Profile } = await import('./pages/Profile'); // conditional rendring in home page
                     return { Component: Profile };
-                }
+                },
+                children: [
+                    {
+                        path: 'history',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'achivements',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'friends',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'setting',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
+                            return { Component: MatchTable };
+                        }
+                    }
+                ]
             },
             {
                 path: '/setting', // search before implement
@@ -66,12 +96,12 @@ const router = createBrowserRouter([
                     let { Rooms } = await import('./pages/Rooms'); // conditional rendring in home page
                     return { Component: Rooms };
                 }
-            },
-            {
-                path: '*',
-                element: <div>not found</div>
             }
         ]
+    },
+    {
+        path: '*',
+        element: <div>not found</div>
     }
 ]);
 
