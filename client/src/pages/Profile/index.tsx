@@ -8,20 +8,42 @@ import { Outlet } from 'react-router-dom';
 import { UserProfileCard } from '../../components/';
 
 export function Profile() {
-    // useEffect(() => {
-    //     request.get('/users/me').then((response) => console.log(response)).catch(error => console.log(error));
-    // }, []);
     return (
         // gap-20
         <div className="flex-grow flex-col justify-center items-center inline-flex gap-14">
-            {/* profile card */}
             <UserProfileCard />
-            <Outlet/>
+            <div className="w-2/3 h-full p-2.5 bg-white rounded-[20px] shadow flex-col justify-start items-center inline-flex">
+                <Outlet />
+            </div>
         </div>
     );
 }
-
-
+{
+    /* <div className="p-2.5 left-0 top-0 absolute bg-stone-50 justify-center items-center gap-2.5 inline-flex">
+                        <div className="w-[1323px] h-[73px] px-20 rounded-[10px] justify-between items-center flex">
+                            <div className="w-[130px] px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
+                                <div className="w-[110px] text-neutral-500 text-[22px] font-normal font-['Acme'] leading-7">
+                                    Date & Time
+                                </div>
+                            </div>
+                            <div className="w-[480px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
+                                <div className="text-neutral-500 text-[22px] font-normal font-['Acme'] leading-7">
+                                    opponent
+                                </div>
+                            </div>
+                            <div className="w-[63px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
+                                <div className="text-neutral-500 text-[22px] font-normal font-['Acme'] leading-7">
+                                    score
+                                </div>
+                            </div>
+                            <div className="w-[88px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
+                                <div className="text-neutral-500 text-[22px] font-normal font-['Acme'] leading-7">
+                                    Awarded
+                                </div>
+                            </div>
+                        </div>
+                    </div> */
+}
 {
     /*Achievements && MatchTable */
 }
