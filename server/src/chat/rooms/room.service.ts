@@ -108,7 +108,7 @@ export class RoomService {
         });
         if (!room)
             return ({ message: 'No Existing Room With This Id', state: false});
-        if (!user.rooms.includes(room))
+        if (user.rooms.includes(room))
             return({message: 'Already Joined', state: false, joinedRoom: room});
 
         // if (!room)
