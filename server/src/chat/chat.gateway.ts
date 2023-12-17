@@ -15,6 +15,7 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { RoomService } from './rooms/room.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { use } from 'passport';
 
 @WebSocketGateway({
   cors: {
@@ -27,6 +28,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   constructor(private readonly prisma: PrismaOrmService,
     private readonly roomService:  RoomService,
     private readonly jwt: JwtService ){}
+    
+    private usersSockets: Map<string,string> = new Map<string,string>;
 
   @WebSocketServer() server: Server;
 
@@ -40,39 +43,48 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const { sockets } = this.server.sockets;
 
     this.logger.log(`This client ${client.id} connected`)
+    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    if (userCheck.state === false)
+      this.handleDisconnect(client);
+    console.log(`This user ${userCheck.userData.email} is now connected`);
+    this.usersSockets.set(userCheck.userData.email, client.id);
+    console.log(this.usersSockets);
     this.logger.debug(`Number of clients connected: ${sockets.size}`);
   }
 
   
   @SubscribeMessage('message')
-  handleMessage(client: any, payload: any) {
-    this.logger.log(`Message received from client with id: ${client.id}`);
-    this.logger.debug(`Payload: ${payload}`);
-    this.server.emit('onMessage', payload);
+  async handleMessage(client: any, payload: any) {
+    // this.logger.log(`Message received from client with id: ${client.id}`);
+    // this.logger.debug(`Payload: ${payload}`);
+    // this.server.emit('onMessage', payload);
+    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    console.log(`this user ${userCheck.userData.email} is sending a message to this room ${payload.room}`);
+    console.log(`the message is : ${payload.message}`);
+    this.server.to(payload.room).emit('message', payload.message);
     return {payload};
   }
   
   @SubscribeMessage('joinRoom')
   async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
     
-    console.log('zemla d sockets')
     const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       throw new WsException(userCheck.message);
-      console.log('zemla d sockets 2')
-    // console.log('in join room');
-    // console.log(user);
-    
     this.logger.log(`the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`);
     const userRoom = await this.roomService.joinRoom(joinRoomDto, userCheck.userData.sub);
-    console.log()
     if (userRoom.state === false)
     {
       console.log(userRoom.message);
       throw new WsException(userRoom.message);
     }
     else
+    {
+      const userSocket = this.usersSockets.get(userCheck.userData.email);
+      // await this.server.in(payload.user.socketId).socketsJoin(payload.roomName)
+      await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
       return (userRoom.joinedRoom);
+    }
   }
 
   async getUserFromAccessToken(cookie: string) {
