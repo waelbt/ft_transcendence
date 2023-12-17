@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChatGateway } from './chat.gateway';
-
+import { GameController } from 'src/game/game.controller';
 describe('ChatGateway', () => {
   let gateway: ChatGateway;
 
