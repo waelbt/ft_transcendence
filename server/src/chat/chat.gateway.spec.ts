@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChatGateway } from './chat.gateway';
 import { GameController } from 'src/game/game.controller';
+import { hashPassword } from './rooms/hash-password';
 describe('ChatGateway', () => {
   let gateway: ChatGateway;
 
