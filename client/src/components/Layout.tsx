@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom';
 // import { ProfileCompletion } from '../pages/ProfileCompletion';
-import { IconContext } from 'react-icons';
+// import { IconContext } from 'react-icons';
 import { IoIosNotifications } from 'react-icons/io';
+import UserMenu from './DropdownProfile';
+import { useState } from 'react';
 // import { SlLogout } from 'react-icons/sl';
 // import { useEffect } from 'react';
 // import { useUserStore } from '../stores';
@@ -10,6 +12,7 @@ import { IoIosNotifications } from 'react-icons/io';
 
 function Layout() {
     const navLinks = ['Home', 'Profile', 'Chat', 'Rooms', 'Game']; //! game section is temporary here
+    const [openProfile, setOpenProfile] = useState(false);
     // const { login } = useUserStore();
     // const navigate = useNavigate();
     // useEffect(() => {
@@ -57,16 +60,19 @@ function Layout() {
                             {/* <!-- avatar && notifaction uSection --> */}
                             <div className="px-2.5 justify-start items-center gap-[30px] inline-flex">
                                 <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                                    <IconContext.Provider
+                                    {/* <IconContext.Provider
                                         value={{
                                             color: '#787878'
                                         }}
-                                    >
-                                        <IoIosNotifications size={28} />
-                                    </IconContext.Provider>
+                                    > */}
+                                    <IoIosNotifications
+                                        className="text-gray-500"
+                                        size={28}
+                                    />
+                                    {/* </IconContext.Provider> */}
                                     {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
                                 </div>
-                                <div className="avatar">
+                                <div className="avatar cursor-pointer" onClick={() => setOpenProfile(!openProfile)}>
                                     <div className="w-12 rounded-full ring ring-amber-500 ring-offset-base-100 ring-offset-2">
                                         <img src="https://tecdn.b-cdn.net/img/new/avatars/2.webp" />
                                     </div>
@@ -86,7 +92,11 @@ function Layout() {
                 </div> */}
                 <Outlet />
             </div>
-            {/* )} */}
+            {openProfile ? (
+                <div className="absolute top-20 right-4" onClick={() => setOpenProfile(false)}>
+                    <UserMenu />
+                </div>
+            ) : null}
         </>
     );
 }

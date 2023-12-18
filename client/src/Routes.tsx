@@ -26,26 +26,26 @@ const router = createBrowserRouter([
         children: [
             // lazy
             {
-                path: '/lobby',
+                path: '/home',
                 lazy: async () => {
                     let { Lobby } = await import('./pages/Lobby'); // conditional rendring in home page
                     return { Component: Lobby };
                 }
             },
-            {
-                path: '/chat',
-                lazy: async () => {
-                    let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
-                    return { Component: Chat };
-                }
-            },
-            {
-                path: '/game',
-                lazy: async () => {
-                    let { Game } = await import('./pages/Game'); // conditional rendring in home page
-                    return { Component: Game };
-                }
-            },
+            // {
+            //     path: '/chat',
+            //     lazy: async () => {
+            //         let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
+            //         return { Component: Chat };
+            //     }
+            // },
+            // {
+            //     path: '/game',
+            //     lazy: async () => {
+            //         let { Game } = await import('./pages/Game'); // conditional rendring in home page
+            //         return { Component: Game };
+            //     }
+            // },
             {
                 path: '/profile', // search before implement
                 lazy: async () => {
@@ -70,8 +70,8 @@ const router = createBrowserRouter([
                     {
                         path: 'friends',
                         lazy: async () => {
-                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
-                            return { Component: MatchTable };
+                            let { FriendsDashboard } = await import('./components/'); // conditional rendring in home page
+                            return { Component: FriendsDashboard };
                         }
                     },
                     {

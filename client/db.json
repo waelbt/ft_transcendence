@@ -1,4 +1,41 @@
 {
+    "friends": [
+        {
+            "id": 1,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 2,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 3,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 4,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 5,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        }
+    ],
     "matches": [
         {
             "id": 1,

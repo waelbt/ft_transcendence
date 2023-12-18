@@ -16,6 +16,14 @@ export interface Player {
     rating: number;
 }
 
+export interface Friend {
+    id: number;
+    name: string;
+    avatar: string;
+    status: string;
+    actions: string[];
+}
+
 export interface Match {
     id: number;
     opponent: Player;

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 import { IoMdImages } from 'react-icons/io';
-import { IconContext } from 'react-icons';
+// import { IconContext } from 'react-icons';
 
 interface AvatarProps {
     imageUrl: string | null;
@@ -39,9 +39,9 @@ const Avatar: FC<AvatarProps> = ({ imageUrl, onCLick }) => {
                     >
                         <div className="w-9 h-9 flex justify-center items-center">
                             {' '}
-                            <IconContext.Provider value={{ color: '#FFFFFF' }}>
-                                <IoTrashOutline size={22} />
-                            </IconContext.Provider>
+                            {/* <IconContext.Provider value={{ color: '#FFFFFF' }}> */}
+                                <IoTrashOutline className="text-white" size={22} />
+                            {/* </IconContext.Provider> */}
                         </div>
                     </span>
                 )}
