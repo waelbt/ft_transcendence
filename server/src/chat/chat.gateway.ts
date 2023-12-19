@@ -68,6 +68,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @SubscribeMessage('joinRoom')
   async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
     
+    console.log("here");
     const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       throw new WsException(userCheck.message);
@@ -81,7 +82,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     else
     {
       const userSocket = this.usersSockets.get(userCheck.userData.email);
-      // await this.server.in(payload.user.socketId).socketsJoin(payload.roomName)
       await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
       return (userRoom.joinedRoom);
     }

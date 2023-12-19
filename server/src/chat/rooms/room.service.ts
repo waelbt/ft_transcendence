@@ -73,7 +73,7 @@ export class RoomService {
                 users: true,
                 messages: {
                     include: {
-                        user: true,
+                        sender: true,
                     },
                 },
             },
@@ -137,7 +137,7 @@ export class RoomService {
                 users: true,
                 messages: {
                     include : {
-                        user: true,
+                        sender: true,
                     },
                 },
             },
@@ -165,7 +165,7 @@ export class RoomService {
                 users: true,
                 messages: {
                     include: {
-                        user: true,
+                        sender: true,
                     },
                 },
             },
@@ -233,7 +233,7 @@ export class RoomService {
                 users: true,
                 messages: {
                     include: {
-                        user: true,
+                        sender: true,
                     },
                 },
             },
@@ -678,4 +678,7 @@ export class RoomService {
         this.mutedUsers.delete(unmuteUser.userID);
     }
 
+
+    // createMessage
+    // 
 }
