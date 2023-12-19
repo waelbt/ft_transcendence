@@ -13,6 +13,7 @@ import { hashPassword, verifyPassowrd } from './hash-password';
 import { changeRoomPasswordDto } from '../DTOS/change-room-password';
 import { MuteUserDto, UnmuteUserDto, UnmuteUserDetails } from '../DTOS/mute-user-dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { CreateMessageDto } from '../DTOS/create-message-dto';
 
 @Injectable()
 export class RoomService {
@@ -234,6 +235,7 @@ export class RoomService {
                 messages: {
                     include: {
                         sender: true,
+                        room: true,
                     },
                 },
             },
@@ -680,5 +682,35 @@ export class RoomService {
 
 
     // createMessage
-    // 
+    async createMessage(createMessageDto: CreateMessageDto, senderId: string) {
+
+        const room = await this.prisma.room.findFirst({
+            where: {
+                roomTitle: createMessageDto.roomTitle,
+            },
+        });
+
+        const newMessage = await this.prisma.message.create({
+            data: {
+                message: createMessageDto.message,
+                sender: {
+                    connect: {
+                        id: senderId,
+                    },
+                },
+                room: {
+                    connect: {
+                        id: room.id,
+                    },
+                },
+            },
+            include: {
+                sender: true,
+                room: true,
+            }
+        });
+
+        console.log(newMessage);
+        return (newMessage);
+    }
 }

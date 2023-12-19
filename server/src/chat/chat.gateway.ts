@@ -16,6 +16,7 @@ import { RoomService } from './rooms/room.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { use } from 'passport';
+import { CreateMessageDto } from './DTOS/create-message-dto';
 
 @WebSocketGateway({
   cors: {
@@ -54,14 +55,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   
   @SubscribeMessage('message')
-  async handleMessage(client: any, payload: any) {
+  async handleMessage(client: any, payload: CreateMessageDto) {
     // this.logger.log(`Message received from client with id: ${client.id}`);
     // this.logger.debug(`Payload: ${payload}`);
     // this.server.emit('onMessage', payload);
     const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
-    console.log(`this user ${userCheck.userData.email} is sending a message to this room ${payload.room}`);
+    console.log(`this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`);
     console.log(`the message is : ${payload.message}`);
-    this.server.to(payload.room).emit('message', payload.message);
+    this.server.to(payload.roomTitle).emit('message', payload.message);
+    this.roomService.createMessage(payload, userCheck.userData.sub);
     return {payload};
   }
   
