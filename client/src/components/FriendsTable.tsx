@@ -9,6 +9,8 @@ type FriendsTableProps = {
     friends: Friend[];
 };
 
+
+// ! fix later 
 function FriendsTable({ friends }: FriendsTableProps) {
     useEffect(() => {
         console.log(window.innerWidth);
@@ -42,7 +44,7 @@ function FriendsTable({ friends }: FriendsTableProps) {
                     </div>
 
                     {/* Popover element */}
-                    <Popover className="relative">
+                    <Popover className="">
                         {({ open }) => (
                             <>
                                 <Popover.Button
@@ -62,17 +64,17 @@ function FriendsTable({ friends }: FriendsTableProps) {
                                     leaveTo="opacity-0 translate-y-1"
                                 >
                                     <Popover.Panel
-                                        className={`absolute left-0 -translate-x-30 z-10 mt-3 w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
+                                        className={`absolute left-[85%]  z-10  w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
                                     >
-                                        <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                             <ul
-                                                className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                                className="py-2 text-sm text-zinc-600 "
                                                 aria-labelledby="dropdownMenuIconButton"
                                             >
                                                 {friend.actions.map(
                                                     (action, index) => (
                                                         <li
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                            className="block px-4 py-2 hover:bg-gray-100 "
                                                             key={index}
                                                             // onClick={() => ()  request.get(`/${action}/id`)}
                                                         >
