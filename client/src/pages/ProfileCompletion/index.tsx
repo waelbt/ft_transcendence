@@ -74,6 +74,7 @@ export function ProfileCompletion() {
                                                     setImagePath(null);
                                                     setSelectedItemIndex(-1);
                                                 }}
+                                                style='p-14'
                                             />
                                             <label
                                                 className="absolute top-0 left-0 w-full h-full"

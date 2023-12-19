@@ -11,6 +11,7 @@
 import { NavLink, Navigate } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
+import { Avatar } from '.';
 
 // import { UserMenu } from '.';
 
@@ -23,11 +24,16 @@ function UserProfileCard() {
             <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white">
                 <div className="px-5 py-2.5 flex-col justify-center items-center gap-2.5 inline-flex">
                     {/* avatar */}
-                    <div className="avatar online">
+                    {/* <div className="avatar online">
                         <div className="w-40 h-40 rounded-full">
                             <img src="https://tecdn.b-cdn.net/img/new/avatars/2.webp" />
                         </div>
-                    </div>
+                    </div> */}
+                    <Avatar
+                        imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                        state="online"
+                        style="w-40 h-40"
+                    />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
                         dos404
                     </div>
