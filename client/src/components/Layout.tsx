@@ -99,7 +99,7 @@ function Layout() {
                                                 leaveFrom="opacity-100 translate-y-0"
                                                 leaveTo="opacity-0 translate-y-1"
                                             >
-                                                <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
+                                                <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-sm -translate-x-52 transform px-4 sm:px-0 lg:max-w-3xl">
                                                     <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex">
                                                         <li
                                                             className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"

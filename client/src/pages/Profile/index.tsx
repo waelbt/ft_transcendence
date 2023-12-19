@@ -7,7 +7,7 @@ export function Profile() {
         <div className="flex-grow flex-col justify-center items-center inline-flex gap-14">
             <UserProfileCard />
             {/* w-2/3 h-full */}
-            <div className=" p-2.5 bg-white rounded-[20px] shadow flex-col justify-start items-center inline-flex">
+            <div className="w-2/3 p-2.5 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
                 <Outlet />
             </div>
         </div>

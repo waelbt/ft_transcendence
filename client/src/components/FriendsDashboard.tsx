@@ -39,7 +39,7 @@ const FriendsDashboard: React.FC = () => {
     //   });
 
     return (
-        <div className="App">
+        <div className="max-h-[400px] overflow-y-auto w-full">
             {/* <SearchBar setSearchTerm={setSearchTerm} />
       <FilterButtons setFilter={setFilter} /> */}
             {/* friends={friends} */}

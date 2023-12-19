@@ -1,34 +1,37 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Friend } from '../../../shared/types';
+import { Popover, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 // import DropDownMenu from './DropDownMenu';
-// import { TbMessageCircle2Filled } from 'react-icons/tb';
+
 type FriendsTableProps = {
     friends: Friend[];
 };
 
 function FriendsTable({ friends }: FriendsTableProps) {
-    const [openMenu, setOpenMenu] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(-1);
-
     useEffect(() => {
-        console.log(typeof friends);
-    }, [friends]);
+        console.log(window.innerWidth);
+    }, [window.innerWidth]);
 
     return (
-        <div className="relative flex-col justify-start items-start inline-flex">
-            {friends.map((friend: Friend, index) => (
+        <div className="flex flex-col w-full">
+            {friends.map((friend: Friend) => (
                 <div
-                    className="  py-4 border-b border-gray-200 justify-center items-center gap-[1104.88px] inline-flex "
+                    className="flex py-4 border-b border-gray-200 justify-between items-center w-full"
                     key={friend.id}
                 >
-                    <div className="self-stretch justify-center items-center gap-2.5 inline-flex px-8">
-                        <div className=" avatar">
+                    {/* Element to take all available space */}
+                    <div className="flex flex-grow items-center gap-2.5 px-8">
+                        <div className="avatar">
                             <div className="w-12 rounded-full">
-                                <img src={friend.avatar} />
+                                <img
+                                    src={friend.avatar}
+                                    alt={`${friend.name}'s avatar`}
+                                />
                             </div>
                         </div>
-                        <div className="self-stretch p-2.5 flex-col justify-center items-start gap-[5px] inline-flex">
+                        <div className="flex flex-col justify-center items-start gap-[5px]">
                             <div className="text-black text-sm font-normal font-['Acme']">
                                 {friend.name}
                             </div>
@@ -37,32 +40,57 @@ function FriendsTable({ friends }: FriendsTableProps) {
                             </div>
                         </div>
                     </div>
-                    {/* <div className=" self-stretch p-2.5 justify-center items-center gap-2.5 inline-flex"> */}
-                        {/* <button className="p-2 bg-neutral-100 rounded-3xl flex-col justify-center items-center">
-                            <TbMessageCircle2Filled className="text-gray-500" /> //! message redirect buttom
-                        </button> */}
-                        <button
-                            className="p-2 bg-neutral-100 rounded-3xl flex-col justify-center items-center"
-                            onClick={() => {
-                                setOpenMenu(true);
-                                setActiveIndex(
-                                    index !== activeIndex ? index : -1
-                                );
-                            }}
-                        >
-                            <BsThreeDotsVertical className="text-gray-500" />
-                        </button>
-                    {/* </div> */}
+
+                    {/* Popover element */}
+                    <Popover className="relative">
+                        {({ open }) => (
+                            <>
+                                <Popover.Button
+                                    className={`group inline-flex items-center rounded-md px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 ${
+                                        open ? 'text-white' : 'text-white/90'
+                                    }`}
+                                >
+                                    <BsThreeDotsVertical className="text-gray-500" />
+                                </Popover.Button>
+                                <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-200"
+                                    enterFrom="opacity-0 translate-y-1"
+                                    enterTo="opacity-100 translate-y-0"
+                                    leave="transition ease-in duration-150"
+                                    leaveFrom="opacity-100 translate-y-0"
+                                    leaveTo="opacity-0 translate-y-1"
+                                >
+                                    <Popover.Panel
+                                        className={`absolute left-0 -translate-x-30 z-10 mt-3 w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
+                                    >
+                                        <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                            <ul
+                                                className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                                aria-labelledby="dropdownMenuIconButton"
+                                            >
+                                                {friend.actions.map(
+                                                    (action, index) => (
+                                                        <li
+                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                            key={index}
+                                                            // onClick={() => ()  request.get(`/${action}/id`)}
+                                                        >
+                                                            {action}
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </Popover.Panel>
+                                </Transition>
+                            </>
+                        )}
+                    </Popover>
                 </div>
             ))}
-            
         </div>
     );
 }
 
 export default FriendsTable;
-// {openMenu && activeIndex === index && (
-//     <div className="z-100 aboslute top-0 left-0">
-//         <DropDownMenu actions={friend.actions} />
-//     </div>
-// )}
