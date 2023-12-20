@@ -16,6 +16,11 @@ function Layout() {
             icon: IoMdSettings,
             action: () => navigate('/profile/setting')
         },
+        {
+            name: 'logout',
+            icon: HiLogout,
+            action: () => navigate('/')
+        }
         // {
         //     name: 'achivements',
         //     icon: IoMdSettings,
@@ -26,11 +31,6 @@ function Layout() {
         //     icon: IoMdSettings,
         //     action: () => navigate('/profile/setting')
         // },
-        {
-            name: 'logout',
-            icon: HiLogout,
-            action: () => navigate('/')
-        }
     ];
     return (
         <>
@@ -42,7 +42,10 @@ function Layout() {
                     <div className="w-full px-4">
                         <div className="flex justify-between items-center">
                             {/* <!-- Logo Section --> */}
-                            <div className="flex-shrink-0 text-black text-xl font-bold font-['Lemonada']">
+                            <div
+                                className="flex-shrink-0 text-black text-xl font-bold font-['Lemonada'] cursor-pointer"
+                                onClick={() => navigate('/home')}
+                            >
                                 LaughTale
                             </div>
 

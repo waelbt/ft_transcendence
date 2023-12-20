@@ -77,18 +77,11 @@ const router = createBrowserRouter([
                     {
                         path: 'setting',
                         lazy: async () => {
-                            let { MatchTable } = await import('./components/'); // conditional rendring in home page
-                            return { Component: MatchTable };
+                            let { Setting } = await import('./components/'); // conditional rendring in home page
+                            return { Component: Setting };
                         }
                     }
                 ]
-            },
-            {
-                path: '/setting', // search before implement
-                lazy: async () => {
-                    let { Setting } = await import('./pages/Setting'); // conditional rendring in home page
-                    return { Component: Setting };
-                }
             },
             {
                 path: '/rooms', // search before implement

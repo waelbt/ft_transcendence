@@ -23,7 +23,6 @@ function FriendsTable({ friends }: FriendsTableProps) {
                     className="flex py-4 border-b border-gray-200 justify-between items-center w-full"
                     key={friend.id}
                 >
-                    {/* Element to take all available space */}
                     <div className="flex flex-grow items-center gap-2.5 px-8">
                         <div className="avatar">
                             <div className="w-12 rounded-full">

@@ -124,7 +124,7 @@ const MatchTable = () => {
             styles={{
                 tableStyle: 'font-normal font-["Acme"] text-2xl',
                 theadStyle: 'bg-[#F5F5F5] text-zinc-500  leading-5',
-                tbodyStyle: 'text-zinc-500   leading-tight ',
+                tbodyStyle: 'text-zinc-500 leading-tight ',
                 trStyle: 'px-20',
                 thStyle: 'py-2',
                 tdStyle: ''
