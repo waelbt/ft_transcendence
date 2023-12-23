@@ -6,9 +6,19 @@ import { NAV_LINKS } from '../constants';
 import { HiLogout } from 'react-icons/hi';
 import { IoMdSettings } from 'react-icons/io';
 import { Avatar } from '.';
+import { request } from '../axios-utils';
 
 function Layout() {
     const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await request.get('/auth/logout');
+            navigate('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
 
     const solutions = [
         {
@@ -19,10 +29,10 @@ function Layout() {
         {
             name: 'logout',
             icon: HiLogout,
-            action: () => navigate('/')
+            action: handleLogout
         }
         // {
-        //     name: 'achivements',
+        //     name: 'achivements',s
         //     icon: IoMdSettings,
         //     action: () => navigate('/profile/setting')
         // },
@@ -131,9 +141,7 @@ function Layout() {
                                                                 <li
                                                                     key={index}
                                                                     className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                                                    onClick={
-                                                                        solution.action
-                                                                    }
+                                                                    onClick={solution.action}
                                                                 >
                                                                     <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
                                                                         <solution.icon
