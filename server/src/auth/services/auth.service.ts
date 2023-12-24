@@ -28,11 +28,7 @@ export class AuthService {
             await this.generateATRT(res, req.user);
             const user = await this.usersService.getOneUser(id);
             if (isUser)
-            {
-                
                 res.redirect('http://localhost:8000/');
-            }
-            
         }
 
         async refreshToken(@Req() req, @Res() res){
@@ -45,7 +41,7 @@ export class AuthService {
         logout(@Res() res){
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            // res.redirect('/auth/google');
+            res.redirect('http://localhost:8000/login');
         }
 
         async matchRefreshToken(@Req() req){
