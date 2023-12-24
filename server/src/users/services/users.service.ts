@@ -120,12 +120,14 @@ export class UsersService {
     }
 
     async userInfos(@Req() req, userId: string) {
-        const friends = await this.friendService.listFriends(userId);
+        const friends = await this.friendService.userListFriends(req.user.sub, userId);
         console.log(friends);
+        console.log(req.user.sub);
         const user = await this.getOneUser(userId);
+        delete user.HashPassword;
         console.log(user);
-        const block = await this.blockUsers.listOfBlockedUsers(userId);
-        const info = { user, friends, block };
+        // const block = await this.blockUsers.listOfBlockedUsers(userId);
+        const info = { user, friends};
         return info;
     }
 

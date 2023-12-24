@@ -47,7 +47,7 @@ export class AuthService {
         logout(@Res() res){
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            res.redirect('/auth/google');
+            // res.redirect('/auth/google');
         }
 
         async matchRefreshToken(@Req() req){

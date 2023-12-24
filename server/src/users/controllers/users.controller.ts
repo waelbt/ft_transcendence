@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
 import { P_N_Dto } from '../dto/completeProfile.dto';
 import { BlockService } from '../services/blocked.service';
+import { userInfos } from '../dto/userInfo.dto';
 
 
 @ApiTags('users')
@@ -15,12 +16,10 @@ export class UsersController {
     private readonly blockService: BlockService,) {}
 
   @Get(':id/me')
-  async userInfos(@Req() req, @Param('id') userId: string){
-    console.log('Welcom To our Website again');
-    if (userId != req.user.sub){
-      console.log('user1: ', userId, 'sub: ', req.user.sub);
-      throw new UnauthorizedException('You are not allowed to remove this user from friends');
-    }
+  @ApiParam({name: 'id', description: 'ID of the user u wanna get his infos', type: 'string'})
+  @ApiResponse({ status: 200, description: 'Successful response', type: userInfos })
+  // @ApiResponse({ status: 404, description: 'Not Found' })
+  async userInfos(@Req() req, @Param('id') userId: string) :Promise<userInfos>{
     return (await this.usersService.userInfos(req, userId));
   }
 
