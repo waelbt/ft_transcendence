@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { use } from 'passport';
 import { CreateMessageDto } from './DTOS/create-message-dto';
+import { LeaveRoomDto } from './DTOS/leave-room.dto';
 
 @WebSocketGateway({
   cors: {
@@ -83,10 +84,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     }
     else
     {
-      const userSocket = this.usersSockets.get(userCheck.userData.email);
+      const userSocket = await this.usersSockets.get(userCheck.userData.email);
       await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
       return (userRoom.joinedRoom);
     }
+  }
+
+  @SubscribeMessage('leaveRoom')
+  async leaveRoom(client: Socket, leaveRoomDto: LeaveRoomDto) {
+
+    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    if (userCheck.state === false)
+      throw new WsException(userCheck.message);
+    console.log(`The user ${userCheck.userData.email} is leaving the room ${leaveRoomDto.roomTitle}`);
+    await this.roomService.leaveRoom(leaveRoomDto, userCheck.userData.sub);
+    const userSocket = await this.usersSockets.get(userCheck.userData.email);
+    await this.server.in(userSocket).socketsLeave(leaveRoomDto.roomTitle);
   }
 
   async getUserFromAccessToken(cookie: string) {
