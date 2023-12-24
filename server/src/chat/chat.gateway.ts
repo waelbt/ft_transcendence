@@ -13,6 +13,7 @@ import { Server, Socket } from 'socket.io'
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { RoomService } from './rooms/room.service';
+import { WebSocketService } from './chat.gateway.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { use } from 'passport';
@@ -29,7 +30,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   constructor(private readonly prisma: PrismaOrmService,
     private readonly roomService:  RoomService,
-    private readonly jwt: JwtService ){}
+    private readonly jwt: JwtService,
+    private readonly wsService: WebSocketService,
+    ){}
     
     private usersSockets: Map<string,string> = new Map<string,string>;
 
@@ -48,10 +51,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       this.handleDisconnect(client);
-    console.log(`This user ${userCheck.userData.email} is now connected`);
-    this.usersSockets.set(userCheck.userData.email, client.id);
-    console.log(this.usersSockets);
-    this.logger.debug(`Number of clients connected: ${sockets.size}`);
+    else {
+      console.log(`This user ${userCheck.userData.email} is now connected`);
+      this.usersSockets.set(userCheck.userData.email, client.id);
+      console.log(this.usersSockets);
+      this.wsService.joinUserSocketToItsRooms(client.id, userCheck.userData.sub, this.server);
+      this.logger.debug(`Number of clients connected: ${sockets.size}`);
+    }
   }
 
   
@@ -123,7 +129,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async handleDisconnect(client: any) {
-    this.logger.log(`This client ${client.id} disconnected`);
+    client.disconnect(true);
+    // this.logger.log(`This client ${client.id} disconnected`);
   }
 
 }
