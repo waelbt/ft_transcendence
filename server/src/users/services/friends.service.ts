@@ -3,6 +3,7 @@ import {
     Injectable,
     NotFoundException,
     Param,
+    UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -30,7 +31,7 @@ export class friendsService {
         );
 
         if (existRequest) {
-            throw new Error('Friend request already sent'); //need to handle this because it causes 500
+            throw new UnauthorizedException('Friend request already sent'); //need to handle this because it causes 500
         }
 
         //create a new friendship request
@@ -52,9 +53,6 @@ export class friendsService {
     async acceptFriendRequest(userId1: string, userId2: string) {
         //check for users if exists
         await this.checkUsersExistence(userId1, userId2);
-
-        //find The friendship Request
-        // const friendship = await this.findFirstStatusPending(userId1, userId2);
 
         const friendship = await this.prisma.friendship.findFirst({
             where: { userId1: userId2, userId2: userId1, status: 'pending' }
