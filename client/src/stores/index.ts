@@ -37,7 +37,13 @@ type UserState = {
 // // Define a type for the store's actions
 type UserActions = {
     login: () => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
+    UpdateIsLogged: (isLogged: UserState['isLogged']) => void;
+    UpdateAvatar: (avatar: UserState['avatar']) => void;
+    UpdateNickName: (nickName: UserState['nickName']) => void;
+    // status:;
+    // F2A:;
+    // inGame:;
 };
 
 export const useUserStore = create<UserState & UserActions>((set) => ({
@@ -68,7 +74,7 @@ export const useUserStore = create<UserState & UserActions>((set) => ({
         });
     },
     logout: async () => {
-        // await request.get('/auth/logout');
+        await request.get('/auth/logout');
         set(
             {
                 isLogged: false,
@@ -84,7 +90,10 @@ export const useUserStore = create<UserState & UserActions>((set) => ({
             },
             true // ? the state update should trigger a re-render of the components that subscribe to the store.
         );
-    }
+    },
+    UpdateIsLogged: (isLogged) => set(() => ({ isLogged: isLogged })),
+    UpdateAvatar: (avatar) => set(() => ({ avatar: avatar })),
+    UpdateNickName: (nickName) => set(() => ({ nickName: nickName }))
 }));
 
 // login: async () => {

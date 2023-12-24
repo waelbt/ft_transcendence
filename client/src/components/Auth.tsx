@@ -1,10 +1,10 @@
-import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
+import { GoogleIcon, IntraIcon } from '../assets/custom-icons';
 
 // todo: store svgs in components
 
 // ! open intra or google model instead of redirecting the hole app
 
-export function Auth() {
+const Auth = () => {
     return (
         <>
             {/*container*/}
@@ -41,7 +41,7 @@ export function Auth() {
                                     <div className="flex-grow border-t border-gray-300"></div>
                                 </div>
                             </div>
-                            {/*intra btn*/} 
+                            {/*intra btn*/}
                             <a
                                 className="px-32 py-5 bg-white rounded-[47px] justify-center items-center gap-2.5 inline-flex border border-black  hover:opacity-60 transition-opacity hover:bg-gray-100"
                                 href={`${
@@ -61,4 +61,6 @@ export function Auth() {
             </div>
         </>
     );
-}
+};
+
+export default Auth;
