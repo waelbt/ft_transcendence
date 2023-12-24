@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
-import { P_N_Dto } from '../dto/completeProfile.dto';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
+import { dto } from '../dto/completeProfile.dto';
 
 
 @ApiTags('users')
@@ -67,9 +67,16 @@ export class UsersController {
     return await this.usersService.deleteImage(path);
   }
   
-  @Get('/info')
-  async UserInfo(@Req() req, dto: P_N_Dto){
-    return await this.usersService.userInfo(req, dto);    
+  @Post('/info')
+  @ApiBody({type: dto})
+
+  async UserInfo(
+    @Req() req, @Body() dto: dto,
+  ){
+    console.log('ana hnaya');
+    console.log('avatar: ', dto.avatar);
+    console.log('nickName: ', dto.nickName);
+    return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
   @Get()
