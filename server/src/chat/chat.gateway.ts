@@ -14,23 +14,23 @@ import { JoinRoomDto } from './DTOS/join-room.dto';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { RoomService } from './rooms/room.service';
 import { WebSocketService } from './chat.gateway.service';
-import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { use } from 'passport';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { LeaveRoomDto } from './DTOS/leave-room.dto';
+import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
+  namespace: '/chat'
 })
 
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
 
   constructor(private readonly prisma: PrismaOrmService,
     private readonly roomService:  RoomService,
-    private readonly jwt: JwtService,
     private readonly wsService: WebSocketService,
     ){}
     
@@ -48,7 +48,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const { sockets } = this.server.sockets;
 
     this.logger.log(`This client ${client.id} connected`)
-    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       this.handleDisconnect(client);
     else {
@@ -56,7 +56,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       this.usersSockets.set(userCheck.userData.email, client.id);
       console.log(this.usersSockets);
       this.wsService.joinUserSocketToItsRooms(client.id, userCheck.userData.sub, this.server);
-      this.logger.debug(`Number of clients connected: ${sockets.size}`);
+      // this.logger.debug(`Number of clients connected: ${sockets.size}`);
     }
   }
 
@@ -66,11 +66,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     // this.logger.log(`Message received from client with id: ${client.id}`);
     // this.logger.debug(`Payload: ${payload}`);
     // this.server.emit('onMessage', payload);
-    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
     console.log(`this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`);
     console.log(`the message is : ${payload.message}`);
-    this.server.to(payload.roomTitle).emit('message', payload.message);
-    this.roomService.createMessage(payload, userCheck.userData.sub);
+    try {
+      
+      await this.wsService.createMessage(payload, userCheck.userData.sub);
+      this.server.to(payload.roomTitle).emit('message', payload.message);
+    } catch (err) {
+      return (err);
+    }
     return {payload};
   }
   
@@ -78,7 +83,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
     
     console.log("here");
-    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       throw new WsException(userCheck.message);
     this.logger.log(`the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`);
@@ -99,7 +104,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @SubscribeMessage('leaveRoom')
   async leaveRoom(client: Socket, leaveRoomDto: LeaveRoomDto) {
 
-    const userCheck = await this.getUserFromAccessToken(client.handshake.headers.cookie);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
     if (userCheck.state === false)
       throw new WsException(userCheck.message);
     console.log(`The user ${userCheck.userData.email} is leaving the room ${leaveRoomDto.roomTitle}`);
@@ -108,24 +113,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     await this.server.in(userSocket).socketsLeave(leaveRoomDto.roomTitle);
   }
 
-  async getUserFromAccessToken(cookie: string) {
+  @SubscribeMessage('muteUser')
+  async muteUser(client: Socket, muteUserDto: MuteUserDto) {
 
-    const accessToken =  await this.retrieveAccessToken(cookie);
-    try {
-
-      var jwtCheck = await this.jwt.verify(accessToken, {secret: process.env.JWT_secret});
-    }catch(err)
-    {
-        return ({message: 'Not Authorized', state: false});
-    }
-    return ({userData: jwtCheck, state: true});
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    if (userCheck.state === false)
+      throw new WsException(userCheck.message);
+    console.log('mute function');
+    await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
   }
 
-  async retrieveAccessToken(cookie: string) : Promise<string> {
-
-    const index = cookie.indexOf(';');
-    const accessToken = cookie.slice(12, index);
-    return (accessToken);
+  @SubscribeMessage('unmuteUser')
+  async unmuteUser(client: Socket, unmuteUserDto: UnmuteUserDto) {
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    if (userCheck.state === false)
+      throw new WsException(userCheck.message);
+    await this.wsService.unmuteUser(unmuteUserDto, userCheck.userData.sub);
   }
 
   async handleDisconnect(client: any) {

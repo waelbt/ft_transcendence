@@ -559,11 +559,12 @@ export class RoomService {
 
     }
 
-    async muteUser(muteUserDto: MuteUserDto, userId) {
+    async muteUser(muteUserDto: MuteUserDto, userId: string) {
         // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userToMute);
         // you cannot mute the room owner is working succefully
-        if (this.isUserAdmin(userId, muteUserDto.roomId))
+        if (await this.isUserAdmin(userId, muteUserDto.roomId))
         {
+            console.log(`user ${userId}`);
             await this.isUserOwner(muteUserDto.roomId, muteUserDto.userToMute, "Mute");
             const unmuteTime = new Date();
             unmuteTime.setMinutes(unmuteTime.getMinutes() + muteUserDto.muteDuration);
@@ -592,7 +593,7 @@ export class RoomService {
             return (this.mutedUsers);
         }
         else
-            throw new BadRequestException('Only Admins And Owners Can Mute Other Users');
+            throw new Error('Only Admins And Owners Can Mute Other Users');
     }
 
     async unmuteUser(unmuteUserDto : UnmuteUserDto, userId) {
@@ -637,9 +638,15 @@ export class RoomService {
         });
 
         if(roomWithMutedUsers.muted.includes(userToCheck))
+        {
             console.log(`user with the id ${userToCheck} is muted`);
+            return (false);
+        }
         else
+        {
             console.log(`user with the id ${userToCheck} is not muted`);
+            return (true);
+        }
     }
 
     @Cron(CronExpression.EVERY_10_SECONDS)
@@ -689,28 +696,32 @@ export class RoomService {
                 roomTitle: createMessageDto.roomTitle,
             },
         });
-
-        const newMessage = await this.prisma.message.create({
-            data: {
-                message: createMessageDto.message,
-                sender: {
-                    connect: {
-                        id: senderId,
+        if (await this.isUserMuted(room.id, senderId))
+        {
+            const newMessage = await this.prisma.message.create({
+                data: {
+                    message: createMessageDto.message,
+                    sender: {
+                        connect: {
+                            id: senderId,
+                        },
+                    },
+                    room: {
+                        connect: {
+                            id: room.id,
+                        },
                     },
                 },
-                room: {
-                    connect: {
-                        id: room.id,
-                    },
-                },
-            },
-            include: {
-                sender: true,
-                room: true,
-            }
-        });
+                include: {
+                    sender: true,
+                    room: true,
+                }
+            });
 
-        console.log(newMessage);
-        return (newMessage);
+            console.log(newMessage);
+            return (newMessage);
+        }
+        else
+            throw Error("You Are Muted");
     }
 }
