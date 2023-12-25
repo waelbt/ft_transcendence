@@ -11,7 +11,9 @@ import { BanMemberDto } from './DTOS/ban-member-dto';
 import { RemoveBanDto } from './DTOS/remove-ban-dto';
 import { changeRoomPasswordDto } from './DTOS/change-room-password';
 import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Chat')
 @Controller('chat')
 @UseGuards(AuthGuard('jwt'))
 export class ChatController {
