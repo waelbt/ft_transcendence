@@ -28,7 +28,7 @@ export class AuthService {
             await this.generateATRT(res, req.user);
             const user = await this.usersService.getOneUser(id);
             if (isUser)
-                res.redirect('http://localhost:8000/');
+                res.redirect('http://localhost:8000/profile');
         }
 
         async refreshToken(@Req() req, @Res() res){
