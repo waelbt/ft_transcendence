@@ -45,6 +45,15 @@ export class AuthController {
         await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
+    @Get('checkAuth')
+    @Public()
+    async checkCookie(@Req() req): Promise<boolean>{
+        const accessToken = req.cookies['accessToken'];
+        if (!accessToken)
+            return false
+        return true;
+    }
+
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
         await this.AuthService.refreshToken(req, res);
