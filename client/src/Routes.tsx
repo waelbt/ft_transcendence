@@ -1,21 +1,15 @@
 import {
     createBrowserRouter,
+    Navigate,
     redirect,
     // redirect,
     RouterProvider
 } from 'react-router-dom';
-import { useUserStore } from './stores';
 
 // import { useUserStore } from './stores';
 // import toast from 'react-hot-toast';
 
 // import { lazy } from 'react';
-
-function isCookieSet() {
-    const cookies = document.cookie.split('; ');
-    const cookie = cookies.find((row) => row.startsWith(import.meta.env.VITE_BASE_URL + '='));
-    return cookie !== undefined;
-}
 
 // function RouteWrapper() {
 //     // Directly use the condition to choose which component to render
@@ -40,27 +34,27 @@ const router = createBrowserRouter([
     },
     {
         path: '/',
-        loader: async () => {
-            const user = useUserStore();
-
-            
-            if (!isCookieSet())
-                return redirect('/login');
-            // Replace this with your actual authentication logic
-            // const isAuthenticated = await checkAuth();
-
-            // if (!isAuthenticated) {
-            // Redirect to the login page if not authenticated
-            // }
-
-            // You can also return data or simply return nothing
-        },
+        // loader: async () => {
+        //     const cookies = document.cookie.split('; ');
+        //     const cookie = cookies.find((row) =>
+        //         row.startsWith(import.meta.env.VITE_COOKIE_NAME + '=')
+        //     );
+        //     console.log(cookie);
+        //     if (cookie == undefined) return <Navigate to="/login" />;
+        // },
         lazy: async () => {
             let { Layout } = await import('./components'); // conditional rendring in home page
             return { Component: Layout };
         },
         children: [
             // lazy
+            {
+                index: true,
+                lazy: async () => {
+                    let { Profile } = await import('./pages/Profile'); // conditional rendring in home page
+                    return { Component: Profile };
+                }
+            },
             {
                 path: '/home',
                 lazy: async () => {
@@ -89,6 +83,13 @@ const router = createBrowserRouter([
                     return { Component: Profile };
                 },
                 children: [
+                    {
+                        index: true,
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/');
+                            return { Component: MatchTable };
+                        }
+                    },
                     {
                         path: 'history',
                         lazy: async () => {

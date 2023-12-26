@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { request } from '../axios-utils';
+import { request } from '../api';
 // import { persist, createJSONStorage } from "zustand/middleware";
 // import { api } from "../Api/base";
 

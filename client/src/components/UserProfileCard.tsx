@@ -64,13 +64,6 @@ function UserProfileCard() {
                                     }`
                                 }
                             >
-                                {index === 0 && (
-                                    <Navigate
-                                        to={`/profile/friends `}
-                                        i
-                                        replace
-                                    />
-                                )}
                                 {link}
                             </NavLink>
                         ))}

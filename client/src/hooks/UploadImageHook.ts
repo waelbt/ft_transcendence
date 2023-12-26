@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { request } from '../axios-utils';
+import { request } from '../api';
 import axios from 'axios';
 
 const useUpload = () => {
@@ -16,7 +16,7 @@ const useUpload = () => {
         try {
             var formData = new FormData();
             formData.append('file', file);
-            
+
             await request.post('users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { NAV_LINKS } from '../constants';
 import { HiLogout } from 'react-icons/hi';
@@ -13,6 +13,11 @@ import { ProfileCompletion } from '../pages/ProfileCompletion';
 function Layout() {
     const { logout } = useUserStore();
     const navigate = useNavigate();
+
+    // const { isAuthenticated } = useAuth();
+    // if (!isAuthenticated) {
+    //     navigate('/login');
+    // }
 
     const handleLogout = async () => {
         try {
@@ -35,6 +40,7 @@ function Layout() {
             action: handleLogout
         }
     ];
+
     return (
         <>
             {false ? (
@@ -301,3 +307,9 @@ export default Layout;
 //     };
 //     log();
 // }, []);
+
+// useEffect(() => {
+//     if (!Cookies.get("accessToken")) navigate('/login');
+// }, [navigate]);
+
+// import Cookies from 'js-cookie';
