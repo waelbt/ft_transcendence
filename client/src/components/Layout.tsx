@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { NAV_LINKS } from '../constants';
 import { HiLogout } from 'react-icons/hi';
@@ -10,8 +10,23 @@ import { useUserStore } from '../stores';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
-    const { logout } = useUserStore();
+    const { logout, login } = useUserStore();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Define the async function inside the useEffect
+        const fetchData = async () => {
+            try {
+                await login();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        // Call the async function
+        fetchData();
+    }, []); // Empty dependency array means this effect runs once after the initial render
+
     const MenuFields = [
         {
             name: 'Setting & privacy',
