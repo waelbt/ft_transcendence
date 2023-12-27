@@ -35,8 +35,8 @@ export class UsersService {
         });
     }
 
-    findAllUser() {
-        return this.prisma.user.findMany();
+    async findAllUser() {
+        return await this.prisma.user.findMany();
     }
 
     async findOneUser(id: string) {
@@ -47,6 +47,13 @@ export class UsersService {
             }
         });
         return user ? true : false;
+    }
+
+    async saveUser(user: User): Promise<User> {
+        return this.prisma.user.update({
+          where: { id: user.id },
+          data: user,
+        });
     }
 
     async getOneUser(id: string) {
@@ -155,5 +162,21 @@ export class UsersService {
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
         const info = { user, friends, block };
         return info;
+    }
+
+    async getAllUsersRank(){
+        const users = await this.findAllUser();
+        
+        console.log(users);
+
+        const sortedUsers = users.sort((user1, user2) => {
+            if (user1.level !== user2.level) {
+              return user2.level - user1.level; // Sort user2y level in descending order
+            } else {
+              return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
+            }
+          });
+          console.log(sortedUsers);
+          return sortedUsers;
     }
 }
