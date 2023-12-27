@@ -7,10 +7,13 @@ JWT_secret= "secretJWTforTrandandan"
 R_JWT_secret= "secretREFRESH_JWTforTrandandan"
 
 intra_Client_Id="u-s4t2ud-7945ba61de4ba67ad52d4f88677d3ce18e8ac60d14c137c5f5a5f25982ee2cf7"
-intra_Secret="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"
+intra_Secret="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"
+intraCallback="http://localhost:4000/auth/intra/callback"
 
 Google_Client_Id="1010031413538-61qtbs1ba0qjnmld9s5kfe3ciak5m4ho.apps.googleusercontent.com"
 Google_Secret="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"
+googleCallback="http://localhost:4000/auth/google/callback"
+
 
 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
 

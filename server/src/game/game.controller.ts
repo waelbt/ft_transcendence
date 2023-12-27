@@ -1,16 +1,36 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UnauthorizedException } from '@nestjs/common';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { UsersService } from 'src/users/services/users.service';
+import { gameService } from './game.service';
+import { gameDto } from './dto/game.dto';
 
-@Controller('game1')
+@Controller('game')
+@ApiTags('game')
 export class GameController {
-  @Get()
-  findAll(): string {
-    return 'This action returns all cats';
-  }
+    constructor(
+        private userService: UsersService,
+        private gameService: gameService){}
 
-  @Post()
-  create(@Body() createCatDto: any): string {
-    console.log('post', createCatDto);
-    return createCatDto.contact;
-  }
-  
+    @Get()
+    findAll(): string {
+        return 'This action returns all cats';
+    }
+
+    @Post('create')
+    @ApiBody({type: gameDto})
+
+    async create(@Body() game: gameDto){
+        await this.checkUsers(game.winnerId, game.loserId);
+
+        console.log('hi im in create game');
+        return (await this.gameService.createGame(game));
+    }
+
+    async checkUsers(userId1: string, userId2: string){
+        const user1 = await this.userService.findOneUser(userId1);
+        const user2 = await this.userService.findOneUser(userId2);
+
+        if (!user1 || !user2)
+            throw new UnauthorizedException('user not found');
+    }
 }

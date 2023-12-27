@@ -12,62 +12,66 @@ datasource db {
 }
 
 model User {
-  id           String       @id @unique
-  email        String       @unique
-  HashPassword String?
-  Avatar       String?
-  nickName     String       @unique
-  fullName     String
-  status       Boolean      @default(true)
-  F2A          Boolean      @default(false)
-  F2A_Secret   String?
-  inGame       Boolean      @default(false)
-  createdAt    DateTime     @default(now())
-  friends      Friendship[]
-    // Define the blocks initiated by this user
-  blockedUsers  Block[] @relation("BlockedUsers")
-
-  // games1 Game[] @relation("User1Games")
-  // games2 Game[] @relation("User2Games")
-  // winner Game[] @relation("Winner")
-  // loser  Game[] @relation("Loser")
-  rooms        Room[]
-  messages     Message[]
+	id           		String       	@id @unique
+	email        		String       	@unique
+	HashPassword 		String?
+	Avatar       		String?
+	nickName     		String       	@unique
+	fullName     		String
+	status       		Boolean      	@default(true)
+	F2A          		Boolean      	@default(false)
+	F2A_Secret   		String?
+	inGame       		Boolean      	@default(false)
+	completeProfile 	Boolean   		@default(false)
+	createdAt    		DateTime     	@default(now())
+	exp					Int?			@default(0)
+	level				Int?			@default(0)
+	
+	friends      		Friendship[]
+		// Define the blocks initiated by this user
+	blockedUsers  		Block[] 		@relation("BlockedUsers")
+	games1       		Game[] 			@relation("User1Games")
+	games2       		Game[] 			@relation("User2Games")
+	winner       		Game[] 			@relation("Winner")
+	loser        		Game[] 			@relation("Loser")
+	rooms        		Room[]
+	messages     		Message[]
 }
 
 model Friendship {
-  id      String @id
-  userId1 String
-  userId2 String
-  status  String
-  user    User[]
+	id      	String @id
+	userId1 	String
+	userId2 	String
+	status  	String
+	user    	User[]
 
-  @@unique([userId1, userId2])
+	@@unique([userId1, userId2])
 }
 
 model Block {
-  id            String   @id @unique
-  userId        String
-  blockedUserId String
+	id            String   @id @unique
+	userId        String
+	blockedUserId String
 
-  // Define the user who initiated the block
-  user          User     @relation("BlockedUsers", fields: [userId], references: [id])
+	// Define the user who initiated the block
+	user          User     @relation("BlockedUsers", fields: [userId], references: [id])
 }
 
-// model Game {
-//   id         String     @id @unique
-//   user1      User    @relation("User1Games", fields: [player1Id], references: [id])
-//   player1Id    String
-//   user2      User    @relation("User2Games", fields: [player2Id], references: [id])
-//   player2Id    String
-//   winner     User?   @relation("Winner", fields: [winnerId], references: [id])
-//   winnerId   String?
-//   loser      User?   @relation("Loser", fields: [loserId], references: [id])
-//   loserId    String?
-//   result     String
-//   Mode         String   @default("classic")
-//   createdAt  DateTime @default(now())
-// }
+model Game {
+	id           Int         @id @default(autoincrement())
+	user1        User    @relation("User1Games", fields: [player1Id], references: [id])
+	player1Id    String
+	user2        User    @relation("User2Games", fields: [player2Id], references: [id])
+	player2Id    String
+	winner       User?   @relation("Winner", fields: [winnerId], references: [id])
+	winnerId     String?
+	loser        User?   @relation("Loser", fields: [loserId], references: [id])
+	loserId      String?
+	result       String
+	Mode         String   @default("classic")
+	createdAt    DateTime @default(now())
+}
+
 model Room {
   id             Int         @id @default(autoincrement())
   createdAt      DateTime    @default(now())
