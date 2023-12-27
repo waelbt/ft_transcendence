@@ -1,34 +1,18 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { NAV_LINKS } from '../constants';
 import { HiLogout } from 'react-icons/hi';
 import { IoMdSettings } from 'react-icons/io';
 import { Avatar } from '.';
 import { useUserStore } from '../stores';
-import toast from 'react-hot-toast';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
     const { logout } = useUserStore();
     const navigate = useNavigate();
-
-    // const { isAuthenticated } = useAuth();
-    // if (!isAuthenticated) {
-    //     navigate('/login');
-    // }
-
-    const handleLogout = async () => {
-        try {
-            await logout();
-            navigate('/login');
-        } catch (error) {
-            toast.error('Logout failed:', error);
-        }
-    };
-
-    const solutions = [
+    const MenuFields = [
         {
             name: 'Setting & privacy',
             icon: IoMdSettings,
@@ -37,7 +21,10 @@ function Layout() {
         {
             name: 'logout',
             icon: HiLogout,
-            action: handleLogout
+            action: () => {
+                navigate('/login');
+                logout();
+            }
         }
     ];
 
@@ -132,7 +119,7 @@ function Layout() {
                                                                     dos404
                                                                 </div>
                                                             </li>
-                                                            {solutions.map(
+                                                            {MenuFields.map(
                                                                 (
                                                                     solution,
                                                                     index
@@ -243,7 +230,7 @@ export default Layout;
 {
     /* <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
                                                         <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
-                                                            {solutions.map(
+                                                            {MenuFields.map(
                                                                 (item) => (
                                                                     <a
                                                                         key={

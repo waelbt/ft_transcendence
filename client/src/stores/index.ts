@@ -73,8 +73,7 @@ export const useUserStore = create<UserState & UserActions>((set) => ({
             inGame: data.user.inGame
         });
     },
-    logout: async () => {
-        await request.get('/auth/logout');
+    logout: () => {
         set(
             {
                 isLogged: false,
