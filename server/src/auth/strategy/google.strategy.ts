@@ -11,9 +11,9 @@ export class googleStrategy extends PassportStrategy(
     ) {
     constructor (config: ConfigService){
         super({
-            clientID: '1010031413538-61qtbs1ba0qjnmld9s5kfe3ciak5m4ho.apps.googleusercontent.com',
-            clientSecret: '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',
-            callbackURL: 'http://localhost:4000/auth/google/callback',
+            clientID: config.get('Google_Client_Id'),
+            clientSecret: config.get('Google_Secret'),
+            callbackURL: config.get('googleCallback'),
             scope: ['email' ,'profile'],
         })
     }

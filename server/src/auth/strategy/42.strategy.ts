@@ -11,9 +11,9 @@ export class intrastrategy extends PassportStrategy(
     ) {
     constructor (config: ConfigService){
         super({
-            clientID: 'u-s4t2ud-7945ba61de4ba67ad52d4f88677d3ce18e8ac60d14c137c5f5a5f25982ee2cf7',
-            clientSecret: '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',
-            callbackURL: 'http://localhost:4000/auth/intra/callback',
+            clientID: config.get('intra_Client_Id'),
+            clientSecret: config.get('intra_Secret'),
+            callbackURL: config.get('intraCallback'),
             Scope: ['profile', 'email'],
         });
     }

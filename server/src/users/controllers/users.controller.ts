@@ -51,7 +51,7 @@ export class UsersController {
       if (!file) {
         throw new InvalidFileException('No file provided.');
       }
-      console.log(file);
+      // console.log(file);
       return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {
@@ -79,15 +79,19 @@ export class UsersController {
     return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
-  @Get()
-  @ApiBearerAuth()
+  @Get('all')
   @ApiOkResponse()
-  findAllUser() {
-    return this.usersService.findAllUser();
+  async findAllUser() {
+    return await this.usersService.findAllUser();
+  }
+
+  @Get('rank')
+  async allUsersRank(){
+    console.log('hana');
+    return await this.usersService.getAllUsersRank();
   }
 
   @Get(':id')
-  @ApiBearerAuth()
   @ApiOkResponse()
   async findOneUser(@Param('id') id: string) {
     console.log('hi im here');
@@ -98,14 +102,12 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
   @ApiCreatedResponse()
   updateUser(@Param('id') id: string, @Body() user: User) {
     return (this.usersService.updateUser(String(id), user));
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiOkResponse()
   removeUser(@Param('id') id: string) {
     return (this.usersService.removeUser(String(id)));
@@ -156,6 +158,7 @@ export class UsersController {
     }
     return await this.blockService.listOfBlockedUsers(userId);
   }
+
 // Close Prisma client when done
 // prisma.$disconnect();
 }
