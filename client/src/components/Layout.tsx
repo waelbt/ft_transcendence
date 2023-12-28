@@ -10,8 +10,12 @@ import { useUserStore } from '../stores';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
-    const { logout, login } = useUserStore();
+    const { logout, login, isLogged } = useUserStore();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!isLogged) navigate('/');
+    }, []);
 
     useEffect(() => {
         // Define the async function inside the useEffect
@@ -37,8 +41,8 @@ function Layout() {
             name: 'logout',
             icon: HiLogout,
             action: () => {
-                navigate('/login');
                 logout();
+                navigate('/');
             }
         }
     ];

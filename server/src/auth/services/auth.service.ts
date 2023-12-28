@@ -33,7 +33,7 @@ export class AuthService {
         if (!isUser) await this.usersService.createUser(req.user, id);
         await this.generateATRT(res, req.user);
         const user = await this.usersService.getOneUser(id);
-        if (isUser) res.redirect('http://localhost:8000/');
+        if (isUser) res.redirect('http://localhost:8000/home');
     }
 
     async refreshToken(@Req() req, @Res() res) {
