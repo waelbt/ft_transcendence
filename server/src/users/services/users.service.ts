@@ -79,14 +79,10 @@ export class UsersService {
     }
 
     async uploadAvatar(file: Express.Multer.File, @Req() req): Promise<any> {
-        console.log('jjjjj');
-        const user = await this.findOneUser(req.user.id);
-        if (!user) throw new NotFoundException(`User does not exist`);
-        console.log('im user');
-        // const theUser = this.getOneUser(User);
-        // User.Avatar = imageData.data.url;
-        this.updateUser(req.user.id, req.user);
-        console.log('path is : ', file.path);
+        const user = await this.findOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException(`User does not exist`);
+
         return file.path;
     }
 
@@ -120,6 +116,7 @@ export class UsersService {
         if (avatar && nickName) {
             await this.updateAvatarNickname(req.user.sub, avatar, nickName)
         }
+
         await this.prisma.user.update({
             where: {id: req.user.sub},
             data: {

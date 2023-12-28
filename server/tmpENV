@@ -15,7 +15,7 @@ Google_Secret="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"
 googleCallback="http://localhost:4000/auth/google/callback"
 
 
-
+upload="/home/hp/Desktop/ft_transcendence/server/upload"
 
 # package.json
 

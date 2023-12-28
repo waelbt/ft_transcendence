@@ -51,7 +51,7 @@ export class UsersController {
       if (!file) {
         throw new InvalidFileException('No file provided.');
       }
-      console.log(file);
+      // console.log(file);
       return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {

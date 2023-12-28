@@ -6,7 +6,7 @@ import { InvalidFileException } from './file.exception';
 
 export const multerOptions = {
   storage: diskStorage({
-    destination: '/home/liltwl/Desktop/ft_transcendence/server/uploads',
+    destination: process.env.upload,
     filename: (req, file, callback) => {
         const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
 
@@ -21,7 +21,9 @@ export const multerOptions = {
     fileFilter: (req, file, callback) => {
         const allowedFileTypes = ['.png' , '.jpg'];
         const maxFileSize = 4 * 1024 * 1024; // 4MB
-    
+
+        console.log('upload: ', process.env.upload);
+
         const fileExtension = extname(file.originalname).toLowerCase();
         if (!allowedFileTypes.includes(fileExtension)) {
           return callback(new InvalidFileException('Invalid file type. Only PNG and JPG files are allowed.'), false);
