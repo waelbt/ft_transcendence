@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import {
-    Avatar,
-    ProgressRingLoader,
-    InputField,
-    FormComponent
-} from '../../components/';
+import { Avatar, ProgressRingLoader, FormComponent } from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
-import { DEFAULT_PATH } from '../../constants';
+import { DEFAULT_PATH, CONFIRMATION_FIELDS } from '../../constants';
 import useUpload from '../../hooks/UploadImageHook';
+import { request } from '../../api';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../stores';
 
 // ! combine the nickname and submit section into a resuable from
 export function ProfileCompletion() {
+    const navigate = useNavigate();
+    const { UpdateIsProfileComplete } = useUserStore();
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
@@ -19,28 +19,23 @@ export function ProfileCompletion() {
     // const { uploading, progress, error, success, uploadData } = useUpload();
 
     const onSubmit = async (data: FieldValues) => {
-        console.log(data);
-        // mutate(data as LoginData);
+        data['avatar'] = imagePath
+            ? imagePath
+            : '/home/wael/Desktop/ft_transcendence/client/src/assets/images/image_processing20221027-11907-zvqv42.png';
+        try {
+            console.log(data);
+            await request.post('/users/info', JSON.stringify(data), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            UpdateIsProfileComplete(true);
+            navigate('/');
+        } catch (e) {
+            console.log(e);
+        }
     };
 
-    const fields = [
-        {
-            label: 'Nickname',
-            type: 'text',
-            name: 'nickname',
-            validation: {
-                required: 'Nickname is required!',
-                maxLength: {
-                    value: 40,
-                    message: 'Nickname must be less than 40 characters'
-                },
-                minLength: {
-                    value: 5,
-                    message: 'Nickname must be at least 5 characters'
-                }
-            }
-        }
-    ];
     return (
         <>
             <div className="flex flex-col h-screen shadow-2xl">
@@ -183,7 +178,7 @@ export function ProfileCompletion() {
                                 {/* nickname section */}
                             </div>
                             <FormComponent
-                                fields={fields}
+                                fields={CONFIRMATION_FIELDS}
                                 onSubmit={onSubmit}
                                 btn={{
                                     // TODO: store this in a custom style proprty
