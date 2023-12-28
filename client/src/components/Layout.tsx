@@ -2,15 +2,14 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
 import { Fragment, useEffect } from 'react';
 import { Popover, Transition } from '@headlessui/react';
-import { NAV_LINKS } from '../constants';
-import { HiLogout } from 'react-icons/hi';
-import { IoMdSettings } from 'react-icons/io';
+import { MENU_FIELDS, NAV_LINKS } from '../constants';
+
 import { Avatar } from '.';
 import { useUserStore } from '../stores';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
-    const { logout, login, isLogged } = useUserStore();
+    const { logout, login, isLogged, isProfileComplete } = useUserStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,25 +30,9 @@ function Layout() {
         fetchData();
     }, []); // Empty dependency array means this effect runs once after the initial render
 
-    const MenuFields = [
-        {
-            name: 'Setting & privacy',
-            icon: IoMdSettings,
-            action: () => navigate('/profile/setting')
-        },
-        {
-            name: 'logout',
-            icon: HiLogout,
-            action: () => {
-                logout();
-                navigate('/');
-            }
-        }
-    ];
-
     return (
         <>
-            {false ? (
+            {!isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">
@@ -138,9 +121,9 @@ function Layout() {
                                                                     dos404
                                                                 </div>
                                                             </li>
-                                                            {MenuFields.map(
+                                                            {MENU_FIELDS.map(
                                                                 (
-                                                                    solution,
+                                                                    field,
                                                                     index
                                                                 ) => (
                                                                     <li
@@ -148,12 +131,18 @@ function Layout() {
                                                                             index
                                                                         }
                                                                         className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                                                        onClick={
-                                                                            solution.action
-                                                                        }
+                                                                        onClick={() => {
+                                                                            field.path ==
+                                                                            '/'
+                                                                                ? logout()
+                                                                                : null;
+                                                                            navigate(
+                                                                                field.path
+                                                                            );
+                                                                        }}
                                                                     >
                                                                         <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
-                                                                            <solution.icon
+                                                                            <field.icon
                                                                                 size={
                                                                                     24
                                                                                 }
@@ -161,7 +150,7 @@ function Layout() {
                                                                         </div>
                                                                         <div className="text-zinc-600 text-xl font-normal font-['Acme'] pr-10">
                                                                             {
-                                                                                solution.name
+                                                                                field.name
                                                                             }
                                                                         </div>
                                                                     </li>
@@ -185,137 +174,3 @@ function Layout() {
 }
 
 export default Layout;
-
-// {
-//     name: 'achivements',s
-//     icon: IoMdSettings,
-//     action: () => navigate('/profile/setting')
-// },
-// {
-//     name: 'friendsy',
-//     icon: IoMdSettings,
-//     action: () => navigate('/profile/setting')
-// },
-
-{
-    /* <Outlet /> */
-}
-{
-    /* <!-- Search Section --> */
-}
-{
-    /* <div className="hidden md:block">
-    <input
-        type="text"
-        placeholder="Search Facebook"
-        className="rounded-full py-2 px-4 border-none focus:outline-none"
-    />
-  </div> */
-}
-
-// import { useState } from 'react';
-// import { SlLogout } from 'react-icons/sl';
-// import { useEffect } from 'react';
-// import { useUserStore } from '../stores';
-// import { useNavigate } from 'react-router-dom';
-// import toast from 'react-hot-toast';
-// import { ProfileCompletion } from '../pages/ProfileCompletion';
-// import { IconContext } from 'react-icons';
-
-{
-    /* {openProfile && (
-                <div
-                    className="absolute top-20 right-4"
-                    onClick={() => setOpenProfile(false)}
-                >
-                    <UserMenu />
-                </div>
-            )} */
-}
-{
-    /* // ! <div className="flex-grow"> add flex-grow to all pages */
-}
-{
-    /* <div
-                    className="absolute bottom-10 left-8"
-                    onClick={() => {
-                        console.log('temporary logout');
-                    }}
-                >
-                    <SlLogout size={35} />
-                </div> */
-}
-
-{
-    /* <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
-                                                        <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
-                                                            {MenuFields.map(
-                                                                (item) => (
-                                                                    <a
-                                                                        key={
-                                                                            item.name
-                                                                        }
-                                                                        href={
-                                                                            item.href
-                                                                        }
-                                                                        className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
-                                                                    >
-                                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
-                                                                            <item.icon aria-hidden="true" />
-                                                                        </div>
-                                                                        <div className="ml-4">
-                                                                            <p className="text-sm font-medium text-gray-900">
-                                                                                {
-                                                                                    item.name
-                                                                                }
-                                                                            </p>
-                                                                            <p className="text-sm text-gray-500">
-                                                                                {
-                                                                                    item.description
-                                                                                }
-                                                                            </p>
-                                                                        </div>
-                                                                    </a>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                        <div className="bg-gray-50 p-4">
-                                                            <a
-                                                                href="##"
-                                                                className="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
-                                                            >
-                                                                <span className="flex items-center">
-                                                                    <span className="text-sm font-medium text-gray-900">
-                                                                        Documentation
-                                                                    </span>
-                                                                </span>
-                                                                <span className="block text-sm text-gray-500">
-                                                                    Start
-                                                                    integrating
-                                                                    products and
-                                                                    tools
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div> */
-}
-
-// const [openProfile, setOpenProfile] = useState(false);
-// const { login } = useUserStore();
-// const navigate = useNavigate();
-// useEffect(() => {
-//     const log = async () => {
-//         try {
-//             await login();
-//         } catch (e: any) {
-//             toast.error(e);
-//         }
-//     };
-//     log();
-// }, []);
-
-// useEffect(() => {
-//     if (!Cookies.get("accessToken")) navigate('/login');
-// }, [navigate]);
-
-// import Cookies from 'js-cookie';

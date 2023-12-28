@@ -1,7 +1,12 @@
 import { useState } from 'react';
-import { Avatar, ProgressRingLoader, InputField } from '../../components/';
+import {
+    Avatar,
+    ProgressRingLoader,
+    InputField,
+    FormComponent
+} from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
-import { IconContext } from 'react-icons';
+import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH } from '../../constants';
 import useUpload from '../../hooks/UploadImageHook';
 
@@ -10,7 +15,32 @@ export function ProfileCompletion() {
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const { uploading, progress, error, success, uploadData } = useUpload();
+    const { progress, uploadData } = useUpload();
+    // const { uploading, progress, error, success, uploadData } = useUpload();
+
+    const onSubmit = async (data: FieldValues) => {
+        console.log(data);
+        // mutate(data as LoginData);
+    };
+
+    const fields = [
+        {
+            label: 'Nickname',
+            type: 'text',
+            name: 'nickname',
+            validation: {
+                required: 'Nickname is required!',
+                maxLength: {
+                    value: 40,
+                    message: 'Nickname must be less than 40 characters'
+                },
+                minLength: {
+                    value: 5,
+                    message: 'Nickname must be at least 5 characters'
+                }
+            }
+        }
+    ];
     return (
         <>
             <div className="flex flex-col h-screen shadow-2xl">
@@ -70,13 +100,13 @@ export function ProfileCompletion() {
                                             htmlFor="inputTag"
                                         >
                                             <ProgressRingLoader
-                                                    style={
-                                                        'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
-                                                    }
-                                                    radius={62}
-                                                    stroke={2}
-                                                    progress={progress}
-                                                />
+                                                style={
+                                                    'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                                                }
+                                                radius={62}
+                                                stroke={2}
+                                                progress={progress}
+                                            />
                                         </label>
                                     </div>
                                     {/* btn and default section */}
@@ -99,9 +129,9 @@ export function ProfileCompletion() {
                                                 }
                                             >
                                                 {showDefault ? (
-                                                    <IoIosArrowForward className="text-gray-500"/>
+                                                    <IoIosArrowForward className="text-gray-500" />
                                                 ) : (
-                                                    <IoIosArrowDown className="text-gray-500"/>
+                                                    <IoIosArrowDown className="text-gray-500" />
                                                 )}
 
                                                 <span className="text-neutral-400 text-base font-normal font-['Acme'] leading-snug tracking-tigh">
@@ -152,15 +182,16 @@ export function ProfileCompletion() {
                                 </div>
                                 {/* nickname section */}
                             </div>
-                            <InputField label="Nickname" />
-                            {/* submit putton section */}
-                            <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
-                                <button className="bg-black rounded-[55px] justify-center items-center gap-3 inline-flex hover:bg-gray-500">
-                                    <div className="py-3.5 px-5 text-center text-white text-sm font-bold font-sans">
-                                        Continue
-                                    </div>
-                                </button>
-                            </div>
+                            <FormComponent
+                                fields={fields}
+                                onSubmit={onSubmit}
+                                btn={{
+                                    // TODO: store this in a custom style proprty
+                                    style: 'bg-black rounded-[55px] justify-center items-center gap-3 inline-flex hover:bg-gray-500 py-3.5 px-5 text-center text-white text-sm font-bold font-sans',
+                                    type: 'submit',
+                                    text: 'Continue'
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
