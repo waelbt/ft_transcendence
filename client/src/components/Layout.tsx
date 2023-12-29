@@ -3,24 +3,24 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { IoIosNotifications } from 'react-icons/io';
 import { SlLogout } from 'react-icons/sl';
-import { useEffect } from 'react';
-import { useUserStore } from '../stores';
+// import { useEffect } from 'react';
+// import { useUserStore } from '../stores';
 // import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 function Layout() {
     const navLinks = ['Home', 'Profile', 'Chat', 'Rooms', 'Game']; //! game section is temporary here
-    const { login } = useUserStore();
+    // const { login } = useUserStore();
     // const navigate = useNavigate();
-    useEffect(() => {
-        const log = async () => {
-            try {
-                await login();
-            } catch (e: any) {
-                toast.error(e);
-            }
-        };
-        log();
-    }, []);
+    // useEffect(() => {
+    //     const log = async () => {
+    //         try {
+    //             await login();
+    //         } catch (e: any) {
+    //             toast.error(e);
+    //         }
+    //     };
+    //     log();
+    // }, []);
     return (
         <>
             {/* {false ? (
