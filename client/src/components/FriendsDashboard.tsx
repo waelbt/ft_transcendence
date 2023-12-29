@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Friend } from '../../../shared/types';
 import { FriendsTable } from '.';
+import { useOutletContext } from 'react-router-dom';
+import { useUserStore } from '../stores';
 
 // ! implement later
 // import SearchBar from './components/SearchBar';
 // import FilterButtons from './components/FilterButtons';
 // import FriendsTable from './components/FriendsTable';
 
+
+// ! fix types later 
 const FriendsDashboard: React.FC = () => {
+    const profile = useOutletContext();
+    const user = useUserStore();
     const [friends, setFriends] = useState<Friend[]>([]);
     //   const [searchTerm, setSearchTerm] = useState('');
     //   const [filter, setFilter] = useState('all');
@@ -23,7 +29,9 @@ const FriendsDashboard: React.FC = () => {
             }
         };
 
-        fetchData();
+        user.id != profile.id
+            ? fetchData()
+            : setFriends(user.friends);
         // Fetch data from JSON server or local JSON file
         // setFriends(data);
     }, []);
