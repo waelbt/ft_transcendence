@@ -24,20 +24,24 @@ import { ChatModule } from './chat/chat.module';
 import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
 import { ScheduleModule } from '@nestjs/schedule';
-// @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
+
 @Module({
   imports: [GameModule,
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     PrismaOrmModule,
     UsersModule,
-    MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     ConversationsModule,
-    // JwtModule.register({secret: process.env.JWT_secret}),
     ChatModule,
-    // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
     JwtModule.register({secret: process.env.JWT_secret}),
     ScheduleModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'upload'), // Change 'uploads' to the directory where your images are stored
+      serveRoot: '/upload', // Change '/uploads' to the base path for serving images
+    }),
   ],
   controllers: [
     ChatController,

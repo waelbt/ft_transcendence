@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, Res } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,6 +7,8 @@ import { InvalidFileException } from '../multer/file.exception';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 
 @ApiTags('users')
@@ -57,7 +59,6 @@ export class UsersController {
       if (error instanceof InvalidFileException) {
         throw new HttpException({ statusCode: HttpStatus.BAD_REQUEST, message: error.message }, HttpStatus.BAD_REQUEST);
       }
-
       throw new HttpException({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -89,6 +90,18 @@ export class UsersController {
   async allUsersRank(){
     console.log('hana');
     return await this.usersService.getAllUsersRank();
+  }
+
+  @Get(':image')
+  getImage(@Param('image') image: string, @Res() res){
+
+    const imagePath = join(process.cwd(), 'upload', image);
+
+    if (existsSync(imagePath)) {
+      res.sendFile(imagePath);
+    } else {
+      throw new NotFoundException('Image not found');
+    }
   }
 
   @Get(':id')
