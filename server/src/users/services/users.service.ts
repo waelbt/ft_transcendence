@@ -35,8 +35,8 @@ export class UsersService {
         });
     }
 
-    findAllUser() {
-        return this.prisma.user.findMany();
+    async findAllUser() {
+        return await this.prisma.user.findMany();
     }
 
     async findOneUser(id: string) {
@@ -47,6 +47,13 @@ export class UsersService {
             }
         });
         return user ? true : false;
+    }
+
+    async saveUser(user: User): Promise<User> {
+        return this.prisma.user.update({
+          where: { id: user.id },
+          data: user,
+        });
     }
 
     async getOneUser(id: string) {
@@ -72,14 +79,10 @@ export class UsersService {
     }
 
     async uploadAvatar(file: Express.Multer.File, @Req() req): Promise<any> {
-        console.log('jjjjj');
-        const user = await this.findOneUser(req.user.id);
-        if (!user) throw new NotFoundException(`User does not exist`);
-        console.log('im user');
-        // const theUser = this.getOneUser(User);
-        // User.Avatar = imageData.data.url;
-        this.updateUser(req.user.id, req.user);
-        console.log('path is : ', file.path);
+        const user = await this.findOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException(`User does not exist`);
+
         return file.path;
     }
 
@@ -113,6 +116,7 @@ export class UsersService {
         if (avatar && nickName) {
             await this.updateAvatarNickname(req.user.sub, avatar, nickName)
         }
+
         await this.prisma.user.update({
             where: {id: req.user.sub},
             data: {
@@ -155,5 +159,21 @@ export class UsersService {
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
         const info = { user, friends, block };
         return info;
+    }
+
+    async getAllUsersRank(){
+        const users = await this.findAllUser();
+        
+        console.log(users);
+
+        const sortedUsers = users.sort((user1, user2) => {
+            if (user1.level !== user2.level) {
+              return user2.level - user1.level; // Sort user2y level in descending order
+            } else {
+              return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
+            }
+          });
+          console.log(sortedUsers);
+          return sortedUsers;
     }
 }
