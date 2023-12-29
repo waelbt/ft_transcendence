@@ -32,7 +32,7 @@ function Layout() {
 
     return (
         <>
-            {!isProfileComplete ? (
+            {isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">
@@ -106,7 +106,7 @@ function Layout() {
                                                                 className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
                                                                 onClick={() => {
                                                                     navigate(
-                                                                        '/profile/history'
+                                                                        '/profile/me'
                                                                     );
                                                                 }}
                                                             >

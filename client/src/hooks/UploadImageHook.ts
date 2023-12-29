@@ -7,6 +7,7 @@ const useUpload = () => {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [avatarPath, setAvatarPath] = useState<string | null>(null);
 
     const uploadData = async (file: File) => {
         setUploading(true);
@@ -17,7 +18,7 @@ const useUpload = () => {
             var formData = new FormData();
             formData.append('file', file);
 
-            await request.post('users/upload', formData, {
+            const response = await request.post('/users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -31,7 +32,7 @@ const useUpload = () => {
                     }
                 }
             });
-
+            setAvatarPath(response.data);
             setSuccess(true);
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -39,55 +40,14 @@ const useUpload = () => {
             } else {
                 setError('An unexpected error occurred');
             }
+            console.log(error);
+            setProgress(0);
         } finally {
             setUploading(false);
         }
     };
 
-    return { uploading, progress, error, success, uploadData };
+    return { uploading, progress, error, success, uploadData, avatarPath };
 };
 
 export default useUpload;
-// import { useState } from 'react';
-// import { request } from '../axios-utils';
-// import { AxiosError } from 'axios';
-
-// const useUpload = () => {
-//     const [uploading, setUploading] = useState(false);
-//     const [progress, setProgress] = useState(0);
-//     const [error, setError] = useState(null);
-//     const [success, setSuccess] = useState(false);
-
-//     const uploadData = async (url: string) => {
-//         setUploading(true);
-//         setError(null);
-
-//         try {
-//             var formData = new FormData();
-//             formData.append('file', url);
-//             await request.post('users/upload', formData, {
-//                 headers: {
-//                     'Content-Type': 'multipart/form-data'
-//                 },
-//                 onUploadProgress: function (progressEvent) {
-//                     if (progressEvent && progressEvent.total) {
-//                         let percentCompleted = Math.round(
-//                             (progressEvent.loaded * 100) / progressEvent.total
-//                         );
-//                         setProgress(percentCompleted);
-//                         console.log(`Upload progress: ${percentCompleted}%`);
-//                     }
-//                 }
-//             });
-//             setSuccess(true);
-//         } catch (err : AxiosError) { //fix this type
-//             setError(err.message || 'Failed to upload');
-//         } finally {
-//             setUploading(false);
-//         }
-//     };
-
-//     return { uploading, progress, error, success, uploadData };
-// };
-
-// export default useUpload;

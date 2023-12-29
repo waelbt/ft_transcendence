@@ -3,13 +3,13 @@ import { IoMdSettings } from 'react-icons/io';
 
 export const DEFAULT_PATH = './src/assets/images/default';
 
-export const NAV_LINKS = ['Home', 'Profile', 'Chat', 'Rooms', 'Game'];
+export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
 
 export const MENU_FIELDS = [
     {
         name: 'Setting & privacy',
         icon: IoMdSettings,
-        path: '/profile/setting'
+        path: '/profile/me/setting'
     },
     {
         name: 'logout',
@@ -18,7 +18,7 @@ export const MENU_FIELDS = [
     }
 ];
 
-export const CONFIRMATION_FIELDS  = [
+export const CONFIRMATION_FIELDS = [
     {
         label: 'Nickname',
         type: 'text',

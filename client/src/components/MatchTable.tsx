@@ -3,6 +3,7 @@ import { Match } from '../../../shared/types';
 import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
+import { useOutletContext } from 'react-router-dom';
 
 // <div className="w-[1323px] h-[73px] px-20 bg-emerald-600 bg-opacity-20 rounded-[10px] justify-between items-center inline-flex">
 //     <div className="w-[169px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">

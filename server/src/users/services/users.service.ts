@@ -82,7 +82,6 @@ export class UsersService {
         const user = await this.findOneUser(req.user.sub);
         if (!user)
             throw new NotFoundException(`User does not exist`);
-
         return file.path;
     }
 

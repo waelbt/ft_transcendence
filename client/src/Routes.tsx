@@ -44,7 +44,7 @@ const router = createBrowserRouter([
                 }
             },
             {
-                path: '/profile', // search before implement
+                path: "Profile/:id",
                 lazy: async () => {
                     let { Profile } = await import('./pages/Profile');
                     return { Component: Profile };

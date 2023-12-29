@@ -31,7 +31,6 @@ type UserState = {
     isProfileComplete: boolean;
 };
 
-// // Define a type for the store's actions
 type UserActions = {
     login: () => Promise<void>;
     logout: () => void;

@@ -55,7 +55,7 @@ function UserProfileCard() {
                         {navLinks.map((link, index) => (
                             <NavLink
                                 key={index}
-                                to={`/profile/${link}`}
+                                to={`/profile/:id/${link}`}
                                 className={({ isActive }) =>
                                     `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
                                         isActive

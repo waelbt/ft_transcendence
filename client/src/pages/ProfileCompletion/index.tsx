@@ -48,7 +48,7 @@ export function ProfileCompletion() {
                         </div>
                     </div>
                     <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
-                        <div className="px-3.5 py-px flex-col justify-start items-start gap-4 flex">
+                        <div className="px-3.5 py-px flex-col justify-start items-start gap-12 flex">
                             {/* Header */}
                             <div className=" flex-col justify-center items-start inline-flex gap-2">
                                 <div className="text-neutral-900 text-3xl font-bold font-sans">
