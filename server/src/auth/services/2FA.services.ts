@@ -24,7 +24,7 @@ export class twoFAService{
             const qrCodeDataURL = await qrcode.toDataURL(otpAuthUrl);
             const f2a = await this.prisma.user.update({
                 where: {id: (await user).id},
-                data: {F2A_Secret: secret},
+                data: {f2A_Secret: secret},
             });
             return res.status(200).json({ qrCode: qrCodeDataURL });
         } catch (error) {
@@ -50,7 +50,7 @@ export class twoFAService{
     }
 
     async isItEnable(user: User){
-        if (user.F2A == true)
+        if (user.f2A == true)
             return { message: '2FA enable'};
         return { message: '2FA is not enable'};
     }
@@ -58,7 +58,7 @@ export class twoFAService{
     async  disable2FA(user: User){
         const update = await this.prisma.user.update({
             where: {id: user.id},
-            data: {F2A: false},
+            data: {f2A: false},
         });
     }
 }

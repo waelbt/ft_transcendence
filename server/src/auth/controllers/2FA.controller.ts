@@ -33,7 +33,7 @@ export class twoFAController{
         //     return res.status(400).json({ message: '2FA already enabled!' });
         // }
         const token = body;
-        const isValidToken = await this.twoFAService.validateTwoFAToken(token, user.F2A_Secret);
+        const isValidToken = await this.twoFAService.validateTwoFAToken(token, user.f2A_Secret);
         if (!isValidToken) {
             return res.status(401).json({ message: 'Invalid 2FA token' });
         }

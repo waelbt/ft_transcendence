@@ -160,18 +160,17 @@ export class friendsController {
     }
 
     //endPoint to list friends for another user
-    @Get(':id/friends/:viewerId')
+    @Get('friends/:viewerId')
     async userListFriends(
         @Req() req,
-        @Param('id') userId: string,
         @Param('viewerId') viewerId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to see this friend list');
-        }
+        // if (userId != req.user.sub){
+        //     console.log('user1: ', userId, 'sub: ', req.user.sub);
+        //     throw new UnauthorizedException('You are not allowed to see this friend list');
+        // }
         try {
-            const friends = await this.friendsService.userListFriends(userId, viewerId);
+            const friends = await this.friendsService.userListFriends(req.user.sub, viewerId);
             return { friends };
           } catch (error) {
             if (error instanceof NotFoundException) {
