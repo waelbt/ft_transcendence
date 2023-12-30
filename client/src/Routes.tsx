@@ -4,17 +4,8 @@ const router = createBrowserRouter([
     {
         path: '/',
         lazy: async () => {
-            let { Auth } = await import('./pages/Auth');
+            let { Auth } = await import('./components');
             return { Component: Auth };
-        }
-    },
-    {
-        path: '/get-started',
-        lazy: async () => {
-            let { ProfileCompletion } = await import(
-                './pages/ProfileCompletion'
-            );
-            return { Component: ProfileCompletion };
         }
     },
     {
@@ -24,54 +15,92 @@ const router = createBrowserRouter([
             return { Component: Layout };
         },
         children: [
-            // lazy
+            // {
+            //     index: true,
+            //     lazy: async () => {
+            //         let { Profile } = await import('./pages/Profile');
+            //         return { Component: Profile };
+            //     }
+            // },
             {
-                path: '/lobby',
+                path: '/home',
                 lazy: async () => {
-                    let { Lobby } = await import('./pages/Lobby'); // conditional rendring in home page
+                    let { Lobby } = await import('./pages/Lobby');
                     return { Component: Lobby };
                 }
             },
-            // {
-            //     path: '/chat',
-            //     lazy: async () => {
-            //         let { Chat } = await import('./pages/Chat'); // conditional rendring in home page
-            //         return { Component: Chat };
-            //     }
-            // },
-            // {
-            //     path: '/game',
-            //     lazy: async () => {
-            //         let { Game } = await import('./pages/Game'); // conditional rendring in home page
-            //         return { Component: Game };
-            //     }
-            // },
             {
-                path: '/profile', // search before implement
+                path: '/chat',
                 lazy: async () => {
-                    let { Profile } = await import('./pages/Profile'); // conditional rendring in home page
+                    let { Chat } = await import('./pages/Chat');
+                    return { Component: Chat };
+                }
+            },
+            {
+                path: '/game',
+                lazy: async () => {
+                    let { Game } = await import('./pages/Game');
+                    return { Component: Game };
+                }
+            },
+            {
+                path: "Profile/:id",
+                lazy: async () => {
+                    let { Profile } = await import('./pages/Profile');
                     return { Component: Profile };
-                }
+                },
+                children: [
+                    {
+                        index: true,
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/');
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'history',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/');
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'achivements',
+                        lazy: async () => {
+                            let { MatchTable } = await import('./components/');
+                            return { Component: MatchTable };
+                        }
+                    },
+                    {
+                        path: 'friends',
+                        lazy: async () => {
+                            let { FriendsDashboard } = await import(
+                                './components/'
+                            );
+                            return { Component: FriendsDashboard };
+                        }
+                    },
+                    {
+                        path: 'setting',
+                        lazy: async () => {
+                            let { Setting } = await import('./components/');
+                            return { Component: Setting };
+                        }
+                    }
+                ]
             },
             {
-                path: '/setting', // search before implement
+                path: '/rooms',
                 lazy: async () => {
-                    let { Setting } = await import('./pages/Setting'); // conditional rendring in home page
-                    return { Component: Setting };
-                }
-            },
-            {
-                path: '/rooms', // search before implement
-                lazy: async () => {
-                    let { Rooms } = await import('./pages/Rooms'); // conditional rendring in home page
+                    let { Rooms } = await import('./pages/Rooms');
                     return { Component: Rooms };
                 }
-            },
-            {
-                path: '*',
-                element: <div>not found</div>
             }
         ]
+    },
+    {
+        path: '*',
+        element: <div>not found</div>
     }
 ]);
 

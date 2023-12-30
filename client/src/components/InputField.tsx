@@ -1,6 +1,3 @@
-import React, { useState } from 'react';
-// import './index.scss';
-
 type InputFieldProps = {
     label?: string;
     type?: string;
@@ -14,18 +11,19 @@ function InputField({
     label,
     type,
     placeholder,
-    register // secure
-}: InputFieldProps) {
+    register
+} // secure
+: InputFieldProps) {
     // const [visible, setvisible] = useState(false);
 
     return (
         <>
-            <div className="flex flex-col justify-start items-start gap-1.5">
+            <div className="flex flex-col justify-start items-start gap-3">
                 <label className="text-black text-lg font-bold font-sans leading-tight">
                     {label}{' '}
                 </label>
                 <input
-                    className="w-[385px] pl-1 pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center text-black text-lg font-normal font-sans leading-normal !outline-none"
+                    className="w-[500px] pl-1 pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center text-black text-lg font-normal font-sans leading-normal !outline-none"
                     type={type}
                     placeholder={placeholder}
                     {...register}

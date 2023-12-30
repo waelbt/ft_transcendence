@@ -55,21 +55,23 @@ function FormComponent({
                         type={field.type}
                         placeholder={field.placeholder}
                         register={register(field.name, field.validation)}
-                        secure={field.secure}
+                        // secure={field.secure}
                     />
                 );
             })}
-            <button 
-                // ${
-                // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
-                // }` 
-                // ? style the disabled state
-                className={btn.style}
-                type={btn.type}
-                disabled={isSubmitting}
-            >
-                {btn.text}
-            </button>
+            <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
+                <button
+                    // ${
+                    // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
+                    // }`
+                    // ? style the disabled state
+                    className={btn.style}
+                    type={btn.type}
+                    disabled={isSubmitting}
+                >
+                    {btn.text}
+                </button>
+            </div>
         </form>
     );
 }

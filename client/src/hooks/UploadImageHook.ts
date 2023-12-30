@@ -1,24 +1,28 @@
 import { useState } from 'react';
-import { request } from '../axios-utils';
+import { request } from '../api';
+import axios from 'axios';
 
 const useUpload = () => {
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [avatarPath, setAvatarPath] = useState<string | null>(null);
 
-    const uploadData = async (url: string) => {
+    const uploadData = async (file: File) => {
         setUploading(true);
         setError(null);
+        setSuccess(false);
 
         try {
             var formData = new FormData();
-            formData.append('file', url);
-            await request.post('users/upload', formData, {
+            formData.append('file', file);
+
+            const response = await request.post('/users/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                onUploadProgress: function (progressEvent) {
+                onUploadProgress: (progressEvent) => {
                     if (progressEvent && progressEvent.total) {
                         let percentCompleted = Math.round(
                             (progressEvent.loaded * 100) / progressEvent.total
@@ -28,15 +32,22 @@ const useUpload = () => {
                     }
                 }
             });
+            setAvatarPath(response.data);
             setSuccess(true);
         } catch (err) {
-            setError(err.message || 'Failed to upload');
+            if (axios.isAxiosError(err)) {
+                setError(err.message || 'Failed to upload');
+            } else {
+                setError('An unexpected error occurred');
+            }
+            console.log(error);
+            setProgress(0);
         } finally {
             setUploading(false);
         }
     };
 
-    return { uploading, progress, error, success, uploadData };
+    return { uploading, progress, error, success, uploadData, avatarPath };
 };
 
 export default useUpload;
