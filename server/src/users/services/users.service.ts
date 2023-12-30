@@ -2,15 +2,12 @@ import {
     Inject,
     Injectable,
     NotFoundException,
-    Param,
     Req,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
-import { catchError, firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { friendsService } from './friends.service';
 import { BlockService } from './blocked.service';
 
@@ -29,7 +26,7 @@ export class UsersService {
                 id: id,
                 email: user.email,
                 fullName: user.fullName,
-                Avatar: user.avatar,
+                avatar: user.avatar,
                 nickName: user.nickName
             }
         });
@@ -57,7 +54,6 @@ export class UsersService {
     }
 
     async getOneUser(id: string) {
-        console.log('userId: ', id);
         return await this.prisma.user.findUnique({
             where: {
                 id: id
@@ -107,6 +103,42 @@ export class UsersService {
         });
     }
 
+    async matchHistory(userId: string){
+        const matchs = await this.prisma.game.findMany({
+            where:{
+                OR: [
+                    {winnerId: userId},
+                    {loserId: userId},
+                ],
+            },
+        });
+    
+        const match = await Promise.all( matchs.map( async (matche) =>{
+
+            var user;
+            var addedXp;
+            if (matche.winnerId == userId)
+            {
+                user = await this.getOneUser(matche.loserId);
+                addedXp = 400;
+            }else{
+                user = await this.getOneUser(matche.winnerId);
+                addedXp = 100;
+            }
+            const score = matche.result.split('-');
+            const id = matche.id;
+            const date = matche.createdAt;
+            return {
+                id,
+                user,
+                score,
+                addedXp,
+                date,
+            }
+        }));
+        return match;
+    }
+
     async userInfo(@Req() req, avatar: string, nickName: string) {
         console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
@@ -131,7 +163,7 @@ export class UsersService {
         const update = await this.prisma.user.update({
             where: {id: userId},
             data: {
-                Avatar: avatar,
+                avatar: avatar,
                 nickName: nickName,
             },
         });
@@ -142,7 +174,7 @@ export class UsersService {
         console.log(friends);
         console.log(req.user.sub);
         const user = await this.getOneUser(userId);
-        delete user.HashPassword;
+        delete user.hashPassword;
         console.log(user);
         // const block = await this.blockUsers.listOfBlockedUsers(userId);
         const info = { user, friends};
@@ -150,6 +182,7 @@ export class UsersService {
     }
 
     async myInfos(@Req() req) {
+        console.log(req.user.sub);
         const user = await this.getOneUser(req.user.sub);
         console.log(user);
 

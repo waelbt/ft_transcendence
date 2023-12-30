@@ -12,11 +12,11 @@ export class userDTO{
     
     @ApiProperty()
 
-    HashPassword: string;
+    hashPassword: string;
     
     @ApiProperty()
 
-    Avatar: string;
+    avatar: string;
     
     @ApiProperty()
 
@@ -32,11 +32,11 @@ export class userDTO{
     
     @ApiProperty()
 
-    F2A: boolean;
+    f2A: boolean;
     
     @ApiProperty()
 
-    F2A_Secret: string;
+    f2A_Secret: string;
     
     @ApiProperty()
 

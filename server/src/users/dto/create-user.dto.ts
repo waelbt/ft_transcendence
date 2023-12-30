@@ -20,7 +20,7 @@ export class CreateUserDto {
     @IsString()
     @ApiProperty()
     @MinLength(7)
-    HashPassword: string;
+    hashPassword: string;
 
     Avatar: string;
 

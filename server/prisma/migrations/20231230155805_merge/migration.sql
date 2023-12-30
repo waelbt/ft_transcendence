@@ -5,15 +5,18 @@ CREATE TYPE "RoomPrivacy" AS ENUM ('PUBLIC', 'PRIVATE', 'PROTECTED');
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "HashPassword" TEXT,
-    "Avatar" TEXT,
+    "hashPassword" TEXT,
+    "avatar" TEXT,
     "nickName" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT true,
-    "F2A" BOOLEAN NOT NULL DEFAULT false,
-    "F2A_Secret" TEXT,
+    "f2A" BOOLEAN NOT NULL DEFAULT false,
+    "f2A_Secret" TEXT,
     "inGame" BOOLEAN NOT NULL DEFAULT false,
+    "completeProfile" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "exp" INTEGER DEFAULT 0,
+    "level" INTEGER DEFAULT 0,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -35,6 +38,20 @@ CREATE TABLE "Block" (
     "blockedUserId" TEXT NOT NULL,
 
     CONSTRAINT "Block_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Game" (
+    "id" SERIAL NOT NULL,
+    "player1Id" TEXT NOT NULL,
+    "player2Id" TEXT NOT NULL,
+    "winnerId" TEXT,
+    "loserId" TEXT,
+    "result" TEXT NOT NULL,
+    "Mode" TEXT NOT NULL DEFAULT 'classic',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -109,6 +126,18 @@ CREATE INDEX "_RoomToUser_B_index" ON "_RoomToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "Block" ADD CONSTRAINT "Block_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Game" ADD CONSTRAINT "Game_player1Id_fkey" FOREIGN KEY ("player1Id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Game" ADD CONSTRAINT "Game_player2Id_fkey" FOREIGN KEY ("player2Id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Game" ADD CONSTRAINT "Game_winnerId_fkey" FOREIGN KEY ("winnerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Game" ADD CONSTRAINT "Game_loserId_fkey" FOREIGN KEY ("loserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
