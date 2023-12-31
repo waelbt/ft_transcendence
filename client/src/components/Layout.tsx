@@ -9,33 +9,33 @@ import { useUserStore } from '../stores';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
-    const { logout, login, isLogged, isProfileComplete } = useUserStore();
+    // const { logout, login, isLogged, isProfileComplete } = useUserStore();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!isLogged) navigate('/');
-    }, []);
+    // useEffect(() => {
+    //     if (!isLogged) navigate('/');
+    // }, []);
 
-    useEffect(() => {
-        // Define the async function inside the useEffect
-        const fetchData = async () => {
-            try {
-                await login();
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+    // useEffect(() => {
+    //     // Define the async function inside the useEffect
+    //     const fetchData = async () => {
+    //         try {
+    //             await login();
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
 
-        // Call the async function
-        fetchData();
-    }, []); // Empty dependency array means this effect runs once after the initial render
+    //     // Call the async function
+    //     fetchData();
+    // }, []); // Empty dependency array means this effect runs once after the initial render
 
     return (
         <>
-            {isProfileComplete ? (
+            {false ? (
                 <ProfileCompletion />
             ) : (
-                <div className="relative flex flex-col h-screen bg-primary-white">
+                <div className="relative flex flex-col h-screen bg-primary-white gap-3">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
                             <div className="flex justify-between items-center">

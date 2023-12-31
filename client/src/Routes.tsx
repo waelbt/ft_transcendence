@@ -44,7 +44,7 @@ const router = createBrowserRouter([
             //     }
             // },
             {
-                path: "Profile/:id",
+                path: 'Profile/:id',
                 lazy: async () => {
                     let { Profile } = await import('./pages/Profile');
                     return { Component: Profile };
@@ -95,12 +95,12 @@ const router = createBrowserRouter([
                     let { Rooms } = await import('./pages/Rooms');
                     return { Component: Rooms };
                 }
+            },
+            {
+                path: '*',
+                element: <div>not found</div>
             }
         ]
-    },
-    {
-        path: '*',
-        element: <div>not found</div>
     }
 ]);
 

@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import { Friend } from '../../../shared/types';
 import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-// import DropDownMenu from './DropDownMenu';
 
 type FriendsTableProps = {
     friends: Friend[];
@@ -12,9 +10,7 @@ type FriendsTableProps = {
 
 // ! fix later 
 function FriendsTable({ friends }: FriendsTableProps) {
-    useEffect(() => {
-        console.log(window.innerWidth);
-    }, [window.innerWidth]);
+
 
     return (
         <div className="flex flex-col w-full">

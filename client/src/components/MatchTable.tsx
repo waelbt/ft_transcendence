@@ -3,45 +3,6 @@ import { Match } from '../../../shared/types';
 import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
-import { useOutletContext } from 'react-router-dom';
-
-// <div className="w-[1323px] h-[73px] px-20 bg-emerald-600 bg-opacity-20 rounded-[10px] justify-between items-center inline-flex">
-//     <div className="w-[169px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
-//         <div className="text-neutral-500 text-[22px] font-normal font-['Acme'] leading-7">
-//             12-12-2023 17:39
-//         </div>
-//     </div>
-//     <div className="w-[480px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
-//         <div className="w-[50px] h-[50px] relative"></div>
-//         <div className="p-2.5 justify-center items-center gap-2.5 flex">
-//             <img
-//                 className="w-8 h-8 relative rounded-[60px] border border-black"
-//                 src="https://via.placeholder.com/32x32"
-//             />
-//             <div>
-//                 <span className="text-black text-[22px] font-normal font-['Acme'] leading-7">
-//                     simopoza{' '}
-//                 </span>
-//                 <span className="text-zinc-500 text-[22px] font-normal font-['Acme'] leading-7">
-//                     (8.58)
-//                 </span>
-//                 <span className="text-black text-[22px] font-normal font-['Acme'] leading-7">
-//                     {' '}
-//                 </span>
-//             </div>
-//         </div>
-//     </div>
-//     <div className="w-[61px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
-//         <div className="text-black text-[22px] font-normal font-['Acme'] leading-7">
-//             3 - 5
-//         </div>
-//     </div>
-//     <div className="w-[88px] self-stretch px-2.5 py-1.5 justify-center items-center gap-[15px] flex">
-//         <div className="text-black text-[22px] font-normal font-['Acme'] leading-7">
-//             +30 exp
-//         </div>
-//     </div>
-// </div>;
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
@@ -52,7 +13,7 @@ const MatchTable = () => {
                 accessor: 'date',
                 Cell: ({ value }) => {
                     return (
-                        <div className="px-14 py-2  flex-col justify-center items-center inline-flex">
+                        <div className="flex-col justify-center items-center inline-flex">
                             {value}
                         </div>
                     );
@@ -62,7 +23,7 @@ const MatchTable = () => {
                 Header: 'Opponent',
                 accessor: 'opponent',
                 Cell: ({ value }) => (
-                    <div className="px-10 py-2 justify-center items-center gap-4 inline-flex">
+                    <div className="justify-center items-center gap-4 inline-flex">
                         <VersusIcon />
                         <div className="p-2.5 justify-center items-center gap-2.5 flex">
                             <div className="flex-col justify-center items-center gap-1 inline-flex">
@@ -83,7 +44,7 @@ const MatchTable = () => {
                 accessor: 'score',
                 Cell: ({ value }) => {
                     return (
-                        <div className="px-10 py-2 justify-center items-center gap-2.5 inline-flex">
+                        <div>
                             {value.score1} - {value.score2}
                         </div>
                     );
@@ -95,15 +56,22 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         // ! for responsive add md on padding
-                        <div className="px-10 py-2 flex-col justify-center items-center inline-flex">
-                            {value}
-                        </div>
+                        <div>{value}</div>
                     );
                 }
             }
         ],
         []
     );
+    const getRowColor = (match: Match) => {
+        // Assuming you have a way to determine a win or loss, adjust the logic accordingly
+        // This is just an example logic, replace it with your actual win/loss condition
+        if (match.score.score1 > match.score.score2) {
+            return 'bg-green-200'; // Green for win
+        } else {
+            return 'bg-red-200'; // Red for loss
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -119,18 +87,25 @@ const MatchTable = () => {
         fetchData();
     }, []);
     return (
-        <Table
-            columns={columns}
-            data={data}
-            styles={{
-                tableStyle: 'font-normal font-["Acme"] text-2xl',
-                theadStyle: 'bg-[#F5F5F5] text-zinc-500  leading-5',
-                tbodyStyle: 'text-zinc-500 leading-tight ',
-                trStyle: 'px-20',
-                thStyle: 'py-2',
-                tdStyle: ''
-            }}
-        />
+        // ! protect if the data is empty
+        <div className="overflow-auto max-h-[500px] w-full">
+            <Table
+                columns={columns}
+                data={data}
+                styles={{
+                    tableStyle: 'font-normal font-["Acme"] text-2xl w-full',
+                    theadStyle: 'bg-[#F5F5F5] text-zinc-500 sticky top-0 z-10 ',
+                    // 
+                    tbodyStyle: 'text-zinc-500 leading-tight ',
+                    trStyle: '',
+                    thStyle: 'p-2',
+                    tdStyle: 'p-2 text-center align-middle'
+                }}
+                getRowProps={(row) => ({
+                    className: getRowColor(row.original)
+                })}
+            />
+        </div>
     );
 };
 

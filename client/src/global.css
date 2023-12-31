@@ -33,27 +33,38 @@ body {
 }
 
 
-/* !change scroll css to tailwind  */
-.tableScroll {
-    display: block;
-    max-height: 320px; /* Adjust this value as needed */
-    overflow-y: auto;
-    overflow-x: hidden;
+.skeleton-avatar,
+.skeleton-text,
+.skeleton-button {
+    background-color: #e0e0e0;
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(to right, #e0e0e0 8%, #f8f8f8 18%, #e0e0e0 33%);
+    background-size: 1000px 104px;
 }
 
-/* Styles to ensure the table still looks good */
-.tableScroll table {
-    width: 100%;
+.skeleton-avatar {
+    width: 48px; /* Adjust as needed */
+    height: 48px; /* Adjust as needed */
+    border-radius: 50%;
 }
 
-.tableScroll th,
-.tableScroll td {
-    padding: 8px; /* Adjust padding as needed */
+.skeleton-text {
+    height: 16px; /* Adjust as needed */
+    border-radius: 4px;
+    margin-bottom: 5px;
 }
 
-.tableScroll thead th {
-    position: sticky;
-    top: 0;
-    background-color: #f9f9f9;
-    z-index: 1; /* Ensure header is above other rows */
+.skeleton-button {
+    width: 32px; /* Adjust as needed */
+    height: 32px; /* Adjust as needed */
+    border-radius: 50%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
 }
