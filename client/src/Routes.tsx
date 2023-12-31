@@ -67,8 +67,10 @@ const router = createBrowserRouter([
                     {
                         path: 'achivements',
                         lazy: async () => {
-                            let { MatchTable } = await import('./components/');
-                            return { Component: MatchTable };
+                            let { Achievements } = await import(
+                                './components/'
+                            );
+                            return { Component: Achievements };
                         }
                     },
                     {

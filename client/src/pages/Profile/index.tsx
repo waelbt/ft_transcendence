@@ -35,7 +35,7 @@ export function Profile() {
         <div className="flex-grow flex-col justify-center items-center inline-flex my-5 gap-10">
             <UserProfileCard {...profile} />
             {/* w-2/3 h-full */}
-            <div className="w-2/3 h-full p-2.5 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
+            <div className="w-2/3 h-full p-2 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
                 <Outlet context={profile} />
             </div>
         </div>
