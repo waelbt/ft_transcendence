@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Friend } from '../../../shared/types';
-import { FriendsTable } from '.';
+// import { FriendsTable } from '.';
+import FriendCard from './FriendCard';
+// import { Friend } from '../../../shared/types';
 // import { useOutletContext } from 'react-router-dom';
 // import { useUserStore } from '../stores';
 
@@ -11,40 +12,39 @@ import { FriendsTable } from '.';
 
 // ! fix types later
 const FriendsDashboard: React.FC = () => {
-    const fields = ['all', 'online', 'blocked'];
-    const [friends, setFriends] = useState<Friend[]>([]);
-    const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]);
-
+    const fields = ['all', 'blocked'];
+    const [friendsIdList, setFriendsIdList] = useState<string[]>([]);
+    const [filter, setFilter] = useState('all');
+    // const fields = ['all', 'online', 'blocked'];
+    // const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]);
     // const profile = useOutletContext();
     // const user = useUserStore();
     // const [searchTerm, setSearchTerm] = useState('');
-    const [filter, setFilter] = useState('all');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/Friends');
-                const Friend: Friend[] = await response.json();
-                setFriends(Friend);
+                const response = await fetch('http://localhost:3000/friends');
+                const data: string[] = await response.json();
+                console.log(data);
+                setFriendsIdList(data);
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
         fetchData();
-        // Fetch data from JSON server or local JSON file
-        // setFriends(data);
     }, []);
 
-    useEffect(() => {
-        if (filter == 'all') setFilteredFriends(friends);
-        else if (filter == 'online') {
-            const onlineFriends = friends.filter(
-                (friend) => friend.status == 'online'
-            );
-            setFilteredFriends(onlineFriends);
-        }
-    }, [filter, friends]);
+    // useEffect(() => {
+    //     if (filter == 'all') setFilteredFriends(friends);
+    //     else if (filter == 'online') {
+    //         const onlineFriends = friends.filter(
+    //             (friend) => friend.status == 'online'
+    //         );
+    //         setFilteredFriends(onlineFriends);
+    //     }
+    // }, [filter, friends]);
 
     //   const filteredFriends = friends.filter(friend => {
 
@@ -61,6 +61,7 @@ const FriendsDashboard: React.FC = () => {
                     <div className="self-stretch px-2.5justify-start items-center gap-4 flex">
                         {fields.map((field) => (
                             <div
+                                key={field}
                                 className={`self-stretch px-3 py-4 justify-start items-center gap-2.5 flex  text-xl font-normal font-['Acme'] cursor-pointer ${
                                     field == filter
                                         ? 'text-black border-b-2 border-black'
@@ -76,7 +77,12 @@ const FriendsDashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <FriendsTable friendsIdList={filteredFriends} />
+            {/* <FriendsTable friendsIdList={friendsIdList} /> */}
+            <div className="flex flex-col w-full">
+                {friendsIdList.map((friendId: string) => (
+                    <FriendCard key={`friend${friendId}`} friendId={friendId} />
+                ))}
+            </div>
         </div>
     );
 };

@@ -1,61 +1,70 @@
 {
-    "friends": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    "friendDetails": {
-        "1": {
+    "friends": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "friendDetails": [
+        {
+            "id": 1,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "2": {
+        {
+            "id": 2,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "3": {
+        {
+            "id": 3,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "4": {
+        {
+            "id": 4,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "5": {
+        {
+            "id": 5,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "6": {
+        {
+            "id": 6,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "7": {
+        {
+            "id": 7,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "8": {
+        {
+            "id": 8,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
-        "9": {
+        {
+            "id": 9,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "offline",
+            "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         }
-    },
+    ],
     "matches": [
         {
             "id": 1,
@@ -185,71 +194,3 @@
         }
     ]
 }
-
-// "friends": [
-//     {
-//         "id": 1,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "online",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 2,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "offline",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 3,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "offline",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 4,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "offline",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 5,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "offline",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 6,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "online",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 7,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "online",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 8,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "offline",
-//         "actions": ["block", "unfriend", "challenge"]
-//     },
-//     {
-//         "id": 9,
-//         "name": "dos404",
-//         "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-//         "status": "in game",
-//         "actions": ["block", "unfriend", "challenge"]
-//     }
-
-
-// ],

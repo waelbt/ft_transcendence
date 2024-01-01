@@ -43,13 +43,13 @@ body {
 }
 
 .skeleton-avatar {
-    width: 48px; /* Adjust as needed */
-    height: 48px; /* Adjust as needed */
+    /* width: 48px; Adjust as needed */
+    /* height: 48px; Adjust as needed */
     border-radius: 50%;
 }
 
 .skeleton-text {
-    height: 16px; /* Adjust as needed */
+    /* height: 16px; Adjust as needed */
     border-radius: 4px;
     margin-bottom: 5px;
 }
