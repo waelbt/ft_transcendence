@@ -1,22 +1,28 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
 
 export class MuteUserDto {
 
+    @ApiProperty()
     @IsNumber()
     roomId: number;
 
+    @ApiProperty()
     @IsString()
     userToMute: string;
 
+    @ApiProperty()
     @IsNumber()
     muteDuration: number;
 }
 
 export class UnmuteUserDto {
 
+    @ApiProperty()
     @IsNumber()
     roomId: number;
 
+    @ApiProperty()
     @IsString()
     userToUnmute: string;
 }
