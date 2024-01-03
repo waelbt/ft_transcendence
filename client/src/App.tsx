@@ -6,35 +6,36 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
-import { GameProvider } from './context/game-context';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+// import { GameProvider } from './context/game-context';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            staleTime: Infinity,
-            cacheTime: Infinity
-        } as QueryOptions
-    }
-});
+const queryClient = new QueryClient();
 
+// {
+//     defaultOptions: {
+//         queries: {
+//             staleTime: Infinity,
+//             cacheTime: Infinity
+//         } as QueryOptions
+//     }
+// }
 function App() {
     return (
         // ask gpt later abt the provider oders
         <QueryClientProvider client={queryClient}>
-            <GameProvider >
-                <AllRoutes />
-                <Toaster
-                    position="top-center"
-                    reverseOrder={false}
-                    toastOptions={{
-                        duration: 3000
-                    }}
-                />
+            {/* <GameProvider > */}
+            <AllRoutes />
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                toastOptions={{
+                    duration: 3000
+                }}
+            />
             <ReactQueryDevtools />
-         </GameProvider > 
+            {/* </GameProvider >  */}
         </QueryClientProvider>
-
-        
     );
 }
 

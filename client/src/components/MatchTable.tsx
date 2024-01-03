@@ -9,55 +9,43 @@ const MatchTable = () => {
     const columns = useMemo<Column<Match>[]>(
         () => [
             {
-                Header: 'Players',
-                accessor: 'players',
-                Cell: ({ value }) => (
-                    <div className="px-10 py-2 justify-center items-center gap-2.5 inline-flex">
-                        <div className="p-2.5 justify-center items-center gap-[5px] flex">
-                            <img
-                                className="w-4 h-4 relative rounded-[60px] border border-black"
-                                src={value[0].avatar}
-                            />
-                            <div className="text-black">
-                                {value[0].name} ({value[0].rating})
-                            </div>
+                Header: 'Date & Time',
+                accessor: 'date',
+                Cell: ({ value }) => {
+                    return (
+                        <div className="flex-col justify-center items-center inline-flex">
+                            {value}
                         </div>
+                    );
+                }
+            },
+            {
+                Header: 'Opponent',
+                accessor: 'opponent',
+                Cell: ({ value }) => (
+                    <div className="justify-center items-center gap-4 inline-flex">
                         <VersusIcon />
-                        <div className="p-2.5 justify-center items-center gap-[5px] flex">
+                        <div className="p-2.5 justify-center items-center gap-2.5 flex">
                             <div className="flex-col justify-center items-center gap-1 inline-flex">
                                 <img
-                                    className="w-4 h-4 relative rounded-[60px] border border-black"
-                                    src={value[1].avatar}
+                                    className="w-8 h-8 relative rounded-[60px] border border-black"
+                                    src={value.avatar}
                                 />
                             </div>
                             <div className="text-black">
-                                {value[1].name} ({value[1].rating})
+                                {value.name} ({value.rating})
                             </div>
                         </div>
                     </div>
                 )
             },
             {
-                Header: 'Result',
-                accessor: 'result',
+                Header: 'score',
+                accessor: 'score',
                 Cell: ({ value }) => {
                     return (
-                        <div className="px-10 py-2 justify-center items-center gap-2.5 inline-flex">
-                            <div className="flex-col justify-center items-center inline-flex">
-                                <span>{value.score1}</span>
-                                <span>{value.score2}</span>
-                            </div>
-                            <div
-                                className={`w-[15px] h-[15px] rounded flex-col justify-center items-center inline-flex ${
-                                    value.score1 > value.score2
-                                        ? 'bg-lime-600'
-                                        : 'bg-red-500'
-                                }`}
-                            >
-                                <div className="text-white text-[15px] font-normal font-['Acme'] leading-tight">
-                                    {value.score1 > value.score2 ? '+' : '-'}
-                                </div>
-                            </div>
+                        <div>
+                            {value.score1} - {value.score2}
                         </div>
                     );
                 }
@@ -68,26 +56,22 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         // ! for responsive add md on padding
-                        <div className="px-10 py-2 bg-white flex-col justify-center items-center inline-flex">
-                            {value}
-                        </div>
-                    );
-                }
-            },
-            {
-                Header: 'Date',
-                accessor: 'date',
-                Cell: ({ value }) => {
-                    return (
-                        <div className="px-14 py-2 bg-white flex-col justify-center items-center inline-flex">
-                            {value}
-                        </div>
+                        <div>{value}</div>
                     );
                 }
             }
         ],
         []
     );
+    const getRowColor = (match: Match) => {
+        // Assuming you have a way to determine a win or loss, adjust the logic accordingly
+        // This is just an example logic, replace it with your actual win/loss condition
+        if (match.score.score1 > match.score.score2) {
+            return 'rounded-3xl bg-emerald-100  border-b-8 border-white rounded-full '; // Green for win
+        } else {
+            return 'rounded-3xl bg-red-200   border-b-8 border-white rounded-full'; // Red for loss
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -103,18 +87,26 @@ const MatchTable = () => {
         fetchData();
     }, []);
     return (
-        <Table
-            columns={columns}
-            data={data}
-            styles={{
-                tableStyle: 'font-normal font-["Acme"]',
-                theadStyle: 'bg-[#F5F5F5] text-zinc-500 text-sm  leading-5',
-                tbodyStyle: 'text-zinc-500 text-base  leading-tight',
-                trStyle: '',
-                thStyle: 'py-2',
-                tdStyle: ''
-            }}
-        />
+        // ! protect if the data is empty
+        <div className="overflow-y-auto max-h-[540px] w-full">
+            <Table
+                columns={columns}
+                data={data}
+                styles={{
+                    tableStyle:
+                        'w-full text-xl text-neutral-500 font-normal font-["Acme"]',
+                    theadStyle:
+                        'sticky top-0 z-10 border-b border-neutral-100 bg-white ',
+                    tbodyStyle: '',
+                    trStyle: '',
+                    thStyle: 'px-2 py-5',
+                    tdStyle: 'p-2 text-center align-middle'
+                }}
+                getRowProps={(row) => ({
+                    className: getRowColor(row.original)
+                })}
+            />
+        </div>
     );
 };
 

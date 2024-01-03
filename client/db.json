@@ -1,193 +1,196 @@
 {
+    "friends": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "friendDetails": [
+        {
+            "id": 1,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 2,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 3,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 4,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 5,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 6,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 7,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 8,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 9,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        }
+    ],
     "matches": [
         {
             "id": 1,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+50 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 2,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 1,
                 "score2": 6
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 3,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 4,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 5,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 6,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 7,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 8,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         },
         {
             "id": 9,
-            "players": [
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "waelbt",
-                    "rating": 9.01
-                },
-                {
-                    "avatar": "./src/assets/images/default1.png",
-                    "name": "simpzoa",
-                    "rating": 8.58
-                }
-            ],
-            "result": {
+            "opponent": {
+                "avatar": "./src/assets/images/default1.png",
+                "name": "simpzoa",
+                "rating": 8.58
+            },
+            "score": {
                 "score1": 5,
                 "score2": 0
             },
             "awarded": "+10 exp",
-            "date": "Dec 21, 2023"
+            "date": "12-12-2023 17:39"
         }
     ]
 }
