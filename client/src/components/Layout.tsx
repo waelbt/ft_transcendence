@@ -111,13 +111,13 @@ function Layout() {
                                                                 }}
                                                             >
                                                                 <Avatar
-                                                                    style="h-8 w-8"
+                                                                    style="h-10 w-10"
                                                                     imageUrl={
                                                                         'https://tecdn.b-cdn.net/img/new/avatars/2.webp'
                                                                     }
                                                                     state="online"
                                                                 />
-                                                                <div className="text-black text-xl font-normal font-['Acme']">
+                                                                <div className="text-black text-2xl font-normal font-['Acme']">
                                                                     dos404
                                                                 </div>
                                                             </li>
