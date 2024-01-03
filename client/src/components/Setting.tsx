@@ -22,9 +22,9 @@ function Setting() {
     const onSubmit = () => {};
     return (
         <div className="px-7 py-2.5 flex-col justify-between items-start inline-flex gap-5">
-            <div className="text-neutral-400 text-3xl font-normal font-['Acme']">
+            {/* <div className="text-neutral-400 text-3xl font-normal font-['Acme']">
                 Account Setting
-            </div>
+            </div> */}
             {/* gap-[79px] */}
             <div className="justify-center items-center inline-flex gap-10">
                 <div className="flex-col justify-center items-start gap-8 inline-flex">
