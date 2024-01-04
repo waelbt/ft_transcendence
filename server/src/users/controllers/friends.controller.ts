@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
 import { friendsService } from "../services/friends.service";
 import { UsersService } from "../services/users.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiParam, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('friends')
 @Controller('friends')
@@ -10,17 +10,18 @@ export class friendsController {
         private readonly userService: UsersService){}
 
     //endPoint to send request (post)
-    @Post(':id/sendFriendRequest/:friendId')
+    @Post('sendFriendRequest/:friendId')
+    @ApiParam({name: 'friendId', description: 'id of the user recieves friend request', type: 'string'})
+
     async sendFriendRequest(
         @Req() req,
-        @Param('id') userId: string,
         @Param('friendId') friendId: string){
-            if (userId != req.user.sub){
-                console.log('user1: ', userId, 'sub: ', req.user.sub);
+            if (friendId == req.user.sub){
+                console.log('user1: ', friendId, 'sub: ', req.user.sub);
                 throw new UnauthorizedException('You are not allowed to send this friend request');
             }
             try{
-                await this.friendsService.sendFriendRequest(userId, friendId);
+                await this.friendsService.sendFriendRequest(req.user.sub, friendId);
                 return { message: 'Friend request sent successfully' };
             } catch (error){
                 if (error instanceof NotFoundException) {
@@ -31,18 +32,15 @@ export class friendsController {
     }
 
     //endPoint to accept a friendship request
-    @Post(':id/acceptFriendRequest/:friendId')
+    @Post('acceptFriendRequest/:friendId')
+    @ApiParam({name: 'friendId', description: 'id of the user that send a friend request', type: 'string'})
+
     async acceptFriendRequest(
         @Req() req,
-        @Param('id') userId: string,
         @Param('friendId') friendId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to accept this friend request');
-        }
         try{
-            await this.friendsService.acceptFriendRequest(userId, friendId);
+            await this.friendsService.acceptFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request Accepted successfully'};
         } catch (error){
             if (error instanceof NotFoundException) {
@@ -53,18 +51,17 @@ export class friendsController {
     }
 
     //endPoint to reject a frienship request
-    @Post(':id/rejectFriendRequest/:friendId')
+    @Post('rejectFriendRequest/:friendId')
     async rejectFriendRequest(
         @Req() req,
-        @Param('id') userId: string,
         @Param('friendId') friendId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to reject this friend request');
-        }
+        // if (friendId != req.user.sub){
+        //     console.log('user1: ', friendId, 'sub: ', req.user.sub);
+        //     throw new UnauthorizedException('You are not allowed to reject this friend request');
+        // }
         try{
-            await this.friendsService.rejectFriendRequest(userId, friendId);
+            await this.friendsService.rejectFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request Rejected successfully'};
         } catch (error){
             if (error instanceof NotFoundException) {
@@ -89,18 +86,17 @@ export class friendsController {
     }
 
     //endPoint to remove user from friend list
-    @Post(':id/removeSentFriendRequest/:friendId')
+    @Post('removeSentFriendRequest/:friendId')
     async removeSentFriendRequestFriend(
         @Req() req,
-        @Param('id') userId: string,
         @Param('friendId') friendId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to remove this friend request');
-        }
+        // if (friendId != req.user.sub){
+        //     console.log('user1: ', friendId, 'sub: ', req.user.sub);
+        //     throw new UnauthorizedException('You are not allowed to remove this friend request');
+        // }
         try{
-            await this.friendsService.removeSentFriendRequest(userId, friendId);
+            await this.friendsService.removeSentFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request sent remove successfully'};
         } catch (error){
             if (error instanceof NotFoundException) {
@@ -111,18 +107,17 @@ export class friendsController {
     }
 
     //endPoint to remove user from friend list
-    @Post(':id/removeFriend/:friendId')
+    @Post('removeFriend/:friendId')
     async removeFriend(
         @Req() req,
-        @Param('id') userId: string,
         @Param('friendId') friendId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
+        if (friendId != req.user.sub){
+            console.log('user1: ', friendId, 'sub: ', req.user.sub);
             throw new UnauthorizedException('You are not allowed to remove this user from friends');
         }
         try{
-            await this.friendsService.removeFriend(userId, friendId);
+            await this.friendsService.removeFriend(req.user.sub, friendId);
             return { message: 'Friend remove successfully'};
         } catch (error){
             if (error instanceof NotFoundException) {

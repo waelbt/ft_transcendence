@@ -9,7 +9,6 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
-import { P_N_Dto } from '../dto/completeProfile.dto';
 import * as fs from 'fs';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { friendsService } from './friends.service';
@@ -105,27 +104,44 @@ export class UsersService {
         });
     }
 
-    async userInfo(@Req() req, dto: P_N_Dto) {
-        const isUser = this.findOneUser(req.user.id);
-        if (isUser) throw new NotFoundException(`User does not exist`);
+    async userInfo(@Req() req, avatar: string, nickName: string) {
+        console.log('id: ', req.user.sub);
+        const isUser = this.findOneUser(req.user.sub);
+        if (!isUser) throw new NotFoundException(`User does not exist`);
         //update user avatar and nickName if the front send them if not do not do anything
         //serach if the userName exist or not because it's need to be unique
-        var user = this.getOneUser(req.user.id);
-        if (dto.Avatar && dto.nickName) {
-            (await user).Avatar = dto.Avatar;
-            (await user).nickName = dto.nickName;
+        if (avatar && nickName) {
+            await this.updateAvatarNickname(req.user.sub, avatar, nickName)
         }
-        this.updateUser((await user).id, await user);
+        await this.prisma.user.update({
+            where: {id: req.user.sub},
+            data: {
+                completeProfile: true,
+            }
+        });
+        const user = await this.getOneUser(req.user.sub);
         return user;
     }
 
+    async updateAvatarNickname(userId: string, avatar: string, nickName: string){
+        const update = await this.prisma.user.update({
+            where: {id: userId},
+            data: {
+                Avatar: avatar,
+                nickName: nickName,
+            },
+        });
+    }
+
     async userInfos(@Req() req, userId: string) {
-        const friends = await this.friendService.listFriends(userId);
+        const friends = await this.friendService.userListFriends(req.user.sub, userId);
         console.log(friends);
+        console.log(req.user.sub);
         const user = await this.getOneUser(userId);
+        delete user.HashPassword;
         console.log(user);
-        const block = await this.blockUsers.listOfBlockedUsers(userId);
-        const info = { user, friends, block };
+        // const block = await this.blockUsers.listOfBlockedUsers(userId);
+        const info = { user, friends};
         return info;
     }
 

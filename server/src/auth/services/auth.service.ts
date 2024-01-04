@@ -22,18 +22,13 @@ export class AuthService {
 
         async setUpTokens(@Req() req, @Res() res, id: string){
             console.log('here = ', req.user);
-            // console.log(req.user.userId);
             var isUser = await this.usersService.findOneUser(id);
             if (!isUser)
-            {
-                console.log('im in create user');
                 await this.usersService.createUser(req.user, id);
-            }
             await this.generateATRT(res, req.user);
+            const user = await this.usersService.getOneUser(id);
             if (isUser)
-                res.redirect('http://localhost:8000/Profile');
-            else
-                res.redirect('http://localhost:8000/get-started'); 
+                res.redirect('http://localhost:8000/profile');
         }
 
         async refreshToken(@Req() req, @Res() res){
@@ -46,11 +41,12 @@ export class AuthService {
         logout(@Res() res){
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            res.redirect('/auth/google');
+            res.redirect('http://localhost:8000/login');
         }
 
         async matchRefreshToken(@Req() req){
             const refreshToken = req.cookies['refreshToken'];
+            console.log('helloooo');
             try{
                 const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
                 return payload;

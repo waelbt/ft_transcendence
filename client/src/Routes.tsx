@@ -11,7 +11,9 @@ const router = createBrowserRouter([
     {
         path: '/get-started',
         lazy: async () => {
-            let { ProfileCompletion } = await import('./pages/ProfileCompletion');
+            let { ProfileCompletion } = await import(
+                './pages/ProfileCompletion'
+            );
             return { Component: ProfileCompletion };
         }
     },
@@ -37,13 +39,13 @@ const router = createBrowserRouter([
                     return { Component: Chat };
                 }
             },
-            {
-                path: '/game',
-                lazy: async () => {
-                    let { Game } = await import('./pages/Game'); // conditional rendring in home page
-                    return { Component: Game };
-                }
-            },
+            // {
+            //     path: '/game',
+            //     lazy: async () => {
+            //         let { Game } = await import('./pages/Game'); // conditional rendring in home page
+            //         return { Component: Game };
+            //     }
+            // },
             {
                 path: '/profile', // search before implement
                 lazy: async () => {
