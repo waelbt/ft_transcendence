@@ -24,33 +24,33 @@ import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 // @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
-@Module({
-  imports: [GameModule,
-    ConfigModule.forRoot({ isGlobal: true }),
-    AuthModule,
-    PrismaOrmModule,
-    UsersModule,
-    MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
-    // JwtModule.register({secret: process.env.JWT_secret}),
-    ChatModule,
-    // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
-    JwtModule.register({secret: process.env.JWT_secret}),
-    ScheduleModule.forRoot(),
-  ],
-  controllers: [
-    ChatController,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: accessTokenGuard,
-    },
-    RoomService
-  ],
-})
+const uploadsDestination = process.env.UPLOADS_DESTINATION;
 
+@Module({
+    imports: [
+        GameModule,
+        ConfigModule.forRoot({ isGlobal: true }),
+        AuthModule,
+        PrismaOrmModule,
+        UsersModule,
+        MulterModule.register({ dest: uploadsDestination }),
+        // JwtModule.register({secret: process.env.JWT_secret}),
+        ChatModule,
+        // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
+        JwtModule.register({ secret: process.env.JWT_secret }),
+        ScheduleModule.forRoot()
+    ],
+    controllers: [ChatController],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: accessTokenGuard
+        },
+        RoomService
+    ]
+})
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(Middlware).forRoutes(UsersController, ChatGateway);
-  }
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(Middlware).forRoutes(UsersController, ChatGateway);
+    }
 }
