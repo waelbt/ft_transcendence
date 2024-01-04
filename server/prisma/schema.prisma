@@ -26,7 +26,8 @@ model User {
 	createdAt    		DateTime     	@default(now())
 	exp					Int?			@default(0)
 	level				Int?			@default(0)
-	
+
+	achievement      	Achievement?
 	friends      		Friendship[]
 		// Define the blocks initiated by this user
 	blockedUsers  		Block[] 		@relation("BlockedUsers")
@@ -57,8 +58,22 @@ model Block {
 	user          User     @relation("BlockedUsers", fields: [userId], references: [id])
 }
 
+model Achievement{
+	id            	String   @id @unique
+  	user       		User?   @relation(fields: [UserId], references: [id])
+  	UserId     		String  @unique
+	welcome			Boolean @default(false) // if u win ur first game
+	harban			Boolean @default(false) // if u win by 3-0
+	khari			Boolean @default(false) // if u lose by 3-0
+	brown			Boolean @default(false)	// if u win 3 games in row
+	silver			Boolean @default(false) // if u win 5 games in row
+	goldon			Boolean @default(false) // if u win 10 games in row 
+	hacker			Boolean @default(false) // if u win agains boot
+
+}
+
 model Game {
-	id           Int         @id @default(autoincrement())
+	id           Int     @id @default(autoincrement())
 	user1        User    @relation("User1Games", fields: [player1Id], references: [id])
 	player1Id    String
 	user2        User    @relation("User2Games", fields: [player2Id], references: [id])
