@@ -7,7 +7,7 @@ import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
 
 // ! open intra or google model instead of redirecting the hole app
 
-const Auth = () => {
+export const Auth = () => {
     // const { isLogged } = useUserStore();
     // const navigate = useNavigate();
 
@@ -60,4 +60,4 @@ const Auth = () => {
     );
 };
 
-export default Auth;
+// export default Auth;

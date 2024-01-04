@@ -4,7 +4,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         lazy: async () => {
-            let { Auth } = await import('./components');
+            let { Auth } = await import('./pages/Auth');
             return { Component: Auth };
         }
     },
