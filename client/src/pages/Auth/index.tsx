@@ -1,19 +1,19 @@
-// import { useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
-// import { useUserStore } from '../../stores';
-// import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../stores';
+import { useNavigate } from 'react-router-dom';
 
 // todo: store svgs in components
 
 // ! open intra or google model instead of redirecting the hole app
 
 export const Auth = () => {
-    // const { isLogged } = useUserStore();
-    // const navigate = useNavigate();
+    const { isLogged } = useUserStore();
+    const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (isLogged) navigate('/home');
-    // }, []);
+    useEffect(() => {
+        if (isLogged) navigate('/home');
+    }, []);
 
     return (
         <div className="flex">
@@ -60,4 +60,3 @@ export const Auth = () => {
     );
 };
 
-// export default Auth;

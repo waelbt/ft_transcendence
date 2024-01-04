@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
@@ -15,9 +15,13 @@ export function ProfileCompletion() {
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const { progress, uploadData } = useUpload();
-    // const { uploading, progress, error, success, uploadData } = useUpload();
+    const { uploading, progress, error, success, uploadData } = useUpload();
 
+    useEffect(() => {
+        console.log('error ', error);
+        console.log('uploading ', uploading);
+        console.log('success ', success)
+    }, [uploading, error, success]);
     const onSubmit = async (data: FieldValues) => {
         data['avatar'] = imagePath
             ? imagePath
@@ -59,8 +63,8 @@ export function ProfileCompletion() {
                                 </div>
                             </div>
                             {/* avatar section */}
-                            <div className="flex flex-col gap-4">
-                                <span className="text-black text-lg font-bold font-sans">
+                            <div className="flex flex-col gap-4 justify-start items-start">
+                                <span className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
                                     Add an avatar
                                 </span>
                                 <div className=" pr-3.5 py-px justify-start items-start gap-10 inline-flex">
@@ -116,14 +120,14 @@ export function ProfileCompletion() {
                                             </div>
                                         </label>
                                         {/* default */}
-                                        <div className="flex-col justify-start items-start gap-0.5 inline-flex">
+                                        <div className="flex-col justify-center items-center gap-0.5 inline-flex">
                                             <div
                                                 className="inline-flex justify-content items-center gap-1 "
                                                 onClick={() =>
                                                     setShowDefault(!showDefault)
                                                 }
                                             >
-                                                {showDefault ? (
+                                                {!showDefault ? (
                                                     <IoIosArrowForward className="text-gray-500" />
                                                 ) : (
                                                     <IoIosArrowDown className="text-gray-500" />
@@ -135,15 +139,15 @@ export function ProfileCompletion() {
                                                 </span>
                                             </div>
                                             <ul
-                                                className={`list-none flex items-start gap-3 p-0  ${
-                                                    showDefault ? 'hidden' : ''
+                                                className={`list-none grid grid-cols-3 gap-3 p-0 ${
+                                                    !showDefault ? 'hidden' : ''
                                                 }`}
                                             >
                                                 {Array.from(
                                                     { length: 6 },
                                                     (_, index) => (
                                                         <li
-                                                            className={`w-11 h-11 flex-shrink-0 rounded-full p-[0.1rem]  border-solid border-primary-pink ${
+                                                            className={`w-10 h-10 flex-shrink-0 rounded-full border-solid border-primary-pink ${
                                                                 index ===
                                                                 selectedItemIndex
                                                                     ? 'border-2'
