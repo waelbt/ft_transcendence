@@ -15,12 +15,12 @@ model User {
 	id           		String       	@id @unique
 	email        		String       	@unique
 	HashPassword 		String?
-	Avatar       		String?
+	avatar       		String?
 	nickName     		String       	@unique
 	fullName     		String
 	status       		Boolean      	@default(true)
-	F2A          		Boolean      	@default(false)
-	F2A_Secret   		String?
+	f2A          		Boolean      	@default(false)
+	f2A_Secret   		String?
 	inGame       		Boolean      	@default(false)
 	completeProfile 	Boolean   		@default(false)
 	createdAt    		DateTime     	@default(now())

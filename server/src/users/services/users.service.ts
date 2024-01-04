@@ -29,7 +29,7 @@ export class UsersService {
                 id: id,
                 email: user.email,
                 fullName: user.fullName,
-                Avatar: user.avatar,
+                avatar: user.avatar,
                 nickName: user.nickName
             }
         });
@@ -131,7 +131,7 @@ export class UsersService {
         const update = await this.prisma.user.update({
             where: {id: userId},
             data: {
-                Avatar: avatar,
+                avatar: avatar,
                 nickName: nickName,
             },
         });

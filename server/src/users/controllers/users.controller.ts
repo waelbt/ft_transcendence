@@ -19,7 +19,7 @@ export class UsersController {
   @ApiParam({name: 'id', description: 'ID of the user u wanna get his infos', type: 'string'})
   @ApiResponse({ status: 200, description: 'Successful response', type: userInfos })
   // @ApiResponse({ status: 404, description: 'Not Found' })
-  async userInfos(@Req() req, @Param('id') userId: string) :Promise<userInfos>{
+  async userInfos(@Req() req, @Param('id') userId: string) {
     return (await this.usersService.userInfos(req, userId));
   }
 
