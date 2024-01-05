@@ -9,28 +9,35 @@ import { useGameStore } from '../../stores/gameStore';
 const removeDecimalPart = (number: number) => Math.floor(number);
 
 export function Game() {
-    const game = useGameStore();
+    const {
+        updateState,
+        paddlepos1,
+        firstPaddlePos,
+        secondPaddlePos,
+        isGameReady,
+        gameMode
+    } = useGameStore();
     const { leftScore, rightScore, gameOver } = useScores();
-    const [firstPaddlePos, setFirstPaddlePos] = useState(0);
+    // const [firstPaddlePos, setFirstPaddlePos] = useState(0);
     const movePaddle = useRef(0);
-    const [secondPaddlePos, setSecondPaddlePos] = useState(0);
-    const [isGameReady, setIsGameReady] = useState(false);
-    const [gameMode, setGameMode] = useState('');
+    // const [secondPaddlePos, setSecondPaddlePos] = useState(0);
+    // const [isGameReady, setIsGameReady] = useState(false);
+    // const [gameMode, setGameMode] = useState('');
     const { socket } = useSocketStore();
     const { id } = useUserStore();
 
     useEffect(() => {
         const startGameListener = ({ room, SecondPlayer, chosen }) => {
-            game.updateIsSecondPlayer(SecondPlayer);
-            game.updatechosenMode(chosen);
-            game.updateLeftcolor('white');
-            game.updateRightcolor('white');
-            setIsGameReady(true);
-            game.updateRoomid(room);
+            updateState({ isSecondPlayer: SecondPlayer });
+            updateState({ chosenMode: chosen });
+            updateState({ rightcolor: 'white' });
+            updateState({ leftcolor: 'white' });
+            updateState({ isGameReady: true });
+            updateState({ roomid: room });
         };
 
         const paddleMoveListener = (newPosition) =>
-            setSecondPaddlePos(newPosition);
+            updateState({ secondPaddlePos: newPosition });
 
         const playerDisconnectedListener = async () => {
             console.log('player disconnected');
@@ -58,7 +65,7 @@ export function Game() {
             socket.off('paddlemove', paddleMoveListener);
             socket.off('PlayerDisconnected', playerDisconnectedListener);
         };
-    }, [gameMode, socket, game]);
+    }, [gameMode, socket]); // game store
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -76,10 +83,11 @@ export function Game() {
 
         const updatePaddlePosition = () => {
             if (!gameOver) {
-                setFirstPaddlePos((prev) => {
+                const position = (prev) => {
                     const newPosition = prev + movePaddle.current;
                     return Math.min(Math.max(newPosition, -17.187), 17.5);
-                });
+                };
+                updateState({ firstPaddlePos: position });
                 requestAnimationFrame(updatePaddlePosition);
             }
         };

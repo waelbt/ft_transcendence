@@ -34,12 +34,7 @@ type UserStateType = {
 type UserActionsType = {
     login: () => Promise<void>;
     logout: () => void;
-    updateIsLogged: (isLogged: UserStateType['isLogged']) => void;
-    updateAvatar: (avatar: UserStateType['avatar']) => void;
-    updateNickName: (nickName: UserStateType['nickName']) => void;
-    updateIsProfileComplete: (
-        isProfileComplete: UserStateType['isProfileComplete']
-    ) => void;
+    updateState: (newState: Partial<UserStateType>) => void;
 };
 
 export const useUserStore = createWithEqualityFn<
@@ -92,11 +87,8 @@ export const useUserStore = createWithEqualityFn<
                     true // ? the state update should trigger a re-render of the components that subscribe to the store.
                 );
             },
-            updateIsLogged: (isLogged) => set(() => ({ isLogged: isLogged })),
-            updateAvatar: (avatar) => set(() => ({ avatar: avatar })),
-            updateIsProfileComplete: (isProfileComplete) =>
-                set(() => ({ isProfileComplete: isProfileComplete })),
-            updateNickName: (nickName) => set(() => ({ nickName: nickName }))
+            updateState: (newState) =>
+                set((state) => ({ ...state, ...newState }))
         }),
         {
             name: 'userStore',
