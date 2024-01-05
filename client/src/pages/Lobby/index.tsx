@@ -1,4 +1,4 @@
-import { useUserStore } from '../../stores';
+import { useUserStore } from '../../stores/userStore';
 
 export function Lobby() {
     const user = useUserStore();

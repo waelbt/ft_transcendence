@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
-import { useUserStore } from '../../stores';
+import { useUserStore } from '../../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 
 // todo: store svgs in components
@@ -59,4 +59,3 @@ export const Auth = () => {
         </div>
     );
 };
-

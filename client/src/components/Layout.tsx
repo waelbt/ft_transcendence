@@ -5,7 +5,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
 import { Avatar } from '.';
-import { useUserStore } from '../stores';
+import { useUserStore } from '../stores/userStore';
 import { ProfileCompletion } from '../pages/ProfileCompletion';
 
 function Layout() {
@@ -14,9 +14,6 @@ function Layout() {
 
     useEffect(() => {
         if (!isLogged) navigate('/');
-    }, []);
-
-    useEffect(() => {
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
@@ -32,7 +29,7 @@ function Layout() {
 
     return (
         <>
-            {!isProfileComplete ? (
+            {isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white gap-3">

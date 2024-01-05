@@ -9,17 +9,24 @@ import { useGameStore } from '../../stores/gameStore';
 const removeDecimalPart = (number: number) => Math.floor(number);
 
 export function Game() {
+    let gameSt: string;
     const game = useGameStore();
     const { leftScore, rightScore, gameOver } = useScores();
     const [firstPaddlePos, setFirstPaddlePos] = useState(0);
     const movePaddle = useRef(0);
     const [secondPaddlePos, setSecondPaddlePos] = useState(0);
     const [isGameReady, setIsGameReady] = useState(false);
-    const [gameMode, setGameMode] = useState('');
+    const [gameMode, setGameMode] = React.useState<
+        null | 'classic' | 'crazy' | 'IA'
+    >(null);
     const { socket } = useSocketStore();
     const { id } = useUserStore();
 
     useEffect(() => {
+        if (gameMode) {
+            socket.emit('gameMode', gameMode);
+        }
+
         const startGameListener = ({ room, SecondPlayer, chosen }) => {
             game.updateIsSecondPlayer(SecondPlayer);
             game.updatechosenMode(chosen);
@@ -49,19 +56,15 @@ export function Game() {
         socket.on('paddlemove', paddleMoveListener);
         socket.on('PlayerDisconnected', playerDisconnectedListener);
 
-        if (gameMode) {
-            socket.emit('gameMode', gameMode);
-        }
-
         return () => {
             socket.off('startgame', startGameListener);
             socket.off('paddlemove', paddleMoveListener);
             socket.off('PlayerDisconnected', playerDisconnectedListener);
         };
-    }, [gameMode, socket, game]);
+    }, [gameMode]);
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowUp' || e.key === 'w') {
                 movePaddle.current = -0.2;
             } else if (e.key === 'ArrowDown' || e.key === 's') {
@@ -70,20 +73,31 @@ export function Game() {
         };
 
         const handleKeyUp = () => (movePaddle.current = 0);
-
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-
         const updatePaddlePosition = () => {
             if (!gameOver) {
                 setFirstPaddlePos((prev) => {
                     const newPosition = prev + movePaddle.current;
-                    return Math.min(Math.max(newPosition, -17.187), 17.5);
+                    const maxPos = 17.5;
+                    const minPos = -17.187;
+
+                    const clampedPosition = Math.min(
+                        Math.max(newPosition, minPos),
+                        maxPos
+                    );
+                    game.updatePaddlepos1(clampedPosition);
+                    socket.emit('paddlemove', {
+                        room: game.roomid,
+                        pos: clampedPosition,
+                        SecondPlayer: game.isSecondPlayer
+                    });
+                    return clampedPosition;
                 });
                 requestAnimationFrame(updatePaddlePosition);
             }
         };
 
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
         requestAnimationFrame(updatePaddlePosition);
 
         return () => {
@@ -92,57 +106,66 @@ export function Game() {
         };
     }, [gameOver]);
 
-    const gameSelectionScreen = (
-        <div className="container">
-            {['classic', 'crazy', 'IA'].map((mode) => (
+    if (gameMode === null) {
+        return (
+            <div className="container">
                 <button
-                    key={mode}
                     className="custom-button"
-                    onClick={() => setGameMode(mode)}
+                    onClick={() => setGameMode('classic')}
                 >
-                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                    Classic
                 </button>
-            ))}
-        </div>
-    );
-
-    const gamePlayScreen = (
-        <div className={`table-${game.chosenMode}`}>
-            <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-            <Ball gameSt={gameMode} />
-            <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
-            <Score
-                leftScore={removeDecimalPart(leftScore / 2)}
-                rightScore={removeDecimalPart(rightScore / 2)}
-                lColor={game.leftcolor}
-                rColor={game.rightcolor}
-            />
-            <div className="lineC">
-                <div className="line"></div>
+                <button
+                    className="custom-button"
+                    onClick={() => setGameMode('crazy')}
+                >
+                    Crazy
+                </button>
+                <button
+                    className="custom-button"
+                    onClick={() => setGameMode('IA')}
+                >
+                    IA
+                </button>
             </div>
-        </div>
-    );
+        );
+    }
+    gameSt = gameMode;
 
-    return gameMode === '' ? (
-        gameSelectionScreen
-    ) : (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
-            {!isGameReady ? (
-                <div className="waiting-screen">
-                    <p
-                        style={{
-                            color: 'white',
-                            fontSize: '2em',
-                            textAlign: 'center',
-                            animation: 'fade 1.5s infinite'
-                        }}
-                    >
-                        Please wait for another player
-                    </p>
-                </div>
-            ) : (
-                gamePlayScreen
-            )}
-        </div>
+    return (
+        <>
+            <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
+                {!isGameReady && (
+                    <div className="waiting-screen">
+                        <p
+                            style={{
+                                color: 'white',
+                                fontSize: '2em',
+                                textAlign: 'center',
+                                animation: 'fade 1.5s infinite'
+                            }}
+                        >
+                            Please wait for another player
+                        </p>
+                    </div>
+                )}
+                {isGameReady && (
+                    <div className={`table-${game.chosenMode}`}>
+                        <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
+                        <Ball gameSt={gameSt} />
+                        <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
+                        <Score
+                            leftScore={removeDecimalPart(leftScore / 2)}
+                            rightScore={removeDecimalPart(rightScore / 2)}
+                            lColor={game.leftcolor}
+                            rColor={game.rightcolor}
+                        />
+                        <div className="lineC">
+                            <div className="line"></div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </>
     );
 }

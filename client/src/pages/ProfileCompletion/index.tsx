@@ -6,22 +6,17 @@ import { DEFAULT_PATH, NICKNAME_FIELD } from '../../constants';
 import useUpload from '../../hooks/UploadImageHook';
 import { request } from '../../api';
 import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '../../stores';
+import { useUserStore } from '../../stores/userStore';
 
 // ! combine the nickname and submit section into a resuable from
 export function ProfileCompletion() {
     const navigate = useNavigate();
-    const { UpdateIsProfileComplete } = useUserStore();
+    const { updateIsProfileComplete } = useUserStore();
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
     const { uploading, progress, error, success, uploadData } = useUpload();
 
-    useEffect(() => {
-        console.log('error ', error);
-        console.log('uploading ', uploading);
-        console.log('success ', success)
-    }, [uploading, error, success]);
     const onSubmit = async (data: FieldValues) => {
         data['avatar'] = imagePath
             ? imagePath
@@ -33,7 +28,7 @@ export function ProfileCompletion() {
                     'Content-Type': 'application/json'
                 }
             });
-            UpdateIsProfileComplete(true);
+            updateIsProfileComplete(true);
             navigate('/');
         } catch (e) {
             console.log(e);

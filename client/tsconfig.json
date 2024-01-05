@@ -25,6 +25,6 @@
         "types/**/*",
         "deprecated/LoginForm.tsx",
         "deprecated/RegisterForm.tsx"
-    ],
+, "deprecated/context"    ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

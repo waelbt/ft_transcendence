@@ -36,13 +36,13 @@ const router = createBrowserRouter([
                     return { Component: Chat };
                 }
             },
-            // {
-            //     index: true,
-            //     lazy: async () => {
-            //         let { Game } = await import('./pages/Game');
-            //         return { Component: Game };
-            //     }
-            // },
+            {
+                path: '/Game',
+                lazy: async () => {
+                    let { Game } = await import('./pages/Game');
+                    return { Component: Game };
+                }
+            },
             {
                 path: 'Profile/:id',
                 lazy: async () => {

@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { UserProfileCard } from '../../components/';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useUserStore } from '../../stores';
+import { useUserStore } from '../../stores/userStore';
 import { request } from '../../api';
 
 export function Profile() {
@@ -16,9 +16,10 @@ export function Profile() {
         const fetchData = async () => {
             try {
                 const res = await request.get(`users/${params.id}`);
-
+                console.log(res.data);
                 setProfile(res.data);
             } catch (e) {
+                // ! serve error page in this case not found and forrebiden
                 console.log(e);
                 // ! navigae to home or error page
             }
@@ -27,8 +28,7 @@ export function Profile() {
         params.id != user.id && params.id != 'me'
             ? fetchData()
             : setProfile(user);
-    }, []);
-    // ? [params]
+    }, [params]);
 
     return (
         // gap-20

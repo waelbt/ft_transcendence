@@ -17,7 +17,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 // server       |   createdAt: 2023-12-28T03:05:40.353Z
 // server       | }
 
-type UserState = {
+type UserStateType = {
     isLogged: boolean;
     id: string;
     email: string;
@@ -31,18 +31,20 @@ type UserState = {
     isProfileComplete: boolean;
 };
 
-type UserActions = {
+type UserActionsType = {
     login: () => Promise<void>;
     logout: () => void;
-    UpdateIsLogged: (isLogged: UserState['isLogged']) => void;
-    UpdateAvatar: (avatar: UserState['avatar']) => void;
-    UpdateNickName: (nickName: UserState['nickName']) => void;
-    UpdateIsProfileComplete: (
-        isProfileComplete: UserState['isProfileComplete']
+    updateIsLogged: (isLogged: UserStateType['isLogged']) => void;
+    updateAvatar: (avatar: UserStateType['avatar']) => void;
+    updateNickName: (nickName: UserStateType['nickName']) => void;
+    updateIsProfileComplete: (
+        isProfileComplete: UserStateType['isProfileComplete']
     ) => void;
 };
 
-export const useUserStore = createWithEqualityFn<UserState & UserActions>()(
+export const useUserStore = createWithEqualityFn<
+    UserStateType & UserActionsType
+>()(
     persist(
         (set) => ({
             isLogged: false,
@@ -90,11 +92,11 @@ export const useUserStore = createWithEqualityFn<UserState & UserActions>()(
                     true // ? the state update should trigger a re-render of the components that subscribe to the store.
                 );
             },
-            UpdateIsLogged: (isLogged) => set(() => ({ isLogged: isLogged })),
-            UpdateAvatar: (avatar) => set(() => ({ avatar: avatar })),
-            UpdateIsProfileComplete: (isProfileComplete) =>
+            updateIsLogged: (isLogged) => set(() => ({ isLogged: isLogged })),
+            updateAvatar: (avatar) => set(() => ({ avatar: avatar })),
+            updateIsProfileComplete: (isProfileComplete) =>
                 set(() => ({ isProfileComplete: isProfileComplete })),
-            UpdateNickName: (nickName) => set(() => ({ nickName: nickName }))
+            updateNickName: (nickName) => set(() => ({ nickName: nickName }))
         }),
         {
             name: 'userStore',
