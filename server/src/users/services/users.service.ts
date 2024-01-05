@@ -116,7 +116,6 @@ export class UsersService {
         if (avatar && nickName) {
             await this.updateAvatarNickname(req.user.sub, avatar, nickName)
         }
-
         await this.prisma.user.update({
             where: {id: req.user.sub},
             data: {

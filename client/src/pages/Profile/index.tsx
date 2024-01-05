@@ -30,6 +30,9 @@ export function Profile() {
     }, []);
     // ? [params]
 
+    // useEffect(() => {
+    //     request.get('/users/me').then((response) => console.log(response)).catch(error => console.log(error));
+    // }, []);
     return (
         // gap-20
         <div className="flex-grow flex-col justify-center items-center inline-flex my-5 gap-10">

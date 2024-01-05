@@ -1,0 +1,25 @@
+#chat-message-list {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 300px;
+  }
+  
+  .my-message {
+    align-self: flex-end;
+    background-color: #0584FE;
+    color: #fff;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 12px 12px 0px 12px;
+  }
+
+  .other-message {
+    align-self: flex-start;
+    background-color: #F1F1F1;
+    color: #000;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 12px 12px 12px 0px;
+  }

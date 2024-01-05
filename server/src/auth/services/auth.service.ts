@@ -27,6 +27,7 @@ export class AuthService {
                 await this.usersService.createUser(req.user, id);
             await this.generateATRT(res, req.user);
             const user = await this.usersService.getOneUser(id);
+            const user = await this.usersService.getOneUser(id);
             if (isUser)
                 res.redirect('http://localhost:8000/home');
         }
@@ -46,6 +47,7 @@ export class AuthService {
 
         async matchRefreshToken(@Req() req){
             const refreshToken = req.cookies['refreshToken'];
+            console.log('helloooo');
             console.log('helloooo');
             try{
                 const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
