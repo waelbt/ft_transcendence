@@ -7,7 +7,7 @@ type GameStateType = {
     chosenMode: string;
     leftColor: string;
     rightColor: string;
-    firstPaddlePos: number;
+    firstPaddlePos: any;
     secondPaddlePos: number;
     isGameReady: boolean;
     gameMode: null | string;

@@ -15,13 +15,6 @@ const router = createBrowserRouter([
             return { Component: Layout };
         },
         children: [
-            // {
-            //     index: true,
-            //     lazy: async () => {
-            //         let { Profile } = await import('./pages/Profile');
-            //         return { Component: Profile };
-            //     }
-            // },
             {
                 path: '/home',
                 lazy: async () => {

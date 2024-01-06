@@ -5,6 +5,7 @@ import { useUserStore } from '../../stores/userStore';
 import { useScores } from '../../hooks/scoresHook';
 import { Score, Paddle, Ball } from '../../components/game';
 import { useGameStore } from '../../stores/gameStore';
+import { request } from '../../api';
 
 const removeDecimalPart = (number: number) => Math.floor(number);
 
@@ -43,14 +44,24 @@ export function Game() {
 
         const playerDisconnectedListener = async () => {
             console.log('player disconnected');
-            fetch('http://localhost:3001/game1', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ room: 'dzdzed', id: id })
-            }).then((res) => console.log('data 1 ', res.json()));
+            const response = request.post(
+                '/game1',
+                JSON.stringify({ room: 'dzdzed', id: id }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            console.log(response);
+            // fetch('http://localhost:3001/game1', {
+            //     method: 'POST',
+            //     mode: 'no-cors',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ room: 'dzdzed', id: id })
+            // }).then((res) => console.log('data 1 ', res.json()));
             window.location.reload();
         };
 
