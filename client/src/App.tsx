@@ -6,7 +6,7 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
-// import { GameProvider } from './context/game-context';
+import { GameProvider } from './context/game-context';
 
 const queryClient = new QueryClient();
 
@@ -22,7 +22,7 @@ function App() {
     return (
         // ask gpt later abt the provider oders
         <QueryClientProvider client={queryClient}>
-            {/* <GameProvider > */}
+            <GameProvider>
                 <AllRoutes />
                 <Toaster
                     position="top-center"
@@ -31,8 +31,8 @@ function App() {
                         duration: 3000
                     }}
                 />
-            <ReactQueryDevtools />
-         {/* </GameProvider >  */}
+                <ReactQueryDevtools />
+            </GameProvider>
         </QueryClientProvider>
     );
 }

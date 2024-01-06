@@ -32,7 +32,7 @@ function Layout() {
 
     return (
         <>
-            {!isProfileComplete ? (
+            {isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white gap-3">
