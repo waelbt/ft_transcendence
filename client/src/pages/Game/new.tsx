@@ -31,8 +31,8 @@ export function Game() {
         const startGameListener = ({ room, SecondPlayer, chosen }) => {
             game.updateIsSecondPlayer(SecondPlayer);
             game.updatechosenMode(chosen);
-            game.updateLeftcolor('white');
-            game.updateRightcolor('white');
+            game.updateleftColor('white');
+            game.updaterightColor('white');
             setIsGameReady(true);
             game.updateRoomid(room);
         };
@@ -45,7 +45,7 @@ export function Game() {
             try {
                 const response = await request.post(
                     '/game1',
-                    { room: 'dzdzed', id: id }, //! check this 
+                    { room: 'dzdzed', id: id }, //! check this
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -164,8 +164,8 @@ export function Game() {
                         <Score
                             leftScore={removeDecimalPart(leftScore / 2)}
                             rightScore={removeDecimalPart(rightScore / 2)}
-                            lColor={game.leftcolor}
-                            rColor={game.rightcolor}
+                            lColor={game.leftColor}
+                            rColor={game.rightColor}
                         />
                         <div className="lineC">
                             <div className="line"></div>

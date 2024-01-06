@@ -5,12 +5,12 @@ type GameStateType = {
     roomid: any; // Consider using a more specific type instead of 'any'
     isSecondPlayer: boolean; // Changed from number to boolean for clarity
     chosenMode: string;
-    leftcolor: string;
-    rightcolor: string;
+    leftColor: string;
+    rightColor: string;
     firstPaddlePos: number;
     secondPaddlePos: number;
     isGameReady: boolean;
-    gameMode: null | 'classic' | 'crazy' | 'IA';
+    gameMode: null | string;
 };
 
 type GameStateAction = {
@@ -22,8 +22,8 @@ export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
     roomid: null, // Default value changed to null
     isSecondPlayer: false,
     chosenMode: '',
-    leftcolor: '',
-    rightcolor: '',
+    leftColor: '',
+    rightColor: '',
     firstPaddlePos: 0,
     secondPaddlePos: 0,
     isGameReady: false,
@@ -38,8 +38,8 @@ export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
 //     roomid: any;
 //     isSecondPlayer: number;
 //     chosenMode: string;
-//     leftcolor: string;
-//     rightcolor: string;
+//     leftColor: string;
+//     rightColor: string;
 // };
 
 // type GameStateAction = {
@@ -50,8 +50,8 @@ export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
 //     //     isSecondPlayer: GameStateType['isSecondPlayer']
 //     // ) => void;
 //     // updatechosenMode: (chosenMode: GameStateType['chosenMode']) => void;
-//     // updateLeftcolor: (leftcolor: GameStateType['leftcolor']) => void;
-//     // updateRightcolor: (rightcolor: GameStateType['rightcolor']) => void;
+//     // updateleftColor: (leftColor: GameStateType['leftColor']) => void;
+//     // updaterightColor: (rightColor: GameStateType['rightColor']) => void;
 // };
 
 // export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
@@ -59,8 +59,8 @@ export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
 //     roomid: 0,
 //     isSecondPlayer: 0,
 //     chosenMode: '',
-//     leftcolor: '',
-//     rightcolor: '',
+//     leftColor: '',
+//     rightColor: '',
 //     updateState: (newState) => set(state => ({ ...state, ...newState })),
 
 // //     updatePaddlepos1: (paddlepos1) => set(() => ({ paddlepos1: paddlepos1 })),
@@ -68,6 +68,6 @@ export const useGameStore = create<GameStateType & GameStateAction>((set) => ({
 // //     updateIsSecondPlayer: (isSecondPlayer) =>
 // //         set(() => ({ isSecondPlayer: isSecondPlayer })),
 // //     updatechosenMode: (chosenMode) => set(() => ({ chosenMode: chosenMode })),
-// //     updateLeftcolor: (leftcolor) => set(() => ({ leftcolor: leftcolor })),
-// //     updateRightcolor: (rightcolor) => set(() => ({ rightcolor: rightcolor }))
+// //     updateleftColor: (leftColor) => set(() => ({ leftColor: leftColor })),
+// //     updaterightColor: (rightColor) => set(() => ({ rightColor: rightColor }))
 // // }));

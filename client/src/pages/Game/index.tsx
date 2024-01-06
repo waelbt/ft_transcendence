@@ -15,7 +15,9 @@ export function Game() {
         firstPaddlePos,
         secondPaddlePos,
         isGameReady,
-        gameMode
+        gameMode,
+        rightColor,
+        leftColor
     } = useGameStore();
     const { leftScore, rightScore, gameOver } = useScores();
     // const [firstPaddlePos, setFirstPaddlePos] = useState(0);
@@ -30,8 +32,8 @@ export function Game() {
         const startGameListener = ({ room, SecondPlayer, chosen }) => {
             updateState({ isSecondPlayer: SecondPlayer });
             updateState({ chosenMode: chosen });
-            updateState({ rightcolor: 'white' });
-            updateState({ leftcolor: 'white' });
+            updateState({ rightColor: 'white' });
+            updateState({ leftColor: 'white' });
             updateState({ isGameReady: true });
             updateState({ roomid: room });
         };
@@ -106,7 +108,7 @@ export function Game() {
                 <button
                     key={mode}
                     className="custom-button"
-                    onClick={() => setGameMode(mode)}
+                    onClick={() => updateState({ gameMode: mode })}
                 >
                     {mode.charAt(0).toUpperCase() + mode.slice(1)}
                 </button>
@@ -115,15 +117,15 @@ export function Game() {
     );
 
     const gamePlayScreen = (
-        <div className={`table-${game.chosenMode}`}>
+        <div className={`table-${gameMode}`}>
             <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-            <Ball gameSt={gameMode} />
+            <Ball gameSt={gameMode as string} />
             <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
             <Score
                 leftScore={removeDecimalPart(leftScore / 2)}
                 rightScore={removeDecimalPart(rightScore / 2)}
-                lColor={game.leftcolor}
-                rColor={game.rightcolor}
+                lColor={leftColor}
+                rColor={rightColor}
             />
             <div className="lineC">
                 <div className="line"></div>
@@ -131,7 +133,7 @@ export function Game() {
         </div>
     );
 
-    return gameMode === '' ? (
+    return !gameMode ? (
         gameSelectionScreen
     ) : (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
