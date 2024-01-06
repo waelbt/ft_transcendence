@@ -10,7 +10,6 @@ import { PrismaOrmModule } from './prisma-orm/prisma-orm.module';
 import { UsersModule } from './users/users.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { GameGateway } from './game/game.gateway';
-import { GameGateway } from './game/game.gateway';
 import { MulterModule } from '@nestjs/platform-express';
 import { APP_GUARD } from '@nestjs/core';
 import { accessTokenGuard } from './common/guards';
@@ -24,35 +23,10 @@ import { ChatModule } from './chat/chat.module';
 import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ChatModule } from './chat/chat.module';
-import { RoomService } from './chat/rooms/room.service';
-import { ChatController } from './chat/chat.controller';
-import { ScheduleModule } from '@nestjs/schedule';
 // @ApiCookieAuth('jwt') // Specify the cookie name, e.g., 'jwt'
 const uploadsDestination = process.env.UPLOADS_DESTINATION;
+
 @Module({
-  imports: [GameModule,
-    ConfigModule.forRoot({ isGlobal: true }),
-    AuthModule,
-    PrismaOrmModule,
-    UsersModule,
-    MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
-    // JwtModule.register({secret: process.env.JWT_secret}),
-    ChatModule,
-    // MulterModule.register({ dest: '/home/sel-ouaf/ft_transcendence/server/uploads' }),
-    JwtModule.register({secret: process.env.JWT_secret}),
-    ScheduleModule.forRoot(),
-  ],
-  controllers: [
-    ChatController,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: accessTokenGuard,
-    },
-    RoomService
-  ],
     imports: [
         GameModule,
         ConfigModule.forRoot({ isGlobal: true }),
@@ -75,8 +49,6 @@ const uploadsDestination = process.env.UPLOADS_DESTINATION;
         RoomService
     ]
 })
-
-
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(Middlware).forRoutes(UsersController, ChatGateway);
