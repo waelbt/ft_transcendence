@@ -53,7 +53,7 @@ export function Game() {
                     }
                 }
             );
-            console.log(response);
+
             // fetch('http://localhost:3001/game1', {
             //     method: 'POST',
             //     mode: 'no-cors',

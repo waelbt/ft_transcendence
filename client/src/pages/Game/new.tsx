@@ -3,7 +3,7 @@ import './game.css';
 import { useGame } from '../../context/game-context';
 import { useUserStore } from '../../stores';
 
-function removeDecimalPart(number: number): number {
+function dd(number: number): number {
     return Math.floor(number);
 }
 
@@ -154,7 +154,7 @@ export function Game() {
         socket.on('leftscored', () => {
             setLeftScore((prevScore: number) => {
                 const newScore = prevScore + 1;
-                if (removeDecimalPart(newScore / 2) === 5) {
+                if (dd(newScore / 2) === 5) {
                     //9alab 3la data lighay htaj khona o siftha lih
                     setGameOver(true);
                     fetch('http://localhost:3001/game1', {
@@ -184,7 +184,7 @@ export function Game() {
         socket.on('rightscored', () => {
             setRightScore((prevScore: number) => {
                 const newScore = prevScore + 1;
-                if (removeDecimalPart(newScore / 2) === 5) {
+                if (dd(newScore / 2) === 5) {
                     setGameOver(true);
                     window.location.reload();
                     socket.emit('gameended');
