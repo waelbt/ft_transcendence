@@ -45,19 +45,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async handleConnection(client: any, ...args: any[]) {
-    const { sockets } = this.server.sockets;
+    // const { sockets } = this.server.sockets;
 
     this.logger.log(`This client ${client.id} connected`)
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    if (userCheck.state === false)
-      this.handleDisconnect(client);
-    else {
-      console.log(`This user ${userCheck.userData.email} is now connected`);
-      this.usersSockets.set(userCheck.userData.email, client.id);
-      console.log(this.usersSockets);
-      this.wsService.joinUserSocketToItsRooms(client.id, userCheck.userData.sub, this.server);
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    // if (userCheck.state === false)
+    //   this.handleDisconnect(client);
+    // else {
+      // console.log(`This user ${userCheck.userData.email} is now connected`);
+      // this.usersSockets.set(userCheck.userData.email, client.id);
+      // console.log(this.usersSockets);
+      // this.wsService.joinUserSocketToItsRooms(client.id, userCheck.userData.sub, this.server);
       // this.logger.debug(`Number of clients connected: ${sockets.size}`);
-    }
+    // }
   }
 
   
@@ -66,12 +66,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     // this.logger.log(`Message received from client with id: ${client.id}`);
     // this.logger.debug(`Payload: ${payload}`);
     // this.server.emit('onMessage', payload);
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    console.log(`this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`);
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    console.log(`this user ${payload.id} is sending a message to this room ${payload.roomTitle}`);
     console.log(`the message is : ${payload.message}`);
     try {
       
-      await this.wsService.createMessage(payload, userCheck.userData.sub);
+      await this.wsService.createMessage(payload, payload.id);
       this.server.to(payload.roomTitle).emit('message', payload.message);
     } catch (err) {
       return (err);
@@ -82,12 +82,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @SubscribeMessage('joinRoom')
   async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
     
-    console.log("here");
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    if (userCheck.state === false)
-      throw new WsException(userCheck.message);
-    this.logger.log(`the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`);
-    const userRoom = await this.roomService.joinRoom(joinRoomDto, userCheck.userData.sub);
+    // console.log("here");
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    // if (userCheck.state === false)
+    //   throw new WsException(userCheck.message);
+    this.logger.log(`the user  ${joinRoomDto.id} is trying to join the room "${joinRoomDto.roomId}"`);
+    const userRoom = await this.roomService.joinRoom(joinRoomDto, joinRoomDto.id);
     if (userRoom.state === false)
     {
       console.log(userRoom.message);
@@ -95,7 +95,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     }
     else
     {
-      const userSocket = await this.usersSockets.get(userCheck.userData.email);
+      const userEmail = await this.getUserEmail(joinRoomDto.id);
+      const userSocket = await this.usersSockets.get(userEmail);
       await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
       return (userRoom.joinedRoom);
     }
@@ -104,36 +105,50 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   @SubscribeMessage('leaveRoom')
   async leaveRoom(client: Socket, leaveRoomDto: LeaveRoomDto) {
 
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    if (userCheck.state === false)
-      throw new WsException(userCheck.message);
-    console.log(`The user ${userCheck.userData.email} is leaving the room ${leaveRoomDto.roomTitle}`);
-    await this.roomService.leaveRoom(leaveRoomDto, userCheck.userData.sub);
-    const userSocket = await this.usersSockets.get(userCheck.userData.email);
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    // if (userCheck.state === false)
+    //   throw new WsException(userCheck.message);
+    console.log(`The user ${leaveRoomDto.id} is leaving the room ${leaveRoomDto.roomTitle}`);
+    await this.roomService.leaveRoom(leaveRoomDto, leaveRoomDto.id);
+    const userSocket = await this.usersSockets.get(leaveRoomDto.id);
     await this.server.in(userSocket).socketsLeave(leaveRoomDto.roomTitle);
   }
 
   @SubscribeMessage('muteUser')
   async muteUser(client: Socket, muteUserDto: MuteUserDto) {
 
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    if (userCheck.state === false)
-      throw new WsException(userCheck.message);
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    // if (userCheck.state === false)
+    //   throw new WsException(userCheck.message);
     console.log('mute function');
-    await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
+    await this.wsService.muteUser(muteUserDto, muteUserDto.id);
   }
 
   @SubscribeMessage('unmuteUser')
   async unmuteUser(client: Socket, unmuteUserDto: UnmuteUserDto) {
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    if (userCheck.state === false)
-      throw new WsException(userCheck.message);
-    await this.wsService.unmuteUser(unmuteUserDto, userCheck.userData.sub);
+    // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
+    // if (userCheck.state === false)
+    //   throw new WsException(userCheck.message);
+    await this.wsService.unmuteUser(unmuteUserDto, unmuteUserDto.id);
   }
 
   async handleDisconnect(client: any) {
     client.disconnect(true);
     // this.logger.log(`This client ${client.id} disconnected`);
+  }
+
+  async getUserEmail(id: string) : Promise<string> {
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select : {
+        email: true,
+      },
+    });
+
+    return ((await user).email)
   }
 
 }
