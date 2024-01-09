@@ -6,8 +6,7 @@ import {
     QueryOptions
 } from '@tanstack/react-query';
 import './global.css';
-import React from 'react';
-// import React from 'react';
+
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -18,10 +17,7 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <App />
-        </QueryClientProvider>
-        //{' '}
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+        <App />
+    </QueryClientProvider>
 );

@@ -12,3 +12,5 @@ export { default as FriendsTable } from './FriendsTable';
 export { default as FriendsDashboard } from './FriendsDashboard';
 export { default as Setting } from './Setting';
 export { default as Twofa } from './Twofa';
+export { default as ProfileCompletion } from './ProfileCompletion';
+export { default as TwoFaVerfication } from './TwoFaVerfication';

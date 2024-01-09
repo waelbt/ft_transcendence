@@ -6,10 +6,11 @@ import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
 import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
-import { ProfileCompletion } from '../pages/ProfileCompletion';
+// import { ProfileCompletion } from '../pages/ProfileCompletion';
+import Confirmation from '../pages/Confirmation';
 
 function Layout() {
-    const { logout, login, isLogged, isProfileComplete } = useUserStore();
+    const { logout, login, isLogged, isProfileComplete, F2A } = useUserStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,8 +30,8 @@ function Layout() {
 
     return (
         <>
-            {isProfileComplete ? (
-                <ProfileCompletion />
+            {isProfileComplete || F2A ? (
+                <Confirmation />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white gap-3">
                     <nav className="bg-white border-b border-neutral-100">
