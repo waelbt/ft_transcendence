@@ -1,52 +1,51 @@
 version: '3.8'
 
-services:
-    client:
-        container_name: client
-        build:
-            context: ./client
-            dockerfile: Dockerfile
-        ports:
-            - '8000:8000'
-        volumes:
-            - ./client:/client
-            # ! - client-node-modules:/client/node_modules (if someone using mac os or windowns uncommment this )
-        networks:
-            - transcendence
-
-    server:
-        container_name: server
-        build:
-            context: ./server
-            dockerfile: Dockerfile
-        ports:
-            - '4000:4000'
-        volumes:
-            - ./server:/server
-            # ! - server-node-modules:/server/node_modules ( if someone using mac os or windowns uncommment this )
-        networks:
-            - transcendence
-        command: sh start.sh
-
-    DB_Postgres:
-        container_name: DB_Postgres
-        image: postgres
-        networks:
-            - transcendence
-        environment:
-            POSTGRES_USER: poza
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: transcendence
-        ports:
-            - 5432:5432
-        restart: always
-
 networks:
-    transcendence:
-        driver: bridge
+  transcendence:
+    driver: bridge
 
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client:/client
+      # ! - client-node-modules:/client/node_modules (if someone using mac os or windowns uncommment this )
+    networks:
+      - transcendence
 
-# ! if someone using mac os or windowns uncommment this
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/server
+      # ! - server-node-modules:/server/node_modules ( if someone using mac os or windowns uncommment this )
+    networks:
+      - transcendence
+    command: sh start.sh
+
+  DB_Postgres:
+    container_name: DB_Postgres
+    image: postgres
+    networks:
+      - transcendence
+    environment:
+      POSTGRES_USER: poza
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transcendence
+    ports:
+      - 5432:5432
+    restart: always
+
+# ! if someone using mac os or windowns uncommment this 
 # volumes:
 #   client-node-modules:
 #   server-node-modules:

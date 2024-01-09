@@ -10,16 +10,15 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { GameProvider } from './context/game-context';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+            cacheTime: Infinity
+        } as QueryOptions
+    }
+});
 
-// {
-//     defaultOptions: {
-//         queries: {
-//             staleTime: Infinity,
-//             cacheTime: Infinity
-//         } as QueryOptions
-//     }
-// }
 function App() {
     return (
         // ask gpt later abt the provider oders

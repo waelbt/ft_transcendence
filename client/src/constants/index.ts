@@ -18,7 +18,7 @@ export const MENU_FIELDS = [
     }
 ];
 
-export const NICKNAME_FIELD = [
+export const CONFIRMATION_FIELDS = [
     {
         label: 'Nickname',
         type: 'text',
@@ -36,20 +36,3 @@ export const NICKNAME_FIELD = [
         }
     }
 ];
-
-// export const SETTING_FIELDS = [
-//     {
-//         label: 'Nickname',
-//         type: 'text',
-//         name: 'nickName',
-//     },
-//     {
-//         label: 'Nickname',
-//         type: 'text',
-//         name: 'nickName',
-//     },{
-//         label: 'Nickname',
-//         type: 'text',
-//         name: 'nickName',
-//     }
-// ];

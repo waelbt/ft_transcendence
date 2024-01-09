@@ -1,45 +1,53 @@
-import { NavLink } from 'react-router-dom';
+// import {
+//     AchievementIcon,
+//     JoinIcon,
+//     LoseCupIcon,
+//     RankIcon,
+//     WinCupIcon
+// } from '../assets/custom-icons';
+// import { useUserStore } from '../stores';
+// import ProgressRingLoader from './ProgressRingLoader';
+
+import { NavLink, Navigate } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
-import { FC } from 'react';
 
-type UserProfileCardProps = {
-    avatar: string;
-    nickName: string;
-    fullName: string;
-    createdAt: string;
-    status: true;
-    exp: 0;
-    level: 0;
-};
+// import { UserMenu } from '.';
 
-const UserProfileCard: FC<UserProfileCardProps> = (props) => {
-    // setting 
+// ! add props
+function UserProfileCard() {
+    // const user = useUserStore();
     const navLinks = ['history', 'achivements', 'friends', 'setting'];
     return (
         <>
             <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white">
                 <div className="px-5 py-2.5 flex-col justify-center items-center gap-2.5 inline-flex">
+                    {/* avatar */}
+                    {/* <div className="avatar online">
+                        <div className="w-40 h-40 rounded-full">
+                            <img src="https://tecdn.b-cdn.net/img/new/avatars/2.webp" />
+                        </div>
+                    </div> */}
                     <Avatar
-                        imageUrl={props.avatar}
+                        imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
                         state="online"
                         style="w-40 h-40"
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
-                        {props.nickName}
+                        dos404
                     </div>
                 </div>
                 <div className="flex-col justify-center items-start inline-flex pt-4">
                     <div className="self-stretch px-10 justify-start items-start gap-2.5 inline-flex">
                         <div className="text-neutral-400 text-[22px] font-normal font-['Acme']">
-                            {props.fullName}
+                            wael boutzougarte
                         </div>
                     </div>
                     <div className="w-[553px] h-[130px] px-10 py-[35px] border-l-4 border-r-4 border-gray-200 flex-col justify-center items-start gap-2.5 flex">
                         <div className="self-stretch justify-between items-start  inline-flex text-black text-xl font-normal font-['Acme']">
-                            <span>level {props.level}</span>
-                            <span>{props.exp}/3000</span>
+                            <span>level 29</span>
+                            <span>2200/3000</span>
                         </div>
                         <ProgressBar />
                     </div>
@@ -47,8 +55,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                         {navLinks.map((link, index) => (
                             <NavLink
                                 key={index}
-                                // ! :id 
-                                to={`${link}`}
+                                to={`/profile/:id/${link}`}
                                 className={({ isActive }) =>
                                     `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
                                         isActive
@@ -72,15 +79,14 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <div className="px-1 justify-center items-center gap-1.5 inline-flex">
                         <JoinIcon />
                         <div className="text-neutral-400 text-sm font-normal font-['Acme']">
-                            {/* Jan 19, 2019 */}
-                            {props.createdAt}
+                            Jan 19, 2019
                         </div>
                     </div>
                 </div>
             </div>
         </>
     );
-};
+}
 
 // <div className="h-[69px] left-[44px] top-[216px] absolute justify-center items-center gap-2.5 inline-flex">
 //     <div className="px-2.5 py-[21px] border-b-4 border-black justify-center items-center gap-2.5 flex">

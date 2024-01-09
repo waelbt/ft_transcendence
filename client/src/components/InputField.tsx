@@ -3,31 +3,30 @@ type InputFieldProps = {
     type?: string;
     placeholder?: string;
     register?: any;
-    disabled: boolean;
     // secure?: boolean;
 };
 
+// ! add the eye icons
 function InputField({
     label,
     type,
     placeholder,
-    register,
-    disabled
-}: InputFieldProps) {
+    register
+} // secure
+: InputFieldProps) {
+    // const [visible, setvisible] = useState(false);
+
     return (
         <>
-            <div className="flex flex-col justify-start items-start gap-[7px]">
-                <label className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+            <div className="flex flex-col justify-start items-start gap-3">
+                <label className="text-black text-lg font-bold font-sans leading-tight">
                     {label}{' '}
                 </label>
                 <input
-                    className={`w-96 pl-5 pr-2.5 py-2.5 ${
-                        disabled ? 'bg-zinc-100' : 'bg-white'
-                    } rounded-[10px] border-2 border-gray-200 justify-start items-center gap-2.5 inline-flex text-start text-neutral-400 text-base font-normal font-['Poppins']`}
+                    className="w-[500px] pl-1 pb-0.5 bg-white border-b-2 border-neutral-400 justify-start items-center text-black text-lg font-normal font-sans leading-normal !outline-none"
                     type={type}
                     placeholder={placeholder}
                     {...register}
-                    disabled={disabled} // Correctly apply the disabled prop
                 />
             </div>
         </>

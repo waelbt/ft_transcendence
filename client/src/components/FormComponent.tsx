@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 type FormProps = {
     fields: any[];
     btn: any;
-    onSubmit?: (data: any) => void;
+    onSubmit: (data: any) => void;
     defaultValues?: any;
     errors?: any;
 };
@@ -55,26 +55,23 @@ function FormComponent({
                         type={field.type}
                         placeholder={field.placeholder}
                         register={register(field.name, field.validation)}
-                        disabled={isSubmitting || field.disabled}
                         // secure={field.secure}
                     />
                 );
             })}
-            {onSubmit ? (
-                <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
-                    <button
-                        // ${
-                        // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
-                        // }`
-                        // ? style the disabled state
-                        className={btn.style}
-                        type={btn.type}
-                        disabled={isSubmitting}
-                    >
-                        {btn.text}
-                    </button>
-                </div>
-            ) : null}
+            <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
+                <button
+                    // ${
+                    // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
+                    // }`
+                    // ? style the disabled state
+                    className={btn.style}
+                    type={btn.type}
+                    disabled={isSubmitting}
+                >
+                    {btn.text}
+                </button>
+            </div>
         </form>
     );
 }

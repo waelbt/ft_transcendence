@@ -4,7 +4,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         lazy: async () => {
-            let { Auth } = await import('./pages/Auth');
+            let { Auth } = await import('./components');
             return { Component: Auth };
         }
     },
@@ -36,15 +36,15 @@ const router = createBrowserRouter([
                     return { Component: Chat };
                 }
             },
-            // {
-            //     index: true,
-            //     lazy: async () => {
-            //         let { Game } = await import('./pages/Game');
-            //         return { Component: Game };
-            //     }
-            // },
             {
-                path: 'Profile/:id',
+                path: '/game',
+                lazy: async () => {
+                    let { Game } = await import('./pages/Game');
+                    return { Component: Game };
+                }
+            },
+            {
+                path: "Profile/:id",
                 lazy: async () => {
                     let { Profile } = await import('./pages/Profile');
                     return { Component: Profile };
@@ -67,10 +67,8 @@ const router = createBrowserRouter([
                     {
                         path: 'achivements',
                         lazy: async () => {
-                            let { Achievements } = await import(
-                                './components/'
-                            );
-                            return { Component: Achievements };
+                            let { MatchTable } = await import('./components/');
+                            return { Component: MatchTable };
                         }
                     },
                     {
@@ -97,12 +95,12 @@ const router = createBrowserRouter([
                     let { Rooms } = await import('./pages/Rooms');
                     return { Component: Rooms };
                 }
-            },
-            {
-                path: '*',
-                element: <div>not found</div>
             }
         ]
+    },
+    {
+        path: '*',
+        element: <div>not found</div>
     }
 ]);
 

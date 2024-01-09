@@ -35,7 +35,7 @@ function Layout() {
             {isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
-                <div className="relative flex flex-col h-screen bg-primary-white gap-3">
+                <div className="relative flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
                             <div className="flex justify-between items-center">
@@ -111,13 +111,13 @@ function Layout() {
                                                                 }}
                                                             >
                                                                 <Avatar
-                                                                    style="h-10 w-10"
+                                                                    style="h-8 w-8"
                                                                     imageUrl={
                                                                         'https://tecdn.b-cdn.net/img/new/avatars/2.webp'
                                                                     }
                                                                     state="online"
                                                                 />
-                                                                <div className="text-black text-2xl font-normal font-['Acme']">
+                                                                <div className="text-black text-xl font-normal font-['Acme']">
                                                                     dos404
                                                                 </div>
                                                             </li>

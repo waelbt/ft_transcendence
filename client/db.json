@@ -1,6 +1,5 @@
 {
-    "friends": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-    "friendDetails": [
+    "friends": [
         {
             "id": 1,
             "name": "dos404",
@@ -31,34 +30,6 @@
         },
         {
             "id": 5,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 6,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 7,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 8,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 9,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",

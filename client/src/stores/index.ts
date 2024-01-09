@@ -24,7 +24,7 @@ type UserState = {
     avatar: string;
     nickName: string;
     fullName: string;
-    createdAt: string;
+    // createdAt: string;
     status: boolean;
     F2A: boolean;
     inGame: boolean;
@@ -48,10 +48,9 @@ export const useUserStore = createWithEqualityFn<UserState & UserActions>()(
             isLogged: false,
             id: '',
             email: '',
-            avatar: 'https://tecdn.b-cdn.net/img/new/avatars/2.webp', // ! tmp
+            avatar: '',
             nickName: '',
             fullName: '',
-            createdAt: '',
             status: false,
             F2A: false,
             inGame: false,
@@ -67,7 +66,7 @@ export const useUserStore = createWithEqualityFn<UserState & UserActions>()(
                     avatar: data.user.avatar,
                     nickName: data.user.nickName,
                     fullName: data.user.fullName,
-                    createdAt: data.user.createdAt,
+                    // createdAt: data.user.createdAt,
                     status: data.user.status,
                     F2A: data.user.F2A,
                     inGame: data.user.inGame

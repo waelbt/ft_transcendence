@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
-import { DEFAULT_PATH, NICKNAME_FIELD } from '../../constants';
+import { DEFAULT_PATH, CONFIRMATION_FIELDS } from '../../constants';
 import useUpload from '../../hooks/UploadImageHook';
 import { request } from '../../api';
 import { useNavigate } from 'react-router-dom';
@@ -88,7 +88,7 @@ export function ProfileCompletion() {
                                                 setImagePath(null);
                                                 setSelectedItemIndex(-1);
                                             }}
-                                            style="p-20"
+                                            style="p-14"
                                         />
                                         <label
                                             className="absolute top-0 left-0 w-full h-full"
@@ -98,7 +98,7 @@ export function ProfileCompletion() {
                                                 style={
                                                     'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                                                 }
-                                                radius={84}
+                                                radius={62}
                                                 stroke={2}
                                                 progress={progress}
                                             />
@@ -178,7 +178,7 @@ export function ProfileCompletion() {
                                 {/* nickname section */}
                             </div>
                             <FormComponent
-                                fields={NICKNAME_FIELD}
+                                fields={CONFIRMATION_FIELDS}
                                 onSubmit={onSubmit}
                                 btn={{
                                     // TODO: store this in a custom style proprty
