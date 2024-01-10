@@ -3,6 +3,8 @@ import './game.css';
 import { useGame } from '../../context/game-context';
 import { useUserStore } from '../../stores/userStore';
 import { useSocketStore } from '../../stores/socketStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import { MODES } from '../../constants';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -136,6 +138,7 @@ const Ball = ({ gameSt }: { gameSt: string }) => {
 };
 
 export function Game() {
+    const { mode } = useParams();
     const [firstPaddlePos, setFirstPaddlePos] = React.useState(0);
     const movePaddle = React.useRef(0);
 
@@ -148,6 +151,14 @@ export function Game() {
     const [isGameReady, setIsGameReady] = React.useState(false);
     const { socket } = useSocketStore();
     const { id } = useUserStore();
+    const navigate = useNavigate();
+    // let history = useHistory();
+
+    useEffect(() => {
+        if (!MODES.includes(mode as string)) {
+            navigate('/test');
+        }
+    }, [mode, history]);
 
     React.useEffect(() => {
         console.log('userid ', id);
@@ -197,16 +208,11 @@ export function Game() {
         };
     }, []);
 
-    const [gameMode, setGameMode] = React.useState<
-        null | 'classic' | 'crazy' | 'IA'
-    >(null);
+    // const [gameMode, setGameMode] = React.useState<
+    //     null | 'classic' | 'crazy' | 'IA'
+    // >(null);
 
-    let gameSt: string;
-    React.useEffect(() => {
-        if (gameMode) {
-            socket.emit('gameMode', gameMode);
-        }
-    }, [gameMode]);
+    // let gameSt: string;
 
     React.useEffect(() => {
         socket.on('startgame', ({ room, SecondPlayer, chosen }) => {
@@ -308,32 +314,32 @@ export function Game() {
         };
     });
 
-    if (gameMode === null) {
-        return (
-            <div className="container">
-                <button
-                    className="custom-button"
-                    onClick={() => setGameMode('classic')}
-                >
-                    Classic
-                </button>
-                <button
-                    className="custom-button"
-                    onClick={() => setGameMode('crazy')}
-                >
-                    Crazy
-                </button>
-                <button
-                    className="custom-button"
-                    onClick={() => setGameMode('IA')}
-                >
-                    IA
-                </button>
-            </div>
-        );
-    }
+    // if (gameMode === null) {
+    //     return (
+    //         <div className="container">
+    //             <button
+    //                 className="custom-button"
+    //                 onClick={() => setGameMode('classic')}
+    //             >
+    //                 Classic
+    //             </button>
+    //             <button
+    //                 className="custom-button"
+    //                 onClick={() => setGameMode('crazy')}
+    //             >
+    //                 Crazy
+    //             </button>
+    //             <button
+    //                 className="custom-button"
+    //                 onClick={() => setGameMode('IA')}
+    //             >
+    //                 IA
+    //             </button>
+    //         </div>
+    //     );
+    // }
 
-    gameSt = gameMode;
+    // gameSt = gameMode;
     return (
         <>
             <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
@@ -354,7 +360,7 @@ export function Game() {
                 {isGameReady && (
                     <div className={`table-${chosenMode}`}>
                         <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-                        <Ball gameSt={gameSt} />
+                        <Ball gameSt={mode as string} />
                         <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
                         {/* <Score
                             leftScore={removeDecimalPart(leftscore / 2)}
@@ -371,7 +377,6 @@ export function Game() {
         </>
     );
 }
-
 
 // ! use this component in the home page
 // import React from 'react';

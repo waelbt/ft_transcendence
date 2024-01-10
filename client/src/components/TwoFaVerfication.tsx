@@ -1,4 +1,5 @@
 import { FormEvent, MouseEvent, useState } from 'react';
+import toast from 'react-hot-toast';
 
 function TwoFaVerfication() {
     const [code, setCode] = useState(['', '', '', '', '', '']); // Assuming a two-character code
@@ -22,6 +23,10 @@ function TwoFaVerfication() {
         e.preventDefault();
         // ! if not valid toast here and alsoremove the style
         // If the input is valid, proceed with submitting the form
+        if(isInputValid)
+        {
+            toast.error("nssiti hadi")
+        }
         console.log('Form submitted with value:', code.join(''));
         // Add your submit logic
         // ? navigate
@@ -54,11 +59,9 @@ function TwoFaVerfication() {
                 ))}
             </div>
             <button
-                className={`px-3 py-2 rounded-[10px] border border-stone-300 justify-center items-center gap-3 inline-flex  text-center text-white text-[22px] font-normal font-['Acme'] ${
-                    isInputValid ? 'bg-black hover:bg-gray-800' : 'bg-gray-700'
-                } `}
+                className="px-3 py-2 rounded-[10px] border bg-black hover:bg-gray-800 border-stone-300 justify-center items-center gap-3 inline-flex  text-center text-white text-[22px] font-normal font-['Acme'] "
                 onClick={handleSubmit}
-                disabled={!isInputValid}
+                // disabled={!isInputValid}
             >
                 continue
             </button>
