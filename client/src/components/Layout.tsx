@@ -35,7 +35,7 @@ function Layout() {
             {isProfileComplete ? (
                 <ProfileCompletion />
             ) : (
-                <div className="relative flex flex-col h-screen bg-primary-white gap-3">
+                <div className="relative flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
                             <div className="flex justify-between items-center">
