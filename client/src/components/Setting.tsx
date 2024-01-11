@@ -21,72 +21,68 @@ function Setting() {
 
     const onSubmit = () => {};
     return (
-        <div className="px-7 py-2.5 flex-col justify-between items-start inline-flex gap-5">
-            {/* <div className="text-neutral-400 text-3xl font-normal font-['Acme']">
-                Account Setting
-            </div> */}
-            {/* gap-[79px] */}
-            <div className="justify-center items-center inline-flex gap-10">
-                <div className="flex-col justify-center items-start gap-8 inline-flex">
-                    <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-                        <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
-                            Edit Avatar
-                        </div>
-                        <div className="px-2.5 pt-5 pb-2.5 justify-center items-center gap-[30px] inline-flex">
-                            <Avatar
-                                imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
-                                style="w-32 h-32"
+        // <div className="px-7 py-2.5 flex-col  justify-center items-start inline-flex gap-5">
+        <div className="px-7 py-2.5  h-full justify-center items-center inline-flex gap-5">
+            <div className="flex-col justify-center items-start gap-8 inline-flex">
+                <div className="flex-col justify-start items-start gap-2.5 inline-flex">
+                    <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+                        Edit Avatar
+                    </div>
+                    <div className="px-2.5 pt-5 pb-2.5 justify-center items-center gap-[30px] inline-flex">
+                        <Avatar
+                            imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                            style="w-32 h-32"
+                        />
+                        <div className="flex-col justify-center items-start gap-4 inline-flex ">
+                            <input
+                                className=""
+                                // id="inputTag"
+                                type="file"
+                                // onChange={(event) => {
+                                // const file = event.target.files?.[0];
+                                // if (file) {
+                                //     const objectURL =
+                                //         URL.createObjectURL(file);
+                                //     setImagePath(objectURL);
+                                //     uploadData(file);
+                                // }
+                                // }}
                             />
-                            <div className="flex-col justify-center items-start gap-4 inline-flex ">
-                                <input
-                                    className=""
-                                    // id="inputTag"
-                                    type="file"
-                                    // onChange={(event) => {
-                                    // const file = event.target.files?.[0];
-                                    // if (file) {
-                                    //     const objectURL =
-                                    //         URL.createObjectURL(file);
-                                    //     setImagePath(objectURL);
-                                    //     uploadData(file);
-                                    // }
-                                    // }}
-                                />
-                                <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">
-                                    JPG or PNG. Max size of 4Mo
-                                </div>
-                                {/* //! prevent the  user from spawning Upload click */}
-                                <div className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 ">
-                                    Upload Now
-                                </div>
+                            <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">
+                                JPG or PNG. Max size of 4Mo
+                            </div>
+                            {/* //! prevent the  user from spawning Upload click */}
+                            <div className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 ">
+                                Upload Now
                             </div>
                         </div>
                     </div>
-                    <div className="w-[387px] h-[84px] flex-col justify-start items-start gap-[7px] inline-flex">
-                        <FormComponent
-                            fields={NICKNAME_FIELD}
-                            onSubmit={onSubmit}
-                            btn={{
-                                // TODO: store this in a custom style proprty
-                                style: ' px-6 py-1 bg-stone-50 rounded-[20px] border border-stone-300 justify-center items-center gap-3 inline-flex text-center text-neutral-500 text-lg font-normal font-["Acme"] hover:bg-stone-200',
-                                type: 'submit',
-                                text: 'Submit'
-                            }}
-                        />
-                    </div>
                 </div>
-                <div className="w-px h-full relative bg-neutral-200" />
-                <div className="flex-col justify-center items-start gap-5 inline-flex flex-grow pl-10">
+                <div className="w-[387px] h-[84px] flex-col justify-start items-start gap-[7px] inline-flex">
                     <FormComponent
-                        fields={SETTING_FIELDS}
+                        fields={NICKNAME_FIELD}
+                        onSubmit={onSubmit}
                         btn={{
-                            style: 'hidden'
+                            // TODO: store this in a custom style proprty
+                            style: ' px-6 py-1 bg-stone-50 rounded-[20px] border border-stone-300 justify-center items-center gap-3 inline-flex text-center text-neutral-500 text-lg font-normal font-["Acme"] hover:bg-stone-200',
+                            type: 'submit',
+                            text: 'Submit'
                         }}
                     />
-                    <Twofa />
                 </div>
             </div>
+            <div className="w-px h-full relative bg-neutral-200" />
+            <div className="flex-col justify-center items-start gap-5 inline-flex flex-grow pl-10">
+                <FormComponent
+                    fields={SETTING_FIELDS}
+                    btn={{
+                        style: 'hidden'
+                    }}
+                />
+                <Twofa />
+            </div>
         </div>
+        // </div>
     );
 }
 
@@ -205,4 +201,7 @@ export default Setting;
         </div>
     </div>
 </div>; */
+}
+function usePrams(): { params: any } {
+    throw new Error('Function not implemented.');
 }

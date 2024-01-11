@@ -6,6 +6,8 @@ import { FC, Fragment, useEffect } from 'react';
 import { useUserStore } from '../stores/userStore';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import { Popover, Transition } from '@headlessui/react';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 type UserProfileCardProps = {
     id: string;
@@ -17,6 +19,7 @@ type UserProfileCardProps = {
     exp: 0;
     level: 0;
     actions?: string[];
+    isLoading?: boolean;
 };
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
@@ -30,6 +33,26 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     useEffect(() => {
         console.log(props.actions);
     }, [props]);
+
+    if (props.isLoading) {
+        return (
+            <div className="px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white">
+                {/* Replace actual content with Skeleton components */}
+                <div className="px-5 py-2.5 flex-col justify-center items-center gap-2.5 inline-flex">
+                    <Skeleton circle height={160} width={160} />
+                    <Skeleton height={30} width={200} />
+                </div>
+                <div className="flex-col justify-center items-start inline-flex pt-4">
+                    <Skeleton height={30} width={300} />
+                    <Skeleton height={130} width={553} />
+                </div>
+                <div className="px-3 py-3 rounded-2xl flex-col justify-center items-center gap-3 inline-flex">
+                    <Skeleton height={50} width={200} />
+                    <Skeleton height={20} width={150} />
+                </div>
+            </div>
+        );
+    }
     return (
         <>
             <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white">

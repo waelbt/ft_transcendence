@@ -1,45 +1,48 @@
 import { Outlet } from 'react-router-dom';
 import { UserProfileCard } from '../../components/';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useUserStore } from '../../stores/userStore';
-import { request } from '../../api';
-import useAxiosPrivate from '../../hooks/axiosPrivateHook';
+// import { useUserStore } from '../../stores/userStore';
+import { useUserProfile } from '../../hooks/usersdataHook';
 
 export function Profile() {
-    const user = useUserStore();
-    const params = useParams();
-    const [profile, setProfile] = useState<null | any>(null); // ? get user interface  (dto if possible)
-    // const [profile, setProfile] = useState<any>(user); // ? get user interface  (dto if possible)
-    const axiosPrivate = useAxiosPrivate();
+    // const user = useUserStore();
+    const { id } = useParams();
+    const { profile, isLoading, isError } = useUserProfile(id as string);
 
-    // ! user react query later
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axiosPrivate.get(`users/${params.id}`);
-                console.log(res.data);
-                setProfile(res.data);
-            } catch (e) {
-                // ! serve error page in this case not found and forrebiden
-                console.log(e);
-                // ! navigae to home or error page
-            }
-        };
+    if (isLoading) {
+        return <div>Loading...</div>; // or your custom loader component
+    }
 
-        params.id != user.id && params.id != 'me'
-            ? fetchData()
-            : setProfile(user);
-    }, [params]);
+    if (isError) {
+        // Handle error
+        return <div>Error fetching profile</div>;
+    }
 
     return (
-        // gap-20
         <div className="flex-grow flex-col justify-center items-center inline-flex my-5 gap-10">
-            <UserProfileCard {...profile} />
-            {/* w-2/3 h-full */}
+            <UserProfileCard {...profile} isLoading={isLoading} />
             <div className="w-2/3 h-full p-2 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
                 <Outlet context={profile} />
             </div>
         </div>
     );
 }
+
+// ! user react query later
+// useEffect(() => {
+//     const fetchData = async () => {
+//         try {
+//             const res = await axiosPrivate.get(`users/${id}`);
+//             console.log(res.data);
+//             setProfile(res.data);
+//         } catch (e) {
+//             // ! serve error page in this case not found and forrebiden
+//             console.log(e);
+//             // ! navigae to home or error page
+//         }
+//     };
+
+//     id != user.id && id != 'me'
+//         ? fetchData()
+//         : setProfile(user);
+// }, [params]);
