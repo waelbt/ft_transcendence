@@ -1,6 +1,16 @@
 import axios from 'axios';
 // import axios, { AxiosError, AxiosResponse } from 'axios';
 
+export default axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL
+});
+
+export const axiosPrivate = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    withCredentials: true
+});
+
 // export default axios.create({
 //     baseURL: `${import.meta.env.VITE_BASE_URL}`,
 //     timeout: 10000,
@@ -11,33 +21,33 @@ import axios from 'axios';
 //     }
 // });
 
-export const request = axios.create({
-    baseURL: `${import.meta.env.VITE_BASE_URL}`,
-    timeout: 10000,
-    withCredentials: true,
-    headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-});
+// export const request = axios.create({
+//     baseURL: `${import.meta.env.VITE_BASE_URL}`,
+//     timeout: 10000,
+//     withCredentials: true,
+//     headers: {
+//         'Cache-Control': 'no-cache',
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//     }
+// });
 
-export const axiosPrivate = axios.create({
-    baseURL: `${import.meta.env.VITE_BASE_URL}`,
-    timeout: 10000,
-    withCredentials: true,
-    headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-});
+// export const axiosPrivate = axios.create({
+//     baseURL: `${import.meta.env.VITE_BASE_URL}`,
+//     timeout: 10000,
+//     withCredentials: true,
+//     headers: {
+//         'Cache-Control': 'no-cache',
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//     }
+// });
 
 // ! Usage with URL Encoded
 // const params = new URLSearchParams();
 // params.append('key', 'value');
-// request.post('/endpoint', params);
+// axiosPrivate.post('/endpoint', params);
 
 // ! Usage with JSON
-// request.post('/endpoint', JSON.stringify({ key: 'value' }));
+// axiosPrivate.post('/endpoint', JSON.stringify({ key: 'value' }));
 
 // request.interceptors.response.use(
 //     response => {

@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { request } from '../api';
+import useAxiosPrivate from '../src/hooks/axiosPrivateHook';
 
 function useAuth() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
-
+    const axiosPrivate = useAxiosPrivate();
     useEffect(() => {
         let isMounted = true; // flag to check if component is mounted
 
         const checkAuth = async () => {
             try {
-                const response = await request.get('/auth/checkAuth');
+                const response = await axiosPrivate.get('/auth/checkAuth');
                 if (isMounted) {
                     setIsAuthenticated(response.data);
                 }

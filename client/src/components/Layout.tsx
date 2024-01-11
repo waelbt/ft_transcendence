@@ -8,9 +8,11 @@ import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 // import { ProfileCompletion } from '../pages/ProfileCompletion';
 import Confirmation from '../pages/Confirmation';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function Layout() {
-    const { logout, login, isLogged, isProfileComplete, F2A } = useUserStore();
+    const axiosPrivate = useAxiosPrivate();
+    const { logout, updateState, isProfileComplete, F2A } = useUserStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,12 +20,12 @@ function Layout() {
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
-                await login();
+                const { data } = await axiosPrivate.get('/users/me');
+                updateState(data.user);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         // Call the async function
         fetchData();
     }, []); // Empty dependency array means this effect runs once after the initial render

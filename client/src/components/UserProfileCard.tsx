@@ -115,7 +115,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                                                 <li
                                                                     className="block px-4 py-2 hover:bg-gray-100 "
                                                                     key={index}
-                                                                    // onClick={() => ()  request.get(`/${action}/id`)}
+                                                                    // onClick={() => ()  axiosPrivate.get(`/${action}/id`)}
                                                                 >
                                                                     {action}
                                                                 </li>

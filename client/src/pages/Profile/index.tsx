@@ -4,18 +4,20 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUserStore } from '../../stores/userStore';
 import { request } from '../../api';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 
 export function Profile() {
     const user = useUserStore();
     const params = useParams();
     const [profile, setProfile] = useState<null | any>(null); // ? get user interface  (dto if possible)
     // const [profile, setProfile] = useState<any>(user); // ? get user interface  (dto if possible)
+    const axiosPrivate = useAxiosPrivate();
 
     // ! user react query later
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await request.get(`users/${params.id}`);
+                const res = await axiosPrivate.get(`users/${params.id}`);
                 console.log(res.data);
                 setProfile(res.data);
             } catch (e) {

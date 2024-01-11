@@ -1,21 +1,8 @@
-import { request } from '../api';
+// import { request } from '../api';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
-
-// server       |   id: '112965',
-// server       |   email: 'ibouchaf@student.1337.ma',
-// server       |   HashPassword: null,
-// server       |   Avatar: null,
-// server       |   nickName: 'ibouchaf',
-// server       |   fullName: 'Issam Bouchafra',
-// server       |   status: true,
-// server       |   F2A: false,
-// server       |   F2A_Secret: null,
-// server       |   inGame: false,
-// server       |   completeProfile: false,
-// server       |   createdAt: 2023-12-28T03:05:40.353Z
-// server       | }
+// import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 type UserStateType = {
     isLogged: boolean;
@@ -34,7 +21,7 @@ type UserStateType = {
 };
 
 type UserActionsType = {
-    login: () => Promise<void>;
+    // constructor: (data) => void;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
 };
@@ -57,23 +44,24 @@ export const useUserStore = createWithEqualityFn<
             F2A: false,
             inGame: false,
             isProfileComplete: false,
-            login: async () => {
-                const { data } = await request.get('/users/me');
-                console.log(data);
-                // ! user type men 3and simo
-                set({
-                    isLogged: true,
-                    id: data.user.id,
-                    email: data.user.email,
-                    avatar: data.user.avatar,
-                    nickName: data.user.nickName,
-                    fullName: data.user.fullName,
-                    createdAt: data.user.createdAt,
-                    status: data.user.status,
-                    F2A: data.user.F2A,
-                    inGame: data.user.inGame
-                });
-            },
+            // constructor: (data) => {
+            //     // const axiosPrivate = useAxiosPrivate();
+            //     // const { data } = await axiosPrivate.get('/users/me');
+
+            //     // ! user type men 3and simo
+            //     set({
+            //         isLogged: true,
+            //         id: data.user.id,
+            //         email: data.user.email,
+            //         avatar: data.user.avatar,
+            //         nickName: data.user.nickName,
+            //         fullName: data.user.fullName,
+            //         createdAt: data.user.createdAt,
+            //         status: data.user.status,
+            //         F2A: data.user.F2A,
+            //         inGame: data.user.inGame
+            //     });
+            // },
             logout: () => {
                 set(
                     {

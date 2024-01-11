@@ -4,9 +4,10 @@ import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
 import useUpload from '../hooks/UploadImageHook';
-import { request } from '../api';
+// import { request } from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function ProfileCompletion() {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ function ProfileCompletion() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
     const { progress, uploadData } = useUpload();
+    const axiosPrivate = useAxiosPrivate();
     // const { uploading, progress, error, success, uploadData } = useUpload();
 
     const onSubmit = async (data: FieldValues) => {
@@ -23,7 +25,7 @@ function ProfileCompletion() {
             : '/home/wael/Desktop/ft_transcendence/client/src/assets/images/image_processing20221027-11907-zvqv42.png';
         try {
             console.log(data);
-            await request.post('/users/info', JSON.stringify(data), {
+            await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }

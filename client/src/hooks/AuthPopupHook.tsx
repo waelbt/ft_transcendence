@@ -4,7 +4,7 @@ import { useUserStore } from '../stores/userStore';
 
 const useAuthPopup = () => {
     const location = useLocation();
-    const { isLogged, updateState } = useUserStore();
+    const { updateState } = useUserStore();
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -20,8 +20,6 @@ const useAuthPopup = () => {
             window.opener.location.reload();
         }
     }, [location, updateState]);
-
-    return isLogged;
 };
 
 export default useAuthPopup;

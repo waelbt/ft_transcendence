@@ -50,7 +50,11 @@ export const Auth = () => {
                         </div>
                         <a
                             className="w-full py-5 bg-white rounded-full cursor-pointer flex justify-center items-center gap-2.5 border border-black hover:opacity-60 transition-opacity hover:bg-gray-100 px-4"
-                            href={`${import.meta.env.VITE_BASE_URL}/auth/42`}
+                            onClick={() => {
+                                openPopup(
+                                    `${import.meta.env.VITE_BASE_URL}/auth/42`
+                                );
+                            }}
                         >
                             <IntraIcon />
                             <span className="font-mona text-black text-sm font-semibold">

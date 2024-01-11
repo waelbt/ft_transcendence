@@ -6,6 +6,7 @@ import { useScores } from '../../hooks/scoresHook';
 import { Score, Paddle, Ball } from '../../components/game';
 import { useGameStore } from '../../stores/gameStore';
 import { request } from '../../api';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 
 const removeDecimalPart = (number: number) => Math.floor(number);
 
@@ -20,6 +21,8 @@ export function Game() {
         rightColor,
         leftColor
     } = useGameStore();
+    const axiosPrivate = useAxiosPrivate();
+
     const { leftScore, rightScore, gameOver } = useScores();
     // const [firstPaddlePos, setFirstPaddlePos] = useState(0);
     const movePaddle = useRef(0);
@@ -44,7 +47,7 @@ export function Game() {
 
         const playerDisconnectedListener = async () => {
             console.log('player disconnected');
-            const response = request.post(
+            const response = axiosPrivate.post(
                 '/game/create', //! post gane results
                 JSON.stringify({ room: 'dzdzed', id: id }),
                 {
