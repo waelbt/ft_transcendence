@@ -1,19 +1,19 @@
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
-import { useUserStore } from '../../stores/userStore';
-import { useNavigate } from 'react-router-dom';
-
-// todo: store svgs in components
-
-// ! open intra or google model instead of redirecting the hole app
+import useAuthPopup from '../../hooks/AuthPopupHook';
 
 export const Auth = () => {
-    const { isLogged } = useUserStore();
-    const navigate = useNavigate();
+    const popupRef = useRef<Window | null>(null);
 
-    useEffect(() => {
-        if (isLogged) navigate('/home');
-    }, []);
+    const openPopup = (url: string) => {
+        popupRef.current = window.open(
+            url,
+            'authPopup',
+            'width=600,height=600'
+        );
+    };
+
+    useAuthPopup();
 
     return (
         <div className="flex">
@@ -25,10 +25,14 @@ export const Auth = () => {
                     </div>
                     <div className="py-2 flex flex-col items-center gap-3 w-full">
                         <a
-                            className="w-full py-5 bg-stone-950 rounded-full flex justify-center items-center gap-2.5 hover:opacity-60 transition-opacity hover:bg-gray-900 px-4"
-                            href={`${
-                                import.meta.env.VITE_BASE_URL
-                            }/auth/google`}
+                            className="w-full py-5 bg-stone-950 rounded-full cursor-pointer flex justify-center items-center gap-2.5 hover:opacity-60 transition-opacity hover:bg-gray-900 px-4"
+                            onClick={() => {
+                                openPopup(
+                                    `${
+                                        import.meta.env.VITE_BASE_URL
+                                    }/auth/google`
+                                );
+                            }}
                         >
                             <GoogleIcon />
                             <span className="font-mona text-white text-sm font-semibold">
@@ -45,7 +49,7 @@ export const Auth = () => {
                             </div>
                         </div>
                         <a
-                            className="w-full py-5 bg-white rounded-full flex justify-center items-center gap-2.5 border border-black hover:opacity-60 transition-opacity hover:bg-gray-100 px-4"
+                            className="w-full py-5 bg-white rounded-full cursor-pointer flex justify-center items-center gap-2.5 border border-black hover:opacity-60 transition-opacity hover:bg-gray-100 px-4"
                             href={`${import.meta.env.VITE_BASE_URL}/auth/42`}
                         >
                             <IntraIcon />

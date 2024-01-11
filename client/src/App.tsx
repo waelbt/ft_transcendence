@@ -6,6 +6,9 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
+import { useUserStore } from './stores/userStore';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const queryClient = new QueryClient({
     defaultOptions: {

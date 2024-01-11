@@ -1,4 +1,8 @@
 {
+    "auth": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTU4ODM3MzY3MTUwMjU4OTA2MTUiLCJlbWFpbCI6ImJvdXR6b3VnYXJ0ZUBnbWFpbC5jb20iLCJpYXQiOjE3MDQ5MTA4NTAsImV4cCI6MTcwNDk5NzI1MH0.WCgua-jehJT8ayCDWpsh6vUXDhcw5VX9XG5EFUD-CIE",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTU4ODM3MzY3MTUwMjU4OTA2MTUiLCJlbWFpbCI6ImJvdXR6b3VnYXJ0ZUBnbWFpbC5jb20iLCJpYXQiOjE3MDQ5MTA4NTAsImV4cCI6MTcwNTUxNTY1MH0.bHEP54KBvZna7xW8PbHGc4l8yTqJT4MtXKiyTnL3_Cs"
+    },
     "friends": ["162122", "112965", "3", "4", "5", "6", "7", "8", "9"],
     "friendDetails": [
         {

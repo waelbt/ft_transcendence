@@ -1,18 +1,18 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
+    // {
+    //     path: '/',
+    //     lazy: async () => {
+    //         let { Auth } = await import('./pages/Auth');
+    //         return { Component: Auth };
+    //     }
+    // },
     {
         path: '/',
         lazy: async () => {
-            let { Auth } = await import('./pages/Auth');
-            return { Component: Auth };
-        }
-    },
-    {
-        path: '/',
-        lazy: async () => {
-            let { Layout } = await import('./components');
-            return { Component: Layout };
+            let { RequireAuth } = await import('./components');
+            return { Component: RequireAuth };
         },
         children: [
             {

@@ -14,7 +14,7 @@ function Layout() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLogged) navigate('/');
+        // if (!isLogged) navigate('/');
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
