@@ -55,7 +55,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     }
     return (
         <>
-            <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white">
+            <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white mt-4">
                 <div className="px-5 py-2.5 flex-col justify-center items-center gap-2.5 inline-flex">
                     <Avatar
                         imageUrl={props.avatar}
