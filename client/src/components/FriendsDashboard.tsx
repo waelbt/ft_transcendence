@@ -54,7 +54,7 @@ const FriendsDashboard: React.FC = () => {
     // const searchedFriends = () => {};
 
     return (
-        <div className="overflow-y-auto max-h-[540px] w-full">
+        <>
             {/* <SearchBar setSearchTerm={setSearchTerm} /> */}
             <div className=" px-2.5 bg-white justify-start items-center gap-5 inline-flex sticky top-0 z-10 w-full">
                 <div className="grow shrink basis-0 self-stretch px-2.5 justify-between items-center flex">
@@ -83,7 +83,7 @@ const FriendsDashboard: React.FC = () => {
                     <FriendCard key={`friend${friendId}`} friendId={friendId} />
                 ))}
             </div>
-        </div>
+        </>
     );
 };
 

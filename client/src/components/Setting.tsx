@@ -21,8 +21,9 @@ function Setting() {
 
     const onSubmit = () => {};
     return (
+        // <div className="px-7 py-2.5  h-full justify-center items-center inline-flex gap-5">
         // <div className="px-7 py-2.5 flex-col  justify-center items-start inline-flex gap-5">
-        <div className="px-7 py-2.5  h-full justify-center items-center inline-flex gap-5">
+        <>
             <div className="flex-col justify-center items-start gap-8 inline-flex">
                 <div className="flex-col justify-start items-start gap-2.5 inline-flex">
                     <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
@@ -81,7 +82,8 @@ function Setting() {
                 />
                 <Twofa />
             </div>
-        </div>
+        </>
+        // </div>
         // </div>
     );
 }

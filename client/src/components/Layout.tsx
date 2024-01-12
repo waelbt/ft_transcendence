@@ -35,7 +35,7 @@ function Layout() {
             {isProfileComplete || F2A ? (
                 <Confirmation />
             ) : (
-                <div className="relative flex flex-col h-screen bg-primary-white gap-3">
+                <div className="relative flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
                         <div className="w-full px-4">
                             <div className="flex justify-between items-center">
@@ -166,7 +166,17 @@ function Layout() {
                             </div>
                         </div>
                     </nav>
-                    <Outlet />
+                    {/* <div className="py-3 bg-black flex-grow inline-flex justify-center items-center"> */}
+                    {/* <div className="h-full w-full flex-grow"> */}
+                    <div className="flex-grow inline-flex justify-center items-center w-full ">
+                        {/* <div className="w-full h-full flex justify-center items-center"> */}
+                            <Outlet />
+                        {/* </div> */}
+                        {/* <div className="w-full h-full"></div> */}
+                    </div>
+                    {/* </div> */}
+                    {/* <div className="h-full w-full bg-white flex-grow-0"></div> */}
+                    {/* </div> */}
                 </div>
             )}
         </>

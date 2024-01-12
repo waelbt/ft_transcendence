@@ -88,7 +88,7 @@ const MatchTable = () => {
     }, []);
     return (
         // ! protect if the data is empty
-        <div className="overflow-y-auto max-h-[540px] w-full">
+        // <div className="overflow-y-auto max-h-[540px] w-full">
             <Table
                 columns={columns}
                 data={data}
@@ -106,7 +106,7 @@ const MatchTable = () => {
                     className: getRowColor(row.original)
                 })}
             />
-        </div>
+        // </div>
     );
 };
 

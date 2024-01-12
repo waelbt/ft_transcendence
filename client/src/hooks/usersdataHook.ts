@@ -14,7 +14,7 @@ export const useUserProfile = (userId: string) => {
         queryKey: ['profile', userId],
         queryFn: fetchData,
         enabled: !!userId && userId !== user.id && userId !== 'me',
-        initialData: userId === user.id ? user : undefined
+        initialData: userId === user.id || userId === 'me' ? user : undefined
     });
     return {
         isLoading: query.isLoading,

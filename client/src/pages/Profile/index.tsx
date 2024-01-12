@@ -19,15 +19,27 @@ export function Profile() {
     }
 
     return (
-        <div className="flex-grow flex-col justify-center items-center inline-flex my-5 gap-10">
+        <div className="flex-col h-full justify-center items-center inline-flex my-5 gap-10 ">
+            {/* //! profile */}
             <UserProfileCard {...profile} isLoading={isLoading} />
-            <div className="w-2/3 h-full p-2 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
-                <Outlet context={profile} />
+            <div className='flex-grow w-full debug items-start justify-start'>
+                <Outlet />
             </div>
+            {/* This div takes up all remaining space */}
+            {/* <div className="flex-grow"></div> */}
         </div>
     );
 }
 
+{
+    /* <div className="flex-shrink w-full h-full p-2 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex"> */
+}
+{
+    /* <Outlet context={profile} /> */
+}
+{
+    /* </div> */
+}
 // ! user react query later
 // useEffect(() => {
 //     const fetchData = async () => {
