@@ -125,7 +125,8 @@ function ProfileCompletion() {
                                     }`}
                                 >
                                     {Array.from({ length: 6 }, (_, index) => (
-                                        <li
+                                        // ! use avatar component 
+                                        <li 
                                             className={`w-10 h-10 flex-shrink-0 rounded-full border-solid border-primary-pink ${
                                                 index === selectedItemIndex
                                                     ? 'border-2'

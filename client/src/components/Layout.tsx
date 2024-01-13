@@ -9,6 +9,7 @@ import { useUserStore } from '../stores/userStore';
 // import { ProfileCompletion } from '../pages/ProfileCompletion';
 import Confirmation from '../pages/Confirmation';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import GlobalChat from './GlobalChat';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
@@ -168,11 +169,12 @@ function Layout() {
                     </nav>
                     {/* <div className="py-3 bg-black flex-grow inline-flex justify-center items-center"> */}
                     {/* <div className="h-full w-full flex-grow"> */}
-                    <div className="flex-grow inline-flex justify-center items-center w-full ">
+                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         {/* <div className="w-full h-full flex justify-center items-center"> */}
-                            <Outlet />
-                        {/* </div> */}
-                        {/* <div className="w-full h-full"></div> */}
+                        <Outlet />
+                        <div className='h-full flex justify-center items-center'>
+                            <GlobalChat />
+                        </div>
                     </div>
                     {/* </div> */}
                     {/* <div className="h-full w-full bg-white flex-grow-0"></div> */}
