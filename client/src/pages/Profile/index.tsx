@@ -19,7 +19,7 @@ export function Profile() {
     }
 
     return (
-        <div className="flex-col h-full justify-center items-center inline-flex my-5 gap-5 ">
+        <div className="flex-col h-full justify-center items-center inline-flex gap-5 ">
             {/* //! profile */}
             <UserProfileCard {...profile} isLoading={isLoading} />
             <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow ">

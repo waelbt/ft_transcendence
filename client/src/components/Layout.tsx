@@ -169,10 +169,9 @@ function Layout() {
                     </nav>
                     {/* <div className="py-3 bg-black flex-grow inline-flex justify-center items-center"> */}
                     {/* <div className="h-full w-full flex-grow"> */}
-                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
-                        {/* <div className="w-full h-full flex justify-center items-center"> */}
+                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
                         <Outlet />
-                        <div className='h-full flex justify-center items-center'>
+                        <div className="h-full flex justify-center items-center">
                             <GlobalChat />
                         </div>
                     </div>

@@ -22,13 +22,13 @@ const router = createBrowserRouter([
                     return { Component: Lobby };
                 }
             },
-            {
-                path: '/chat',
-                lazy: async () => {
-                    let { Chat } = await import('./pages/Chat');
-                    return { Component: Chat };
-                }
-            },
+            // {
+            //     path: '/chat',
+            //     lazy: async () => {
+            //         let { Chat } = await import('./pages/Chat');
+            //         return { Component: Chat };
+            //     }
+            // },
             {
                 path: '/Game/:mode',
                 lazy: async () => {
