@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -9,6 +9,8 @@ import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
 import { join } from 'path';
 import { existsSync } from 'fs';
+import { AuthGuard } from '@nestjs/passport';
+import { jwtGuard } from 'src/auth/authGuard';
 
 
 @ApiTags('users')

@@ -36,6 +36,8 @@ export class AuthService {
             req.user
         );
         const user = await this.usersService.getOneUser(id);
+        req.res.setHeader('Authorization', `Bearer ${accessToken}`);
+        console.log(accessToken);
         // if (isUser) res.json({ message: 'User created', user: user });
         res.redirect(
             `http://localhost:8000/auth_popup?accessToken=${accessToken}&refreshToken=${refreshToken}`
@@ -44,9 +46,12 @@ export class AuthService {
 
     async refreshToken(@Req() req, @Res() res) {
         const foundUser = await this.matchRefreshToken(req);
-        const user = await this.usersService.getOneUser(foundUser.id);
+        const user = await this.usersService.getOneUser(foundUser.sub);
         console.log(user.email);
-        await this.generateATRT(res, user);
+        const ATRT = await this.generateATRT(res, user);
+        console.log(foundUser.sub);
+        console.log(ATRT);
+        return ATRT;
     }
 
     logout(@Res() res) {

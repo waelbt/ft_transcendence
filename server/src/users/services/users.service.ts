@@ -185,7 +185,7 @@ export class UsersService {
         console.log(friends);
         console.log(req.user.sub);
         const user = await this.getOneUser(userId);
-        delete user.hashPassword;
+        delete user.HashPassword;
         console.log(user);
         // const block = await this.blockUsers.listOfBlockedUsers(userId);
         const info = { user, friends };
