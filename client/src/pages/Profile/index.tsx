@@ -19,30 +19,12 @@ export function Profile() {
     }
 
     return (
-        <div className="flex-grow flex-col justify-center items-center inline-flex my-5 gap-10">
+        <div className="flex-col h-full justify-center items-center inline-flex my-5 gap-5 ">
+            {/* //! profile */}
             <UserProfileCard {...profile} isLoading={isLoading} />
-            <div className="w-2/3 h-full p-2 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
-                <Outlet context={profile} />
+            <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow ">
+                <Outlet />
             </div>
         </div>
     );
 }
-
-// ! user react query later
-// useEffect(() => {
-//     const fetchData = async () => {
-//         try {
-//             const res = await axiosPrivate.get(`users/${id}`);
-//             console.log(res.data);
-//             setProfile(res.data);
-//         } catch (e) {
-//             // ! serve error page in this case not found and forrebiden
-//             console.log(e);
-//             // ! navigae to home or error page
-//         }
-//     };
-
-//     id != user.id && id != 'me'
-//         ? fetchData()
-//         : setProfile(user);
-// }, [params]);
