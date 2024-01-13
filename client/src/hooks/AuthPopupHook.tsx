@@ -9,13 +9,12 @@ const useAuthPopup = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get('accessToken');
-        const refreshToken = queryParams.get('refreshToken');
+        // const refreshToken = queryParams.get('refreshToken');
 
-        if (accessToken && refreshToken) {
+        if (accessToken) {
             console.log(accessToken);
-            console.log(refreshToken);
             // Update the user store with the received tokens and set logged in status
-            updateState({ accessToken, refreshToken, isLogged: true });
+            updateState({ accessToken, isLogged: true });
             window.close();
             window.opener.location.reload();
         }

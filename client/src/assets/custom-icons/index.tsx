@@ -347,8 +347,8 @@ export const MessageIcon = () => {
                 />
                 <path
                     id="Vector_2"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M5.14307 4.396H20.5716V6.34405H5.14307V4.396ZM5.14307 8.2921H20.5716V10.2402H5.14307V8.2921ZM12.0002 12.1882H20.5716V14.1363H12.0002V12.1882Z"
                     fill="white"
                 />

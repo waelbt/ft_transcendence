@@ -33,10 +33,12 @@ function GlobalChat() {
                     </div>
                     <ul className="flex -space-x-4 rtl:space-x-reverse">
                         {Array.from({ length: 3 }, (_, index) => (
-                            <Avatar
-                                imageUrl={`${DEFAULT_PATH}${index + 1}.png`}
-                                style="w-6 h-6 bg-black rounded-[150px] border border-white"
-                            />
+                            <li key={index}>
+                                <Avatar
+                                    imageUrl={`${DEFAULT_PATH}${index + 1}.png`}
+                                    style="w-6 h-6 bg-black rounded-[150px] border border-white"
+                                />
+                            </li>
                         ))}
                     </ul>
                 </div>

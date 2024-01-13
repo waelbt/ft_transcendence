@@ -31,16 +31,13 @@ export class AuthService {
         console.log('here = ', req.user);
         var isUser = await this.usersService.findOneUser(id);
         if (!isUser) await this.usersService.createUser(req.user, id);
-        const { accessToken, refreshToken } = await this.generateATRT(
-            res,
-            req.user
-        );
+        const { accessToken } = await this.generateATRT(res, req.user);
         const user = await this.usersService.getOneUser(id);
         req.res.setHeader('Authorization', `Bearer ${accessToken}`);
         console.log(accessToken);
         // if (isUser) res.json({ message: 'User created', user: user });
         res.redirect(
-            `http://localhost:8000/auth_popup?accessToken=${accessToken}&refreshToken=${refreshToken}`
+            `http://localhost:8000/auth_popup?accessToken=${accessToken}`
         );
     }
 
@@ -83,7 +80,7 @@ export class AuthService {
                 },
                 {
                     secret: this.config.get('JWT_secret'),
-                    expiresIn: '1d'
+                    expiresIn: '10s'
                 }
             ),
             this.jwt.sign(
@@ -97,10 +94,13 @@ export class AuthService {
                 }
             )
         ]);
-        return { accessToken: access_token, refreshToken: refreshToken };
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true
+        });
+        return { accessToken: access_token };
         // res.send();
         // res.cookie('accessToken', access_token, { httpOnly: true, secure : true});
-        // res.cookie('refreshToken', refreshToken, { httpOnly: true, secure : true});
     }
 
     // async generate2FA(@Req() req){

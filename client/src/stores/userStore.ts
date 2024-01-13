@@ -7,7 +7,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 type UserStateType = {
     isLogged: boolean;
     accessToken: string | null;
-    refreshToken: string | null;
+    // refreshToken: string | null;
     id: string;
     email: string;
     avatar: string;
@@ -33,7 +33,7 @@ export const useUserStore = createWithEqualityFn<
         (set) => ({
             isLogged: false,
             accessToken: null,
-            refreshToken: null,
+            // refreshToken: null,
             id: '',
             email: '',
             avatar: 'https://tecdn.b-cdn.net/img/new/avatars/2.webp', // ! tmp
@@ -67,7 +67,7 @@ export const useUserStore = createWithEqualityFn<
                     {
                         isLogged: false,
                         accessToken: null,
-                        refreshToken: null,
+                        // refreshToken: null,
                         id: '',
                         email: '',
                         avatar: '',
