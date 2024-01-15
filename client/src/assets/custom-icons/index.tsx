@@ -164,6 +164,39 @@ export function AchievementIcon() {
     );
 }
 
+export function WinHeader() {
+    return (
+        <svg
+            width="478"
+            height="140"
+            viewBox="0 0 478 140"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M0 0H478V111.933L428.267 121.519C303.24 145.618 174.76 145.618 49.7329 121.519L0 111.933V0Z"
+                fill="#59D35E"
+            />
+        </svg>
+    );
+}
+
+export function LoseHeader() {
+    return (
+        <svg
+            width="478"
+            height="140"
+            viewBox="0 0 478 140"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M0 0H478V111.933L428.267 121.519C303.24 145.618 174.76 145.618 49.7329 121.519L0 111.933V0Z"
+                fill="#626262"
+            />
+        </svg>
+    );
+}
 // export function WinCupIcon() {
 //     return (
 //         <svg

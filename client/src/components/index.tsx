@@ -15,3 +15,6 @@ export { default as Twofa } from './Twofa';
 export { default as ProfileCompletion } from './ProfileCompletion';
 export { default as TwoFaVerfication } from './TwoFaVerfication';
 export { default as RequireAuth } from './RequireAuth';
+export { default as Modal } from './Modal';
+export { default as MatchResultModal } from './MatchResultModal';
+
