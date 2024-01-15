@@ -13,6 +13,7 @@ export class Middlware implements NestMiddleware {
 
         if (authHeader && authHeader.startsWith('Bearer ')) {
             var accessToken = authHeader.slice(7); // Remove 'Bearer ' prefix
+            // console.log('access is : ', accessToken);
         }
 
         if (!accessToken) {
