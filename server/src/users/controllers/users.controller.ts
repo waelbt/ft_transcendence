@@ -19,7 +19,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService,
     private readonly blockService: BlockService,) {}
 
-  @Get(':id/me')
+  @Get(':id/profile')
   // @ApiResponse({ status: 404, description: 'Not Found' })
   async userInfos(@Req() req, @Param('id') userId: string){
     return (await this.usersService.userInfos(req, userId));

@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards 
 import { AuthService } from "../services/auth.service";
 import { AuthDto, AuthDtoSignIn } from "../dto";
 import { ApiTags } from "@nestjs/swagger";
-import { refreshTokenGuard } from "src/common/guards";
+import { accessTokenGuard, refreshTokenGuard } from "src/common/guards";
 import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators";
 import { Request } from "express";
 import { JwtStrategy } from "../strategy";
@@ -29,6 +29,13 @@ export class AuthController {
     async googleLogin(@Req() req, @Res() res){
         console.log('im in callback google');
         await this.AuthService.setUpTokens(req, res, req.user.id);
+    }
+
+    // @UseGuards(accessTokenGuard)
+    @Public()
+    @Get('hi')
+    hi(){
+        console.log('im in');
     }
 
     @Get('42')
