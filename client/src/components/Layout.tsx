@@ -192,9 +192,9 @@ function Layout() {
                     {/* <div className="h-full w-full flex-grow"> */}
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
                         <Outlet />
-                        <div className="h-full flex justify-center items-center">
-                            <GlobalChat />
-                        </div>
+                        {/* <div className="h-full flex justify-center items-center"> */}
+                            {/* <GlobalChat /> */}
+                        {/* </div> */}
                     </div>
                     {/* </div> */}
                     {/* <div className="h-full w-full bg-white flex-grow-0"></div> */}

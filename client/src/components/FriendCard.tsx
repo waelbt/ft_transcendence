@@ -49,7 +49,7 @@ function FriendCard({ friendId }: FriendsTableProps) {
                         </div>
                     </div>
                 </Link>
-                <Popover className="">
+                <Popover className="relative debug">
                     {({ open }) => (
                         <>
                             <Popover.Button
@@ -72,7 +72,7 @@ function FriendCard({ friendId }: FriendsTableProps) {
                                 leaveTo="opacity-0 translate-y-1"
                             >
                                 <Popover.Panel
-                                    className={`absolute left-[85%]  z-10  w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
+                                    className={`absolute  top-0  z-10  w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
                                 >
                                     <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul
