@@ -85,7 +85,6 @@ export class RoomService {
 
     async joinRoom(joinRoomDto: JoinRoomDto, userId: string) {
         
-        console.log('zbiiiii');
         // check if the room existed and if the user is already joined
         const user = await this.prisma.user.findUnique({
             where: {

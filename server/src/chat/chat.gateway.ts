@@ -58,6 +58,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       // this.wsService.joinUserSocketToItsRooms(client.id, userCheck.userData.sub, this.server);
       // this.logger.debug(`Number of clients connected: ${sockets.size}`);
     // }
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.authorization);
+    if (userCheck.state === true)
+    {
+      await this.wsService.joinUserToGlobalChat(userCheck.userData.sub);
+      await this.wsService.joinUserSocketToGlobalChat(client.id, this.server);
+    }
   }
 
   
@@ -67,11 +73,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     // this.logger.debug(`Payload: ${payload}`);
     // this.server.emit('onMessage', payload);
     // const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.cookie);
-    console.log(`this user ${payload.id} is sending a message to this room ${payload.roomTitle}`);
+    // console.log(`this user ${payload.id} is sending a message to this room ${payload.roomTitle}`);
     console.log(`the message is : ${payload.message}`);
     try {
       
-      await this.wsService.createMessage(payload, payload.id);
+      // await this.wsService.createMessage(payload, payload.id);
       this.server.to(payload.roomTitle).emit('message', payload.message);
     } catch (err) {
       return (err);
@@ -130,6 +136,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     // if (userCheck.state === false)
     //   throw new WsException(userCheck.message);
     await this.wsService.unmuteUser(unmuteUserDto, unmuteUserDto.id);
+  }
+
+  @SubscribeMessage('globalChat')
+  async globalChat(client: Socket, payload: CreateMessageDto) {
+    console.log(client.handshake.headers.authorization);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.authorization);
+    if (userCheck.state == true)
+    {
+      await this.wsService.createGlobalRoom();
+      console.log(payload)
+      await this.wsService.createMessage(payload, userCheck.userData.sub);
+      this.server.to(payload.roomTitle).emit('globalMessage', payload.message);
+    }
   }
 
   async handleDisconnect(client: any) {
