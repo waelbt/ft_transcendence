@@ -272,6 +272,7 @@ export class friendsService {
             userId2
         );
         if (acceptORreject) return { message: 'AcceptOrReject' };
+        return { message: 'notFriend' };
         // this.listFriends()
         // return user;
     }

@@ -197,6 +197,10 @@ export class UsersService {
         console.log(user);
 
         const friends = await this.friendService.listFriends(user.id);
+
+        const friendsIds = friends.map((friends) => {
+            
+        })
         console.log(friends);
 
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
