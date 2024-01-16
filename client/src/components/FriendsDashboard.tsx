@@ -24,7 +24,7 @@ const FriendsDashboard: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/friends');
+                const response = await fetch('http://localhost:3000/friends'); // ! me and /users
                 const data: string[] = await response.json();
                 console.log(data);
                 setFriendsIdList(data);
@@ -34,7 +34,7 @@ const FriendsDashboard: React.FC = () => {
         };
 
         fetchData();
-    }, []);
+    }, [filter]);
 
     // useEffect(() => {
     //     if (filter == 'all') setFilteredFriends(friends);
