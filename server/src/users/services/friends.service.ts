@@ -211,9 +211,10 @@ export class friendsService {
         var friendListWithAction = await Promise.all(
             userFriends
                 .map(async (friendship) => {
-                    if (friendship.userId1 == viewerId) {
+                    console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
+                    if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
                         console.log('im in');
-                        return null;
+                        return ;
                     }
                     const friendId =
                         friendship.userId1 === userId
