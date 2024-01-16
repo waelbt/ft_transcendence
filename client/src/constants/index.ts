@@ -5,6 +5,8 @@ export const DEFAULT_PATH = './src/assets/images/default';
 
 export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
 
+export const MODES = ['classic', 'crazy', 'IA'];
+
 export const MENU_FIELDS = [
     {
         name: 'Setting & privacy',

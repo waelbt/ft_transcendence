@@ -56,8 +56,8 @@ export class AuthController {
 
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        await this.AuthService.refreshToken(req, res);
-        res.send('seccess');
+        // await this.AuthService.refreshToken(req, res);
+        res.send(await this.AuthService.refreshToken(req, res));
     }
 
     @Get('logout')
