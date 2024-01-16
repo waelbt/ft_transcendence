@@ -54,13 +54,8 @@ function Layout() {
 
     return (
         <>
-<<<<<<< HEAD
-            {isProfileComplete ? (
-                <ProfileCompletion />
-=======
             {isProfileComplete || F2A ? (
                 <Confirmation />
->>>>>>> front
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
