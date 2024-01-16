@@ -1,0 +1,110 @@
+.chat-profile {
+    display: grid;
+    align-items: center;
+    border: 1px solid #ccc;
+    width: 25%;
+    /* width: clamp(100px, 60%, 300px); */
+    grid-template-columns: repeat(1,1fr);
+
+  }
+  
+  .chat-profile .profile-image img{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: black solid 2px;
+  }
+  
+  .user-details {
+    /* flex: 1; */
+  }
+  
+  .user-name {
+    color: #000;
+    font-family: Acme;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  .action-buttons {
+    display: grid;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  
+  .action-buttons button {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+  }
+  
+  .challengcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #0c1318;
+    margin-left: 50px; */
+  
+  }
+
+  .challenge-button  {
+    /* background-color: #3498db; */
+    /* display: grid; */
+    align-items: center;
+    justify-content: center;
+    color: #0584FE;
+    font-family: Acme;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%; /* 16px */
+  }
+  
+  .challenge-button:hover  {
+    text-shadow : 0 0 20px #0584FE ,0 0 10px #0584FE;
+    scale: 1.2;
+  }
+
+  .seeprofilecontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .see-profile-button {
+    color: #4F4F4F;
+    font-family: Acme;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%; 
+  }
+  
+  .see-profile-button:hover {
+    text-shadow : 0 0 20px #4F4F4F ,0 0 10px #4F4F4F;
+    scale: 1.2;
+  }
+
+  .blockcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .block-button {
+    color: #F00;
+    font-family: Acme;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%;
+  }
+  .block-button:hover {
+    text-shadow : 0 0 20px #fe0505 ,0 0 10px #ff0000;
+    scale: 1.2;
+  }

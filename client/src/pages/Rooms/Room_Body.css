@@ -1,0 +1,5 @@
+.room_body {
+    display: inline-flex;
+    overflow: auto;
+    width: 100%;
+}
