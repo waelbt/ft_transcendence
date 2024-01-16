@@ -1,5 +1,5 @@
 import { Avatar } from '.';
-import { VersusIcon, WinHeader } from '../assets/custom-icons'; // ! make the header reusable in both cases
+import { VersusIcon, WinHeader } from '../assets/custom-icons';
 import { useModelStore } from '../stores/ModelStore';
 import { ImCross } from 'react-icons/im';
 
@@ -74,28 +74,3 @@ function MatchResultModal() {
 }
 
 export default MatchResultModal;
-
-//  <div className="p-[15px] left-0 top-0 absolute flex-col justify-start items-center gap-2.5 inline-flex">
-
-//     <div className="justify-center items-center gap-5 inline-flex">
-//         <div className="flex-col justify-start items-center gap-[5px] inline-flex">
-//             <img
-//                 className="rounded-[10px] shadow border-4 border-green-600"
-//                 src="https://via.placeholder.com/130x130"
-//             />
-
-//         </div>
-//         <div className="self-stretch flex-col justify-center items-center gap-5 inline-flex">
-//             <div className="w-[50px] h-[50px] relative"></div>
-
-//         </div>
-//         <div className="flex-col justify-start items-center gap-[5px] inline-flex">
-//             <img
-//                 className="w-[130px] h-[130px] relative rounded-[10px] shadow border-2 border-neutral-500"
-//                 src="https://via.placeholder.com/130x130"
-//             />
-//             <div className="text-neutral-500 text-[26px] font-normal font-['Acme']">
-//                 daiseken
-//             </div>
-//         </div>
-//     </div>

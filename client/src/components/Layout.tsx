@@ -16,26 +16,26 @@ function Layout() {
     const { logout, updateState, isProfileComplete, F2A } = useUserStore();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Define the fetchData function
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('/auth/refresh');
-                console.log(response);;
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+    // useEffect(() => {
+    //     // Define the fetchData function
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axios.get('/auth/refresh');
+    //             console.log(response);;
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
 
-        // Set up the interval to fetch data every 10 seconds
-        const intervalId = setInterval(() => {
-            console.log('Fetching data every 10 seconds...');
-            fetchData();
-        }, 10000);
+    //     // Set up the interval to fetch data every 10 seconds
+    //     const intervalId = setInterval(() => {
+    //         console.log('Fetching data every 10 seconds...');
+    //         fetchData();
+    //     }, 10000);
 
-        // Clean up the interval when the component unmounts
-        return () => clearInterval(intervalId);
-    }, []); // Empt
+    //     // Clean up the interval when the component unmounts
+    //     return () => clearInterval(intervalId);
+    // }, []); // Empt
 
     useEffect(() => {
         // if (!isLogged) navigate('/');
