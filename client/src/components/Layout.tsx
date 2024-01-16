@@ -5,35 +5,57 @@ import { Popover, Transition } from '@headlessui/react';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
 import { Avatar } from '.';
-import { useUserStore } from '../stores';
-import { ProfileCompletion } from '../pages/ProfileCompletion';
+import { useUserStore } from '../stores/userStore';
+// import { ProfileCompletion } from '../pages/ProfileCompletion';
+import Confirmation from '../pages/Confirmation';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import GlobalChat from './GlobalChat';
 
 function Layout() {
-    const { logout, login, isLogged, isProfileComplete } = useUserStore();
+    const axiosPrivate = useAxiosPrivate();
+    const { logout, updateState, isProfileComplete, F2A } = useUserStore();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!isLogged) navigate('/');
-    }, []);
+    // useEffect(() => {
+    //     // Define the fetchData function
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axios.get('/auth/refresh');
+    //             console.log(response);;
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
+
+    //     // Set up the interval to fetch data every 10 seconds
+    //     const intervalId = setInterval(() => {
+    //         console.log('Fetching data every 10 seconds...');
+    //         fetchData();
+    //     }, 10000);
+
+    //     // Clean up the interval when the component unmounts
+    //     return () => clearInterval(intervalId);
+    // }, []); // Empt
 
     useEffect(() => {
+        // if (!isLogged) navigate('/');
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
-                await login();
+                const { data } = await axiosPrivate.get('/users/me');
+                updateState(data.user);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         // Call the async function
         fetchData();
     }, []); // Empty dependency array means this effect runs once after the initial render
 
     return (
         <>
-            {isProfileComplete ? (
-                <ProfileCompletion />
+            {isProfileComplete || F2A ? (
+                <Confirmation />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <nav className="bg-white border-b border-neutral-100">
@@ -166,7 +188,17 @@ function Layout() {
                             </div>
                         </div>
                     </nav>
-                    <Outlet />
+                    {/* <div className="py-3 bg-black flex-grow inline-flex justify-center items-center"> */}
+                    {/* <div className="h-full w-full flex-grow"> */}
+                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
+                        <Outlet />
+                        <div className="h-full flex justify-center items-center">
+                            <GlobalChat />
+                        </div>
+                    </div>
+                    {/* </div> */}
+                    {/* <div className="h-full w-full bg-white flex-grow-0"></div> */}
+                    {/* </div> */}
                 </div>
             )}
         </>

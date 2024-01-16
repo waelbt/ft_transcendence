@@ -1,16 +1,20 @@
 {
-    "friends": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "auth": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTU4ODM3MzY3MTUwMjU4OTA2MTUiLCJlbWFpbCI6ImJvdXR6b3VnYXJ0ZUBnbWFpbC5jb20iLCJpYXQiOjE3MDQ5MTA4NTAsImV4cCI6MTcwNDk5NzI1MH0.WCgua-jehJT8ayCDWpsh6vUXDhcw5VX9XG5EFUD-CIE",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTU4ODM3MzY3MTUwMjU4OTA2MTUiLCJlbWFpbCI6ImJvdXR6b3VnYXJ0ZUBnbWFpbC5jb20iLCJpYXQiOjE3MDQ5MTA4NTAsImV4cCI6MTcwNTUxNTY1MH0.bHEP54KBvZna7xW8PbHGc4l8yTqJT4MtXKiyTnL3_Cs"
+    },
+    "friends": ["162122", "112965", "3", "4", "5", "6", "7", "8", "9"],
     "friendDetails": [
         {
-            "id": 1,
-            "name": "dos404",
+            "id": 162122,
+            "name": "messaada",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
         {
-            "id": 2,
-            "name": "dos404",
+            "id": 112965,
+            "name": "ibouchaf",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",
             "actions": ["block", "unfriend", "challenge"]

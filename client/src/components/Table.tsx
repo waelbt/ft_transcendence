@@ -30,6 +30,7 @@ const Table = <D extends object>({
         } as TableOptions<D>);
 
     return (
+        // <div className='"max-h-[300px] overflow-y-auto"'>
         <table {...getTableProps()} className={` ${styles.tableStyle || ''}`}>
             <thead className={styles.theadStyle || ''}>
                 {headerGroups.map((headerGroup) => (
@@ -70,6 +71,7 @@ const Table = <D extends object>({
                 })}
             </tbody>
         </table>
+        // </div>
     );
 };
 

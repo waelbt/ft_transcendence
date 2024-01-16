@@ -32,7 +32,6 @@ body {
     @apply m-0 p-0 bg-white;
 }
 
-
 .skeleton-avatar,
 .skeleton-text,
 .skeleton-button {
@@ -68,3 +67,15 @@ body {
         background-position: 468px 0;
     }
 }
+
+.debug {
+    border: 2px solid red !important;
+    & > * {
+        border: 2px solid green !important;
+        & > * {
+            border: 2px solid blue !important;
+        }
+    }
+}
+
+

@@ -67,9 +67,9 @@ const MatchTable = () => {
         // Assuming you have a way to determine a win or loss, adjust the logic accordingly
         // This is just an example logic, replace it with your actual win/loss condition
         if (match.score.score1 > match.score.score2) {
-            return 'rounded-3xl bg-emerald-100  border-b-8 border-white rounded-full '; // Green for win
+            return 'rounded-3xl bg-emerald-100 border-b-8 border-white rounded-full '; // Green for win
         } else {
-            return 'rounded-3xl bg-red-200   border-b-8 border-white rounded-full'; // Red for loss
+            return 'rounded-3xl bg-red-200 border-b-8 border-white rounded-full'; // Red for loss
         }
     };
 
@@ -88,7 +88,9 @@ const MatchTable = () => {
     }, []);
     return (
         // ! protect if the data is empty
-        <div className="overflow-y-auto max-h-[540px] w-full">
+        <div className="overflow-y-auto max-h-[560px] w-full ">
+            {' '}
+            {/* Adjust max height as needed */}
             <Table
                 columns={columns}
                 data={data}
@@ -97,10 +99,11 @@ const MatchTable = () => {
                         'w-full text-xl text-neutral-500 font-normal font-["Acme"]',
                     theadStyle:
                         'sticky top-0 z-10 border-b border-neutral-100 bg-white ',
-                    tbodyStyle: '',
+                    tbodyStyle: 'overflow-y-auto w-full',
                     trStyle: '',
                     thStyle: 'px-2 py-5',
                     tdStyle: 'p-2 text-center align-middle'
+                    // scrollableTbodyStyle: 'max-h-[400px] overflow-y-auto' // Customize this as needed
                 }}
                 getRowProps={(row) => ({
                     className: getRowColor(row.original)

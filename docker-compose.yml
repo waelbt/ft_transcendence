@@ -11,14 +11,18 @@ services:
         volumes:
             - ./client:/client
             # ! - client-node-modules:/client/node_modules (if someone using mac os or windowns uncommment this )
+        env_file: ./client/.env
         networks:
             - transcendence
 
     server:
         container_name: server
+        env_file: ./server/.env
         build:
             context: ./server
             dockerfile: Dockerfile
+            args:
+                UPLOADS_DESTINATION: "./upload"
         ports:
             - '4000:4000'
         volumes:
@@ -44,8 +48,6 @@ services:
 networks:
     transcendence:
         driver: bridge
-
-
 # ! if someone using mac os or windowns uncommment this
 # volumes:
 #   client-node-modules:

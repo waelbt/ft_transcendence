@@ -23,7 +23,7 @@ const TwoFA = () => {
 
     return (
         <div className="px-5 py-2 bg-gray-100 rounded-[5px] flex-col justify-start items-start gap-[5px] inline-flex w-[600px] h-[270px]">
-            <h2 className="text-center text-neutral-500 text-[22px] font-normal font-['Acme']">
+            <h2 className="text-center text-neutral-500 text-[22px] font-normal font-['Acme']"> 
                 Two Factor Authentication
             </h2>
 

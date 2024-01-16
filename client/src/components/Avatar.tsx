@@ -19,8 +19,10 @@ const Avatar: FC<AvatarProps> = ({ imageUrl, state, style, onCLick }) => {
     return (
         <>
             <div
-                className={`${style} flex items-start gap-2 relative  border-2 border-dashed border-grey-900 rounded-full hover:border-pink uploader cursor-pointer avatar 
-                ${state ? state : ''} ${imageUrl ? 'border-none' : ''}  `}
+                className={`flex items-start gap-2 relative  border-2 border-dashed border-grey-900 rounded-full hover:border-pink uploader cursor-pointer avatar 
+                ${state ? state : ''} ${
+                    imageUrl ? 'border-none' : ''
+                } ${style}  `}
                 style={
                     imageUrl
                         ? {

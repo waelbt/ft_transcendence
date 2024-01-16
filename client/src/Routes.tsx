@@ -1,27 +1,20 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
+    // {
+    //     path: '/',
+    //     lazy: async () => {
+    //         let { Auth } = await import('./pages/Auth');
+    //         return { Component: Auth };
+    //     }
+    // },
     {
         path: '/',
         lazy: async () => {
-            let { Auth } = await import('./pages/Auth');
-            return { Component: Auth };
-        }
-    },
-    {
-        path: '/',
-        lazy: async () => {
-            let { Layout } = await import('./components');
-            return { Component: Layout };
+            let { RequireAuth } = await import('./components');
+            return { Component: RequireAuth };
         },
         children: [
-            // {
-            //     index: true,
-            //     lazy: async () => {
-            //         let { Profile } = await import('./pages/Profile');
-            //         return { Component: Profile };
-            //     }
-            // },
             {
                 path: '/home',
                 lazy: async () => {
@@ -43,6 +36,13 @@ const router = createBrowserRouter([
                     return { Component: Game };
                 }
             },
+            // {
+            //     path: '/Game/:mode',
+            //     lazy: async () => {
+            //         let { Game } = await import('./pages/Game');
+            //         return { Component: Game };
+            //     }
+            // },
             {
                 path: 'Profile/:id',
                 lazy: async () => {
