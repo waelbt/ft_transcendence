@@ -2,8 +2,10 @@ import { Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedExcep
 import { friendsService } from "../services/friends.service";
 import { UsersService } from "../services/users.service";
 import { ApiParam, ApiTags } from "@nestjs/swagger";
+import { Public } from "src/common/decorators";
 
 @ApiTags('friends')
+@Public()
 @Controller('friends')
 export class friendsController {
     constructor(private readonly friendsService: friendsService,

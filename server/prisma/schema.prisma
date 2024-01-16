@@ -59,7 +59,7 @@ model Block {
 }
 
 model Achievement{
-	id            	String   @id @unique
+	id            	String  @id @unique
   	user       		User?   @relation(fields: [UserId], references: [id])
   	UserId     		String  @unique
 	welcome			Boolean @default(false) // if u win ur first game
@@ -69,7 +69,7 @@ model Achievement{
 	silver			Boolean @default(false) // if u win 5 games in row
 	goldon			Boolean @default(false) // if u win 10 games in row 
 	hacker			Boolean @default(false) // if u win agains boot
-
+	consecutiveWins	Int 	@default(0)
 }
 
 model Game {

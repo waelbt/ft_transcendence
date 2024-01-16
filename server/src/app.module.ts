@@ -13,6 +13,8 @@ import { ChatModule } from './chat/chat.module';
 import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
 import { ScheduleModule } from '@nestjs/schedule';
+import { APP_GUARD } from '@nestjs/core';
+import { accessTokenGuard } from './common/guards';
 const uploadsDestination = process.env.UPLOADS_DESTINATION;
 
 @Module({
@@ -29,10 +31,10 @@ const uploadsDestination = process.env.UPLOADS_DESTINATION;
     ],
     controllers: [ChatController],
     providers: [
-        // {
-        //     provide: APP_GUARD,
-        //     useClass: accessTokenGuard
-        // },
+        {
+            provide: APP_GUARD,
+            useClass: accessTokenGuard
+        },
         RoomService
     ]
 })
