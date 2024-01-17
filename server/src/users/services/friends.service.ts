@@ -2,7 +2,6 @@ import {
     Inject,
     Injectable,
     NotFoundException,
-    Param,
     UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
@@ -176,8 +175,25 @@ export class friendsService {
                     friendship.userId2 === userId
                         ? friendship.user[1]
                         : friendship.user[0];
-                if (friendUser.id !== userId) return friendUser;
-                return frienduser2;
+
+                if (friendUser.id !== userId){
+                    const id = friendUser.id;
+                    const avatar = friendUser.avatar;
+                    const name = friendUser.fullName;
+                    return {
+                        id,
+                        avatar,
+                        name
+                    };
+                }
+                const id = frienduser2.id;
+                const avatar = frienduser2.avatar;
+                const name = frienduser2.fullName;
+                return {
+                    id,
+                    avatar,
+                    name
+                };
             })
             .filter((friend) => friend.id !== userId);
 
@@ -195,9 +211,10 @@ export class friendsService {
         var friendListWithAction = await Promise.all(
             userFriends
                 .map(async (friendship) => {
-                    if (friendship.userId1 == viewerId) {
+                    console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
+                    if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
                         console.log('im in');
-                        return null;
+                        return ;
                     }
                     const friendId =
                         friendship.userId1 === userId
@@ -212,9 +229,13 @@ export class friendsService {
                     const user = await this.prisma.user.findUnique({
                         where: { id: friendId }
                     });
-
+                    const id = user.id;
+                    const name = user.fullName;
+                    const avatar = user.avatar;
                     return {
-                        user,
+                        id,
+                        name,
+                        avatar,
                         action: isFriend ? 'Send Message' : 'Add Friend'
                     };
                 })
@@ -252,6 +273,7 @@ export class friendsService {
             userId2
         );
         if (acceptORreject) return { message: 'AcceptOrReject' };
+        return { message: 'notFriend' };
         // this.listFriends()
         // return user;
     }

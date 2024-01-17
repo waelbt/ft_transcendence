@@ -2,6 +2,7 @@ import { Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedExcep
 import { friendsService } from "../services/friends.service";
 import { UsersService } from "../services/users.service";
 import { ApiParam, ApiTags } from "@nestjs/swagger";
+import { Public } from "src/common/decorators";
 
 @ApiTags('friends')
 @Controller('friends')
@@ -16,10 +17,6 @@ export class friendsController {
     async sendFriendRequest(
         @Req() req,
         @Param('friendId') friendId: string){
-            if (friendId == req.user.sub){
-                console.log('user1: ', friendId, 'sub: ', req.user.sub);
-                throw new UnauthorizedException('You are not allowed to send this friend request');
-            }
             try{
                 await this.friendsService.sendFriendRequest(req.user.sub, friendId);
                 return { message: 'Friend request sent successfully' };
@@ -56,10 +53,6 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
-        // if (friendId != req.user.sub){
-        //     console.log('user1: ', friendId, 'sub: ', req.user.sub);
-        //     throw new UnauthorizedException('You are not allowed to reject this friend request');
-        // }
         try{
             await this.friendsService.rejectFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request Rejected successfully'};
@@ -72,17 +65,12 @@ export class friendsController {
     }
 
     //endPoint to return which type of profile to display
-    @Get(':id1/typeProfile/:id2')
+    @Get('typeProfile/:id2')
     async typeOfProfile(
         @Req() req,
-        @Param('id1') userId1: string,
         @Param('id2') userId2: string,
     ){
-        if (userId1 != req.user.sub){
-            console.log('user1: ', userId1, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to remove this user from friends');
-        }
-        return (await this.friendsService.typeOfProfile(userId1, userId2));
+        return (await this.friendsService.typeOfProfile(req.user.sub, userId2));
     }
 
     //endPoint to remove user from friend list
@@ -91,10 +79,6 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
-        // if (friendId != req.user.sub){
-        //     console.log('user1: ', friendId, 'sub: ', req.user.sub);
-        //     throw new UnauthorizedException('You are not allowed to remove this friend request');
-        // }
         try{
             await this.friendsService.removeSentFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request sent remove successfully'};
@@ -112,10 +96,6 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
-        if (friendId != req.user.sub){
-            console.log('user1: ', friendId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to remove this user from friends');
-        }
         try{
             await this.friendsService.removeFriend(req.user.sub, friendId);
             return { message: 'Friend remove successfully'};
@@ -128,10 +108,10 @@ export class friendsController {
     }
 
     //endPoint to return number of friends
-    @Get(':id/numberOfFriends')
-    async numberOfFriends(@Param('id') userId: string){
+    @Get('numberOfFriends')
+    async numberOfFriends(@Req() req){
         try {
-            const numberOfFriends = await this.friendsService.getNumberOfFriends(userId);
+            const numberOfFriends = await this.friendsService.getNumberOfFriends(req.user.sub);
             return { numberOfFriends };
           } catch (error) {
             if (error instanceof NotFoundException) {
@@ -142,14 +122,10 @@ export class friendsController {
     }
 
     //endPoint for the list of friends
-    @Get(':id/listFriends')
-    async getListFriends(@Req() req, @Param('id') userId: string){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to see this friend list');
-        }
+    @Get('listFriends')
+    async getListFriends(@Req() req){
         try {
-            const friends = await this.friendsService.listFriends(userId);
+            const friends = await this.friendsService.listFriends(req.user.sub);
             return { friends };
           } catch (error) {
             if (error instanceof NotFoundException) {
@@ -160,18 +136,13 @@ export class friendsController {
     }
 
     //endPoint to list friends for another user
-    @Get(':id/friends/:viewerId')
+    @Get('friends/:viewerId')
     async userListFriends(
         @Req() req,
-        @Param('id') userId: string,
         @Param('viewerId') viewerId: string,
     ){
-        if (userId != req.user.sub){
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException('You are not allowed to see this friend list');
-        }
         try {
-            const friends = await this.friendsService.userListFriends(userId, viewerId);
+            const friends = await this.friendsService.userListFriends(req.user.sub, viewerId);
             return { friends };
           } catch (error) {
             if (error instanceof NotFoundException) {

@@ -138,26 +138,43 @@ export class UsersService {
     }
 
     async userInfos(@Req() req, userId: string) {
-        const friends = await this.friendService.userListFriends(req.user.sub, userId);
-        console.log(friends);
-        console.log(req.user.sub);
+        const friends = await this.friendService.userListFriends(
+            req.user.sub,
+            userId
+        );
+
+        const friendsIds = friends.map((friends) => {
+            return friends.id;
+        })
+
         const user = await this.getOneUser(userId);
         delete user.HashPassword;
         console.log(user);
-        // const block = await this.blockUsers.listOfBlockedUsers(userId);
-        const info = { user, friends};
+        //add the type of profile string
+        const type = await this.friendService.typeOfProfile(req.user.sub, userId);
+        const info = { user, friendsIds , type};
         return info;
     }
 
     async myInfos(@Req() req) {
         const user = await this.getOneUser(req.user.sub);
+        delete user.HashPassword;
         console.log(user);
 
         const friends = await this.friendService.listFriends(user.id);
-        console.log(friends);
+
+        const friendsIds = friends.map((friends) => {
+            return friends.id;
+        })
+
+        console.log(friendsIds);
 
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
-        const info = { user, friends, block };
+        const blocksIds = block.map((block) => {
+            return block.id;
+        })
+
+        const info = { user, friendsIds, blocksIds };
         return info;
     }
 

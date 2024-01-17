@@ -1,108 +1,126 @@
-import { ForbiddenException, Injectable, Req, Res, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { AuthDto, AuthDtoSignIn } from "../dto";
-import * as argon from 'argon2';
-import { UsersService } from "src/users/services/users.service";
-import { User } from "@prisma/client";
-import * as speakeasy from 'speakeasy';
-import * as qrcode from 'qrcode';
-import * as otplib from 'otplib';
-import * as qrcodeLib from 'qrcode';
-
+import {
+    Injectable,
+    Req,
+    Res,
+    UnauthorizedException
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
+import { UsersService } from 'src/users/services/users.service';
+import { User } from '@prisma/client';
 
 @Injectable({})
 export class AuthService {
-    constructor (private PrismaOrmService:PrismaOrmService,
-        private jwt:JwtService,
+    constructor(
+        private PrismaOrmService: PrismaOrmService,
+        private jwt: JwtService,
         private config: ConfigService,
-        private usersService: UsersService) {}
+        private usersService: UsersService
+    ) {}
 
-        async setUpTokens(@Req() req, @Res() res, id: string){
-            console.log('here = ', req.user);
-            var isUser = await this.usersService.findOneUser(id);
-            if (!isUser)
-                await this.usersService.createUser(req.user, id);
-            await this.generateATRT(res, req.user);
-            const user = await this.usersService.getOneUser(id);
-            if (isUser)
-                res.redirect('http://localhost:8000/home');
+    async setUpTokens(@Req() req, @Res() res, id: string) {
+        console.log('here = ', req.user);
+        var isUser = await this.usersService.findOneUser(id);
+        if (!isUser) await this.usersService.createUser(req.user, id);
+        const { accessToken } = await this.generateATRT(res, req.user);
+        const user = await this.usersService.getOneUser(id);
+        req.res.setHeader('Authorization', `Bearer ${accessToken}`);
+        console.log(accessToken);
+        // if (isUser) res.json({ message: 'User created', user: user });
+        res.redirect(
+            `http://localhost:8000/auth_popup?accessToken=${accessToken}`
+        );
+    }
+
+    async refreshToken(@Req() req, @Res() res) {
+        const foundUser = await this.matchRefreshToken(req, res);
+        const user = await this.usersService.getOneUser(foundUser.sub);
+        console.log(user.email);
+        const ATRT = await this.generateATRT(res, user);
+        console.log(foundUser.sub);
+        console.log(ATRT);
+        return ATRT;
+    }
+
+    logout(@Res() res) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.redirect('http://localhost:8000/');
+    }
+
+    async matchRefreshToken(@Req() req, @Res() res) {
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            var accessToken = authHeader.slice(7);
         }
 
-        async refreshToken(@Req() req, @Res() res){
-            const foundUser = await this.matchRefreshToken(req);
-            const user = await this.usersService.getOneUser(foundUser.id);
-            console.log(user.email);
-            await this.generateATRT(res, user);
+        if (!accessToken) {
+            return res.status(401).json({ message: 'Unauthorized' });
         }
-
-        logout(@Res() res){
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
-            res.redirect('http://localhost:8000/');
+        try {
+            const payload = await this.jwt.verify(
+                accessToken,
+                this.config.get('JWT_secret')
+            );
+            return payload;
+        } catch (err) {
+            throw new UnauthorizedException('No Valid Token');
         }
+    }
 
-        async matchRefreshToken(@Req() req){
-            const refreshToken = req.cookies['refreshToken'];
-            console.log('helloooo');
-            try{
-                const payload = await this.jwt.verify(refreshToken, this.config.get('JWT_secret'));
-                return payload;
-            }
-            catch(err){
-                throw new UnauthorizedException('No Valid Token');
-            }
-        }
-
-        async generateATRT(@Res() res, user: User){
-            const [access_token, refreshToken] = await Promise.all([
-                this.jwt.signAsync(
-                 {
+    async generateATRT(@Res() res, user: User) {
+        const [access_token, refreshToken] = await Promise.all([
+            this.jwt.signAsync(
+                {
                     sub: user.id,
-                    email: user.email,
-                 },
-                 {
+                    email: user.email
+                },
+                {
                     secret: this.config.get('JWT_secret'),
-                    expiresIn: '1d',
-                 },
-                ),
-                this.jwt.sign(
-                 {
+                    expiresIn: '1d'
+                }
+            ),
+            this.jwt.sign(
+                {
                     sub: user.id,
-                    email: user.email,
-                 },
-                 {
+                    email: user.email
+                },
+                {
                     secret: this.config.get('JWT_secret'),
-                    expiresIn: '7d',
-                 },
-                ),
-            ]);
-            res.cookie('accessToken', access_token, { httpOnly: true, secure : true});
-            res.cookie('refreshToken', refreshToken, { httpOnly: true, secure : true});
-        }
+                    expiresIn: '7d'
+                }
+            )
+        ]);
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true
+        });
+        return { accessToken: access_token };
+        // res.send();
+        // res.cookie('accessToken', access_token, { httpOnly: true, secure : true});
+    }
 
-        // async generate2FA(@Req() req){
-        //     const user = this.usersService.getOneUser(req.user.sub);
-        //     console.log('id: ', (await user).id);
-        //     const secret = otplib.authenticator.generateSecret();
-        //     const otpAuthenticator = otplib.authenticator.keyuri((await user).nickName, "sooooo", secret);
-        //     const f2a = await this.PrismaOrmService.user.update({
-        //         where: {id: (await user).id},
-        //         data: {F2A_Secret: secret},
-        //     });
-        //     const qrcode = await qrcodeLib.toDataURL(otpAuthenticator);
-        //     return qrcode;
-        //     // const secret = speakeasy.generateSecret({length: 20});
-        //     // const uri = await qrcode.toDataURL(secret.otpauth_url);
-        //     // console.log("secret: \n", secret);
-        //     // return ({
-        //     //     secret: secret.base32,
-        //     //     uri: uri,
-        //     // })
-        // }
-
+    // async generate2FA(@Req() req){
+    //     const user = this.usersService.getOneUser(req.user.sub);
+    //     console.log('id: ', (await user).id);
+    //     const secret = otplib.authenticator.generateSecret();
+    //     const otpAuthenticator = otplib.authenticator.keyuri((await user).nickName, "sooooo", secret);
+    //     const f2a = await this.PrismaOrmService.user.update({
+    //         where: {id: (await user).id},
+    //         data: {F2A_Secret: secret},
+    //     });
+    //     const qrcode = await qrcodeLib.toDataURL(otpAuthenticator);
+    //     return qrcode;
+    //     // const secret = speakeasy.generateSecret({length: 20});
+    //     // const uri = await qrcode.toDataURL(secret.otpauth_url);
+    //     // console.log("secret: \n", secret);
+    //     // return ({
+    //     //     secret: secret.base32,
+    //     //     uri: uri,
+    //     // })
+    // }
 }
 /*
    async signUp(AuthDto: AuthDto) {
