@@ -31,13 +31,6 @@ export class AuthController {
         await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
-    // @UseGuards(accessTokenGuard)
-    @Public()
-    @Get('hi')
-    hi(){
-        console.log('im in');
-    }
-
     @Get('42')
     @Public()
     @UseGuards(AuthGuard('42'))
@@ -63,8 +56,7 @@ export class AuthController {
 
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        await this.AuthService.refreshToken(req, res);
-        res.send('seccess');
+        res.send(await this.AuthService.refreshToken(req, res));
     }
 
     @Get('logout')
