@@ -8,6 +8,7 @@ import { BiSolidDownArrow } from 'react-icons/bi';
 import { Popover, Transition } from '@headlessui/react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import Popup from 'reactjs-popup';
 
 type UserProfileCardProps = {
     id: string;
@@ -96,9 +97,50 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-{/* props.id != id */}
+                        {/* props.id != id */}
+                        <Popup
+                            trigger={
+                                <div
+                                    className={`group px-2.5 text-white py-[21px] justify-center items-center gap-2.5 inline-flex hover:bg-neutral-100 rounded `}
+                                >
+                                    <div className="text-neutral-500 text-xl font-normal font-['Acme']">
+                                        More
+                                    </div>
+                                    <BiSolidDownArrow
+                                        className="text-neutral-500"
+                                        size={12}
+                                    />
+                                </div>
+                                // <BiSolidDownArrow
+                                //     className="text-neutral-500"
+                                //     size={12}
+                                // />
+                            }
+                            position="bottom center"
+                            nested
+                        >
+                            <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                <ul
+                                    className="py-2 text-sm text-zinc-600 "
+                                    aria-labelledby="dropdownMenuIconButton"
+                                >
+                                wael
+                                    {/* {props.actions.map(
+                                                            (action, index) => (
+                                                                <li
+                                                                    className="block px-4 py-2 hover:bg-gray-100 "
+                                                                    key={index}
+                                                                    // onClick={() => ()  axiosPrivate.get(`/${action}/id`)}
+                                                                >
+                                                                    {action}
+                                                                </li>
+                                                            )
+                                                        )} */}
+                                </ul>
+                            </div>
+                        </Popup>
                         {true && (
-                            <Popover className="debug relative">
+                            <Popover className="relative">
                                 {({ open }) => (
                                     <>
                                         <Popover.Button
@@ -158,7 +200,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <div className="px-1 py-1 justify-center items-center gap-2.5 inline-flex">
                         <AchievementIcon />
                         <div className="text-amber-500 text-3xl font-normal font-['Acme']">
-                            0/13 achievement{' '}
+                            0/13 achievement
                         </div>
                     </div>
                     <div className="px-1 justify-center items-center gap-1.5 inline-flex">
