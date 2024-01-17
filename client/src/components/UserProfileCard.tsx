@@ -27,7 +27,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     // setting
     const navLinks = ['history', 'achivements', 'friends'];
     if (props.id === id) {
-        navLinks.push('setting');
+        navLinks.push('setting'); //! protect this
     }
 
     useEffect(() => {
@@ -96,9 +96,9 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-
-                        {props.id != id && (
-                            <Popover className="">
+{/* props.id != id */}
+                        {true && (
+                            <Popover className="debug relative">
                                 {({ open }) => (
                                     <>
                                         <Popover.Button
@@ -126,7 +126,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                             leaveTo="opacity-0 translate-y-1"
                                         >
                                             <Popover.Panel
-                                                className={`absolute left-[85%]  z-10  w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
+                                                className={`absolute top-0 right-0 z-10  w-screen max-w-sm transform px-4 sm:px-0 lg:max-w-3xl`}
                                             >
                                                 <div className="bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                                     <ul
