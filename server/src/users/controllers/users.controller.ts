@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,9 +7,11 @@ import { InvalidFileException } from '../multer/file.exception';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
+import { jwtGuard } from 'src/auth/authGuard';
 
 
 @ApiTags('users')
+@UseGuards(jwtGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
