@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     async refreshToken(@Req() req, @Res() res) {
-        const foundUser = await this.matchRefreshToken(req);
+        const foundUser = await this.matchRefreshToken(req, res);
         const user = await this.usersService.getOneUser(foundUser.sub);
         console.log(user.email);
         const ATRT = await this.generateATRT(res, user);
@@ -49,12 +49,19 @@ export class AuthService {
         res.redirect('http://localhost:8000/');
     }
 
-    async matchRefreshToken(@Req() req) {
-        const refreshToken = req.cookies['refreshToken'];
-        console.log('helloooo');
+    async matchRefreshToken(@Req() req, @Res() res) {
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            var accessToken = authHeader.slice(7);
+        }
+
+        if (!accessToken) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
         try {
             const payload = await this.jwt.verify(
-                refreshToken,
+                accessToken,
                 this.config.get('JWT_secret')
             );
             return payload;
