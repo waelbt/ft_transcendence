@@ -26,24 +26,26 @@ export class gameService {
     }
 
     async winnerAchievements(userId: string, mode: string, result: string){
-        const achievement = await this.prisma.achievement.findUnique({ where: { id: userId } });
+        const achievement = await this.prisma.achievement.findUnique({ where: { UserId: userId } });
 
+        console.log('chihja');
+        console.log(achievement);
         // if u win ur first game
         await this.firstGameWin(achievement, userId);
 
-        // if u win by 5-0
+        // // if u win by 5-0
         await this.bigWin(achievement, userId, result);
 
-        // 1- if u win 3 games in row brown | 2- if u win 5 games in row silver | 3- if u win 10 games in row golden    
+        // // 1- if u win 3 games in row brown | 2- if u win 5 games in row silver | 3- if u win 10 games in row golden    
         await this.consecutiveWinsAchievements(achievement, userId);
         
-        // if u win agains boot
+        // // if u win agains boot
         await this.winsVSboot(achievement, userId);
     }
 
     async loserAchievement(userId: string, result: string){
         // if u lose by 5-0
-        const achievement = await this.prisma.achievement.findUnique({ where: { id: userId } });
+        const achievement = await this.prisma.achievement.findUnique({ where: { UserId: userId } });
 
         if (achievement && !achievement.khari){
             // User has lose a game with a score of 0-5
@@ -57,7 +59,9 @@ export class gameService {
     }
 
     async firstGameWin(achievement: Achievement, userId: string){
+        // console.log('here: ', achievement.welcome);
         if (achievement && !achievement.welcome) {          
+            console.log('hanaya: ', userId);
             await this.prisma.achievement.update({
                 where: { UserId: userId },
                 data: { welcome: true },
@@ -82,25 +86,25 @@ export class gameService {
         if (achievement) {
             const newConsecutiveWins = achievement.consecutiveWins + 1;
             await this.prisma.achievement.update({
-                where: { id: userId },
+                where: { UserId: userId },
                 data: { consecutiveWins: newConsecutiveWins },
             });
         }
         if (achievement && achievement.consecutiveWins == 3) {
             await this.prisma.achievement.update({
-              where: { id: userId },
+              where: { UserId: userId },
               data: { brown: true },
             });
         }
         if (achievement && achievement.consecutiveWins == 5) {
             await this.prisma.achievement.update({
-              where: { id: userId },
+              where: { UserId: userId },
               data: { silver: true },
             });
         }
         if (achievement && achievement.consecutiveWins == 10) {
             await this.prisma.achievement.update({
-              where: { id: userId },
+              where: { UserId: userId },
               data: { goldon: true },
             });
         }

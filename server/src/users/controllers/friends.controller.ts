@@ -1,8 +1,9 @@
 import { Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
 import { friendsService } from "../services/friends.service";
 import { UsersService } from "../services/users.service";
-import { ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
 
+@ApiBearerAuth()
 @ApiTags('friends')
 @Controller('friends')
 export class friendsController {

@@ -1,17 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
-import { jwtGuard } from 'src/auth/authGuard';
 
 
 @ApiTags('users')
-@UseGuards(jwtGuard)
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
@@ -34,12 +33,12 @@ export class UsersController {
     return (await this.usersService.myInfos(req));
   }
 
-  @Post()
-  @ApiCreatedResponse()
-  createUser(@Body() user: User) {
-    console.log('userId /////', user)
-    return (this.usersService.createUser(user, user.id));
-  }
+  // @Post()
+  // @ApiCreatedResponse()
+  // createUser(@Body() user: User) {
+  //   console.log('userId /////', user)
+  //   return (this.usersService.createUser(user, user.id));
+  // }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -80,7 +79,7 @@ export class UsersController {
     return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
-  @Get()
+  @Get('all')
   @ApiBearerAuth()
   @ApiOkResponse()
   findAllUser() {
