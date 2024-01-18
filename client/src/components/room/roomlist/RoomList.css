@@ -96,3 +96,23 @@ border: 1px solid ;
   position: fixed;
   right: 77%;
 }
+
+
+Copy code
+.room-types {
+  display: flex;
+  justify-content: space-between;
+}
+
+.room-type {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.room-type:hover {
+  background-color: #f0f0f0;
+}

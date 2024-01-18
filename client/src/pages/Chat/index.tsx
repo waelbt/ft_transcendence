@@ -1,26 +1,19 @@
-import ConversationSearch from '../../components/chat/conversation/Conversation-Search';
-import ConversationList from '../../components/chat/conversation/Conversation-List.tsx';
-import NewConversation from '../../components/chat/conversation/New-Conversation';
-import ChatTitle from '../../components/chat/chat-title/Chat-Title';
-import MessageList from '../../components/chat/message/Message-List';
-import ChatForm from '../../components/chat/chat-form/Chat-Form';
-import {
-    conversations,
-    selectedConversation
-} from '../../components/chat/data/conversations';
-import { messages } from '../../components/chat/data/messages';
+import "./chatBody.css";
+import ChatList from "../../components/chat/chatList/ChatList";
+import ChatContent from "../../components/chat/chatcontent/ChatContent";
+import ChatProfile from "../../components/chat/chatprofile/ChatProfile";
 
-import './Chat-Shell.css';
+export function Chat()  {
 
-export function Chat() {
+  const handleSearch = (searchText: string) => {
+    // Your search logic here
+    console.log(`Searching for: ${searchText}`);
+  };
     return (
-        <div id="chat-container">
-            <ConversationSearch />
-            <ConversationList conversations={conversations} />
-            <NewConversation />
-            <ChatTitle selectedConversation={selectedConversation} />
-            <MessageList messages={messages} />
-            <ChatForm />
-        </div>
+      <div className="main__chatbody">
+        <ChatList onSearch={handleSearch} />
+        <ChatContent />
+        <ChatProfile userProfileImage="https://cdn.intra.42.fr/users/440a1a4a4ffbd36581c07bc5a146e82e/mbouhaba.jpg" userName="Dos os" />
+      </div>
     );
 }
