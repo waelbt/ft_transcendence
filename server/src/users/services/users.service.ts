@@ -24,7 +24,7 @@ export class UsersService {
     ) {}
 
     async createUser(user: any, id: string) {
-        return await this.prisma.user.create({
+        const User = await this.prisma.user.create({
             data: {
                 id: id,
                 email: user.email,
@@ -33,6 +33,11 @@ export class UsersService {
                 nickName: user.nickName
             }
         });
+		const achievement = await this.prisma.achievement.create({
+			data : {
+                UserId : User.id,
+            }
+		});
     }
 
     async findAllUser() {

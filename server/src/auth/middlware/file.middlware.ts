@@ -10,6 +10,7 @@ export class Middlware implements NestMiddleware {
 
         const authHeader = req.headers.authorization;
 
+        console.log(req.headers);
         if (authHeader && authHeader.startsWith('Bearer ')) {
             var accessToken = authHeader.slice(7);
         }

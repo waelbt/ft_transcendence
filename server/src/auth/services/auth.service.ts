@@ -50,15 +50,16 @@ export class AuthService {
     }
 
     async matchRefreshToken(@Req() req, @Res() res) {
-        const authHeader = req.headers.authorization;
+        // const authHeader = req.headers.authorization;
 
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            var accessToken = authHeader.slice(7);
-        }
+        // if (authHeader && authHeader.startsWith('Bearer ')) {
+        //     var accessToken = authHeader.slice(7);
+        // }
 
-        if (!accessToken) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+        // if (!accessToken) {
+        //     return res.status(401).json({ message: 'Unauthorized' });
+        // }
+        const accessToken = req.cookies['refreshToken'];
         try {
             const payload = await this.jwt.verify(
                 accessToken,
