@@ -46,7 +46,8 @@ function Layout() {
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
-                const { data } = await axiosPrivate.get('/users/me');
+                const { data } = await axiosPrivate.get('/users/me'); // ! react query
+                console.log(data);
                 updateState(data.user);
             } catch (error) {
                 console.error('Error fetching data:', error);
