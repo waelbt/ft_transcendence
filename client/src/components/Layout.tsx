@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { Fragment, useEffect } from 'react';
-import { Popover, Transition } from '@headlessui/react';
+import { useEffect } from 'react';
+// import { Popover, Transition } from '@headlessui/react';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
 import { Avatar } from '.';
@@ -10,40 +10,43 @@ import { useUserStore } from '../stores/userStore';
 import Confirmation from '../pages/Confirmation';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import GlobalChat from './GlobalChat';
+import Popup from 'reactjs-popup';
+import useRefreshToken from '../hooks/RefreshTokenHook';
+// import useRefreshToken from '../hooks/RefreshTokenHook';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { logout, updateState, isProfileComplete, F2A } = useUserStore();
     const navigate = useNavigate();
+    const refresh = useRefreshToken();
 
-    // useEffect(() => {
-    //     // Define the fetchData function
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await axios.get('/auth/refresh');
-    //             console.log(response);;
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     };
+    useEffect(() => {
+        // Define the fetchData function
+        const fetchData = async () => {
+            try {
+                const newAccessToken = await refresh();
+                updateState({ accessToken: newAccessToken });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        // Set up the interval to fetch data every 10 seconds
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000);
 
-    //     // Set up the interval to fetch data every 10 seconds
-    //     const intervalId = setInterval(() => {
-    //         console.log('Fetching data every 10 seconds...');
-    //         fetchData();
-    //     }, 10000);
-
-    //     // Clean up the interval when the component unmounts
-    //     return () => clearInterval(intervalId);
-    // }, []); // Empt
+        // // Clean up the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, []); // Empt
 
     useEffect(() => {
         // if (!isLogged) navigate('/');
         // Define the async function inside the useEffect
         const fetchData = async () => {
             try {
-                const { data } = await axiosPrivate.get('/users/me');
+                const { data } = await axiosPrivate.get('/users/me'); // ! react query
                 updateState(data.user);
+                console.log(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -90,100 +93,77 @@ function Layout() {
                                 {/* <!-- avatar && notifaction uSection --> */}
                                 <div className=" px-2.5 justify-start items-center gap-[30px] inline-flex">
                                     {/* <!-- notifaction Section --> */}
-                                    <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                                        <IoIosNotifications
-                                            className="text-gray-500"
-                                            size={28}
-                                        />
-                                        {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
-                                    </div>
-                                    {/* <!-- avatar Section --> */}
-                                    <Popover className="relative">
-                                        {({ open }) => (
-                                            <>
-                                                <Popover.Button
-                                                    className={`group inline-flex items-center rounded-md  px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75  ${
-                                                        open
-                                                            ? 'text-white'
-                                                            : 'text-white/90'
-                                                    }`}
+                                    <Popup
+                                        trigger={
+                                            <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
+                                                <IoIosNotifications
+                                                    className="text-gray-500"
+                                                    size={28}
+                                                />
+                                                {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
+                                            </div>
+                                        }
+                                        position="bottom right"
+                                        nested
+                                    >
+                                        <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
+                                            not implemneted yet
+                                        </div>
+                                    </Popup>
+
+                                    <Popup
+                                        trigger={
+                                            <div
+                                                className={`group inline-flex items-center rounded-md  px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 text-white`}
+                                            >
+                                                <Avatar
+                                                    imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                                                    style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2"
+                                                />
+                                            </div>
+                                        }
+                                        position="bottom right"
+                                        nested
+                                    >
+                                        <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
+                                            <li
+                                                className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
+                                                onClick={() => {
+                                                    navigate('/profile/me');
+                                                }}
+                                            >
+                                                <Avatar
+                                                    style="h-10 w-10"
+                                                    imageUrl={
+                                                        'https://tecdn.b-cdn.net/img/new/avatars/2.webp'
+                                                    }
+                                                    state="online"
+                                                />
+                                                <div className="text-black text-2xl font-normal font-['Acme']">
+                                                    dos404
+                                                </div>
+                                            </li>
+                                            {MENU_FIELDS.map((field, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
+                                                    onClick={() => {
+                                                        field.path == '/'
+                                                            ? logout()
+                                                            : null;
+                                                        navigate(field.path);
+                                                    }}
                                                 >
-                                                    <Avatar
-                                                        imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
-                                                        style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2"
-                                                    />
-                                                </Popover.Button>
-                                                <Transition
-                                                    as={Fragment}
-                                                    enter="transition ease-out duration-200"
-                                                    enterFrom="opacity-0 translate-y-1"
-                                                    enterTo="opacity-100 translate-y-0"
-                                                    leave="transition ease-in duration-150"
-                                                    leaveFrom="opacity-100 translate-y-0"
-                                                    leaveTo="opacity-0 translate-y-1"
-                                                >
-                                                    <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-sm -translate-x-52 transform px-4 sm:px-0 lg:max-w-3xl">
-                                                        <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex">
-                                                            <li
-                                                                className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                                                onClick={() => {
-                                                                    navigate(
-                                                                        '/profile/me'
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <Avatar
-                                                                    style="h-10 w-10"
-                                                                    imageUrl={
-                                                                        'https://tecdn.b-cdn.net/img/new/avatars/2.webp'
-                                                                    }
-                                                                    state="online"
-                                                                />
-                                                                <div className="text-black text-2xl font-normal font-['Acme']">
-                                                                    dos404
-                                                                </div>
-                                                            </li>
-                                                            {MENU_FIELDS.map(
-                                                                (
-                                                                    field,
-                                                                    index
-                                                                ) => (
-                                                                    <li
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                                                        onClick={() => {
-                                                                            field.path ==
-                                                                            '/'
-                                                                                ? logout()
-                                                                                : null;
-                                                                            navigate(
-                                                                                field.path
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
-                                                                            <field.icon
-                                                                                size={
-                                                                                    24
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                        <div className="text-zinc-600 text-xl font-normal font-['Acme'] pr-10">
-                                                                            {
-                                                                                field.name
-                                                                            }
-                                                                        </div>
-                                                                    </li>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    </Popover.Panel>
-                                                </Transition>
-                                            </>
-                                        )}
-                                    </Popover>
+                                                    <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
+                                                        <field.icon size={24} />
+                                                    </div>
+                                                    <div className="text-zinc-600 text-xl font-normal font-['Acme'] pr-10">
+                                                        {field.name}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </div>
+                                    </Popup>
                                 </div>
                             </div>
                         </div>
@@ -192,9 +172,9 @@ function Layout() {
                     {/* <div className="h-full w-full flex-grow"> */}
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
                         <Outlet />
-                        <div className="h-full flex justify-center items-center">
-                            <GlobalChat />
-                        </div>
+                        {/* <div className="h-full flex justify-center items-center"> */}
+                        <GlobalChat />
+                        {/* </div> */}
                     </div>
                     {/* </div> */}
                     {/* <div className="h-full w-full bg-white flex-grow-0"></div> */}

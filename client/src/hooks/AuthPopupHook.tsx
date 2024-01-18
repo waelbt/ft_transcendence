@@ -12,7 +12,6 @@ const useAuthPopup = () => {
         // const refreshToken = queryParams.get('refreshToken');
 
         if (accessToken) {
-            console.log(accessToken);
             // Update the user store with the received tokens and set logged in status
             updateState({ accessToken, isLogged: true });
             window.close();
