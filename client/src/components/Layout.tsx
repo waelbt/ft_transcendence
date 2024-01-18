@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { Fragment, useEffect } from 'react';
-import { Popover, Transition } from '@headlessui/react';
+import { useEffect } from 'react';
+// import { Popover, Transition } from '@headlessui/react';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
 import { Avatar } from '.';
@@ -9,7 +9,7 @@ import { useUserStore } from '../stores/userStore';
 // import { ProfileCompletion } from '../pages/ProfileCompletion';
 import Confirmation from '../pages/Confirmation';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
-// import GlobalChat from './GlobalChat';
+import GlobalChat from './GlobalChat';
 import Popup from 'reactjs-popup';
 import useRefreshToken from '../hooks/RefreshTokenHook';
 // import useRefreshToken from '../hooks/RefreshTokenHook';
@@ -45,8 +45,8 @@ function Layout() {
         const fetchData = async () => {
             try {
                 const { data } = await axiosPrivate.get('/users/me'); // ! react query
-                console.log(data);
                 updateState(data.user);
+                console.log(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -173,7 +173,7 @@ function Layout() {
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
                         <Outlet />
                         {/* <div className="h-full flex justify-center items-center"> */}
-                        {/* <GlobalChat /> */}
+                        <GlobalChat />
                         {/* </div> */}
                     </div>
                     {/* </div> */}

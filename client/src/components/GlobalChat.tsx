@@ -5,12 +5,18 @@ import { Avatar } from '.';
 import { DEFAULT_PATH } from '../constants';
 import { BsFillSendFill } from 'react-icons/bs';
 
+import { io, Socket } from 'socket.io-client';
+
+// Create a socket instance
+const socket: Socket = io('http://localhost:4000/chat');
+
 function GlobalChat() {
     const params = useParams();
     const [message, setMessage] = useState('');
 
     const sendMessage = () => {
         console.log(message);
+        socket.emit("");
         setMessage(''); // Clear the input after sending
     };
     useEffect(() => {
