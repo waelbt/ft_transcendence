@@ -21,7 +21,7 @@ type UserStateType = {
 };
 
 type UserActionsType = {
-    // constructor: (data) => void;
+    // constructor: (data : UserStateType) => void;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
 };
@@ -33,7 +33,6 @@ export const useUserStore = createWithEqualityFn<
         (set) => ({
             isLogged: false,
             accessToken: null,
-            // refreshToken: null,
             id: '',
             email: '',
             avatar: 'https://tecdn.b-cdn.net/img/new/avatars/2.webp', // ! tmp
@@ -45,9 +44,6 @@ export const useUserStore = createWithEqualityFn<
             inGame: false,
             isProfileComplete: false,
             // constructor: (data) => {
-            //     // const axiosPrivate = useAxiosPrivate();
-            //     // const { data } = await axiosPrivate.get('/users/me');
-
             //     // ! user type men 3and simo
             //     set({
             //         isLogged: true,
