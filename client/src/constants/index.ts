@@ -5,6 +5,8 @@ export const DEFAULT_PATH = './src/assets/images/default';
 
 export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
 
+export const MODES = ['classic', 'crazy', 'IA'];
+
 export const MENU_FIELDS = [
     {
         name: 'Setting & privacy',
@@ -18,7 +20,7 @@ export const MENU_FIELDS = [
     }
 ];
 
-export const CONFIRMATION_FIELDS = [
+export const NICKNAME_FIELD = [
     {
         label: 'Nickname',
         type: 'text',
@@ -36,3 +38,20 @@ export const CONFIRMATION_FIELDS = [
         }
     }
 ];
+
+// export const SETTING_FIELDS = [
+//     {
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     },
+//     {
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     },{
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     }
+// ];

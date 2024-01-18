@@ -1,15 +1,16 @@
 {
-    "friends": [
+    "friends": ["162122", "112965", "3", "4", "5", "6", "7", "8", "9"],
+    "friendDetails": [
         {
-            "id": 1,
-            "name": "dos404",
+            "id": 113546238214324724995,
+            "name": "messaada",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",
             "actions": ["block", "unfriend", "challenge"]
         },
         {
-            "id": 2,
-            "name": "dos404",
+            "id": 112965,
+            "name": "ibouchaf",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",
             "actions": ["block", "unfriend", "challenge"]
@@ -30,6 +31,34 @@
         },
         {
             "id": 5,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 6,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 7,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 8,
+            "name": "dos404",
+            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
+            "status": "online",
+            "actions": ["block", "unfriend", "challenge"]
+        },
+        {
+            "id": 9,
             "name": "dos404",
             "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
             "status": "online",

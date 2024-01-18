@@ -1,21 +1,32 @@
 import { Outlet } from 'react-router-dom';
 import { UserProfileCard } from '../../components/';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { useUserStore } from '../../stores';
+// import { useUserStore } from '../../stores/userStore';
+import { useUserProfile } from '../../hooks/usersdataHook';
 
 export function Profile() {
-    const user = useUserStore();
-    const params = useParams();
-    const [profile, setProfile] = useState<null | any>(null); // ? get user interface  (dto if possible)
+    // const user = useUserStore();
+    const { id } = useParams();
+    const { profile, isLoading, isError } = useUserProfile(id as string);
 
+    if (isLoading) {
+        return <div>Loading...</div>; // or your custom loader component
+    }
+
+    if (isError) {
+        // Handle error
+        return <div>Error fetching profile</div>;
+    }
+
+    // useEffect(() => {
+    //     request.get('/users/me').then((response) => console.log(response)).catch(error => console.log(error));
+    // }, []);
     return (
-        // gap-20
-        <div className="flex-grow flex-col justify-center items-center inline-flex gap-14">
-            <UserProfileCard />
-            {/* w-2/3 h-full */}
-            <div className="w-2/3 p-2.5 bg-white rounded-[20px] shadow flex-col justify-start items-start inline-flex">
-                <Outlet context={profile}/>
+        <div className="flex-col h-full justify-center items-center inline-flex gap-5 ">
+            {/* //! profile */}
+            <UserProfileCard {...profile} isLoading={isLoading} />
+            <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow ">
+                <Outlet />
             </div>
         </div>
     );
