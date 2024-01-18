@@ -78,7 +78,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                             <span>level {props.level}</span>
                             <span>{props.exp}/3000</span>
                         </div>
-                        <ProgressBar />
+                        <ProgressBar value={20}  color="bg-blue-500"/>
                     </div>
                     <div className="self-stretch px-10 justify-start items-start gap-2.5 inline-flex">
                         {navLinks.map((link, index) => (

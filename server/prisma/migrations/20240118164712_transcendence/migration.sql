@@ -51,6 +51,7 @@ CREATE TABLE "Achievement" (
     "silver" BOOLEAN NOT NULL DEFAULT false,
     "goldon" BOOLEAN NOT NULL DEFAULT false,
     "hacker" BOOLEAN NOT NULL DEFAULT false,
+    "consecutiveWins" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Achievement_pkey" PRIMARY KEY ("id")
 );
