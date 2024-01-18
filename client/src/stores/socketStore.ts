@@ -1,8 +1,21 @@
 import { io } from 'socket.io-client';
-import { create } from 'zustand';
+import { useUserStore } from '.';
+// Update with the correct path
 
-const socket = io(`${import.meta.env.VITE_BASE_URL}/game`);
+// ...
 
+// Inside the part of your code where you want to create the socket connection
+const userStore = useUserStore.getState(); // Get the current state
+
+// Ensure that the access token is available synchronously
+const accessToken = userStore.accessToken || ''; // Replace with your actual way to access the access token
+
+// Create the socket connection with the access token
+const socket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
+    query: {
+        accessToken: accessToken
+    }
+});
 type SocketStateType = {
     socket: any;
 };
