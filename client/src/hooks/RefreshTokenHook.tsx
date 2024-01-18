@@ -2,7 +2,7 @@ import { default as axios } from '../api/';
 import { useUserStore } from '../stores/userStore';
 
 const useRefreshToken = () => {
-    const { updateState } = useUserStore();
+    const { updateState,accessToken } = useUserStore();
     const refresh = async () => {
         const response = await axios.get('/auth/refresh', {
             withCredentials: true
