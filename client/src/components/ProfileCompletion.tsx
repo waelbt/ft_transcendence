@@ -3,7 +3,7 @@ import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
-import useUpload from '../hooks/UploadImageHook';
+import useUpload from '../hooks/uploadImageHook';
 // import { request } from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
@@ -125,8 +125,8 @@ function ProfileCompletion() {
                                     }`}
                                 >
                                     {Array.from({ length: 6 }, (_, index) => (
-                                        // ! use avatar component 
-                                        <li 
+                                        // ! use avatar component
+                                        <li
                                             className={`w-10 h-10 flex-shrink-0 rounded-full border-solid border-primary-pink ${
                                                 index === selectedItemIndex
                                                     ? 'border-2'

@@ -3,7 +3,7 @@ import { Avatar, ProgressRingLoader, FormComponent } from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, CONFIRMATION_FIELDS } from '../../constants';
-import useUpload from '../../hooks/UploadImageHook';
+import useUpload from '../../hooks/uploadImageHook';
 import { request } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores';

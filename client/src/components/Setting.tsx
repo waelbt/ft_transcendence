@@ -2,19 +2,16 @@ import { useEffect } from 'react';
 import { Avatar, FormComponent, Twofa } from '.';
 import { NICKNAME_FIELD } from '../constants';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
-type OutletContextType = {
-    isCurrentUser: boolean;
-};
+import { ProfileOutletContextType } from '../types/global';
 
 function Setting() {
-    const { isCurrentUser } = useOutletContext<OutletContextType>() ?? {
+    const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
         isCurrentUser: false
     };
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isCurrentUser) navigate(-1); // Go back to the previous page
+        if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
     }, [isCurrentUser]);
 
     const SETTING_FIELDS = [

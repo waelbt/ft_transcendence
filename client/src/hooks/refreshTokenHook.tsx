@@ -1,4 +1,4 @@
-import { default as axios } from '../api/';
+import { default as axios } from '../api';
 import { useUserStore } from '../stores/userStore';
 
 const useRefreshToken = () => {

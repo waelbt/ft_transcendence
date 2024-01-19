@@ -75,8 +75,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-                        {/* props.id != id */}
-                        {true && (
+                        {props.id != id && (
                             <Popup
                                 trigger={
                                     <div

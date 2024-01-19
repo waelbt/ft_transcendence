@@ -9,7 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 export function Profile() {
     const { id: paramId } = useParams();
     const { id: userId } = useUserStore();
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     // Determine the correct endpoint
     const isCurrentUser = paramId === 'me' || paramId === userId;
     const endpoint = isCurrentUser ? '/users/me' : `/users/${paramId}/profile`;
@@ -19,7 +19,7 @@ export function Profile() {
         isCurrentUser ? 'me' : (paramId as string)
     ]);
 
-    useEffect(() => {        
+    useEffect(() => {
         // if (paramId === undefined)
         //     navigate('/profile/me');
         refetch(); // Refetch data when paramId changes
@@ -59,7 +59,7 @@ export function Profile() {
         <div className="flex-col h-full justify-center items-center inline-flex gap-5">
             <UserProfileCard {...data.user} />
             <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
-                <Outlet context={{ isCurrentUser }} />
+                <Outlet context={{ isCurrentUser, paramId}} />
             </div>
         </div>
     );

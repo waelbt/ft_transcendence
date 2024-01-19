@@ -4,6 +4,8 @@ import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
 
+import { ProfileOutletContextType } from '../types/global';
+
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
 

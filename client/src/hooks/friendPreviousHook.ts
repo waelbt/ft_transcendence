@@ -1,11 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { Friend } from '../../../shared/types';
-    
-type UseFriendDetailsProps = {
+
+type useFriendPreviousProps = {
     friendId: string;
 };
 
-const useFriendDetails = ({ friendId }: UseFriendDetailsProps) => {
+// /friends/listFriends // !me
+// /friends/friends/{viewerId} // ! other
+
+const useFriendPrevious = ({ friendId }: useFriendPreviousProps) => {
     const fetchFriendDetails = async (): Promise<Friend> => {
         const response = await fetch(
             `http://localhost:3000/friendDetails/${friendId}`
@@ -29,4 +32,4 @@ const useFriendDetails = ({ friendId }: UseFriendDetailsProps) => {
     };
 };
 
-export default useFriendDetails;
+export default useFriendPrevious;
