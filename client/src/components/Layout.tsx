@@ -173,7 +173,7 @@ function Layout() {
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20 ">
                         <Outlet />
                         {/* <div className="h-full flex justify-center items-center"> */}
-                        <GlobalChat />
+                        {/* <GlobalChat /> */}
                         {/* </div> */}
                     </div>
                     {/* </div> */}
