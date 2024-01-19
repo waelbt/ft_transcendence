@@ -4,25 +4,43 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '.';
 import { DEFAULT_PATH } from '../constants';
 import { BsFillSendFill } from 'react-icons/bs';
-
-import { io, Socket } from 'socket.io-client';
-
-// Create a socket instance
-const socket: Socket = io('http://localhost:4000/chat');
+// import { useSocketStore } from '../stores/socketStore';
+import { io } from 'socket.io-client';
+import { useUserStore } from '../stores/userStore';
 
 function GlobalChat() {
-    const params = useParams();
     const [message, setMessage] = useState('');
+    const [chatLog, setChatLog] = useState([]);
+    const [socket, setSocket] = useState<any>(null);
+    const { accessToken } = useUserStore();
+    useEffect(() => {
+        // Connect to the Socket.IO server
+        const newSocket = io('http://localhost:4000/chat', {
+            auth: {
+                accessToken: accessToken
+            }
+        }); // Replace with your server URL
+        setSocket(newSocket);
+
+        // Event listener for receiving messages
+        newSocket.on('globalMessage', (data) => {
+            console.log(data);
+            alert(data);
+        });
+
+        // Cleanup function to disconnect the socket when the component unmounts
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []); // Run this effect only once when the component mounts
 
     const sendMessage = () => {
-        console.log(message);
-        socket.emit("");
-        setMessage(''); // Clear the input after sending
-    };
-    useEffect(() => {
-        console.log(params);
-    }, [params]);
+        // Emit a 'message' event to the server
+        socket.emit('globalChat', message);
 
+        // Clear the input field after sending the message
+        setMessage('');
+    };
     return (
         <div className="w-[380px] self-stretch p-2.5 bg-white rounded-[20px] shadow flex-col justify-center items-center gap-[13px] inline-flex mt-9 mb-7">
             {/* header */}

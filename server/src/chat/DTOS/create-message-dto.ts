@@ -9,7 +9,4 @@ export class CreateMessageDto {
     @IsNotEmpty()
     @MaxLength(1000)
     message: string;
-
-    @IsString()
-    id: string;
 }

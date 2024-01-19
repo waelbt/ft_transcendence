@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Param, Post, UnauthorizedException } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/services/users.service';
 import { gameService } from './game.service';
 import { gameDto } from './dto/game.dto';
 
-@ApiBearerAuth()
 @Controller('game')
 @ApiTags('game')
 export class GameController {

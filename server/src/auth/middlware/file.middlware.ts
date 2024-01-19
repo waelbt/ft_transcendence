@@ -7,15 +7,16 @@ export class Middlware implements NestMiddleware {
     constructor(private readonly jwt: JwtService) {}
     async use(req: Request, res: Response, next: NextFunction) {
         console.log('zbiiiiii');
+        // const accessToken = req.cookies['accessToken'];
 
         const authHeader = req.headers.authorization;
 
-        console.log(req.headers);
         if (authHeader && authHeader.startsWith('Bearer ')) {
-            var accessToken = authHeader.slice(7);
+            var accessToken = authHeader.slice(7); // Remove 'Bearer ' prefix
         }
 
         if (!accessToken) {
+            console.log('hi');
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
@@ -27,7 +28,7 @@ export class Middlware implements NestMiddleware {
             next();
         } catch (error) {
             console.log('hiiii');
-            console.log(error);
+
             return res.status(401).json({ message: 'Unauthorized' });
         }
     }

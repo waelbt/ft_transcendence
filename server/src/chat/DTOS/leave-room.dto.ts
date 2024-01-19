@@ -5,4 +5,7 @@ export class LeaveRoomDto {
     @ApiProperty()
     @IsString()
     roomTitle: string;
+
+    @IsString()
+    id: string
 }

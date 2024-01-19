@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import { AuthDto, AuthDtoSignIn } from "../dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { accessTokenGuard, refreshTokenGuard } from "src/common/guards";
+import { ApiTags } from "@nestjs/swagger";
+import { refreshTokenGuard } from "src/common/guards";
 import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators";
 import { Request } from "express";
 import { JwtStrategy } from "../strategy";
@@ -11,7 +11,7 @@ import { UsersService } from "src/users/services/users.service";
 import { jwtGuard } from "../authGuard";
 
 
-@ApiBearerAuth()
+
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
@@ -54,11 +54,9 @@ export class AuthController {
         return true;
     }
 
-    @Public()
-    @UseGuards(jwtGuard)
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        console.log('im in refresh');
+        // await this.AuthService.refreshToken(req, res);
         res.send(await this.AuthService.refreshToken(req, res));
     }
 

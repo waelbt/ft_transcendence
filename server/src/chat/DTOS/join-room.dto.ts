@@ -16,4 +16,7 @@ export class JoinRoomDto {
     })
     @IsOptional()
     password?: string;
+
+    @IsString()
+    id: string;
 }

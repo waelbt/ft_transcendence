@@ -1,12 +1,12 @@
 import { Controller, Get, NotFoundException, Req, Res, Body, Post } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { twoFAService } from "../services/2FA.services";
 import { UsersService } from "src/users/services/users.service";
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { User } from "@prisma/client";
 
-@ApiBearerAuth()
+
 @ApiTags('2fa')
 @Controller('2fa')
 export class twoFAController{

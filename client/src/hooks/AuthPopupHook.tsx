@@ -5,7 +5,6 @@ import { useUserStore } from '../stores/userStore';
 const useAuthPopup = () => {
     const location = useLocation();
     const { updateState } = useUserStore();
-
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get('accessToken');

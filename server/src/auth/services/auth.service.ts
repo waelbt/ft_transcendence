@@ -1,4 +1,5 @@
 import {
+    ForbiddenException,
     Injectable,
     Req,
     Res,
@@ -7,8 +8,15 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { AuthDto, AuthDtoSignIn } from '../dto';
+import * as argon from 'argon2';
 import { UsersService } from 'src/users/services/users.service';
 import { User } from '@prisma/client';
+import * as speakeasy from 'speakeasy';
+import * as qrcode from 'qrcode';
+import * as otplib from 'otplib';
+import * as qrcodeLib from 'qrcode';
 
 @Injectable({})
 export class AuthService {
@@ -34,7 +42,7 @@ export class AuthService {
     }
 
     async refreshToken(@Req() req, @Res() res) {
-        const foundUser = await this.matchRefreshToken(req, res);
+        const foundUser = await this.matchRefreshToken(req);
         const user = await this.usersService.getOneUser(foundUser.sub);
         console.log(user.email);
         const ATRT = await this.generateATRT(res, user);
@@ -49,20 +57,12 @@ export class AuthService {
         res.redirect('http://localhost:8000/');
     }
 
-    async matchRefreshToken(@Req() req, @Res() res) {
-        // const authHeader = req.headers.authorization;
-
-        // if (authHeader && authHeader.startsWith('Bearer ')) {
-        //     var accessToken = authHeader.slice(7);
-        // }
-
-        // if (!accessToken) {
-        //     return res.status(401).json({ message: 'Unauthorized' });
-        // }
-        const accessToken = req.cookies['refreshToken'];
+    async matchRefreshToken(@Req() req) {
+        const refreshToken = req.cookies['refreshToken'];
+        console.log('helloooo');
         try {
             const payload = await this.jwt.verify(
-                accessToken,
+                refreshToken,
                 this.config.get('JWT_secret')
             );
             return payload;
@@ -80,7 +80,7 @@ export class AuthService {
                 },
                 {
                     secret: this.config.get('JWT_secret'),
-                    expiresIn: '1d'
+                    expiresIn: '15m'
                 }
             ),
             this.jwt.sign(
@@ -90,7 +90,7 @@ export class AuthService {
                 },
                 {
                     secret: this.config.get('JWT_secret'),
-                    expiresIn: '7d'
+                    expiresIn: '14d'
                 }
             )
         ]);
