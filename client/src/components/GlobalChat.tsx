@@ -4,24 +4,23 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '.';
 import { DEFAULT_PATH } from '../constants';
 import { BsFillSendFill } from 'react-icons/bs';
-
-import { io, Socket } from 'socket.io-client';
-
-// Create a socket instance
-const socket: Socket = io('http://localhost:4000/chat');
+import { useSocketStore } from '../stores/socketStore';
 
 function GlobalChat() {
+    const { socket } = useSocketStore();
     const params = useParams();
     const [message, setMessage] = useState('');
 
     const sendMessage = () => {
-        console.log(message);
-        socket.emit("");
+        socket.emit('globalChat', message);
         setMessage(''); // Clear the input after sending
     };
+
     useEffect(() => {
-        console.log(params);
-    }, [params]);
+        socket.on('globalMessage', (data: any) => {
+            alert(data);
+        });
+    }, [socket]);
 
     return (
         <div className="w-[380px] self-stretch p-2.5 bg-white rounded-[20px] shadow flex-col justify-center items-center gap-[13px] inline-flex mt-9 mb-7">

@@ -1,5 +1,6 @@
+import { create } from 'zustand';
 import { io } from 'socket.io-client';
-import { useUserStore } from '.';
+import { useUserStore } from './userStore';
 // Update with the correct path
 
 // ...
@@ -10,28 +11,28 @@ const userStore = useUserStore.getState(); // Get the current state
 // Ensure that the access token is available synchronously
 const accessToken = userStore.accessToken || ''; // Replace with your actual way to access the access token
 
-// Create the socket connection with the access token
-const socket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
-    query: {
-        accessToken: accessToken
-    }
-});
 type SocketStateType = {
     socket: any;
 };
 
 type SocketActionType = {
-    connect: () => void;
+    // connect: () => void;
 };
 
 export const useSocketStore = create<SocketStateType & SocketActionType>(
+    // set, get
     () => ({
-        socket: socket,
-        connect: () => {
-            socket.on('connect', () => {
-                console.log('connected!');
-                console.log(socket.id);
-            });
-        }
+        socket: io(`${import.meta.env.VITE_BASE_URL}/chat`, {
+            auth: {
+                accessToken: accessToken
+            }
+        }),
+        // connect: () => {
+        //     const state = get();
+        //     state.socket.on('connect', () => {
+        //         console.log('connected!');
+        //         console.log(state.socket.id);
+        //     });
+        // }
     })
 );

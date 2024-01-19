@@ -140,8 +140,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('globalChat')
   async globalChat(client: Socket, payload: CreateMessageDto) {
-    console.log(client.handshake.headers.authorization);
-    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.authorization);
+    console.log("wael   ",client.handshake.auth.accessToken);
+    const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.accessToken);
     if (userCheck.state == true)
     {
       await this.wsService.createGlobalRoom();
