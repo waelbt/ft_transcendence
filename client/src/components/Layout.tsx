@@ -11,33 +11,40 @@ import Confirmation from '../pages/Confirmation';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import GlobalChat from './GlobalChat';
 import Popup from 'reactjs-popup';
+import useRefreshToken from '../hooks/RefreshTokenHook';
+import axios from '../api';
 // import useRefreshToken from '../hooks/RefreshTokenHook';
 // import useRefreshToken from '../hooks/RefreshTokenHook';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { logout, updateState, isProfileComplete, F2A } = useUserStore();
+    const { logout, updateState, accessToken, isProfileComplete, F2A } =
+        useUserStore();
     const navigate = useNavigate();
-    // const refresh = useRefreshToken();
+    const refresh = useRefreshToken();
 
-    // useEffect(() => {
-    //     // Define the fetchData function
-    //     const fetchData = async () => {
-    //         try {
-    //             const newAccessToken = await refresh();
-    //             updateState({ accessToken: newAccessToken });
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     };
-    //     // Set up the interval to fetch data every 10 seconds
-    //     const intervalId = setInterval(() => {
-    //         fetchData();
-    //     }, 10000);
+    useEffect(() => {
+        // Define the fetchData function
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('/auth/refresh', {
+                    withCredentials: true
+                });
+                console.log(response);
+                // console.log(accessToken);
+                // updateState({ accessToken: newAccessToken });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        // Set up the interval to fetch data every 10 seconds
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000);
 
-    //     // // Clean up the interval when the component unmounts
-    //     return () => clearInterval(intervalId);
-    // }, []); // Empt
+        // // Clean up the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, []); // Empt
 
     useEffect(() => {
         // if (!isLogged) navigate('/');
