@@ -11,8 +11,14 @@ const userStore = useUserStore.getState(); // Get the current state
 // Ensure that the access token is available synchronously
 const accessToken = userStore.accessToken || ''; // Replace with your actual way to access the access token
 
+const socket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
+    auth: {
+        accessToken: accessToken
+    }
+});
+
 type SocketStateType = {
-    socket: any;
+    Socket: any;
 };
 
 type SocketActionType = {
@@ -22,11 +28,7 @@ type SocketActionType = {
 export const useSocketStore = create<SocketStateType & SocketActionType>(
     // set, get
     () => ({
-        socket: io(`${import.meta.env.VITE_BASE_URL}/chat`, {
-            auth: {
-                accessToken: accessToken
-            }
-        }),
+        Socket:socket,
         // connect: () => {
         //     const state = get();
         //     state.socket.on('connect', () => {
