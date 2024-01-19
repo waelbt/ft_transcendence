@@ -7,7 +7,6 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 type UserStateType = {
     isLogged: boolean;
     accessToken: string | null;
-    // refreshToken: string | null;
     id: string;
     email: string;
     avatar: string;
@@ -18,6 +17,8 @@ type UserStateType = {
     F2A: boolean;
     inGame: boolean;
     isProfileComplete: boolean;
+    friends: string[];
+    block: string[];
 };
 
 type UserActionsType = {
@@ -43,21 +44,8 @@ export const useUserStore = createWithEqualityFn<
             F2A: false,
             inGame: false,
             isProfileComplete: false,
-            // constructor: (data) => {
-            //     // ! user type men 3and simo
-            //     set({
-            //         isLogged: true,
-            //         id: data.user.id,
-            //         email: data.user.email,
-            //         avatar: data.user.avatar,
-            //         nickName: data.user.nickName,
-            //         fullName: data.user.fullName,
-            //         createdAt: data.user.createdAt,
-            //         status: data.user.status,
-            //         F2A: data.user.F2A,
-            //         inGame: data.user.inGame
-            //     });
-            // },
+            friends: [],
+            block: [],
             logout: () => {
                 set(
                     {

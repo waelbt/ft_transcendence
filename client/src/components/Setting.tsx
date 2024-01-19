@@ -1,7 +1,22 @@
+import { useEffect } from 'react';
 import { Avatar, FormComponent, Twofa } from '.';
 import { NICKNAME_FIELD } from '../constants';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+
+type OutletContextType = {
+    isCurrentUser: boolean;
+};
 
 function Setting() {
+    const { isCurrentUser } = useOutletContext<OutletContextType>() ?? {
+        isCurrentUser: false
+    };
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!isCurrentUser) navigate(-1); // Go back to the previous page
+    }, [isCurrentUser]);
+
     const SETTING_FIELDS = [
         {
             label: 'Full Name',
@@ -47,7 +62,10 @@ function Setting() {
                                 // }
                                 // }}
                             />
-                            <div id="inputImage" className="p-0.5 bg-gray-200 rounded-[3px] border border-zinc-400 justify-center items-center gap-3 inline-flex text-center text-black text-sm font-normal font-['Poppins']">
+                            <div
+                                id="inputImage"
+                                className="p-0.5 bg-gray-200 rounded-[3px] border border-zinc-400 justify-center items-center gap-3 inline-flex text-center text-black text-sm font-normal font-['Poppins']"
+                            >
                                 Browse...
                             </div>
                             <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">

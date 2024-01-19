@@ -2,3 +2,8 @@
 - bridge profile endpoint
 - test response interceptor
 - check when accesToken expire in the chat interface
+- isloading and isError handling
+- protect setting page 
+- seklons
+- set up the navigation history (search for any navigate in the code)
+- protect /profile (parmID undefined)

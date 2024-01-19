@@ -8,21 +8,33 @@ import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 // import { ProfileCompletion } from '../pages/ProfileCompletion';
 import Confirmation from '../pages/Confirmation';
-import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import GlobalChat from './GlobalChat';
 import Popup from 'reactjs-popup';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
+import { useGetUserInfos } from '../hooks/getUserInfos';
 // import useRefreshToken from '../hooks/RefreshTokenHook';
 
 function Layout() {
-    const axiosPrivate = useAxiosPrivate();
     const { logout, updateState, accessToken, isProfileComplete, F2A } =
         useUserStore();
     const navigate = useNavigate();
     const { initializeSocket, socket } = useChatSocketStore();
+    const { data, isLoading, isError } = useGetUserInfos('/users/me', [
+        'profile',
+        'me'
+    ]);
+    useEffect(() => {
+        if (data) {
+            updateState(data.user);
+            updateState({ friends: data.friends });
+            updateState({ block: data.block });
+        }
+        // if (isError) // ! handle this case
+    }, [data, isError]); // Empty dependency array means this effect runs once after the initial render
 
     useEffect(() => {
         if (accessToken) {
+            console.log(accessToken);
             initializeSocket(accessToken);
         }
 
@@ -31,22 +43,7 @@ function Layout() {
         };
     }, [initializeSocket, socket]);
 
-    useEffect(() => {
-        // if (!isLogged) navigate('/');
-        // Define the async function inside the useEffect
-        const fetchData = async () => {
-            try {
-                const { data } = await axiosPrivate.get('/users/me'); // ! react query
-                updateState(data.user);
-                console.log(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        // Call the async function
-        fetchData();
-    }, []); // Empty dependency array means this effect runs once after the initial render
-
+    if (isLoading) return <div>loading profile data</div>;
     return (
         <>
             {isProfileComplete || F2A ? (

@@ -42,7 +42,7 @@ CREATE TABLE "Block" (
 
 -- CreateTable
 CREATE TABLE "Achievement" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "UserId" TEXT NOT NULL,
     "welcome" BOOLEAN NOT NULL DEFAULT false,
     "harban" BOOLEAN NOT NULL DEFAULT false,
@@ -124,9 +124,6 @@ CREATE UNIQUE INDEX "Friendship_userId1_userId2_key" ON "Friendship"("userId1", 
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Block_id_key" ON "Block"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Achievement_id_key" ON "Achievement"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Achievement_UserId_key" ON "Achievement"("UserId");
