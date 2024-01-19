@@ -22,10 +22,12 @@ function Layout() {
     const { initializeSocket, socket } = useChatSocketStore();
 
     useEffect(() => {
+        console.log(accessToken);
         if (accessToken) {
             initializeSocket(accessToken);
         }
 
+        // socket?.emit('globalChat', {message: 'test'});
         return () => {
             socket?.disconnect();
         };
