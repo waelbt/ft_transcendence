@@ -13,4 +13,8 @@ RUN npm install -g prisma
 RUN mkdir -p $UPLOADS_DESTINATION && \
     chmod 755 $UPLOADS_DESTINATION
 
-EXPOSE 4000
+RUN chmod +x start.sh
+
+EXPOSE 3000
+
+CMD [ "sh", "./start.sh" ]
