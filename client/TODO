@@ -1,4 +1,4 @@
-- attach token && socket
+attach token && socket
 - bridge profile endpoint
 - test response interceptor
 - check when accesToken expire in the chat interface
