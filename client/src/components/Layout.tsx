@@ -11,9 +11,7 @@ import Confirmation from '../pages/Confirmation';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import GlobalChat from './GlobalChat';
 import Popup from 'reactjs-popup';
-import useRefreshToken from '../hooks/RefreshTokenHook';
-import axios from '../api';
-// import useRefreshToken from '../hooks/RefreshTokenHook';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 // import useRefreshToken from '../hooks/RefreshTokenHook';
 
 function Layout() {
@@ -21,30 +19,17 @@ function Layout() {
     const { logout, updateState, accessToken, isProfileComplete, F2A } =
         useUserStore();
     const navigate = useNavigate();
-    const refresh = useRefreshToken();
+    const { initializeSocket, socket } = useChatSocketStore();
 
     useEffect(() => {
-        // Define the fetchData function
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('/auth/refresh', {
-                    withCredentials: true
-                });
-                console.log(response);
-                // console.log(accessToken);
-                // updateState({ accessToken: newAccessToken });
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        // Set up the interval to fetch data every 10 seconds
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 10000);
+        if (accessToken) {
+            initializeSocket(accessToken);
+        }
 
-        // // Clean up the interval when the component unmounts
-        return () => clearInterval(intervalId);
-    }, []); // Empt
+        return () => {
+            socket?.disconnect();
+        };
+    }, [initializeSocket, socket]);
 
     useEffect(() => {
         // if (!isLogged) navigate('/');
