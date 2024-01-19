@@ -86,6 +86,11 @@ export class UsersController {
     return this.usersService.findAllUser();
   }
 
+  @Get('historyMatchs')
+  async match_history(@Req() req){
+    return await this.usersService.matchHistory(req.user.sub);
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   @ApiOkResponse()

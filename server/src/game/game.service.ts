@@ -22,6 +22,8 @@ export class gameService {
 
         await this.winnerAchievements(game.winnerId, game.mode, game.result);
         await this.loserAchievement(game.loserId, game.result);
+        //update level and xp for each user
+        // await this.updateUserData()
         return newGame;
     }
 
