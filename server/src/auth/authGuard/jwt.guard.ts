@@ -28,9 +28,6 @@ export class jwtGuard extends AuthGuard('jwt'){
     
         // Set the JWT token in the request for further use if needed
         request.jwtToken = token;
-        console.log('hna');
-        // console.log(super.canActivate(context));
-        console.log('lhih');
         return true;
       }
     
