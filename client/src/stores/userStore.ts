@@ -27,6 +27,7 @@ type UserActionsType = {
     updateState: (newState: Partial<UserStateType>) => void;
 };
 
+// ? remove storing in local storage and test the behavior
 export const useUserStore = createWithEqualityFn<
     UserStateType & UserActionsType
 >()(

@@ -1,21 +1,34 @@
-- bridge profile endpoint
-- test response interceptor
-- check when accesToken expire in the chat interface
-- isloading and isError handling
-- protect setting page 
-- seklons
-- set up the navigation history (search for any navigate in the code)
-- protect /profile (parmID undefined)
-- edit the form style
-- implement the new setting page ui
-- in case of fail return to the auth page
--localhost:8000/profile/me/setting put this before login 
-- add pong loader gif in the project
-- error pages
+-   bridge profile endpoint
+-   test response interceptor
+-   check when accesToken expire in the chat interface
+-   isloading and isError handling
+-   protect setting page
+-   seklons
+-   set up the navigation history (search for any navigate in the code)
+-   protect /profile (parmID undefined)
+-   edit the form style
+-   implement the new setting page ui
+-   in case of fail return to the auth page -localhost:8000/profile/me/setting
+    put this before login
+-   add pong loader gif in the project
+-   error pages
 
-
-- handle fail in the generate qr code
-- code qr borders
-- add loader binma genera code QR
+-   handle fail in the generate qr code
+-   code qr borders
+-   add loader binma genera code QR
 
 <!-- }, [axiosPrivate]); // ! check later about this dependeci -->
+
+line 48 form component 
+{/_ //! prevent the user from spawning Upload click _/}
+
+
+
+toast.promise(myPromise, {
+  loading: 'Loading',
+  success: 'Got the data',
+  error: 'Error when fetching',
+});
+
+
+remove static messages later

@@ -5,6 +5,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import { useUserStore } from '../stores/userStore';
 import { IoIosLock } from 'react-icons/io';
+import { absoluteToast } from '../tools';
 
 const TwoFA = () => {
     const [code, setCode] = useState<string>('');
@@ -21,13 +22,12 @@ const TwoFA = () => {
                     '/2fa/validate',
                     formData
                 );
-                toast.success(response.data.message);
+                absoluteToast(toast.success, response.data.message);
                 updateState({ F2A: true });
             } catch (error) {
                 if (isAxiosError(error)) {
                     updateState({ F2A: true }); //! false
-
-                    toast.error(error.response?.data.message);
+                    absoluteToast(toast.error, error.response?.data.message);
                 }
             }
         };
@@ -37,7 +37,10 @@ const TwoFA = () => {
             if (/^[0-9]+$/.test(code)) {
                 validateCode();
             } else {
-                toast.error('Error: input is invalid: value is not a number');
+                absoluteToast(
+                    toast.error,
+                    'Error: input is invalid: value is not a number'
+                );
             }
         }
     }, [code]);
@@ -46,10 +49,11 @@ const TwoFA = () => {
         try {
             await axiosPrivate.post('/2fa/disable');
             updateState({ F2A: false });
-            toast.success('2FA disable successfully');
+            absoluteToast(toast.success, '2FA disable successfully');
         } catch (error) {
             if (isAxiosError(error))
-                toast.error(
+                absoluteToast(
+                    toast.error,
                     " We're having a little trouble disabling 2FA right now.  Please try again in a few minutes."
                 );
         }
@@ -90,32 +94,34 @@ const TwoFA = () => {
                 }
                 className="flex-col justify-cemter items-center inline-flex gap-6"
             >
-                <div className="border border-gray-200">
-                    <div
-                        className={`${
-                            image ? 'bg-gray-200 animate-pulse' : ''
-                        }`}
-                        style={{
-                            backgroundSize: 'cover',
-                            filter: image ? 'blur(8px)' : 'none',
-                            backgroundImage: `url(${
-                                image ? image : '/path/to/placeholder-image.png'
-                            })`
-                        }}
-                    />
+                <div className="border border-gray-200 w-[202px] h-[203px] relative">
+                    {image ? (
+                        <img
+                            src={image}
+                            alt="QR Code"
+                            className="absolute inset-0 w-full h-full object-cover"
+                        />
+                    ) : (
+                        <img
+                            src="/defaultQR.png"
+                            alt="Loading placeholder"
+                            className="absolute inset-0 w-full h-full object-cover animate-pulse bg-gray-200"
+                            style={{ filter: 'blur(8px)' }}
+                        />
+                    )}
                 </div>
                 <div className="justify-center items-center gap-2 inline-flex">
-                    <div className="w-[130px] h-[0px] border border-zinc-400"></div>
-                    <div className="text-center text-zinc-400 text-sm font-light font-['Poppins']">
+                    <div className="w-[130px] h-[0px] border-t border-neutral-400"></div>
+                    <div className="text-center text-neutral-400 text-sm font-light font-['Poppins']">
                         enter code
                     </div>
-                    <div className="w-[130px] h-[0px] border border-zinc-400"></div>
+                    <div className="w-[130px] h-[0px] border-t border-neutral-400"></div>
                 </div>
                 <div className="flex-col justify-center items-center gap-5 flex">
                     <CodeInput
                         setter={setCode}
                         hide={F2A}
-                        style="w-[30px] h-10 text-center text-black text-xl relative bg-white
+                        style="w-[45px] h-[50px] text-center text-black text-xl relative bg-white
                 rounded-[10px] border border-neutral-400"
                     />
                 </div>

@@ -68,7 +68,7 @@ body {
     }
 }
 
-/* .debug {
+.debug {
     border: 2px solid red !important;
     & > * {
         border: 2px solid green !important;
@@ -78,7 +78,6 @@ body {
     }
 }
 
- */
 .loader-container {
     display: flex;
     justify-content: center;

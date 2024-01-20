@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from './InputField';
 import toast from 'react-hot-toast';
+import { absoluteToast } from '../tools';
 
 type FormProps = {
     fields: any[];
@@ -29,17 +30,22 @@ function FormComponent({
             const firstErrorKey = Object.keys(errors)[0];
             const confirmPassword = getValues('confirmPassword');
 
-            toast.dismiss();
             if (
                 firstErrorKey &&
                 typeof errors[firstErrorKey]?.message === 'string'
             )
-                toast.error(errors[firstErrorKey]?.message as string);
+                absoluteToast(
+                    toast.error,
+                    errors[firstErrorKey]?.message as string
+                );
             else if (
                 confirmPassword &&
                 confirmPassword != getValues('password')
             )
-                toast.error('Passwords must match confirm password');
+                absoluteToast(
+                    toast.error,
+                    'Passwords must match confirm password'
+                );
         }
     }, [errors, isSubmitting]);
     return (

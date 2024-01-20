@@ -21,9 +21,9 @@ function InputField({
                     {label}{' '}
                 </label>
                 <input
-                    className={`w-96 pl-5 pr-2.5 py-2.5 ${
+                    className={` ${
                         disabled ? 'bg-zinc-100' : 'bg-white'
-                    } rounded-[10px] border-2 border-gray-200 justify-start items-center gap-2.5 inline-flex text-start text-neutral-400 text-base font-normal font-['Poppins']`}
+                    }  w-[387px] h-[47px] pl-5 pr-2.5 py-2.5 bg-white border-b-2  border-gray-200 justify-start items-center gap-2.5 inline-flex  outline-none  text-neutral-400 text-base font-medium font-['Poppins'`}
                     type={type}
                     placeholder={placeholder}
                     {...register}
@@ -33,5 +33,17 @@ function InputField({
         </>
     );
 }
-
+<div className="w-[387px] h-[47px] pl-5 pr-2.5 py-2.5 bg-white border-b-2 border-gray-200 justify-start items-center gap-2.5 inline-flex">
+    <div className="text-center text-neutral-400 text-base font-normal font-['Poppins']">
+        Dos404
+    </div>
+</div>;
 export default InputField;
+
+{
+    /* <div className="w-[387px] h-[47px] pl-5 pr-2.5 py-2.5 bg-white border-b-2 border-gray-200 justify-start items-center gap-2.5 inline-flex">
+    <div className="text-center text-neutral-400 text-base font-normal font-['Poppins']">
+        Dos404
+    </div>
+</div>; */
+}

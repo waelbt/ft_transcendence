@@ -14,6 +14,9 @@ export const useChatSocketStore = create<SocketState>((set, get) => ({
         const { socket } = get();
         if (token && !socket) {
             const newSocket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
+                path: '/socket.io',
+                transports: ['websocket'],
+                secure: true,
                 auth: { token: token }
             });
             set({ socket: newSocket });
