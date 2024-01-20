@@ -42,7 +42,7 @@ export class twoFAController{
 
     @Post('validate')
     async validateTwoFA(@Body() code, @Req() req, @Res() res) {
-        return (await this.twoFAService.validateTwoFA(req.user, code, res));
+        return (await this.twoFAService.validateTwoFA(req, code, res));
     }
 
     @Get('isEnable')

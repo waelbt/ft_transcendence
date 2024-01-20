@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import { Popover, Transition } from '@headlessui/react';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 
@@ -19,20 +19,22 @@ function Layout() {
         useUserStore();
     const navigate = useNavigate();
     const { initializeSocket, socket } = useChatSocketStore();
-    const { data, isLoading, isError } = useGetUserInfos('/users/me', [
-        'profile',
-        'me'
-    ]);
+    const { data, isLoading } = useGetUserInfos('/users/me', ['profile', 'me']);
+    const [redirect, SetRedirect] = useState<boolean>(false);
     useEffect(() => {
         if (data) {
             updateState(data.user);
             updateState({ friends: data.friends });
             updateState({ block: data.block });
+            // SetRedirect(F2A || isProfileComplete);
+            SetRedirect(F2A);
         }
         // if (isError) // ! handle this case
-    }, [data, isError]); // Empty dependency array means this effect runs once after the initial render
+    }, []); // Empty dependency array means this effect runs once after the initial render
 
     useEffect(() => {
+        // ! protect this to happpen one time
+        console.log(accessToken);
         if (accessToken) {
             console.log(accessToken);
             initializeSocket(accessToken);
@@ -46,7 +48,8 @@ function Layout() {
     if (isLoading) return <div>loading profile data</div>;
     return (
         <>
-            {isProfileComplete || F2A ? (
+            {/* {isProfileComplete || F2A ? ( */}
+            {redirect ? (
                 <Confirmation />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">

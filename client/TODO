@@ -1,4 +1,3 @@
-- attach token && socket
 - bridge profile endpoint
 - test response interceptor
 - check when accesToken expire in the chat interface
@@ -9,3 +8,7 @@
 - protect /profile (parmID undefined)
 - edit the form style
 - implement the new setting page ui
+- handle fail in the generate qr code
+- in case of fail return to the auth page
+- code qr borders
+-localhost:8000/profile/me/setting put this before login 

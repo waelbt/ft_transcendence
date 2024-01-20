@@ -26,10 +26,9 @@ const useAxiosPrivate = () => {
                 if (error?.response?.status === 401 && !prevRequest.sent) {
                     prevRequest.sent = true;
                     // gerenate new access token
-                    // console.log('new old token ', accessToken);
-                    updateState({ accessToken: null });
+                    console.log('new old token ', accessToken);
                     const newAccessToken = await refresh();
-                    // console.log('new access token ', newAccessToken);
+                    console.log('new access token ', newAccessToken);
                     prevRequest.headers[
                         'Authorization'
                     ] = `Bearer ${newAccessToken}`;
