@@ -1,4 +1,4 @@
-import { Injectable, Res } from "@nestjs/common";
+import { Injectable, NotFoundException, Res } from "@nestjs/common";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import * as speakeasy from 'speakeasy';
 import { User } from "@prisma/client";
@@ -47,6 +47,25 @@ export class twoFAService{
           token,
           window: 1, 
       });
+    }
+
+    async validateTwoFA(user: User, code, @Res() res) {
+        const isUser = await this.prisma.user.findUnique({ where: { id: user.id } });
+        if (!user) throw new NotFoundException(`User does not exist`);
+    
+        const enteredToken = code.token;
+        const isValidToken = await this.validateTwoFAToken(enteredToken, user.f2A_Secret);
+    
+        if (isValidToken) {
+          await this.prisma.user.update({
+            where: { id: user.id },
+            data: { f2A: true },
+          });
+    
+          return res.status(200).json({ message: '2FA validation successful', user });
+        } else {
+          return res.status(401).json({ message: 'Invalid 2FA token' });
+        }
     }
 
     async isItEnable(user: User){

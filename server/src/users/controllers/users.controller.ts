@@ -79,11 +79,21 @@ export class UsersController {
     return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
+  @Get('/previo/:id')
+  async userData(@Param('id') id: string){
+    return (await this.usersService.userData(id));
+  }
+
   @Get('all')
   @ApiBearerAuth()
   @ApiOkResponse()
   findAllUser() {
     return this.usersService.findAllUser();
+  }
+
+  @Get('historyMatchs')
+  async match_history(@Req() req){
+    return await this.usersService.matchHistory(req.user.sub);
   }
 
   @Get(':id')

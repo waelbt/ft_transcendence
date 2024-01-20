@@ -40,6 +40,11 @@ export class twoFAController{
         return res.status(200).json({ message: '2FA enabled successfully'});
     }
 
+    @Post('validate')
+    async validateTwoFA(@Body() code, @Req() req, @Res() res) {
+        return (await this.twoFAService.validateTwoFA(req.user, code, res));
+    }
+
     @Get('isEnable')
     async isItEnable(@Req() req){
         const user = await this.userService.getOneUser(req.user.sub);

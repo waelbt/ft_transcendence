@@ -112,6 +112,47 @@ export class UsersService {
         });
     }
 
+    async matchHistory(userId: string){
+        const matchs = await this.prisma.game.findMany({
+            where:{
+                OR: [
+                    {winnerId: userId},
+                    {loserId: userId},
+                ],
+            },
+        });
+    
+        const match = await Promise.all( matchs.map( async (matche) =>{
+
+            var user;
+            var addedXp;
+            if (matche.winnerId == userId)
+            {
+                user = await this.getOneUser(matche.loserId);
+                addedXp = 400;
+            }else{
+                user = await this.getOneUser(matche.winnerId);
+                addedXp = 100;
+            }
+            const score = matche.result.split('-');
+            const id = matche.id;
+            const date = matche.createdAt;
+            const level = user.level;
+            const name = user.fullName;
+            const avatar = user.avatar;
+            return {
+                id,
+                name,
+                avatar,
+                level,
+                score,
+                addedXp,
+                date,
+            }
+        }));
+        return match;
+    }
+
     async userInfo(@Req() req, avatar: string, nickName: string) {
         console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
@@ -181,6 +222,20 @@ export class UsersService {
 
         const info = { user, friendsIds, blocksIds };
         return info;
+    }
+
+    async userData(userId: string){
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        if (!user) throw new NotFoundException(`User does not exist`);
+
+        const id = user.id;
+        const avatar = user.avatar;
+        const fullName = user.fullName;
+        return ({
+            id,
+            avatar,
+            fullName,
+        });
     }
 
     async getAllUsersRank(){
