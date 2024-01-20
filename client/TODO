@@ -7,3 +7,5 @@
 - seklons
 - set up the navigation history (search for any navigate in the code)
 - protect /profile (parmID undefined)
+- edit the form style
+- implement the new setting page ui

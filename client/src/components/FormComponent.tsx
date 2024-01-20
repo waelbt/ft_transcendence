@@ -61,7 +61,7 @@ function FormComponent({
                 );
             })}
             {onSubmit ? (
-                <div className="w-full flex-col justify-end items-end gap-3 inline-flex">
+                <div className="w-full flex-col justify-center items-center gap-3 inline-flex">
                     <button
                         // ${
                         // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
