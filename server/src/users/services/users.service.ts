@@ -224,6 +224,20 @@ export class UsersService {
         return info;
     }
 
+    async userData(userId: string){
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        if (!user) throw new NotFoundException(`User does not exist`);
+
+        const id = user.id;
+        const avatar = user.avatar;
+        const fullName = user.fullName;
+        return ({
+            id,
+            avatar,
+            fullName,
+        });
+    }
+
     async getAllUsersRank(){
         const users = await this.findAllUser();
         

@@ -79,6 +79,11 @@ export class UsersController {
     return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
+  @Get('/previo/:id')
+  async userData(@Param('id') id: string){
+    return (await this.usersService.userData(id));
+  }
+
   @Get('all')
   @ApiBearerAuth()
   @ApiOkResponse()
