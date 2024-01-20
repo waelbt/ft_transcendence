@@ -91,7 +91,7 @@ function Setting() {
     </div>;
     return (
         <div className="flex h-full w-full justify-between items-center gap-8">
-            <div className="self-stretch flex-col justify-between items-center inline-flex px-4 py-4">
+            <div className="     flex-col justify-between items-center inline-flex px-4 py-4">
                 <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
                     Appearance
                 </div>
@@ -141,7 +141,7 @@ function Setting() {
                 />
             </div>
             <div className="w-px h-[80%] relative bg-neutral-200" />{' '}
-            <div className="self-stretch flex-col justify-between items-center inline-flex px-4 py-4">
+            <div className="flex-col justify-between items-center inline-flex gap-8 px-4 py-4">
                 <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
                     Security
                 </div>

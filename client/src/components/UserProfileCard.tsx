@@ -1,9 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useOutletContext } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
 import { FC, useEffect } from 'react';
-import { useUserStore } from '../stores/userStore';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
@@ -18,13 +17,13 @@ type UserProfileCardProps = {
     exp: 0;
     level: 0;
     actions?: string[];
+    isCurrentUser: boolean;
 };
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
-    const { id } = useUserStore();
-    // setting
+    // const { id } = useUserStore();
     const navLinks = ['history', 'achivements', 'friends'];
-    if (props.id === id) {
+    if (props.isCurrentUser) {
         navLinks.push('setting'); //! protect this
     }
 
@@ -75,7 +74,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-                        {props.id != id && (
+                        {!props.isCurrentUser && (
                             <Popup
                                 trigger={
                                     <div

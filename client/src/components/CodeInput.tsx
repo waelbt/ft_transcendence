@@ -3,11 +3,13 @@ import React, { FormEvent, useEffect, useState } from 'react';
 interface CodeInputProps {
     setter: React.Dispatch<React.SetStateAction<string>>;
     style?: string;
+    hide: boolean;
 }
 
 const CodeInput: React.FC<CodeInputProps> = ({
     setter,
-    style = 'w-16 h-14 text-center text-black text-xl relative bg-white rounded-[10px] border border-neutral-400'
+    style = 'w-16 h-14 text-center text-black text-xl relative bg-white rounded-[10px] border border-neutral-400',
+    hide
 }) => {
     const [code, setCode] = useState(['', '', '', '', '', '']);
 
@@ -26,11 +28,16 @@ const CodeInput: React.FC<CodeInputProps> = ({
         };
 
     useEffect(() => {
-        setter(code.join(''));
-    }, [code]);
+        if (hide) setCode(['', '', '', '', '', '']);
+        else setter(code.join(''));
+    }, [code, hide]);
 
     return (
-        <div className="justify-center items-center gap-[15px] inline-flex">
+        <div
+            className={`justify-center items-center gap-[15px] inline-flex ${
+                hide ? 'hidden' : ''
+            }`}
+        >
             {code.map((c, index) => (
                 <input
                     key={index}

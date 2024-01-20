@@ -8,7 +8,14 @@
 - protect /profile (parmID undefined)
 - edit the form style
 - implement the new setting page ui
-- handle fail in the generate qr code
 - in case of fail return to the auth page
-- code qr borders
 -localhost:8000/profile/me/setting put this before login 
+- add pong loader gif in the project
+- error pages
+
+
+- handle fail in the generate qr code
+- code qr borders
+- add loader binma genera code QR
+
+<!-- }, [axiosPrivate]); // ! check later about this dependeci -->
