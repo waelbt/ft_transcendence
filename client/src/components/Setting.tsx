@@ -27,11 +27,11 @@ function Setting() {
                 </div>
                 <div className="h-full w-full flex-col inline-flex justify-center items-center gap-14">
                     {' '}
-                    <div className="flex-col items-start justify-center">
+                    <div className="w-full flex-col items-start justify-center">
                         <div className="text-neutral-500 text-2xl font-normal font-['Acme']">
                             edit avatar
                         </div>
-                        <div className="pt-5 pb-2.5 justify-center items-center gap-[30px] inline-flex">
+                        <div className="pt-5 pb-2.5 w-full justify-between items-center gap-[30px] inline-flex">
                             <Avatar
                                 imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
                                 style="w-32 h-32"
@@ -51,12 +51,21 @@ function Setting() {
                                     // }
                                     // }}
                                 />
-                                <div
+                                {/* <div
                                     id="inputImage"
                                     className="p-0.5 bg-stone-100 rounded-[3px] border border-zinc-300 justify-center items-center gap-3 inline-flex text-center text-neutral-700 text-sm font-bold font-['Poppins'] cursor-pointer"
                                 >
                                     Browse...
-                                </div>
+                                </div> */}
+                                <label
+                                    className="p-3 bg-white rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex cursor-pointer"
+                                    htmlFor="inputImage"
+                                >
+                                    <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">
+                                        Choose image
+                                    </div>
+                                </label>
+
                                 <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">
                                     JPG or PNG. Max size of 4Mo
                                 </div>
@@ -70,7 +79,7 @@ function Setting() {
                         fields={NICKNAME_FIELD}
                         onSubmit={onSubmit}
                         btn={{
-                            style: 'px-6 py-1 bg-stone-50 rounded-[20px] border border-stone-300 justify-center items-center gap-3 inline-flex text-center text-neutral-500 text-lg font-normal font-["Acme"] hover:bg-stone-200',
+                            style: "px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-xl font-normal font-['Acme'] cursor-pointer hover:bg-stone-200",
                             type: 'submit',
                             text: 'Submit'
                         }}
