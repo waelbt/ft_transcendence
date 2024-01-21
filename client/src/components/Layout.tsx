@@ -1,40 +1,40 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useUserStore } from '../stores/userStore';
 import Verfication from '../pages/Verfication';
 import GlobalChat from './GlobalChat';
-import { useChatSocketStore } from '../stores/ChatSocketStore';
-import { useGetUserInfos } from '../hooks/getUserInfos';
 import NavigationMenu from './NavigationMenu';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useUserStore } from '../stores/userStore';
 
 function Layout() {
-    const { updateState, accessToken, isProfileComplete, F2A, verified } =
+    const axiosPrivate = useAxiosPrivate();
+    const { updateState, accessToken, verified, isLogged, active } =
         useUserStore();
-    const { initializeSocket, socket } = useChatSocketStore();
-    const { data, isLoading } = useGetUserInfos('/users/me', ['profile', 'me']);
     const [redirect, setRedirect] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (data) {
-            updateState(data.user);
-            updateState({ friends: data.friends, block: data.block });
-            setRedirect((F2A || !isProfileComplete) && !verified);
-            initializeSocket(accessToken);
-        }
-        console.log(accessToken);
-        return () => socket?.disconnect();
-    }, [
-        data,
-        F2A,
-        isProfileComplete,
-        updateState,
-        accessToken,
-        initializeSocket,
-        verified
-    ]);
+        const fetchData = async () => {
+            console.log(accessToken);
+            try {
+                setIsLoading(true);
+                const { user, friends, block } = (
+                    await axiosPrivate.get('/users/me')
+                ).data;
+                updateState(user);
+                updateState({ friends: friends, block: block });
+                updateState({ active: true });
+                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
+            } catch (error) {
+                console.log(error); // !toast
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (isLogged && !active) fetchData();
+    }, [isLogged]);
 
-    if (isLoading) return <div>Loading profile data...</div>; //! big loader
-
+    if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <>
             {redirect ? (
@@ -44,7 +44,7 @@ function Layout() {
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        <GlobalChat />
+                        {/* <GlobalChat />   */}
                     </div>
                 </div>
             )}

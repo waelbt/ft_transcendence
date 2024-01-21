@@ -34,3 +34,5 @@ toast.promise(myPromise, {
 remove static messages later
 
 - check if the user id in the blocked arrray return forbidden
+
+store the path on the server'for user pic '

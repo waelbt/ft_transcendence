@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useGetUserInfos } from '../../hooks/getUserInfos';
 import { useUserStore } from '../../stores/userStore';
 import Skeleton from 'react-loading-skeleton';
+import toast from 'react-hot-toast';
 
 export function Profile() {
     const { id: paramId } = useParams();
@@ -14,10 +15,11 @@ export function Profile() {
     const isCurrentUser = paramId === 'me' || paramId === userId;
     const endpoint = isCurrentUser ? '/users/me' : `/users/${paramId}/profile`;
 
-    const { data, isLoading, isError, refetch } = useGetUserInfos(endpoint, [
-        'profile',
-        isCurrentUser ? 'me' : (paramId as string)
-    ]);
+    const { data, isLoading, isError, error, refetch } = useGetUserInfos(
+        endpoint,
+        ['profile', isCurrentUser ? 'me' : (paramId as string)],
+        isCurrentUser
+    );
 
     useEffect(() => {
         // if (paramId === undefined)

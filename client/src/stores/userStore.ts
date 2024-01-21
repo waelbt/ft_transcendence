@@ -4,7 +4,10 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
+// ! create a const object for defautl value to use it twice 
+
 type UserStateType = {
+    active: boolean;
     isLogged: boolean;
     verified: boolean;
     accessToken: string | null;
@@ -24,6 +27,7 @@ type UserStateType = {
 
 type UserActionsType = {
     // constructor: (data : UserStateType) => void;
+    getState: () => UserStateType;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
 };
@@ -33,13 +37,14 @@ export const useUserStore = createWithEqualityFn<
     UserStateType & UserActionsType
 >()(
     persist(
-        (set) => ({
+        (set, get) => ({
+            active: false,
             isLogged: false,
             verified: false,
             accessToken: null,
             id: '',
             email: '',
-            avatar: 'https://tecdn.b-cdn.net/img/new/avatars/2.webp', // ! tmp
+            avatar: '', // ! tmp
             nickName: '',
             fullName: '',
             createdAt: '',
@@ -49,12 +54,16 @@ export const useUserStore = createWithEqualityFn<
             isProfileComplete: false,
             friends: [],
             block: [],
+            getState: () => {
+                const { logout, updateState, getState, ...restOfState } = get();
+                return restOfState;
+            },
             logout: () => {
                 set(
                     {
+                        active: false,
                         isLogged: false,
                         accessToken: null,
-                        // refreshToken: null,
                         id: '',
                         email: '',
                         avatar: '',
@@ -63,7 +72,9 @@ export const useUserStore = createWithEqualityFn<
                         status: false,
                         F2A: false,
                         inGame: false,
-                        isProfileComplete: false
+                        isProfileComplete: false,
+                        friends: [],
+                        block: []
                     },
                     true // ? the state update should trigger a re-render of the components that subscribe to the store.
                 );

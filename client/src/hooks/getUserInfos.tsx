@@ -1,20 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPrivate from './axiosPrivateHook';
+import { useUserStore } from '../stores/userStore';
 
-export const useGetUserInfos = (endpoint: string, key: string[]) => {
+export const useGetUserInfos = (
+    endpoint: string,
+    key: string[],
+    isCurrentUser: boolean
+) => {
     const axiosPrivate = useAxiosPrivate();
+    const { getState } = useUserStore();
 
     const fetchData = async () => {
         const { data } = await axiosPrivate.get(endpoint);
-        console.log('data  ', data);
-
         return data;
     };
 
     const query = useQuery({
         queryKey: key,
-        queryFn: fetchData
+        queryFn: fetchData,
+        enabled: !isCurrentUser,
+        initialData: getState()
     });
+
     return {
         isLoading: query.isLoading,
         isError: query.isError,
