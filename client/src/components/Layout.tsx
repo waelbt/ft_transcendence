@@ -1,14 +1,15 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUserStore } from '../stores/userStore';
-import Confirmation from '../pages/Confirmation';
+import Verfication from '../pages/Verfication';
 import GlobalChat from './GlobalChat';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
 import { useGetUserInfos } from '../hooks/getUserInfos';
 import NavigationMenu from './NavigationMenu';
 
 function Layout() {
-    const { updateState, accessToken, isProfileComplete, F2A } = useUserStore();
+    const { updateState, accessToken, isProfileComplete, F2A, verified } =
+        useUserStore();
     const { initializeSocket, socket } = useChatSocketStore();
     const { data, isLoading } = useGetUserInfos('/users/me', ['profile', 'me']);
     const [redirect, setRedirect] = useState(false);
@@ -17,8 +18,8 @@ function Layout() {
         if (data) {
             updateState(data.user);
             updateState({ friends: data.friends, block: data.block });
-            // setRedirect(F2A || !isProfileComplete);
-            setRedirect(false);
+            // setRedirect(F2A || !isProfileComplete );
+            setRedirect((false) && !verified);
             initializeSocket(accessToken);
         }
         return () => socket?.disconnect();
@@ -29,7 +30,7 @@ function Layout() {
         updateState,
         accessToken,
         initializeSocket,
-        socket
+        verified
     ]);
 
     if (isLoading) return <div>Loading profile data...</div>; //! big loader
@@ -37,7 +38,7 @@ function Layout() {
     return (
         <>
             {redirect ? (
-                <Confirmation />
+                <Verfication />
             ) : (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />

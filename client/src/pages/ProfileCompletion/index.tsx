@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../../components/';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
-import { DEFAULT_PATH, CONFIRMATION_FIELDS } from '../../constants';
+import { DEFAULT_PATH, Verfication_FIELDS } from '../../constants';
 import useUpload from '../../hooks/uploadImageHook';
 import { request } from '../../api';
 import { useNavigate } from 'react-router-dom';
@@ -178,7 +178,7 @@ export function ProfileCompletion() {
                                 {/* nickname section */}
                             </div>
                             <FormComponent
-                                fields={CONFIRMATION_FIELDS}
+                                fields={Verfication_FIELDS}
                                 onSubmit={onSubmit}
                                 btn={{
                                     // TODO: store this in a custom style proprty

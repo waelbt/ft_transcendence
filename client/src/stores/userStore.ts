@@ -6,6 +6,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 type UserStateType = {
     isLogged: boolean;
+    verified: boolean;
     accessToken: string | null;
     id: string;
     email: string;
@@ -34,6 +35,7 @@ export const useUserStore = createWithEqualityFn<
     persist(
         (set) => ({
             isLogged: false,
+            verified: false,
             accessToken: null,
             id: '',
             email: '',

@@ -26,7 +26,7 @@ const TwoFA = () => {
                 updateState({ F2A: true });
             } catch (error) {
                 if (isAxiosError(error)) {
-                    updateState({ F2A: true }); //! false
+                    updateState({ F2A: false }); //! false
                     absoluteToast(toast.error, error.response?.data.message);
                 }
             }

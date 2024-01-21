@@ -1,39 +1,47 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import CodeInput from './CodeInput';
-
-// ! code
-
-// const [code, setCode] = useState(['', '', '', '', '', '']);
-// const [isInputValid, setIsInputValid] = useState<boolean>(false);
-
-// const handleCodeChange = (newCode: string[]) => {
-//     setCode(newCode);
-//     // Validate the code and set the input validity
-//     // Example validation: checking if all elements are numbers and the array is full
-
-//     setIsInputValid(isValid);
-// };
+import { absoluteToast } from '../tools';
+import { isAxiosError } from 'axios';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useUserStore } from '../stores/userStore';
 
 function TwoFaVerfication() {
     const [code, setCode] = useState<string>('');
-
-    // const handleSubmit = (e: MouseEvent<HTMLElement>) => {
-    //     e.preventDefault();
-    //     console.log(code);
-    //     if (code.length === 6 && /^[0-9]+$/.test(code)) {
-    //         // ! post request to the server
-    //     } else {
-    //         toast.error('invalid code format');
-    //     }
-    // };
+    const axiosPrivate = useAxiosPrivate();
+    const { updateState } = useUserStore();
 
     useEffect(() => {
-        // && /^[0-9]+$/.test(code)
+        const validateCode = async () => {
+            var formData = new FormData();
+            formData.append('text', code);
+            try {
+                const response = await axiosPrivate.post(
+                    '/2fa/validate',
+                    formData
+                );
+                absoluteToast(toast.success, response.data.message);
+                updateState({ verified: true });
+            } catch (error) {
+                if (isAxiosError(error)) {
+                    absoluteToast(toast.error, error.response?.data.message);
+                }
+            }
+        };
+
         if (code.length === 6) {
             console.log(code);
+            if (/^[0-9]+$/.test(code)) {
+                validateCode();
+            } else {
+                absoluteToast(
+                    toast.error,
+                    'Error: input is invalid: value is not a number'
+                );
+            }
         }
     }, [code]);
+
     return (
         <div className="h-80 flex-col justify-center items-center gap-[50px] inline-flex">
             <div className=" flex-col justify-center items-start gap-[30px] flex">
@@ -44,14 +52,7 @@ function TwoFaVerfication() {
                     Enter code from your two-factor authentication app
                 </div>
             </div>
-            <CodeInput setter={setCode} />
-            {/* <button
-                className="px-3 py-2 rounded-[10px] border bg-black hover:bg-gray-800 border-stone-300 justify-center items-center gap-3 inline-flex  text-center text-white text-[22px] font-normal font-['Acme'] "
-                onClick={handleSubmit}
-                // disabled={!isInputValid}
-            >
-                continue
-            </button> */}
+            <CodeInput setter={setCode} hide={false} />
         </div>
     );
 }
