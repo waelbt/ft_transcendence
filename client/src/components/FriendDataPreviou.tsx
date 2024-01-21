@@ -2,11 +2,11 @@ import { Avatar } from '.';
 import { Link } from 'react-router-dom';
 import useFriendPrevious from '../hooks/friendPreviousHook';
 
-type FriendsCardProps = {
+type FriendDataPreviouProps = {
     friendId: string;
 };
 
-function FriendCard({ friendId }: FriendsCardProps) {
+function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
     const { isLoading, isError, error, friend } = useFriendPrevious({
         friendId
     });
@@ -49,4 +49,4 @@ function FriendCard({ friendId }: FriendsCardProps) {
     );
 }
 
-export default FriendCard;
+export default FriendDataPreviou;

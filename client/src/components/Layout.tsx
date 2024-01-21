@@ -18,10 +18,10 @@ function Layout() {
         if (data) {
             updateState(data.user);
             updateState({ friends: data.friends, block: data.block });
-            // setRedirect(F2A || !isProfileComplete );
-            setRedirect((false) && !verified);
+            setRedirect((F2A || !isProfileComplete) && !verified);
             initializeSocket(accessToken);
         }
+        console.log(accessToken);
         return () => socket?.disconnect();
     }, [
         data,

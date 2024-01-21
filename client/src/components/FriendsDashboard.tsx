@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import FriendCard from './FriendCard';
+import FriendCard from './FriendDataPreviou';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { MdCancel } from 'react-icons/md';
