@@ -1,22 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { Friend } from '../../../shared/types';
+import useAxiosPrivate from './axiosPrivateHook';
 
 type useFriendPreviousProps = {
     friendId: string;
 };
 
-// /friends/listFriends // !me
-// /friends/friends/{viewerId} // ! other
-
 const useFriendPrevious = ({ friendId }: useFriendPreviousProps) => {
+    const axiosPrivate = useAxiosPrivate();
     const fetchFriendDetails = async (): Promise<Friend> => {
-        const response = await fetch(
-            `http://localhost:3000/friendDetails/${friendId}`
-        );
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
+        const res = await axiosPrivate.get(`/users/previo/${friendId}`);
+        return res.data;
     };
 
     const query = useQuery<Friend, Error>({

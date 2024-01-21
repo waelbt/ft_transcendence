@@ -7,7 +7,7 @@ import { useUserStore } from '../stores/userStore';
 
 function NavigationMenu() {
     const navigate = useNavigate();
-    const { logout } = useUserStore();
+    const { logout, nickName, avatar } = useUserStore();
     return (
         <nav className="bg-white border-b border-neutral-100">
             <div className="w-full px-4">
@@ -15,7 +15,7 @@ function NavigationMenu() {
                     {/* <!-- Logo Section --> */}
                     <div
                         className="flex-shrink-0 text-black text-xl font-bold font-['Lemonada'] cursor-pointer"
-                        onClick={() => navigate('/home')}
+                        onClick={() => navigate('/')}
                     >
                         LaughTale
                     </div>
@@ -65,7 +65,7 @@ function NavigationMenu() {
                                     className={`group inline-flex items-center rounded-md  px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 text-white`}
                                 >
                                     <Avatar
-                                        imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                                        imageUrl={avatar}
                                         style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2"
                                     />
                                 </div>
@@ -82,13 +82,11 @@ function NavigationMenu() {
                                 >
                                     <Avatar
                                         style="h-10 w-10"
-                                        imageUrl={
-                                            'https://tecdn.b-cdn.net/img/new/avatars/2.webp'
-                                        }
+                                        imageUrl={avatar}
                                         state="online"
                                     />
                                     <div className="text-black text-2xl font-normal font-['Acme']">
-                                        dos404
+                                        {nickName}
                                     </div>
                                 </li>
                                 {MENU_FIELDS.map((field, index) => (

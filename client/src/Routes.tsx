@@ -16,6 +16,13 @@ const router = createBrowserRouter([
         },
         children: [
             {
+                index: true,
+                lazy: async () => {
+                    let { Lobby } = await import('./pages/Lobby');
+                    return { Component: Lobby };
+                }
+            },
+            {
                 path: '/home',
                 lazy: async () => {
                     let { Lobby } = await import('./pages/Lobby');

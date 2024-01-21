@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FriendCard from './FriendCard';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
+import { MdCancel } from 'react-icons/md';
 
 const FriendsDashboard: React.FC = () => {
     const { isCurrentUser, friends, block, paramId } =
@@ -41,12 +42,17 @@ const FriendsDashboard: React.FC = () => {
             </div>
             <div className="flex flex-col w-full">
                 {friendsIdList.map((friendId: string) => (
-                    <FriendCard
-                        key={`friend${friendId}`}
-                        friendId={friendId}
-                        isCurrentUser={isCurrentUser as boolean}
-                        paramId={paramId as string}
-                    />
+                    <div className="flex py-4 border-b border-gray-200 justify-between items-center w-full ">
+                        <FriendCard
+                            key={`friend${friendId}`}
+                            friendId={friendId}
+                        />
+
+                        <MdCancel
+                            className="text-neutral-200 cursor-pointer mr-4"
+                            size={32}
+                        />
+                    </div>
                 ))}
             </div>
         </div>
