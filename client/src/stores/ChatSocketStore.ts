@@ -9,7 +9,6 @@ type SocketState = {
 
 export const useChatSocketStore = create<SocketState>((set, get) => ({
     socket: null,
-
     initializeSocket: (token) => {
         const { socket } = get();
         if (token && !socket) {
@@ -24,12 +23,3 @@ export const useChatSocketStore = create<SocketState>((set, get) => ({
         }
     }
 }));
-
-// ? removing accestoken state and start emiting thew new token
-//     updateToken: (token: string) => {
-//         const { socket } = get();
-//         if (socket) {
-//             // Send the new token to the server via the existing socket connection
-//             socket.emit('updateToken', token);
-//         }
-//     }

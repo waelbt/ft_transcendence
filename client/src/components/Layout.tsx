@@ -4,6 +4,7 @@ import Verfication from '../pages/Verfication';
 import NavigationMenu from './NavigationMenu';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 // import GlobalChat from './GlobalChat';
 
 function Layout() {
@@ -12,6 +13,7 @@ function Layout() {
         useUserStore();
     const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { initializeSocket, socket } = useChatSocketStore();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,14 +26,21 @@ function Layout() {
                 updateState(user);
                 updateState({ friends: friends, block: block });
                 updateState({ active: true });
-                setRedirect((user.F2A || !user.isProfileComplete) && !verified);
+                initializeSocket(accessToken);
+                socket?.emit('message', { message: 'test' });
+                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
             } catch (error) {
                 console.log(error); // !toast
             } finally {
                 setIsLoading(false);
             }
         };
-        if (isLogged && !active) fetchData();
+        if (isLogged && !active) {
+            fetchData();
+        }
+        return () => {
+            socket?.disconnect();
+        };
     }, [isLogged]);
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
