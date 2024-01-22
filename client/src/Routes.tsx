@@ -1,13 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
-    // {
-    //     path: '/',
-    //     lazy: async () => {
-    //         let { Auth } = await import('./pages/Auth');
-    //         return { Component: Auth };
-    //     }
-    // },
     {
         path: '/',
         lazy: async () => {
@@ -15,6 +8,13 @@ const router = createBrowserRouter([
             return { Component: RequireAuth };
         },
         children: [
+            {
+                index: true,
+                lazy: async () => {
+                    let { Lobby } = await import('./pages/Lobby');
+                    return { Component: Lobby };
+                }
+            },
             {
                 path: '/home',
                 lazy: async () => {
@@ -36,13 +36,13 @@ const router = createBrowserRouter([
                     return { Component: Game };
                 }
             },
-            // {
-            //     path: '/Game/:mode',
-            //     lazy: async () => {
-            //         let { Game } = await import('./pages/Game');
-            //         return { Component: Game };
-            //     }
-            // },
+            {
+                path: '/rooms',
+                lazy: async () => {
+                    let { Rooms } = await import('./pages/Rooms');
+                    return { Component: Rooms };
+                }
+            },
             {
                 path: 'Profile/:id',
                 lazy: async () => {
@@ -92,15 +92,11 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: '/rooms',
-                lazy: async () => {
-                    let { Rooms } = await import('./pages/Rooms');
-                    return { Component: Rooms };
-                }
-            },
-            {
                 path: '*',
-                element: <div>not found</div>
+                lazy: async () => {
+                    let { NotFound } = await import('./components/errorPages/');
+                    return { Component: NotFound };
+                }
             }
         ]
     }

@@ -22,14 +22,15 @@ export const MENU_FIELDS = [
 
 export const NICKNAME_FIELD = [
     {
-        label: 'Nickname',
+        label: '',
         type: 'text',
         name: 'nickName',
+        placeholder: 'Choose something fun and creative that people can call you by',
         validation: {
             required: 'Nickname is required!',
             maxLength: {
-                value: 40,
-                message: 'Nickname must be less than 40 characters'
+                value: 15,
+                message: 'Nickname must be less than 15 characters'
             },
             minLength: {
                 value: 5,

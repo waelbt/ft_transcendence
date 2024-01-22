@@ -1,12 +1,12 @@
 import { Controller, Get, NotFoundException, Req, Res, Body, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { twoFAService } from "../services/2FA.services";
 import { UsersService } from "src/users/services/users.service";
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { User } from "@prisma/client";
 
-
+@ApiBearerAuth()
 @ApiTags('2fa')
 @Controller('2fa')
 export class twoFAController{
@@ -38,6 +38,11 @@ export class twoFAController{
             return res.status(401).json({ message: 'Invalid 2FA token' });
         }
         return res.status(200).json({ message: '2FA enabled successfully'});
+    }
+
+    @Post('validate')
+    async validateTwoFA(@Body() code, @Req() req, @Res() res) {
+        return (await this.twoFAService.validateTwoFA(req, code, res));
     }
 
     @Get('isEnable')

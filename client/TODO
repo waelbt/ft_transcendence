@@ -1,4 +1,36 @@
-attach token && socket
-- bridge profile endpoint
-- test response interceptor
-- check when accesToken expire in the chat interface
+-   bridge profile endpoint
+-   test response interceptor
+-   check when accesToken expire in the chat interface
+-   isloading and isError handling
+-   protect setting page
+-   seklons
+-   set up the navigation history (search for any navigate in the code)
+-   protect /profile (parmID undefined)
+-   edit the form style
+-   implement the new setting page ui
+-   in case of fail return to the auth page -localhost:8000/profile/me/setting
+    put this before login
+-   add pong loader gif in the project
+-   error pages
+
+-   handle fail in the generate qr code
+-   code qr borders
+-   add loader binma genera code QR
+
+<!-- }, [axiosPrivate]); // ! check later about this dependeci -->
+
+line 48 form component {/_ //! prevent the user from spawning Upload click _/}
+
+toast.promise(myPromise, { loading: 'Loading', success: 'Got the data', error:
+'Error when fetching', });
+
+remove static messages later
+
+-   check if the user id in the blocked arrray return forbidden
+
+store the path on the server'for user pic '
+
+"Oops, that username seems to be already claimed! Try your luck with something
+else?" "Uh oh, looks like someone else snagged that name. How about this cool
+alternative: [suggest similar username]?" "Hold on, that username isn't
+available anymore. Can you think of something equally awesome and unique?

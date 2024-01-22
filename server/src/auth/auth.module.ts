@@ -10,7 +10,7 @@ import { twoFAController } from "./controllers/2FA.controller";
 import { twoFAService } from "./services/2FA.services";
 
 @Module({
-    imports: [JwtModule.register({secret: process.env.JWT_secret,}), UsersModule, PassportModule],
+    imports: [JwtModule.register({secret: process.env.JWT_secret, signOptions: { expiresIn: '1d' },}), UsersModule, PassportModule],
     controllers: [AuthController, twoFAController],
     providers: [AuthService, twoFAService, JwtStrategy, googleStrategy, intrastrategy],
 })

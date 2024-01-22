@@ -4,8 +4,25 @@ import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
 
+import { ProfileOutletContextType } from '../types/global';
+
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/matches');
+                const matches: Match[] = await response.json();
+                setData(matches);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const columns = useMemo<Column<Match>[]>(
         () => [
             {
@@ -63,34 +80,10 @@ const MatchTable = () => {
         ],
         []
     );
-    const getRowColor = (match: Match) => {
-        // Assuming you have a way to determine a win or loss, adjust the logic accordingly
-        // This is just an example logic, replace it with your actual win/loss condition
-        if (match.score.score1 > match.score.score2) {
-            return 'rounded-3xl bg-emerald-100 border-b-8 border-white rounded-full '; // Green for win
-        } else {
-            return 'rounded-3xl bg-red-200 border-b-8 border-white rounded-full'; // Red for loss
-        }
-    };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/matches');
-                const matches: Match[] = await response.json();
-                setData(matches);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
     return (
         // ! protect if the data is empty
         <div className="overflow-y-auto max-h-[560px] w-full ">
-            {' '}
-            {/* Adjust max height as needed */}
             <Table
                 columns={columns}
                 data={data}
@@ -103,10 +96,13 @@ const MatchTable = () => {
                     trStyle: '',
                     thStyle: 'px-2 py-5',
                     tdStyle: 'p-2 text-center align-middle'
-                    // scrollableTbodyStyle: 'max-h-[400px] overflow-y-auto' // Customize this as needed
                 }}
                 getRowProps={(row) => ({
-                    className: getRowColor(row.original)
+                    className: `rounded-3xl border-b-8 border-white rounded-full ${
+                        row.original.score.score1 > row.original.score.score2
+                            ? ' bg-emerald-100  '
+                            : 'bg-red-200 '
+                    }`
                 })}
             />
         </div>
