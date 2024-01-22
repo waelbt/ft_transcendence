@@ -15,13 +15,21 @@ const TwoFA = () => {
     const [image, setImage] = useState<string | null>(null);
     useEffect(() => {
         const validateCode = async () => {
-            var formData = new FormData();
-            formData.append('text', code);
+            // var formData = new FormData();
+            // formData.append('text', code);
             try {
                 const response = await axiosPrivate.post(
                     '/2fa/validate',
-                    formData
+                    {
+                        Code: code // Send the code as a JSON object
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 );
+
                 absoluteToast(toast.success, response.data.message);
                 updateState({ F2A: true });
             } catch (error) {
@@ -35,6 +43,7 @@ const TwoFA = () => {
         if (code.length === 6) {
             console.log(code);
             if (/^[0-9]+$/.test(code)) {
+                console.log(code);
                 validateCode();
             } else {
                 absoluteToast(
