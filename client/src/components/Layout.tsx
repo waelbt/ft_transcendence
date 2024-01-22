@@ -5,6 +5,7 @@ import NavigationMenu from './NavigationMenu';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
+import GlobalChat from './GlobalChat';
 // import GlobalChat from './GlobalChat';
 
 function Layout() {
@@ -53,7 +54,7 @@ function Layout() {
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        {/* <GlobalChat />   */}
+                        <GlobalChat />  
                     </div>
                 </div>
             )}
