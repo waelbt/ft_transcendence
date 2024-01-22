@@ -4,8 +4,10 @@ import { NICKNAME_FIELD } from '../constants';
 
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
+import { useUserStore } from '../stores/userStore';
 
 function Setting() {
+    const { nickName } = useUserStore();
     const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
         isCurrentUser: false
     };
@@ -76,13 +78,27 @@ function Setting() {
                         </div>
                     </div>
                     <FormComponent
-                        fields={NICKNAME_FIELD}
-                        onSubmit={onSubmit}
-                        btn={{
-                            style: "px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-xl font-normal font-['Acme'] cursor-pointer hover:bg-stone-200",
-                            type: 'submit',
-                            text: 'Submit'
-                        }}
+                        fields={[
+                            {
+                                label: '',
+                                type: 'text',
+                                name: 'nickName',
+                                placeholder: nickName,
+                                validation: {
+                                    required: 'Nickname is required!',
+                                    maxLength: {
+                                        value: 15,
+                                        message:
+                                            'Nickname must be less than 15 characters'
+                                    },
+                                    minLength: {
+                                        value: 5,
+                                        message:
+                                            'Nickname must be at least 5 characters'
+                                    }
+                                }
+                            }
+                        ]}
                     />
                 </div>
             </div>

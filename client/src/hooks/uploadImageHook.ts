@@ -1,24 +1,32 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 // import { request } from '../api';
 import axios from 'axios';
 import useAxiosPrivate from './axiosPrivateHook';
 
 const useUpload = () => {
-    const [uploading, setUploading] = useState(false);
+    const [isloading, setIsloading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [avatarPath, setAvatarPath] = useState<string | null>(null);
     const axiosPrivate = useAxiosPrivate();
+    const cancelTokenSource = useRef(axios.CancelToken.source());
 
     const deleteData = async () => {
-        setProgress(0);
+        if (isloading) {
+            cancelTokenSource.current.cancel('Upload cancelled by the user.');
+            cancelTokenSource.current = axios.CancelToken.source();
+        } else {
+            setProgress(0);
+        }
     };
+
     const uploadData = async (file: File) => {
-        setUploading(true);
+        setIsloading(true);
         setError(null);
         setSuccess(false);
 
+        // ! intercept this request
         try {
             var formData = new FormData();
             formData.append('file', file);
@@ -41,7 +49,8 @@ const useUpload = () => {
                                 `Upload progress: ${percentCompleted}%`
                             );
                         }
-                    }
+                    },
+                    cancelToken: cancelTokenSource.current.token
                 }
             );
             setAvatarPath(response.data);
@@ -55,12 +64,12 @@ const useUpload = () => {
             console.log(error);
             setProgress(0);
         } finally {
-            setUploading(false);
+            setIsloading(false);
         }
     };
 
     return {
-        uploading,
+        isloading,
         progress,
         error,
         success,

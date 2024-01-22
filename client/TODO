@@ -19,20 +19,18 @@
 
 <!-- }, [axiosPrivate]); // ! check later about this dependeci -->
 
-line 48 form component 
-{/_ //! prevent the user from spawning Upload click _/}
+line 48 form component {/_ //! prevent the user from spawning Upload click _/}
 
-
-
-toast.promise(myPromise, {
-  loading: 'Loading',
-  success: 'Got the data',
-  error: 'Error when fetching',
-});
-
+toast.promise(myPromise, { loading: 'Loading', success: 'Got the data', error:
+'Error when fetching', });
 
 remove static messages later
 
-- check if the user id in the blocked arrray return forbidden
+-   check if the user id in the blocked arrray return forbidden
 
 store the path on the server'for user pic '
+
+"Oops, that username seems to be already claimed! Try your luck with something
+else?" "Uh oh, looks like someone else snagged that name. How about this cool
+alternative: [suggest similar username]?" "Hold on, that username isn't
+available anymore. Can you think of something equally awesome and unique?

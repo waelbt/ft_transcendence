@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
-import GlobalChat from './GlobalChat';
 import NavigationMenu from './NavigationMenu';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
+// import GlobalChat from './GlobalChat';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
@@ -35,19 +35,6 @@ function Layout() {
     }, [isLogged]);
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
-    // {
-    //     redirect ? (
-    //         <Verfication />
-    //     ) : (
-    //         <div className="relative flex flex-col h-screen bg-primary-white">
-    //             <NavigationMenu />
-    //             <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
-    //                 <Outlet />
-    //                 {/* <GlobalChat />   */}
-    //             </div>
-    //         </div>
-    //     );
-    // }
     return (
         <>
             <Verfication />

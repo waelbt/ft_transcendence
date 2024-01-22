@@ -6,7 +6,7 @@ import { absoluteToast } from '../tools';
 
 type FormProps = {
     fields: any[];
-    btn: any;
+    // btn?: any;
     onSubmit?: (data: any) => void;
     defaultValues?: any;
     errors?: any;
@@ -14,7 +14,7 @@ type FormProps = {
 
 function FormComponent({
     fields,
-    btn,
+    // btn,
     onSubmit,
     defaultValues = {}
 }: FormProps) {
@@ -50,7 +50,7 @@ function FormComponent({
     }, [errors, isSubmitting]);
     return (
         <form
-            className="flex flex-col items-center space-y-3"
+            className="flex flex-col items-center space-y-3 w-full"
             onSubmit={handleSubmit(onSubmit)}
         >
             {fields.map((field, idx) => {
@@ -66,7 +66,7 @@ function FormComponent({
                     />
                 );
             })}
-            {onSubmit ? (
+            {/* {onSubmit ? (
                 <div className="w-full flex-col justify-center items-center gap-3 inline-flex">
                     <button
                         // ${
@@ -80,7 +80,7 @@ function FormComponent({
                         {btn.text}
                     </button>
                 </div>
-            ) : null}
+            ) : null} */}
         </form>
     );
 }
