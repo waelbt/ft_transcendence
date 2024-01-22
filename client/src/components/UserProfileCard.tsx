@@ -78,7 +78,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                             <Popup
                                 trigger={
                                     <div
-                                        className={`group px-2.5 text-white py-[21px] justify-center items-center gap-2.5 inline-flex hover:bg-neutral-100 rounded `}
+                                        className={`group px-2.5 text-white py-[21px] justify-center items-center gap-2.5 inline-flex  hover:border-b-4  border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
                                     >
                                         <div className="text-neutral-500 text-xl font-normal font-['Acme']">
                                             More
@@ -108,7 +108,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                             Remove Friend
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                             </Popup>
                         )}
                     </div>
