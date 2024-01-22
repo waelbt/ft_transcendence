@@ -1,26 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
-import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
 import useUpload from '../hooks/uploadImageHook';
-// import { request } from '../api';
-// import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
 
 function ProfileCompletion() {
-    // const navigate = useNavigate();
     const { updateState } = useUserStore();
-    // const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    // const { progress, uploadData } = useUpload();
     const axiosPrivate = useAxiosPrivate();
-    const { isloading, progress, error, success, deleteData, uploadData } =
+    const { progress, error, success, deleteData, uploadData, avatarPath } =
         useUpload();
 
+    useEffect(() => {
+        if (success) setImagePath(avatarPath);
+    }, [success]);
     const handleSubmit = async (data: FieldValues) => {
         try {
             data['avatar'] = imagePath;
@@ -31,14 +28,13 @@ function ProfileCompletion() {
             });
             updateState({ isProfileComplete: true });
             updateState({ verified: true });
-            // navigate('/');
         } catch (e) {
             console.log(e);
         }
     };
 
     return (
-        <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
+        <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5 mb-10">
             <div className="px-3.5 py-px flex-col justify-start items-start gap-12 flex">
                 {/* Header */}
                 <div className=" flex-col justify-center items-start inline-flex gap-2">
@@ -92,19 +88,16 @@ function ProfileCompletion() {
                                 onClick={(e) => {
                                     e.stopPropagation(); // This stops the event from reaching the label
                                     setImagePath(null);
-                                    selectedItemIndex != -1
+                                    selectedItemIndex == -1
                                         ? deleteData()
                                         : setSelectedItemIndex(-1);
                                 }}
                             >
                                 <div className="w-9 h-9 flex justify-center items-center">
-                                    {' '}
-                                    {/* <IconContext.Provider value={{ color: '#FFFFFF' }}> */}
                                     <IoTrashOutline
                                         className="text-white"
                                         size={22}
                                     />
-                                    {/* </IconContext.Provider> */}
                                 </div>
                             </span>
                         </div>
@@ -119,7 +112,7 @@ function ProfileCompletion() {
                                     Choose image
                                 </div>
                             </label>
-                            <div className="text-neutral-400 text-base font-normal font-['Acme'] leading-snug tracking-tigh">
+                            <div className="text-black text-base font-normal font-['Acme'] leading-snug tracking-tigh">
                                 Or
                             </div>
                             {/* default */}

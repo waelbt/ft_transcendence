@@ -24,7 +24,7 @@ function Layout() {
                 updateState(user);
                 updateState({ friends: friends, block: block });
                 updateState({ active: true });
-                setRedirect((user.F2A || !user.isProfileComplete) && !verified);
+                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
             } catch (error) {
                 console.log(error); // !toast
             } finally {
@@ -37,7 +37,17 @@ function Layout() {
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <>
-            <Verfication />
+            {redirect ? (
+                <Verfication />
+            ) : (
+                <div className="relative flex flex-col h-screen bg-primary-white">
+                    <NavigationMenu />
+                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
+                        <Outlet />
+                        {/* <GlobalChat />   */}
+                    </div>
+                </div>
+            )}
         </>
     );
 }
