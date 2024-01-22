@@ -41,8 +41,15 @@ export class BlockService {
         const blockedUsers = await Promise.all (
             listBlocked.blockedUsers.map(async (user)=> {
             const blockedUser = await this.prisma.user.findUnique({where: {id: user.blockedUserId}});
+            const id = blockedUser.id;
+            const name = blockedUser.fullName;
+            const avatar = blockedUser.avatar;
             // console.log('ana hna : ', blockedUser);
-            return blockedUser;
+            return {
+                id,
+                name,
+                avatar,
+            };
         }),
         );
         return blockedUsers;

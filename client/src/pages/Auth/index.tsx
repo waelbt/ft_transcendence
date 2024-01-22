@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
-import useAuthPopup from '../../hooks/AuthPopupHook';
+import useAuthPopup from '../../hooks/authPopupHook';
 
 export const Auth = () => {
     const popupRef = useRef<Window | null>(null);

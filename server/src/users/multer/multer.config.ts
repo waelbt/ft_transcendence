@@ -7,11 +7,9 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { InvalidFileException } from './file.exception';
 
-const uploadsDestination = process.env.UPLOADS_DESTINATION;
-
 export const multerOptions = {
     storage: diskStorage({
-        destination: uploadsDestination,
+        destination: process.env.UPLOADS_DESTINATION,
         filename: (req, file, callback) => {
             const uniqueName =
                 Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -48,5 +46,10 @@ export const multerOptions = {
         }
 
         callback(null, true);
+    },
+    // limits: { fileSize: 4 * 1024 * 1024 }, // 5MB
+    key: (req, file, cb) => {
+        // Your custom filename logic here
+        cb(null, file.originalname + '-' + Date.now());
     }
 };

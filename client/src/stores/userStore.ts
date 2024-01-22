@@ -4,10 +4,13 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
+// ! create a const object for defautl value to use it twice 
+
 type UserStateType = {
+    active: boolean;
     isLogged: boolean;
+    verified: boolean;
     accessToken: string | null;
-    // refreshToken: string | null;
     id: string;
     email: string;
     avatar: string;
@@ -18,24 +21,30 @@ type UserStateType = {
     F2A: boolean;
     inGame: boolean;
     isProfileComplete: boolean;
+    friends: string[];
+    block: string[];
 };
 
 type UserActionsType = {
     // constructor: (data : UserStateType) => void;
+    getState: () => UserStateType;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
 };
 
+// ? remove storing in local storage and test the behavior
 export const useUserStore = createWithEqualityFn<
     UserStateType & UserActionsType
 >()(
     persist(
-        (set) => ({
+        (set, get) => ({
+            active: false,
             isLogged: false,
+            verified: false,
             accessToken: null,
             id: '',
             email: '',
-            avatar: 'https://tecdn.b-cdn.net/img/new/avatars/2.webp', // ! tmp
+            avatar: '', // ! tmp
             nickName: '',
             fullName: '',
             createdAt: '',
@@ -43,27 +52,18 @@ export const useUserStore = createWithEqualityFn<
             F2A: false,
             inGame: false,
             isProfileComplete: false,
-            // constructor: (data) => {
-            //     // ! user type men 3and simo
-            //     set({
-            //         isLogged: true,
-            //         id: data.user.id,
-            //         email: data.user.email,
-            //         avatar: data.user.avatar,
-            //         nickName: data.user.nickName,
-            //         fullName: data.user.fullName,
-            //         createdAt: data.user.createdAt,
-            //         status: data.user.status,
-            //         F2A: data.user.F2A,
-            //         inGame: data.user.inGame
-            //     });
-            // },
+            friends: [],
+            block: [],
+            getState: () => {
+                const { logout, updateState, getState, ...restOfState } = get();
+                return restOfState;
+            },
             logout: () => {
                 set(
                     {
+                        active: false,
                         isLogged: false,
                         accessToken: null,
-                        // refreshToken: null,
                         id: '',
                         email: '',
                         avatar: '',
@@ -72,7 +72,9 @@ export const useUserStore = createWithEqualityFn<
                         status: false,
                         F2A: false,
                         inGame: false,
-                        isProfileComplete: false
+                        isProfileComplete: false,
+                        friends: [],
+                        block: []
                     },
                     true // ? the state update should trigger a re-render of the components that subscribe to the store.
                 );

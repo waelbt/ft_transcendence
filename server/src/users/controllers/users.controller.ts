@@ -1,27 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
-import { join } from 'path';
-import { existsSync } from 'fs';
-import { AuthGuard } from '@nestjs/passport';
-import { jwtGuard } from 'src/auth/authGuard';
 
 
 @ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
     private readonly blockService: BlockService,) {}
 
-  @Get(':id/me')
+
+  @Get(':id/profile')
   // @ApiResponse({ status: 404, description: 'Not Found' })
-  async userInfos(@Req() req, @Param('id') userId: string){
+  async userInfos(@Req() req, @Param('id') userId: string) {
     return (await this.usersService.userInfos(req, userId));
   }
 
@@ -35,12 +33,12 @@ export class UsersController {
     return (await this.usersService.myInfos(req));
   }
 
-  @Post()
-  @ApiCreatedResponse()
-  createUser(@Body() user: User) {
-    console.log('userId /////', user)
-    return (this.usersService.createUser(user, user.id));
-  }
+  // @Post()
+  // @ApiCreatedResponse()
+  // createUser(@Body() user: User) {
+  //   console.log('userId /////', user)
+  //   return (this.usersService.createUser(user, user.id));
+  // }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -53,12 +51,13 @@ export class UsersController {
       if (!file) {
         throw new InvalidFileException('No file provided.');
       }
-      // console.log(file);
+      console.log(file);
       return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {
         throw new HttpException({ statusCode: HttpStatus.BAD_REQUEST, message: error.message }, HttpStatus.BAD_REQUEST);
       }
+
       throw new HttpException({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -80,36 +79,25 @@ export class UsersController {
     return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
   }
 
+  @Get('/previo/:id')
+  async userData(@Param('id') id: string){
+    return (await this.usersService.userData(id));
+  }
+
   @Get('all')
+  @ApiBearerAuth()
   @ApiOkResponse()
-  async findAllUser() {
-    return await this.usersService.findAllUser();
+  findAllUser() {
+    return this.usersService.findAllUser();
   }
 
-  @Get('rank')
-  async allUsersRank(){
-    console.log('hana');
-    return await this.usersService.getAllUsersRank();
-  }
-
-  @Get('historyMatches')
+  @Get('historyMatchs')
   async match_history(@Req() req){
     return await this.usersService.matchHistory(req.user.sub);
   }
 
-  @Get(':image')
-  getImage(@Param('image') image: string, @Res() res){
-
-    const imagePath = join(process.cwd(), 'upload', image);
-
-    if (existsSync(imagePath)) {
-      res.sendFile(imagePath);
-    } else {
-      throw new NotFoundException('Image not found');
-    }
-  }
-
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOkResponse()
   async findOneUser(@Param('id') id: string) {
     console.log('hi im here');
@@ -120,12 +108,14 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiCreatedResponse()
   updateUser(@Param('id') id: string, @Body() user: User) {
     return (this.usersService.updateUser(String(id), user));
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOkResponse()
   removeUser(@Param('id') id: string) {
     return (this.usersService.removeUser(String(id)));
@@ -176,7 +166,6 @@ export class UsersController {
     }
     return await this.blockService.listOfBlockedUsers(userId);
   }
-
 // Close Prisma client when done
 // prisma.$disconnect();
 }

@@ -68,7 +68,7 @@ body {
     }
 }
 
-/* .debug {
+.debug {
     border: 2px solid red !important;
     & > * {
         border: 2px solid green !important;
@@ -78,4 +78,36 @@ body {
     }
 }
 
- */
+.avatar-container {
+    position: relative;
+    display: inline-block;
+    width: 100px; /* Adjust to match avatar size */
+    height: 100px; /* Adjust to match avatar size */
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%; /* Increase the background size */
+    animation: loadingShimmer 1.5s infinite linear;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-position: 100% 0; /* Change starting position */
+    }
+    100% {
+        background-position: -100% 0; /* Move to the opposite end */
+    }
+}

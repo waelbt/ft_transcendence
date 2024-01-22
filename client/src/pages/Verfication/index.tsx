@@ -1,7 +1,7 @@
-import { TwoFaVerfication, ProfileCompletion } from '../../components/';
+import { TwoFaVerfication, ProfileCompletion } from '../../components';
 import { useUserStore } from '../../stores/userStore';
 
-function Confirmation() {
+function Verfication() {
     const { F2A } = useUserStore();
 
     return (
@@ -26,4 +26,4 @@ function Confirmation() {
     );
 }
 
-export default Confirmation;
+export default Verfication;
