@@ -11,6 +11,9 @@ const useUpload = () => {
     const [avatarPath, setAvatarPath] = useState<string | null>(null);
     const axiosPrivate = useAxiosPrivate();
 
+    const deleteData = async () => {
+        setProgress(0);
+    };
     const uploadData = async (file: File) => {
         setUploading(true);
         setError(null);
@@ -56,7 +59,15 @@ const useUpload = () => {
         }
     };
 
-    return { uploading, progress, error, success, uploadData, avatarPath };
+    return {
+        uploading,
+        progress,
+        error,
+        success,
+        uploadData,
+        deleteData,
+        avatarPath
+    };
 };
 
 export default useUpload;

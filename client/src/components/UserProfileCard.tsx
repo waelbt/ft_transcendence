@@ -92,23 +92,23 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 position="bottom center"
                                 nested
                             >
-                                <div className="w-[126px] h-[132px] pb-[3px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex">
+                                <div className="py-[5px] w-[200px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
+                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
                                         <div className="text-zinc-600 text-lg font-normal font-['Acme']">
                                             Add Friend
                                         </div>
                                     </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex">
+                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
                                         <div className="text-zinc-600 text-lg font-normal font-['Acme']">
                                             Block User
                                         </div>
                                     </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex">
+                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
                                         <div className="text-zinc-600 text-lg font-normal font-['Acme']">
                                             Remove Friend
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
                             </Popup>
                         )}
                     </div>

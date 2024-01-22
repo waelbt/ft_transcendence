@@ -8,6 +8,7 @@ import useUpload from '../hooks/uploadImageHook';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { IoTrashOutline } from 'react-icons/io5';
 
 function ProfileCompletion() {
     const navigate = useNavigate();
@@ -15,9 +16,10 @@ function ProfileCompletion() {
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const { progress, uploadData } = useUpload();
+    // const { progress, uploadData } = useUpload();
     const axiosPrivate = useAxiosPrivate();
-    // const { uploading, progress, error, success, uploadData } = useUpload();
+    const { uploading, progress, error, success, deleteData,uploadData } = useUpload();
+
 
     const onSubmit = async (data: FieldValues) => {
         data['avatar'] = imagePath
@@ -71,11 +73,11 @@ function ProfileCompletion() {
                         <div className="relative">
                             <Avatar
                                 imageUrl={imagePath}
-                                onCLick={(event) => {
-                                    event.stopPropagation(); // This stops the event from reaching the label
-                                    setImagePath(null);
-                                    setSelectedItemIndex(-1);
-                                }}
+                                // onCLick={(event) => {
+                                //     event.stopPropagation(); // This stops the event from reaching the label
+                                //     setImagePath(null);
+                                //     setSelectedItemIndex(-1);
+                                // }}
                                 style="p-20"
                             />
                             <label
@@ -91,6 +93,27 @@ function ProfileCompletion() {
                                     progress={progress}
                                 />
                             </label>
+                            <span
+                                className={`absolute bg-[#f9164f] p-0.5 rounded-full border-w bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 border-4 border-white border-solid flex justify-center items-center z-10 cursor-pointer ${
+                                    !progress ? 'hidden' : ''
+                                }`}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // This stops the event from reaching the label
+                                    setImagePath(null);
+                                    setSelectedItemIndex(-1);
+                                    deleteData();
+                                }}
+                            >
+                                <div className="w-9 h-9 flex justify-center items-center">
+                                    {' '}
+                                    {/* <IconContext.Provider value={{ color: '#FFFFFF' }}> */}
+                                    <IoTrashOutline
+                                        className="text-white"
+                                        size={22}
+                                    />
+                                    {/* </IconContext.Provider> */}
+                                </div>
+                            </span>
                         </div>
                         {/* btn and default section */}
                         <div className="flex-col justify-start items-start gap-1.5 inline-flex">
