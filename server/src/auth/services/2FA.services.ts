@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException, Res } from '@nestjs/common';
-import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
+import { Injectable, NotFoundException, Res } from "@nestjs/common";
+import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import * as speakeasy from 'speakeasy';
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 import * as qrcode from 'qrcode';
 
 @Injectable()
-export class twoFAService {
-    constructor(private prisma: PrismaOrmService) {}
-    generate2FASecret(nickName: string) {
-        const sercet = speakeasy.generateSecret({ name: nickName });
+export class twoFAService{
+    constructor(private prisma: PrismaOrmService){}
+    generate2FASecret(nickName: string){
+        const sercet = speakeasy.generateSecret({name: nickName});
         return sercet.base32;
     }
-    async generate2FA(@Res() res, user: User) {
+    async generate2FA(@Res() res, user: User){
         const secret = this.generate2FASecret((await user).fullName);
         const otpAuthUrl = speakeasy.otpauthURL({
             secret: secret,
@@ -43,34 +43,27 @@ export class twoFAService {
 
     async validateTwoFAToken(token, secret) {
         return speakeasy.totp.verify({
-            secret,
-            encoding: 'base32',
-            token,
-            window: 1
-        });
+          secret,
+          encoding: 'base32',
+          token,
+          window: 1, 
+      });
     }
 
-    async validateTwoFA(req, code, @Res() res) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: req.user.sub }
-        });
+    async validateTwoFA(user: User, code, @Res() res) {
+        const isUser = await this.prisma.user.findUnique({ where: { id: user.id } });
         if (!user) throw new NotFoundException(`User does not exist`);
-
+    
         const enteredToken = code.token;
-        const isValidToken = await this.validateTwoFAToken(
-            enteredToken,
-            user.f2A_Secret
-        );
-
+        const isValidToken = await this.validateTwoFAToken(enteredToken, user.f2A_Secret);
+    
         if (isValidToken) {
-            await this.prisma.user.update({
-                where: { id: req.user.sub },
-                data: { f2A: true }
-            });
-
-            return res
-                .status(200)
-                .json({ message: '2FA validation successful', user });
+          await this.prisma.user.update({
+            where: { id: user.id },
+            data: { f2A: true },
+          });
+    
+          return res.status(200).json({ message: '2FA validation successful', user });
         } else {
             return res.status(401).json({ message: 'Invalid 2FA token' });
         }
