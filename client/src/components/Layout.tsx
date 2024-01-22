@@ -24,7 +24,7 @@ function Layout() {
                 updateState(user);
                 updateState({ friends: friends, block: block });
                 updateState({ active: true });
-                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
+                setRedirect((user.F2A || !user.isProfileComplete) && !verified);
             } catch (error) {
                 console.log(error); // !toast
             } finally {
