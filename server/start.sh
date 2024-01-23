@@ -5,3 +5,5 @@ npx prisma generate
 npx prisma migrate dev --name transcendence
 
 npm run start:dev
+
+npx prisma studio
