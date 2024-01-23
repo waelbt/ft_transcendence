@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { request } from '../api';
+// import { request } from '../api';
 import axios from 'axios';
+import useAxiosPrivate from './axiosPrivateHook';
 
 const useUpload = () => {
     const [uploading, setUploading] = useState(false);
@@ -8,6 +9,7 @@ const useUpload = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [avatarPath, setAvatarPath] = useState<string | null>(null);
+    const axiosPrivate = useAxiosPrivate();
 
     const uploadData = async (file: File) => {
         setUploading(true);
@@ -18,20 +20,27 @@ const useUpload = () => {
             var formData = new FormData();
             formData.append('file', file);
 
-            const response = await request.post('/users/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: (progressEvent) => {
-                    if (progressEvent && progressEvent.total) {
-                        let percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
-                        );
-                        setProgress(percentCompleted);
-                        console.log(`Upload progress: ${percentCompleted}%`);
+            const response = await axiosPrivate.post(
+                '/users/upload',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        if (progressEvent && progressEvent.total) {
+                            let percentCompleted = Math.round(
+                                (progressEvent.loaded * 100) /
+                                    progressEvent.total
+                            );
+                            setProgress(percentCompleted);
+                            console.log(
+                                `Upload progress: ${percentCompleted}%`
+                            );
+                        }
                     }
                 }
-            });
+            );
             setAvatarPath(response.data);
             setSuccess(true);
         } catch (err) {

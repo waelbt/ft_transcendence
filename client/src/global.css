@@ -32,28 +32,82 @@ body {
     @apply m-0 p-0 bg-white;
 }
 
-
-/* !change scroll css to tailwind  */
-.tableScroll {
-    display: block;
-    max-height: 320px; /* Adjust this value as needed */
-    overflow-y: auto;
-    overflow-x: hidden;
+.skeleton-avatar,
+.skeleton-text,
+.skeleton-button {
+    background-color: #e0e0e0;
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(to right, #e0e0e0 8%, #f8f8f8 18%, #e0e0e0 33%);
+    background-size: 1000px 104px;
 }
 
-/* Styles to ensure the table still looks good */
-.tableScroll table {
-    width: 100%;
+.skeleton-avatar {
+    /* width: 48px; Adjust as needed */
+    /* height: 48px; Adjust as needed */
+    border-radius: 50%;
 }
 
-.tableScroll th,
-.tableScroll td {
-    padding: 8px; /* Adjust padding as needed */
+.skeleton-text {
+    /* height: 16px; Adjust as needed */
+    border-radius: 4px;
+    margin-bottom: 5px;
 }
 
-.tableScroll thead th {
-    position: sticky;
+.skeleton-button {
+    width: 32px; /* Adjust as needed */
+    height: 32px; /* Adjust as needed */
+    border-radius: 50%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.debug {
+    border: 2px solid red !important;
+    & > * {
+        border: 2px solid green !important;
+        & > * {
+            border: 2px solid blue !important;
+        }
+    }
+}
+
+.avatar-container {
+    position: relative;
+    display: inline-block;
+    width: 100px; /* Adjust to match avatar size */
+    height: 100px; /* Adjust to match avatar size */
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.loading-overlay {
+    position: absolute;
     top: 0;
-    background-color: #f9f9f9;
-    z-index: 1; /* Ensure header is above other rows */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%; /* Increase the background size */
+    animation: loadingShimmer 1.5s infinite linear;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-position: 100% 0; /* Change starting position */
+    }
+    100% {
+        background-position: -100% 0; /* Move to the opposite end */
+    }
 }

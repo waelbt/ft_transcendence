@@ -12,7 +12,7 @@ const Auth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isLogged) navigate('/home');
+        if (isLogged) navigate('/');
     }, []);
 
     return (

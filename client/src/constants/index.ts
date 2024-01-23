@@ -5,6 +5,8 @@ export const DEFAULT_PATH = './src/assets/images/default';
 
 export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
 
+export const MODES = ['classic', 'crazy', 'IA'];
+
 export const MENU_FIELDS = [
     {
         name: 'Setting & privacy',
@@ -18,16 +20,17 @@ export const MENU_FIELDS = [
     }
 ];
 
-export const CONFIRMATION_FIELDS = [
+export const NICKNAME_FIELD = [
     {
-        label: 'Nickname',
+        label: '',
         type: 'text',
         name: 'nickName',
+        placeholder: 'Choose something fun and creative that people can call you by',
         validation: {
             required: 'Nickname is required!',
             maxLength: {
-                value: 40,
-                message: 'Nickname must be less than 40 characters'
+                value: 15,
+                message: 'Nickname must be less than 15 characters'
             },
             minLength: {
                 value: 5,
@@ -36,3 +39,20 @@ export const CONFIRMATION_FIELDS = [
         }
     }
 ];
+
+// export const SETTING_FIELDS = [
+//     {
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     },
+//     {
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     },{
+//         label: 'Nickname',
+//         type: 'text',
+//         name: 'nickName',
+//     }
+// ];
