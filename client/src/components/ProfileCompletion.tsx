@@ -39,8 +39,8 @@ function ProfileCompletion() {
             );
             console.log(response);
             updateState({ nickName: data['nickName'] });
-            updateState({ avatar: data['avatar'] }); // ! handle default image
-            updateState({ isProfileComplete: true });
+            updateState({ avatar: `${import.meta.env.VITE_BASE_URL}${data['avatar']}` }); // ! handle default image
+            updateState({ completeProfile: true });
             updateState({ verified: true });
         } catch (e) {
             if (axios.isAxiosError(e))

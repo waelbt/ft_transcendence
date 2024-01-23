@@ -11,7 +11,7 @@ import { useUserStore } from '../../stores';
 // ! combine the nickname and submit section into a resuable from
 export function ProfileCompletion() {
     const navigate = useNavigate();
-    const { UpdateIsProfileComplete } = useUserStore();
+    const { UpdatecompleteProfile } = useUserStore();
     const [showDefault, setShowDefault] = useState<boolean>(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const [imagePath, setImagePath] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export function ProfileCompletion() {
                     'Content-Type': 'application/json'
                 }
             });
-            UpdateIsProfileComplete(true);
+            UpdatecompleteProfile(true);
             navigate('/');
         } catch (e) {
             console.log(e);

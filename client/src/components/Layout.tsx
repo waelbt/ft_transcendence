@@ -9,7 +9,7 @@ import GlobalChat from './GlobalChat';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, accessToken, verified, isLogged, active } =
+    const { updateState, avatar, accessToken, verified, isLogged, active } =
         useUserStore();
     // const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -23,13 +23,18 @@ function Layout() {
                 const { user, friends, block } = (
                     await axiosPrivate.get('/users/me')
                 ).data;
+                updateState({ active: true });
                 updateState(user);
                 updateState({ friends: friends, block: block });
-                updateState({ active: true });
+                const encodedFileName = encodeURIComponent(user.avatar);
+                updateState({
+                    avatar: `${import.meta.env.VITE_BASE_URL}${encodedFileName}`
+                }); // ! handle default image
+
                 initializeSocket(accessToken);
                 socket?.emit('message', { message: 'test' });
-                console.log(user.isProfileComplete && !user.F2A);
-                updateState({ verified: user.isProfileComplete && !user.F2A });
+                console.log('user     ', user);
+                updateState({ verified: user.completeProfile && !user.F2A });
             } catch (error) {
                 console.log(error); // !toast
             } finally {
@@ -39,6 +44,7 @@ function Layout() {
         if (isLogged && !active) {
             fetchData();
         }
+        console.log(avatar);
         return () => {
             socket?.disconnect();
         };
