@@ -1,11 +1,22 @@
 import { useEffect } from 'react';
 import { Avatar, FormComponent, Twofa } from '.';
-import { NICKNAME_FIELD } from '../constants';
+// import { NICKNAME_FIELD } from '../constants';
 
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { useUserStore } from '../stores/userStore';
 
+// import { withRouter } from 'react-router-dom';
+// const ComponentToHide = (props) => {
+//     const { location } = props;
+//     if (location.pathname.match(/routeOnWhichToHideIt/)) {
+//         return null;
+//     }
+
+//     return <ComponentToHideContent />;
+// };
+
+// const ComponentThatHides = withRouter(ComponentToHide);
 function Setting() {
     const { nickName } = useUserStore();
     const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {

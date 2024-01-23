@@ -1,14 +1,21 @@
 import { FC } from 'react';
 import { IoMdImages } from 'react-icons/io';
-
+import { CiImageOff } from 'react-icons/ci';
 interface AvatarProps {
     imageUrl: string | null;
     state?: string;
     style?: string;
     isloading?: boolean;
+    errror?: boolean;
 }
 
-const Avatar: FC<AvatarProps> = ({ imageUrl, state, style, isloading }) => {
+const Avatar: FC<AvatarProps> = ({
+    imageUrl,
+    state,
+    style,
+    isloading,
+    errror
+}) => {
     return (
         <>
             <div
@@ -30,7 +37,17 @@ const Avatar: FC<AvatarProps> = ({ imageUrl, state, style, isloading }) => {
                 {!imageUrl && (
                     <>
                         <div className="flex  justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            <IoMdImages className="text-stone-600" size={28} />
+                            {!errror ? (
+                                <IoMdImages
+                                    className="text-stone-600"
+                                    size={28}
+                                />
+                            ) : (
+                                <CiImageOff
+                                    className="text-stone-600"
+                                    size={28}
+                                />
+                            )}
                         </div>
                     </>
                 )}

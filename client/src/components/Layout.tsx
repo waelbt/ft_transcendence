@@ -6,13 +6,12 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
 import GlobalChat from './GlobalChat';
-// import GlobalChat from './GlobalChat';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, verified, isLogged, active } =
         useUserStore();
-    const [redirect, setRedirect] = useState(false);
+    // const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket } = useChatSocketStore();
 
@@ -29,7 +28,8 @@ function Layout() {
                 updateState({ active: true });
                 initializeSocket(accessToken);
                 socket?.emit('message', { message: 'test' });
-                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
+                console.log(user.isProfileComplete && !user.F2A);
+                updateState({ verified: user.isProfileComplete && !user.F2A });
             } catch (error) {
                 console.log(error); // !toast
             } finally {
@@ -47,16 +47,16 @@ function Layout() {
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <>
-            {redirect ? (
-                <Verfication />
-            ) : (
+            {verified ? (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        <GlobalChat />  
+                        <GlobalChat />
                     </div>
                 </div>
+            ) : (
+                <Verfication />
             )}
         </>
     );

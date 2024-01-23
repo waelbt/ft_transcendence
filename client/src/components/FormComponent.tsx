@@ -21,31 +21,18 @@ function FormComponent({
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
-        getValues
+        formState: { errors, isSubmitting }
     } = useForm({ defaultValues });
 
     useEffect(() => {
         if (isSubmitting) {
             const firstErrorKey = Object.keys(errors)[0];
-            const confirmPassword = getValues('confirmPassword');
-
-            if (
-                firstErrorKey &&
-                typeof errors[firstErrorKey]?.message === 'string'
-            )
-                absoluteToast(
-                    toast.error,
-                    errors[firstErrorKey]?.message as string
-                );
-            else if (
-                confirmPassword &&
-                confirmPassword != getValues('password')
-            )
-                absoluteToast(
-                    toast.error,
-                    'Passwords must match confirm password'
-                );
+            if (firstErrorKey) {
+                const errorMessage = errors[firstErrorKey]?.message;
+                if (typeof errorMessage === 'string') {
+                    absoluteToast(toast.error, errorMessage);
+                }
+            }
         }
     }, [errors, isSubmitting]);
     return (
@@ -66,18 +53,18 @@ function FormComponent({
                     />
                 );
             })}
-            {/* {onSubmit ? (
+            {/* {true ? (
                 <div className="w-full flex-col justify-center items-center gap-3 inline-flex">
                     <button
                         // ${
                         // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
                         // }`
                         // ? style the disabled state
-                        className={btn.style}
-                        type={btn.type}
+                        // className={btn.style}
+                        // type={btn.type}
                         disabled={isSubmitting}
                     >
-                        {btn.text}
+                        test
                     </button>
                 </div>
             ) : null} */}

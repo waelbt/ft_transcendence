@@ -83,12 +83,10 @@ export function ProfileCompletion() {
                                     <div className="relative">
                                         <Avatar
                                             imageUrl={imagePath}
-                                            onCLick={(event) => {
-                                                event.stopPropagation(); // This stops the event from reaching the label
-                                                setImagePath(null);
-                                                setSelectedItemIndex(-1);
-                                            }}
                                             style="p-14"
+                                            isloading={
+                                                !!(progress && progress < 100)
+                                            }
                                         />
                                         <label
                                             className="absolute top-0 left-0 w-full h-full"

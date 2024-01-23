@@ -2,28 +2,38 @@ import { useRef, useState } from 'react';
 // import { request } from '../api';
 import axios from 'axios';
 import useAxiosPrivate from './axiosPrivateHook';
+import { absoluteToast } from '../tools';
+import toast from 'react-hot-toast';
 
-const useUpload = () => {
+const useImageUpload = () => {
     const [isloading, setIsloading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [error, setError] = useState<string | null>(null);
+    const [isFailed, setIsFailed] = useState<boolean>(false);
     const [success, setSuccess] = useState(false);
-    const [avatarPath, setAvatarPath] = useState<string | null>(null);
+    const [imagePath, setImagePath] = useState<string | null>(null);
     const axiosPrivate = useAxiosPrivate();
     const cancelTokenSource = useRef(axios.CancelToken.source());
 
-    const deleteData = async () => {
+    const deleteData = async (path: string) => {
         if (isloading) {
             cancelTokenSource.current.cancel('Upload cancelled by the user.');
             cancelTokenSource.current = axios.CancelToken.source();
         } else {
+            // axiosPrivate
+            //     .delete(`/users/delete/image/${path}`)
+            //     .then((response) => {
+            //         console.log('Response:', response.data);
+            //     })
+            //     .catch((error) => {
+            //         console.error('Error:', error);
+            //     });
             setProgress(0);
         }
     };
 
     const uploadData = async (file: File) => {
         setIsloading(true);
-        setError(null);
+        setIsFailed(false);
         setSuccess(false);
 
         // ! intercept this request
@@ -53,15 +63,19 @@ const useUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
-            setAvatarPath(response.data);
+            setImagePath(response.data);
             setSuccess(true);
         } catch (err) {
             if (axios.isAxiosError(err)) {
-                setError(err.message || 'Failed to upload');
-            } else {
-                setError('An unexpected error occurred');
+                absoluteToast(
+                    toast.error,
+                    err.response?.data.message ||
+                        'Failed to upload avatar, try again'
+                );
             }
-            console.log(error);
+            setIsFailed(true);
+
+            setImagePath(null);
             setProgress(0);
         } finally {
             setIsloading(false);
@@ -71,12 +85,13 @@ const useUpload = () => {
     return {
         isloading,
         progress,
-        error,
+        isFailed,
         success,
         uploadData,
         deleteData,
-        avatarPath
+        imagePath,
+        setImagePath
     };
 };
 
-export default useUpload;
+export default useImageUpload;

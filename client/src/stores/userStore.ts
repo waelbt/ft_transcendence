@@ -40,7 +40,7 @@ export const useUserStore = createWithEqualityFn<
         (set, get) => ({
             active: false,
             isLogged: false,
-            verified: false,
+            verified: true,
             accessToken: null,
             id: '',
             email: '',

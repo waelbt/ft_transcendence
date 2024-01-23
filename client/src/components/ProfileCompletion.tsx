@@ -2,34 +2,54 @@ import { useEffect, useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
-import useUpload from '../hooks/uploadImageHook';
 import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
+import useImageUpload from '../hooks/uploadImageHook';
+import { absoluteToast } from '../tools';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function ProfileCompletion() {
     const { updateState } = useUserStore();
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
-    const [imagePath, setImagePath] = useState<string | null>(null);
     const axiosPrivate = useAxiosPrivate();
-    const { progress, error, success, deleteData, uploadData, avatarPath } =
-        useUpload();
+    const {
+        progress,
+        uploadData,
+        imagePath,
+        setImagePath,
+        deleteData,
+        isFailed,
+        success
+    } = useImageUpload();
 
-    useEffect(() => {
-        if (success) setImagePath(avatarPath);
-    }, [success]);
     const handleSubmit = async (data: FieldValues) => {
         try {
-            data['avatar'] = imagePath;
-            await axiosPrivate.post('/users/info', JSON.stringify(data), {
-                headers: {
-                    'Content-Type': 'application/json'
+            if (success && imagePath) data['avatar'] = imagePath;
+            console.log(data);
+            const response = await axiosPrivate.post(
+                '/users/info',
+                JSON.stringify(data),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
-            });
+            );
+            console.log(response);
+            updateState({ nickName: data['nickName'] });
+            updateState({ avatar: data['avatar'] }); // ! handle default image
             updateState({ isProfileComplete: true });
             updateState({ verified: true });
         } catch (e) {
-            console.log(e);
+            if (axios.isAxiosError(e))
+                absoluteToast(
+                    toast.error,
+                    e.response?.data.message ||
+                        'that name is already taken. try a different one'
+                );
+            else absoluteToast(toast.error, e.response?.data.message);
         }
     };
 
@@ -70,6 +90,7 @@ function ProfileCompletion() {
                                 imageUrl={imagePath}
                                 style="p-24 "
                                 isloading={!!(progress && progress < 100)}
+                                errror={isFailed}
                             />
                             <label htmlFor="inputTag">
                                 <ProgressRingLoader
@@ -89,7 +110,7 @@ function ProfileCompletion() {
                                     e.stopPropagation(); // This stops the event from reaching the label
                                     setImagePath(null);
                                     selectedItemIndex == -1
-                                        ? deleteData()
+                                        ? deleteData(imagePath as string)
                                         : setSelectedItemIndex(-1);
                                 }}
                             >
