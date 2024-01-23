@@ -1,6 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    NotFoundException,
+    UseInterceptors,
+    UploadedFile,
+    Req,
+    UnauthorizedException,
+    HttpException,
+    HttpStatus,
+    UseGuards
+} from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
+import {
+    ApiCreatedResponse,
+    ApiOkResponse,
+    ApiTags,
+    ApiBearerAuth,
+    ApiBody,
+    ApiOperation
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
@@ -8,165 +31,191 @@ import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
 
-
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService,
-    private readonly blockService: BlockService,) {}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly blockService: BlockService
+    ) {}
 
+    @Get(':id/profile')
+    // @ApiResponse({ status: 404, description: 'Not Found' })
+    async userInfos(@Req() req, @Param('id') userId: string) {
+        return await this.usersService.userInfos(req, userId);
+    }
 
-  @Get(':id/profile')
-  // @ApiResponse({ status: 404, description: 'Not Found' })
-  async userInfos(@Req() req, @Param('id') userId: string) {
-    return (await this.usersService.userInfos(req, userId));
-  }
+    @Get('me')
+    async myInfos(@Req() req) {
+        console.log('Welcom To our Website again');
+        // if (userId != req.user.sub){
+        //   console.log('user1: ', userId, 'sub: ', req.user.sub);
+        //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
+        // }
+        return await this.usersService.myInfos(req);
+    }
 
-  @Get('me')
-  async myInfos(@Req() req){
-    console.log('Welcom To our Website again');
-    // if (userId != req.user.sub){
-    //   console.log('user1: ', userId, 'sub: ', req.user.sub);
-    //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
+    // @Post()
+    // @ApiCreatedResponse()
+    // createUser(@Body() user: User) {
+    //   console.log('userId /////', user)
+    //   return (this.usersService.createUser(user, user.id));
     // }
-    return (await this.usersService.myInfos(req));
-  }
 
-  // @Post()
-  // @ApiCreatedResponse()
-  // createUser(@Body() user: User) {
-  //   console.log('userId /////', user)
-  //   return (this.usersService.createUser(user, user.id));
-  // }
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadAvatar(
+        @UploadedFile()
+        file: Express.Multer.File,
+        @Req() req
+    ) {
+        try {
+            if (!file) {
+                throw new InvalidFileException('No file provided.');
+            }
+            console.log(file);
+            return await this.usersService.uploadAvatar(file, req);
+        } catch (error) {
+            if (error instanceof InvalidFileException) {
+                throw new HttpException(
+                    {
+                        statusCode: HttpStatus.BAD_REQUEST,
+                        message: error.message
+                    },
+                    HttpStatus.BAD_REQUEST
+                );
+            }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadAvatar(
-    @UploadedFile()
-    file: Express.Multer.File,
-    @Req() req,
-  ){
-    try {
-      if (!file) {
-        throw new InvalidFileException('No file provided.');
-      }
-      console.log(file);
-      return await this.usersService.uploadAvatar(file, req);
-    }catch (error) {
-      if (error instanceof InvalidFileException) {
-        throw new HttpException({ statusCode: HttpStatus.BAD_REQUEST, message: error.message }, HttpStatus.BAD_REQUEST);
-      }
-
-      throw new HttpException({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' }, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @Delete('/delete/image')
-  async deleteImage(path: string){
-    console.log('delete', path);
-    return await this.usersService.deleteImage(path);
-  }
-  
-  @Post('/info')
-  @ApiBody({type: dto})
-
-  async UserInfo(
-    @Req() req, @Body() dto: dto,
-  ){
-    console.log('ana hnaya');
-    console.log('avatar: ', dto.avatar);
-    console.log('nickName: ', dto.nickName);
-    return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
-  }
-
-  @Get('/previo/:id')
-  async userData(@Param('id') id: string){
-    return (await this.usersService.userData(id));
-  }
-
-  @Get('all')
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  findAllUser() {
-    return this.usersService.findAllUser();
-  }
-
-  @Get('historyMatchs')
-  async match_history(@Req() req){
-    return await this.usersService.matchHistory(req.user.sub);
-  }
-
-  @Get(':id')
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  async findOneUser(@Param('id') id: string) {
-    console.log('hi im here');
-    const findUser = await this.usersService.getOneUser(id);
-    if (!findUser)
-      throw new NotFoundException(`User with the  id ${id} does not exist`);
-    return (findUser);
-  }
-
-  @Patch(':id')
-  @ApiBearerAuth()
-  @ApiCreatedResponse()
-  updateUser(@Param('id') id: string, @Body() user: User) {
-    return (this.usersService.updateUser(String(id), user));
-  }
-
-  @Delete(':id')
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  removeUser(@Param('id') id: string) {
-    return (this.usersService.removeUser(String(id)));
-  }
-
-  @Post(':userId/blockUser/:blockedUserId')
-  async blockUser(
-    @Req() req,
-    @Param('userId') userId: string,
-    @Param('blockedUserId') blockedUserId: string){
-      if (userId != req.user.sub){
-        console.log('user1: ', userId, 'sub: ', req.user.sub);
-        throw new UnauthorizedException('You are not allowed to reject this friend request');
-    }
-      this.blockService.blockUser(userId, blockedUserId);
-  }
-
-  @Post(':userId/unblockUser/:unblockedUserId')
-  async unblockUser(
-    @Req() req,
-    @Param('userId') userId: string,
-    @Param('unblockedUserId') unblockedUserId: string){
-      if (userId != req.user.sub){
-        console.log('user1: ', userId, 'sub: ', req.user.sub);
-        throw new UnauthorizedException('You are not allowed to reject this friend request');
-    }
-      this.blockService.unblockUser(userId, unblockedUserId);
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: 'Internal Server Error'
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
-  @Get(':userId/canInteractWith/:otherUserId')
-  async canInteractWith(
-    @Req() req,
-    @Param('userId') userId: string,
-    @Param('otherUserId') otherUserId: string): Promise<Boolean>{
-      if (userId != req.user.sub){
-        console.log('user1: ', userId, 'sub: ', req.user.sub);
-        throw new UnauthorizedException('You are not allowed to reject this friend request');
+    @Delete('/delete/:image')
+    async deleteImage(@Param('image') path: string) {
+        const file = process.env.upload + '/' + path;
+        console.log(file);
+        return await this.usersService.deleteImage(file);
     }
-      const isItBlocked = await this.blockService.isUserBlocked(userId, otherUserId);;
-      return isItBlocked ? false : true;
-  }
 
-  @Get(':userId/blockedUsers')
-  async listOfBlockedUsers(@Req() req, @Param('userId') userId: string){
-    if (userId != req.user.sub){
-      console.log('user1: ', userId, 'sub: ', req.user.sub);
-      throw new UnauthorizedException('You are not allowed to reject this friend request');
+    @Post('/info')
+    @ApiBody({ type: dto })
+    async UserInfo(@Req() req, @Body() dto: dto) {
+        console.log('ana hnaya');
+        console.log('avatar: ', dto.avatar);
+        console.log('nickName: ', dto.nickName);
+        return await this.usersService.userInfo(req, dto.avatar, dto.nickName);
     }
-    return await this.blockService.listOfBlockedUsers(userId);
-  }
-// Close Prisma client when done
-// prisma.$disconnect();
+
+    @Get('/previo/:id')
+    async userData(@Param('id') id: string) {
+        return await this.usersService.userData(id);
+    }
+
+    @Get('all')
+    @ApiBearerAuth()
+    @ApiOkResponse()
+    findAllUser() {
+        return this.usersService.findAllUser();
+    }
+
+    @Get('historyMatchs')
+    async match_history(@Req() req) {
+        return await this.usersService.matchHistory(req.user.sub);
+    }
+
+    @Get(':id')
+    @ApiBearerAuth()
+    @ApiOkResponse()
+    async findOneUser(@Param('id') id: string) {
+        console.log('hi im here');
+        const findUser = await this.usersService.getOneUser(id);
+        if (!findUser)
+            throw new NotFoundException(
+                `User with the  id ${id} does not exist`
+            );
+        return findUser;
+    }
+
+    @Patch(':id')
+    @ApiBearerAuth()
+    @ApiCreatedResponse()
+    updateUser(@Param('id') id: string, @Body() user: User) {
+        return this.usersService.updateUser(String(id), user);
+    }
+
+    @Delete(':id')
+    @ApiBearerAuth()
+    @ApiOkResponse()
+    removeUser(@Param('id') id: string) {
+        return this.usersService.removeUser(String(id));
+    }
+
+    @Post(':userId/blockUser/:blockedUserId')
+    async blockUser(
+        @Req() req,
+        @Param('userId') userId: string,
+        @Param('blockedUserId') blockedUserId: string
+    ) {
+        if (userId != req.user.sub) {
+            console.log('user1: ', userId, 'sub: ', req.user.sub);
+            throw new UnauthorizedException(
+                'You are not allowed to reject this friend request'
+            );
+        }
+        this.blockService.blockUser(userId, blockedUserId);
+    }
+
+    @Post(':userId/unblockUser/:unblockedUserId')
+    async unblockUser(
+        @Req() req,
+        @Param('userId') userId: string,
+        @Param('unblockedUserId') unblockedUserId: string
+    ) {
+        if (userId != req.user.sub) {
+            console.log('user1: ', userId, 'sub: ', req.user.sub);
+            throw new UnauthorizedException(
+                'You are not allowed to reject this friend request'
+            );
+        }
+        this.blockService.unblockUser(userId, unblockedUserId);
+    }
+
+    @Get(':userId/canInteractWith/:otherUserId')
+    async canInteractWith(
+        @Req() req,
+        @Param('userId') userId: string,
+        @Param('otherUserId') otherUserId: string
+    ): Promise<Boolean> {
+        if (userId != req.user.sub) {
+            console.log('user1: ', userId, 'sub: ', req.user.sub);
+            throw new UnauthorizedException(
+                'You are not allowed to reject this friend request'
+            );
+        }
+        const isItBlocked = await this.blockService.isUserBlocked(
+            userId,
+            otherUserId
+        );
+        return isItBlocked ? false : true;
+    }
+
+    @Get(':userId/blockedUsers')
+    async listOfBlockedUsers(@Req() req, @Param('userId') userId: string) {
+        if (userId != req.user.sub) {
+            console.log('user1: ', userId, 'sub: ', req.user.sub);
+            throw new UnauthorizedException(
+                'You are not allowed to reject this friend request'
+            );
+        }
+        return await this.blockService.listOfBlockedUsers(userId);
+    }
+    // Close Prisma client when done
+    // prisma.$disconnect();
 }

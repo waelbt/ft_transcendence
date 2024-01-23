@@ -17,7 +17,6 @@ export const multerOptions = {
             const nameWithoutExtension = file.originalname.split('.')[0];
 
             const ext = extname(file.originalname);
-
             const filename = `${nameWithoutExtension}-${uniqueName}${ext}`;
             callback(null, filename);
         }
