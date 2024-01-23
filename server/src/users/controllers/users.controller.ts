@@ -62,8 +62,8 @@ export class UsersController {
     }
   }
 
-  @Delete('/delete/image')
-  async deleteImage(path: string){
+  @Delete('/delete/:image')
+  async deleteImage(@Param('image') path: string){
     return await this.usersService.deleteImage(path);
   }
   
