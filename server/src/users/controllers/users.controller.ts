@@ -64,6 +64,8 @@ export class UsersController {
 
   @Delete('/delete/:image')
   async deleteImage(@Param('image') path: string){
+    // const filePath = path.replace('/upload/', ''); // Remove the '/upload/' prefix
+    // console.log(filePath);
     return await this.usersService.deleteImage(path);
   }
   
@@ -76,7 +78,9 @@ export class UsersController {
     console.log('ana hnaya');
     console.log('avatar: ', dto.avatar);
     console.log('nickName: ', dto.nickName);
-    return await this.usersService.userInfo(req, dto.avatar, dto.nickName);    
+    const avatar = dto.avatar.split('/server')[1];
+    console.log(avatar);
+    return await this.usersService.userInfo(req, avatar, dto.nickName);
   }
 
   @Get('/previo/:id')
