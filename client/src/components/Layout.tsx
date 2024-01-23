@@ -1,11 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
-import NavigationMenu from './NavigationMenu';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
-import GlobalChat from './GlobalChat';
+import {NavigationMenu, GlobalChat} from '.'
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();

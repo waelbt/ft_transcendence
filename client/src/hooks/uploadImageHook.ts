@@ -63,7 +63,9 @@ const useImageUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
-            setImagePath(response.data);
+            setImagePath(
+                `${import.meta.env.VITE_UPLOADS_DESTINATION}/${response.data}`
+            );
             setSuccess(true);
         } catch (err) {
             if (axios.isAxiosError(err)) {

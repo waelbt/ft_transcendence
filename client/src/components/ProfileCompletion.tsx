@@ -28,28 +28,21 @@ function ProfileCompletion() {
         try {
             if (success && imagePath) data['avatar'] = imagePath;
             console.log(data);
-            const response = await axiosPrivate.post(
-                '/users/info',
-                JSON.stringify(data),
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+            await axiosPrivate.post('/users/info', JSON.stringify(data), {
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            );
-            console.log(response);
+            });
             updateState({ nickName: data['nickName'] });
-            updateState({ avatar: `${import.meta.env.VITE_BASE_URL}${data['avatar']}` }); // ! handle default image
+            updateState({ avatar: data['avatar'] }); // ! handle default image
             updateState({ completeProfile: true });
             updateState({ verified: true });
+            absoluteToast(toast.success, 'profile created successfully');
         } catch (e) {
-            if (axios.isAxiosError(e))
-                absoluteToast(
-                    toast.error,
-                    e.response?.data.message ||
-                        'that name is already taken. try a different one'
-                );
-            else absoluteToast(toast.error, e.response?.data.message);
+            absoluteToast(
+                toast.error,
+                'that name is already taken. try a different one'
+            );
         }
     };
 

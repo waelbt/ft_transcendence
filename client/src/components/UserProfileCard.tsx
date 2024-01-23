@@ -6,6 +6,7 @@ import { FC, useEffect } from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
+import { actions } from 'react-table';
 
 type UserProfileCardProps = {
     id: string;
@@ -30,6 +31,10 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     useEffect(() => {
         console.log(props.actions);
     }, [props]);
+
+    const handleAction = (action: string) => {
+        console.log(action);
+    };
 
     return (
         <>
@@ -74,7 +79,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-                        {true && (
+                        {!props.isCurrentUser && (
                             <Popup
                                 trigger={
                                     <div
@@ -92,22 +97,31 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 position="bottom center"
                                 nested
                             >
+                                {/* <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
+                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
+                                        Add Friend
+                                    </div>
+                                </div>
+                                <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
+                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
+                                        Block User
+                                    </div>
+                                </div>
+                                <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
+                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
+                                        Remove Friend
+                                    </div>
+                                </div> */}
                                 <div className="py-[5px] w-[200px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Add Friend
+                                    {props.actions?.map((action) => (
+                                        <div
+                                            key={action}
+                                            className="text-zinc-600 text-lg font-normal font-['Acme']"
+                                            onClick={handleAction(action)}
+                                        >
+                                            {action}
                                         </div>
-                                    </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Block User
-                                        </div>
-                                    </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Remove Friend
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </Popup>
                         )}

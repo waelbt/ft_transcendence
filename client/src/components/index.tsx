@@ -16,3 +16,5 @@ export { default as TwoFaVerfication } from './TwoFaVerfication';
 export { default as RequireAuth } from './RequireAuth';
 export { default as Modal } from './Modal';
 export { default as MatchResultModal } from './MatchResultModal';
+export { default as NavigationMenu } from './NavigationMenu';
+export { default as GlobalChat } from './GlobalChat';
