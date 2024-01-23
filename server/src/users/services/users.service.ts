@@ -88,8 +88,8 @@ export class UsersService {
         if (!user)
             throw new NotFoundException(`User does not exist`);
         console.log(file.filename);
-        // return ('/upload/' + file.filename);
-        return (file.path);
+        return (file.filename);
+        // return (file.path);
     }
 
     async deleteImage(path: string) {
