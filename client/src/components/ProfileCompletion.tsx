@@ -8,7 +8,7 @@ import { IoTrashOutline } from 'react-icons/io5';
 import useImageUpload from '../hooks/uploadImageHook';
 import { absoluteToast } from '../tools';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+// import axios from 'axios';
 
 function ProfileCompletion() {
     const { updateState } = useUserStore();
@@ -45,7 +45,7 @@ function ProfileCompletion() {
             );
         }
     };
-
+    
     return (
         <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5 mb-10">
             <div className="px-3.5 py-px flex-col justify-start items-start gap-12 flex">

@@ -12,6 +12,7 @@ export const useGetUserInfos = (
 
     const fetchData = async () => {
         const { data } = await axiosPrivate.get(endpoint);
+        console.log(data.type.message);
         return data;
     };
 

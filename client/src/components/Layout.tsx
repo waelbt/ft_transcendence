@@ -10,7 +10,6 @@ function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, avatar, accessToken, verified, isLogged, active } =
         useUserStore();
-    // const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket } = useChatSocketStore();
 

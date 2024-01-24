@@ -59,7 +59,11 @@ export function Profile() {
 
     return (
         <div className="flex-col h-full justify-center items-center inline-flex gap-5">
-            <UserProfileCard {...data.user} isCurrentUser={isCurrentUser} />
+            <UserProfileCard
+                {...data.user}
+                relationship={isCurrentUser ? null : data.type.message}
+                isCurrentUser={isCurrentUser}
+            />
             <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
                 <Outlet context={{ isCurrentUser, paramId }} />
             </div>
