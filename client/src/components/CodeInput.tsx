@@ -1,37 +1,18 @@
-import React, { FormEvent, useEffect, useState } from 'react';
-
 interface CodeInputProps {
-    setter: React.Dispatch<React.SetStateAction<string>>;
+    code: string[];
     style?: string;
     hide: boolean;
+    HandleChangeType: (
+        index: number
+    ) => (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 const CodeInput: React.FC<CodeInputProps> = ({
-    setter,
+    HandleChangeType,
+    code,
     style = 'w-16 h-14 text-center text-black text-xl relative bg-white rounded-[10px] border border-neutral-400',
     hide
 }) => {
-    const [code, setCode] = useState(['', '', '', '', '', '']);
-
-    const handleChange =
-        (index: number) => (event: FormEvent<HTMLInputElement>) => {
-            const newCode = [...code];
-            console.log(event.currentTarget.value);
-            newCode[index] = event.currentTarget.value;
-            console.log(newCode[index]);
-
-            setCode(newCode);
-
-            if (event.currentTarget.value && index <= code.length - 1) {
-                document.getElementById(`input-${index + 1}`)?.focus();
-            }
-        };
-
-    useEffect(() => {
-        if (hide) setCode(['', '', '', '', '', '']);
-        else setter(code.join(''));
-    }, [code, hide]);
-
     return (
         <div
             className={`justify-center items-center gap-[15px] inline-flex ${
@@ -45,7 +26,7 @@ const CodeInput: React.FC<CodeInputProps> = ({
                     type="text"
                     maxLength={1}
                     value={c}
-                    onChange={handleChange(index)}
+                    onChange={HandleChangeType(index)}
                     className={style}
                     inputMode="numeric"
                     pattern="[0-9]*"

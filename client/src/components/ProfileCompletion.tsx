@@ -1,35 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
-import useUpload from '../hooks/uploadImageHook';
 import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
+import useImageUpload from '../hooks/uploadImageHook';
+import toast from 'react-hot-toast';
 
 function ProfileCompletion() {
-    const { updateState } = useUserStore();
+    const { updateState, logout } = useUserStore();
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
-    const [imagePath, setImagePath] = useState<string | null>(null);
     const axiosPrivate = useAxiosPrivate();
-    const { progress, error, success, deleteData, uploadData, avatarPath } =
-        useUpload();
+    const {
+        progress,
+        uploadData,
+        imagePath,
+        setImagePath,
+        deleteData,
+        isFailed,
+        success
+    } = useImageUpload();
 
-    useEffect(() => {
-        if (success) setImagePath(avatarPath);
-    }, [success]);
     const handleSubmit = async (data: FieldValues) => {
         try {
-            data['avatar'] = imagePath;
+            if (success && imagePath) data['avatar'] = imagePath;
+            console.log(data);
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            updateState({ isProfileComplete: true });
+            updateState({ nickName: data['nickName'] });
+            updateState({ avatar: data['avatar'] }); // ! handle default image
+            updateState({ completeProfile: true });
             updateState({ verified: true });
+            toast.success('profile created successfully');
         } catch (e) {
-            console.log(e);
+            toast.error('that name is already taken. try a different one');
         }
     };
 
@@ -70,6 +78,7 @@ function ProfileCompletion() {
                                 imageUrl={imagePath}
                                 style="p-24 "
                                 isloading={!!(progress && progress < 100)}
+                                errror={isFailed}
                             />
                             <label htmlFor="inputTag">
                                 <ProgressRingLoader
@@ -89,7 +98,7 @@ function ProfileCompletion() {
                                     e.stopPropagation(); // This stops the event from reaching the label
                                     setImagePath(null);
                                     selectedItemIndex == -1
-                                        ? deleteData()
+                                        ? deleteData(imagePath as string)
                                         : setSelectedItemIndex(-1);
                                 }}
                             >
@@ -159,6 +168,12 @@ function ProfileCompletion() {
                     fields={NICKNAME_FIELD}
                     onSubmit={handleSubmit}
                 />
+            </div>
+            <div
+                className="fixed inline-flex bottom-4 left-10 cursor-pointer mr-10 hover:underline underline-offset-1 text-white text-4xl font-normal font-['Acme']"
+                onClick={() => logout()}
+            >
+                leave
             </div>
         </div>
     );

@@ -1,11 +1,13 @@
-import { NavLink, useOutletContext } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
+import { ACTIONS_ENDPOINTS } from '../constants';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 type UserProfileCardProps = {
     id: string;
@@ -16,20 +18,59 @@ type UserProfileCardProps = {
     status: true;
     exp: 0;
     level: 0;
-    actions?: string[];
     isCurrentUser: boolean;
+    relationship: string | null;
 };
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
-    // const { id } = useUserStore();
     const navLinks = ['history', 'achivements', 'friends'];
     if (props.isCurrentUser) {
         navLinks.push('setting'); //! protect this
     }
+    const [actions, setActions] = useState<string[]>(['Block user']);
+    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
-        console.log(props.actions);
-    }, [props]);
+        if (props.relationship) {
+            let updatedActions = ['Block User']; // Default action
+
+            switch (props.relationship) {
+                case 'friend':
+                    updatedActions = [
+                        // 'Send Message',
+                        'Remove Friend',
+                        ...updatedActions
+                    ];
+                    break;
+                case 'not friend':
+                    updatedActions = ['Send Request', ...updatedActions];
+                    break;
+                case 'invitation sender':
+                    updatedActions = ['Cancel Request', ...updatedActions];
+                    break;
+                case 'invitation receiver':
+                    updatedActions = [
+                        'Accept Request',
+                        'Decline Request',
+                        ...updatedActions
+                    ];
+                    break;
+            }
+
+            setActions(updatedActions);
+        }
+    }, [props.relationship]);
+
+    const handleAction = async (action: string) => {
+        const endpoint = ACTIONS_ENDPOINTS[action];
+
+        try {
+            const response = await axiosPrivate.post(endpoint + '/' + props.id);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <>
@@ -74,11 +115,11 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 {link}
                             </NavLink>
                         ))}
-                        {true && (
+                        {!props.isCurrentUser && (
                             <Popup
                                 trigger={
                                     <div
-                                        className={`group px-2.5 text-white py-[21px] justify-center items-center gap-2.5 inline-flex  hover:border-b-4  border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
+                                        className={`group px-2.5 text-white py-[21px] justify-center items-center gap-2.5 inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
                                     >
                                         <div className="text-neutral-500 text-xl font-normal font-['Acme']">
                                             More
@@ -93,21 +134,15 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 nested
                             >
                                 <div className="py-[5px] w-[200px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Add Friend
+                                    {actions?.map((action) => (
+                                        <div
+                                            key={action}
+                                            className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
+                                            onClick={() => handleAction(action)}
+                                        >
+                                            {action}
                                         </div>
-                                    </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Block User
-                                        </div>
-                                    </div>
-                                    <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                        <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                            Remove Friend
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </Popup>
                         )}

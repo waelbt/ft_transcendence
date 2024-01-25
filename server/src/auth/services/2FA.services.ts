@@ -1,16 +1,20 @@
-import { Injectable, NotFoundException, Res } from '@nestjs/common';
+import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
-import * as speakeasy from 'speakeasy';
 import { User } from '@prisma/client';
+import * as otplib from 'otplib';
+import * as qrcodeLib from 'qrcode';
+import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 
 @Injectable()
 export class twoFAService {
     constructor(private prisma: PrismaOrmService) {}
+
     generate2FASecret(nickName: string) {
         const sercet = speakeasy.generateSecret({ name: nickName });
         return sercet.base32;
     }
+
     async generate2FA(@Res() res, user: User) {
         const secret = this.generate2FASecret((await user).fullName);
         const otpAuthUrl = speakeasy.otpauthURL({
@@ -41,27 +45,38 @@ export class twoFAService {
     //     });
     // }
 
-    async validateTwoFAToken(token, secret) {
-        return speakeasy.totp.verify({
+    // async validateTwoFAToken(token, secret) {
+    //     return (await speakeasy.totp.verify({
+    //       secret,
+    //       encoding: 'base32',
+    //       token,
+    //       window: 1,
+    //   }));
+    // }
+
+    async validateTwoFAToken(token: string, secret: string): Promise<boolean> {
+        const isValidToken = speakeasy.totp.verify({
             secret,
             encoding: 'base32',
             token,
             window: 1
         });
+        return isValidToken;
     }
 
-    async validateTwoFA(req, code, @Res() res) {
+    async validateTwoFA(@Req() req, code, @Res() res) {
+        console.log('code   ', code);
         const user = await this.prisma.user.findUnique({
             where: { id: req.user.sub }
         });
         if (!user) throw new NotFoundException(`User does not exist`);
 
-        const enteredToken = code.token;
+        console.log(user.f2A_Secret);
         const isValidToken = await this.validateTwoFAToken(
-            enteredToken,
+            code,
             user.f2A_Secret
         );
-
+        console.log('hda : ', isValidToken);
         if (isValidToken) {
             await this.prisma.user.update({
                 where: { id: req.user.sub },

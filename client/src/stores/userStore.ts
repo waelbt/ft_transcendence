@@ -4,7 +4,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
-// ! create a const object for defautl value to use it twice 
+// ! create a const object for defautl value to use it twice
 
 type UserStateType = {
     active: boolean;
@@ -20,7 +20,7 @@ type UserStateType = {
     status: boolean;
     F2A: boolean;
     inGame: boolean;
-    isProfileComplete: boolean;
+    completeProfile: boolean;
     friends: string[];
     block: string[];
 };
@@ -40,7 +40,7 @@ export const useUserStore = createWithEqualityFn<
         (set, get) => ({
             active: false,
             isLogged: false,
-            verified: false,
+            verified: true,
             accessToken: null,
             id: '',
             email: '',
@@ -51,7 +51,7 @@ export const useUserStore = createWithEqualityFn<
             status: false,
             F2A: false,
             inGame: false,
-            isProfileComplete: false,
+            completeProfile: false,
             friends: [],
             block: [],
             getState: () => {
@@ -59,10 +59,12 @@ export const useUserStore = createWithEqualityFn<
                 return restOfState;
             },
             logout: () => {
+                window.history.replaceState(null, '', '/');
                 set(
                     {
                         active: false,
                         isLogged: false,
+                        verified: true,
                         accessToken: null,
                         id: '',
                         email: '',
@@ -72,7 +74,7 @@ export const useUserStore = createWithEqualityFn<
                         status: false,
                         F2A: false,
                         inGame: false,
-                        isProfileComplete: false,
+                        completeProfile: false,
                         friends: [],
                         block: []
                     },

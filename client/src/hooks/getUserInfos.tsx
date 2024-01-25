@@ -3,7 +3,7 @@ import useAxiosPrivate from './axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 
 export const useGetUserInfos = (
-    endpoint: string,
+    userId: string,
     key: string[],
     isCurrentUser: boolean
 ) => {
@@ -11,7 +11,7 @@ export const useGetUserInfos = (
     const { getState } = useUserStore();
 
     const fetchData = async () => {
-        const { data } = await axiosPrivate.get(endpoint);
+        const { data } = await axiosPrivate.get(`/users/${userId}/profile`);
         return data;
     };
 
@@ -19,7 +19,7 @@ export const useGetUserInfos = (
         queryKey: key,
         queryFn: fetchData,
         enabled: !isCurrentUser,
-        initialData: getState()
+        initialData: { user: getState() }
     });
 
     return {

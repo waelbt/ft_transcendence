@@ -1,18 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
-import NavigationMenu from './NavigationMenu';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
-import GlobalChat from './GlobalChat';
-// import GlobalChat from './GlobalChat';
+import { NavigationMenu, GlobalChat } from '.';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, accessToken, verified, isLogged, active } =
+    const { updateState, avatar, accessToken, verified, isLogged, active } =
         useUserStore();
-    const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket } = useChatSocketStore();
 
@@ -21,17 +18,23 @@ function Layout() {
             console.log(accessToken);
             try {
                 setIsLoading(true);
+                // ! convert this to a construct function
                 const { user, friends, block } = (
                     await axiosPrivate.get('/users/me')
                 ).data;
-                updateState(user);
-                updateState({ friends: friends, block: block });
                 updateState({ active: true });
+                updateState(user);
+                updateState({
+                    avatar: `${
+                        import.meta.env.VITE_UPLOADS_DESTINATION
+                    }/${user.avatar?.replace(/ /g, '%20')}`
+                });
+                updateState({ friends: friends, block: block });
+                updateState({ verified: user.completeProfile && !user.F2A });
                 initializeSocket(accessToken);
                 socket?.emit('message', { message: 'test' });
-                // setRedirect((user.F2A || !user.isProfileComplete) && !verified);
             } catch (error) {
-                console.log(error); // !toast
+                console.log(error);
             } finally {
                 setIsLoading(false);
             }
@@ -47,16 +50,16 @@ function Layout() {
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <>
-            {redirect ? (
-                <Verfication />
-            ) : (
+            {verified ? (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        {/* <GlobalChat />   */}
+                        <GlobalChat />
                     </div>
                 </div>
+            ) : (
+                <Verfication />
             )}
         </>
     );

@@ -176,7 +176,7 @@ export class friendsService {
                         ? friendship.user[1]
                         : friendship.user[0];
 
-                if (friendUser.id !== userId){
+                if (friendUser.id !== userId) {
                     const id = friendUser.id;
                     const avatar = friendUser.avatar;
                     const name = friendUser.fullName;
@@ -211,10 +211,18 @@ export class friendsService {
         var friendListWithAction = await Promise.all(
             userFriends
                 .map(async (friendship) => {
-                    console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
-                    if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
+                    console.log(
+                        'wahd: ',
+                        friendship.userId1,
+                        '\njoj: ',
+                        viewerId
+                    );
+                    if (
+                        friendship.userId1 == viewerId ||
+                        friendship.userId2 == viewerId
+                    ) {
                         console.log('im in');
-                        return ;
+                        return;
                     }
                     const friendId =
                         friendship.userId1 === userId
@@ -265,15 +273,15 @@ export class friendsService {
         const block = await this.blockUser.isUserBlocked(userId1, userId2);
         if (block) return { message: 'blocked' };
         const friends = await this.areUsersFriends(userId1, userId2);
-        if (friends) return { message: 'friends' };
+        if (friends) return { message: 'friend' };
         const pending = await this.isUserPending(userId1, userId2);
         if (pending) return { message: 'RemovePendingFriend' };
         const acceptORreject = await this.isUserNeedToAcceptOrReject(
             userId1,
             userId2
         );
-        if (acceptORreject) return { message: 'AcceptOrReject' };
-        return { message: 'notFriend' };
+        if (acceptORreject) return { message: 'invitation receiver' };
+        return { message: 'not friend' };
         // this.listFriends()
         // return user;
     }
