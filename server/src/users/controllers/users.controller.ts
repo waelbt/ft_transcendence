@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards, Res } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -68,7 +68,8 @@ export class UsersController {
     console.log(file);
     return await this.usersService.deleteImage(file);
   }
-  
+
+
   @Post('/info')
   @ApiBody({type: dto})
 
@@ -121,6 +122,18 @@ export class UsersController {
   @ApiOkResponse()
   removeUser(@Param('id') id: string) {
     return (this.usersService.removeUser(String(id)));
+  }
+
+  @Post('UpdateAvatar/:avatar')
+  async updateAvatar(@Req() req, @Res() res, @Param('avatar') avatar: string){
+	await this.usersService.updateAvatar(req.user.sub ,avatar);
+	res.send('seccess');
+  }
+
+  @Post('UpdateNickName/:nickName')
+  async updateNickname(@Req() req, @Res() res, @Param('nickName') name: string){
+	await this.usersService.updateNickName(req.user.sub ,name);
+	res.send('seccess');
   }
 
   @Post(':userId/blockUser/:blockedUserId')

@@ -8,6 +8,7 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { UsersService } from './users.service';
 import { BlockService } from './blocked.service';
+import { use } from 'passport';
 
 @Injectable()
 export class friendsService {
@@ -83,9 +84,12 @@ export class friendsService {
         // const friendship = await this.findFirstStatusPending(userId1, userId2);
 
         const friendship = await this.prisma.friendship.findFirst({
-            where: { userId1: userId1, userId2: userId2, status: 'pending' }
+            where: { userId1: userId2, userId2: userId1, status: 'pending' }
         });
 
+        console.log('wahd: ', userId1);
+        console.log('joj: ', userId2);
+        console.log('friends: ', friendship);
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
         }
