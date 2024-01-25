@@ -1,13 +1,22 @@
 import  { useState, ChangeEvent } from 'react';
 import { IoMdAddCircle } from "react-icons/io";
 import "./RoomList.css";
-
+import RoomTypes from './RoomTypes';
+// import { useModelStore } from '../../../stores/ModelStore';
 
 interface SearchBarProps {
   onSearch: (searchText: string) => void;
 }
 
 const RoomList: React.FC<SearchBarProps> = ({ onSearch }) => {
+
+  // const { isEventOpen, openEvent } = useModert
+
+  const handleTypeSelection = (selectedType: string) => {
+    console.log(`Selected room type: ${selectedType}`);
+    // Handle the selected room type as needed
+  };
+
     const [searchText, setSearchText] = useState<string>("");
   
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +107,9 @@ const RoomList: React.FC<SearchBarProps> = ({ onSearch }) => {
               </div>))}  
               <div className="create_room">
                 <button className='addplus'>
+                {/* <div> */}
+                  <RoomTypes onSelectType={handleTypeSelection} />
+                   {/* </div> */}
                 <IoMdAddCircle size={50} color="55c255"/>
                 </button>
               </div>

@@ -105,7 +105,9 @@
   /* min-height: 580px;
   max-height: 520px; */
   /* height: 100%; */
-  overflow: auto; 
+  /* background-color: #777; */
+  height: 500x;
+  overflow: scroll; 
 }
 
 
@@ -154,4 +156,8 @@ letter-spacing: 0.17px;
 .conversation .conversation-item p:last-child {
   color: #777; 
   font-size: 12px; 
+}
+
+.conversation-item.selected {
+  background-color: #f0f0f0; /* or any other styling you prefer */
 }

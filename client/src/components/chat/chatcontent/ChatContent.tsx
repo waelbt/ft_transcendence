@@ -1,78 +1,68 @@
-
-import React, { useState, useEffect } from "react";
-import { IoSend } from "react-icons/io5";
-import { BsEmojiSmile } from "react-icons/bs";
-import { io } from "socket.io-client";
-// import WebSocket from "./WebSocket.tsx";
+// Inside ChatContent.tsx
+import React, { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
+import MessageInput from './MessageInput';
 import MessageList from './MessageList';
-import "./ChatContent.css";
+import './ChatContent.css';
 
 const socket = io('http://localhost:4000/chat');
 
-export const ChatContent: React.FC = () => {
+interface Message {
+  isMyMessage: boolean;
+  message: string;
+}
 
-  const [currentMessage, setCurrentMessage] = useState("");
+interface Contact {
+  image: string;
+  id: number;
+  name: string;
+  time: string;
+}
 
-  const [messages, setMessages] = useState([
-    { isMyMessage: true, message: 'Hello!' },
-    { isMyMessage: false, message: 'Hi there!' },
-    { isMyMessage: true, message: 't9sser' },
-    { isMyMessage: false, message: 'no thanks' },
-    { isMyMessage: true, message: '7iyed' },
-  ]);
+interface ChatContentProps {
+  selectedContact: Contact | null;
+}
+
+const ChatContent: React.FC<ChatContentProps> = ({ selectedContact }) => {
+  const [selectedContactMessages, setSelectedContactMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    socket.on("receive_message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    if (selectedContact) {
+      const contactMessages = getMessagesForContact(selectedContact.id);
+      setSelectedContactMessages(contactMessages);
+    }
+
+    socket.on('receive_message', (message) => {
+      setSelectedContactMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-      socket.off("receive_message");
+      socket.off('receive_message');
     };
-  }, []);
+  }, [selectedContact]);
 
-  const handleSendClick = () => {
-    // Emit the message to the server
-    const messageData = { isMyMessage: true, message: currentMessage };
-    socket.emit("send_message", messageData);
-    setCurrentMessage("");
-    console.log(currentMessage);
+  const handleSendClick = (message: string) => {
+    const messageData = { isMyMessage: true, message };
+    socket.emit('message', messageData);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentMessage(e.target.value);
-  };
-
-
-  // const handleSendClick = () => {
-  //   // Handle Send button click
-  //   console.log("Send button clicked!");
-  // };
-
-  const handleEmojiClick = () => {
-    // Handle Emoji button click
-    console.log("Emoji button clicked!");
+  const getMessagesForContact = (contactId: number): Message[] => {
+    // Replace this with your actual logic to fetch messages for the given contactId
+    // For example, you might have an array of messages associated with each contact
+    // in your state or database
+    // The key is to replace this with your actual data fetching logic
+    return [
+      { isMyMessage: true, message: 'Hello!' },
+      { isMyMessage: false, message: 'How are you?' },
+      // ... additional messages
+    ];
   };
 
   return (
     <div className="main__chatcontent">
-      <MessageList messages={messages} />
+      <MessageList messages={selectedContactMessages} />
       <div className="content__footer">
-        <div className="sendNewMessage">
-        <input
-            type="text"
-            placeholder="Type a message here"
-            value={currentMessage}
-            onChange={handleInputChange}
-          />
-          <button className="emoji" onClick={handleEmojiClick}>
-            <BsEmojiSmile size={24} />
-          </button>
-          <button onClick={handleSendClick}>
-          <IoSend size={24} color="#007bff" />
-          </button>
-          
-        </div>
+        <MessageInput onSendClick={handleSendClick} maxLength={500} />
       </div>
     </div>
   );

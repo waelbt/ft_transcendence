@@ -3,36 +3,39 @@
     align-items: center;
     border: 1px solid #ccc;
     width: 25%;
+    /* height:100%; */
     /* width: clamp(100px, 60%, 300px); */
-    grid-template-columns: repeat(1,1fr);
+    /* grid-template-columns: repeat(1,1fr); */
 
-  }
+}
   
-  .chat-profile .profile-image img{
+  .chat-profile .profile-image img {
     width: 130px;
     height: 130px;
     border-radius: 50%;
     border: black solid 2px;
   }
   
-  .user-details {
-    /* flex: 1; */
-  }
+.user-details
+{
+  /* flex: 1; */
+}
   
-  .user-name {
-    color: #000;
-    font-family: Acme;
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
+.user-name {
+  color: #000;
+  font-family: Acme;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
   
   .action-buttons {
     display: grid;
     align-items: center;
     gap: 8px;
     margin-top: 20px;
+    /* height: 100%; */
   }
   
   .action-buttons button {
@@ -47,6 +50,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* height: 100%; */
+
     /* background-color: #0c1318;
     margin-left: 50px; */
   
@@ -74,6 +79,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* height: 100%; */
+
   }
 
   .see-profile-button {
@@ -94,6 +101,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* height: 100%; */
   }
   
   .block-button {

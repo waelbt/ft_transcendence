@@ -54,7 +54,7 @@ function Layout() {
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        <GlobalChat />  
+                        {/* <GlobalChat />   */}
                     </div>
                 </div>
             )}
