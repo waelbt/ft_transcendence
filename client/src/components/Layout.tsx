@@ -31,8 +31,8 @@ function Layout() {
                 });
                 updateState({ friends: friends, block: block });
                 updateState({ verified: user.completeProfile && !user.F2A });
-                // initializeSocket(accessToken);
-                // socket?.emit('message', { message: 'test' });
+                initializeSocket(accessToken);
+                socket?.emit('message', { message: 'test' });
             } catch (error) {
                 console.log(error);
             } finally {
