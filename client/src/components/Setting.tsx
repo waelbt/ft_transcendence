@@ -1,34 +1,40 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, FormComponent, Twofa } from '.';
 // import { NICKNAME_FIELD } from '../constants';
 
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { useUserStore } from '../stores/userStore';
+import useImageUpload from '../hooks/uploadImageHook';
+// import { absoluteToast } from '../tools';
+import toast from 'react-hot-toast';
 
-// import { withRouter } from 'react-router-dom';
-// const ComponentToHide = (props) => {
-//     const { location } = props;
-//     if (location.pathname.match(/routeOnWhichToHideIt/)) {
-//         return null;
-//     }
-
-//     return <ComponentToHideContent />;
-// };
-
-// const ComponentThatHides = withRouter(ComponentToHide);
 function Setting() {
-    const { nickName } = useUserStore();
+    const { nickName, avatar } = useUserStore();
     const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
         isCurrentUser: false
     };
+    const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
+    const {
+        uploadData,
+        imagePath,
+        setImagePath,
+        deleteData,
+        isFailed,
+        success
+    } = useImageUpload();
 
     useEffect(() => {
+        console.log(avatar);
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
     }, [isCurrentUser]);
 
-    const onSubmit = () => {};
+
+    // useEffect(() => {
+
+    // }, secc)
+    // const onSubmit = () => {};
 
     return (
         <div className="h-full w-full gap-8 px-[60px] py-2.5 rounded-[20px] shadow justify-between items-center inline-flex ">
@@ -46,7 +52,7 @@ function Setting() {
                         </div>
                         <div className="pt-5 pb-2.5 w-full justify-between items-center gap-[30px] inline-flex">
                             <Avatar
-                                imageUrl="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                                imageUrl={imagePath ? imagePath : avatar}
                                 style="w-32 h-32"
                             />
                             <div className="flex-col justify-center items-start gap-4 inline-flex ">
@@ -54,22 +60,15 @@ function Setting() {
                                     className="hidden"
                                     id="inputImage"
                                     type="file"
-                                    // onChange={(event) => {
-                                    // const file = event.target.files?.[0];
-                                    // if (file) {
-                                    //     const objectURL =
-                                    //         URL.createObjectURL(file);
-                                    //     setImagePath(objectURL);
-                                    //     uploadData(file);
-                                    // }
-                                    // }}
+                                    onChange={(event) => {
+                                        setFIle(event.target.files?.[0]);
+                                        if (file) {
+                                            const objectURL =
+                                                URL.createObjectURL(file);
+                                            setImagePath(objectURL);
+                                        }
+                                    }}
                                 />
-                                {/* <div
-                                    id="inputImage"
-                                    className="p-0.5 bg-stone-100 rounded-[3px] border border-zinc-300 justify-center items-center gap-3 inline-flex text-center text-neutral-700 text-sm font-bold font-['Poppins'] cursor-pointer"
-                                >
-                                    Browse...
-                                </div> */}
                                 <label
                                     className="p-3 bg-white rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex cursor-pointer"
                                     htmlFor="inputImage"
@@ -82,7 +81,13 @@ function Setting() {
                                 <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">
                                     JPG or PNG. Max size of 4Mo
                                 </div>
-                                <div className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 ">
+                                <div
+                                    className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 "
+                                    onClick={() => {
+                                        if (file) uploadData(file);
+                                        else toast.error('not to upload');
+                                    }}
+                                >
                                     Upload Now
                                 </div>
                             </div>

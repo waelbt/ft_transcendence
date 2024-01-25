@@ -59,6 +59,7 @@ export const useUserStore = createWithEqualityFn<
                 return restOfState;
             },
             logout: () => {
+                window.history.replaceState(null, '', '/');
                 set(
                     {
                         active: false,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
 import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
@@ -6,11 +6,7 @@ import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import useImageUpload from '../hooks/uploadImageHook';
-import { absoluteToast } from '../tools';
 import toast from 'react-hot-toast';
-import { HiLogout } from 'react-icons/hi';
-
-// import axios from 'axios';
 
 function ProfileCompletion() {
     const { updateState, logout } = useUserStore();
@@ -39,12 +35,9 @@ function ProfileCompletion() {
             updateState({ avatar: data['avatar'] }); // ! handle default image
             updateState({ completeProfile: true });
             updateState({ verified: true });
-            absoluteToast(toast.success, 'profile created successfully');
+            toast.success('profile created successfully');
         } catch (e) {
-            absoluteToast(
-                toast.error,
-                'that name is already taken. try a different one'
-            );
+            toast.error('that name is already taken. try a different one');
         }
     };
 

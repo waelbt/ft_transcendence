@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from './InputField';
 import toast from 'react-hot-toast';
-import { absoluteToast } from '../tools';
 
 type FormProps = {
     fields: any[];
@@ -30,7 +29,7 @@ function FormComponent({
             if (firstErrorKey) {
                 const errorMessage = errors[firstErrorKey]?.message;
                 if (typeof errorMessage === 'string') {
-                    absoluteToast(toast.error, errorMessage);
+                    toast.error(errorMessage);
                 }
             }
         }

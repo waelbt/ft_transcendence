@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 // import { request } from '../api';
 import axios from 'axios';
 import useAxiosPrivate from './axiosPrivateHook';
-import { absoluteToast } from '../tools';
 import toast from 'react-hot-toast';
 
 const useImageUpload = () => {
@@ -69,8 +68,7 @@ const useImageUpload = () => {
             setSuccess(true);
         } catch (err) {
             if (axios.isAxiosError(err)) {
-                absoluteToast(
-                    toast.error,
+                toast.error(
                     err.response?.data.message ||
                         'Failed to upload avatar, try again'
                 );

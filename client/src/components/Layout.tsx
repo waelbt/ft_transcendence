@@ -25,22 +25,16 @@ function Layout() {
                 updateState({ active: true });
                 updateState(user);
                 updateState({
-                    avatar: `${import.meta.env.VITE_UPLOADS_DESTINATION}/${
-                        user.data
-                    }`
+                    avatar: `${
+                        import.meta.env.VITE_UPLOADS_DESTINATION
+                    }/${user.avatar?.replace(/ /g, '%20')}`
                 });
                 updateState({ friends: friends, block: block });
-                // const encodedFileName = encodeURIComponent(user.avatar);
-                // updateState({
-                //     avatar: `${import.meta.env.VITE_BASE_URL}${encodedFileName}`
-                // }); // ! handle default image
-
-                initializeSocket(accessToken);
-                socket?.emit('message', { message: 'test' });
-                console.log('user     ', user);
                 updateState({ verified: user.completeProfile && !user.F2A });
+                // initializeSocket(accessToken);
+                // socket?.emit('message', { message: 'test' });
             } catch (error) {
-                console.log(error); // !toast
+                console.log(error);
             } finally {
                 setIsLoading(false);
             }
@@ -48,7 +42,6 @@ function Layout() {
         if (isLogged && !active) {
             fetchData();
         }
-        console.log(avatar);
         return () => {
             socket?.disconnect();
         };

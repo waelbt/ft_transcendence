@@ -1,56 +1,64 @@
 import CodeInput from './CodeInput';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import { useUserStore } from '../stores/userStore';
 import { IoIosLock } from 'react-icons/io';
-import { absoluteToast } from '../tools';
+import { FormEvent } from 'react';
 
 const TwoFA = () => {
-    const [code, setCode] = useState<string>('');
+    const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
-    const canvasRef = useRef<HTMLDivElement>(null);
     const { F2A, updateState } = useUserStore();
     const [image, setImage] = useState<string | null>(null);
-    useEffect(() => {
-        const validateCode = async () => {
-            // var formData = new FormData();
-            // formData.append('text', code);
-            try {
-                const response = await axiosPrivate.post(
-                    '/2fa/validate',
-                    {
-                        Code: code // Send the code as a JSON object
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
 
-                absoluteToast(toast.success, response.data.message);
-                updateState({ F2A: true });
-            } catch (error) {
-                if (isAxiosError(error)) {
-                    updateState({ F2A: false }); //! false
-                    absoluteToast(toast.error, error.response?.data.message);
-                }
+    const handleChange =
+        (index: number) => (event: FormEvent<HTMLInputElement>) => {
+            const newCode = [...code];
+            newCode[index] = event.currentTarget.value;
+
+            setCode(newCode);
+
+            if (event.currentTarget.value && index <= code.length - 1) {
+                document.getElementById(`input-${index + 1}`)?.focus();
             }
         };
 
-        if (code.length === 6) {
-            console.log(code);
-            if (/^[0-9]+$/.test(code)) {
-                console.log(code);
-                validateCode();
-            } else {
-                absoluteToast(
-                    toast.error,
-                    'Error: input is invalid: value is not a number'
-                );
+    const validateCode = async () => {
+        try {
+            const codeString = code.join('');
+            if (/^[0-9]+$/.test(codeString)) {
+                toast.error('Error: input is invalid: value is not a number');
+                return;
             }
+            console.log('code ', codeString);
+            const response = await axiosPrivate.post(
+                '/2fa/validate',
+                {
+                    Code: codeString // Send the code as a JSON object
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            toast.success(response.data.message);
+            updateState({ F2A: true });
+        } catch (error) {
+            if (isAxiosError(error)) {
+                updateState({ F2A: false });
+                toast.error(error.response?.data.message);
+            }
+        } finally {
+            setCode(['', '', '', '', '', '']);
+        }
+    };
+
+    useEffect(() => {
+        if (code.every((char) => char !== '')) {
+            validateCode();
         }
     }, [code]);
 
@@ -58,16 +66,15 @@ const TwoFA = () => {
         try {
             await axiosPrivate.post('/2fa/disable');
             updateState({ F2A: false });
-            absoluteToast(toast.success, '2FA disable successfully');
+            toast.success('2FA disable successfully');
         } catch (error) {
             if (isAxiosError(error))
-                absoluteToast(
-                    toast.error,
+                toast.error(
                     " We're having a little trouble disabling 2FA right now.  Please try again in a few minutes."
                 );
         }
-        // ! post to /2fa/desable
     };
+
     useEffect(() => {
         const GenerateQRCode = async () => {
             try {
@@ -76,7 +83,6 @@ const TwoFA = () => {
                 console.log(image);
             } catch (error) {
                 console.error('Error fetching QR code:', error);
-                // Handle error (e.g., show toast notification)
             }
         };
 
@@ -128,7 +134,8 @@ const TwoFA = () => {
                 </div>
                 <div className="flex-col justify-center items-center gap-5 flex">
                     <CodeInput
-                        setter={setCode}
+                        code={code}
+                        HandleChangeType={handleChange}
                         hide={F2A}
                         style="w-[45px] h-[50px] text-center text-black text-xl relative bg-white
                 rounded-[10px] border border-neutral-400"

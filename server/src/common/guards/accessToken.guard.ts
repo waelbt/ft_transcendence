@@ -12,10 +12,10 @@ export class accessTokenGuard extends AuthGuard('jwt') {
             context.getHandler(),
             context.getClass(),
         ]);
-        console.log('ihhho hnaya');
+        // console.log('ihhho hnaya');
         if (isPublic)
             return true;
-        console.log('wlhma 3rft : ', super.canActivate(context));
+        // console.log('wlhma 3rft : ', super.canActivate(context));
         return super.canActivate(context);
     }
 }

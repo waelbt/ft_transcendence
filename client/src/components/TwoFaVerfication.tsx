@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import CodeInput from './CodeInput';
-import { absoluteToast } from '../tools';
 import { isAxiosError } from 'axios';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
@@ -20,11 +19,11 @@ function TwoFaVerfication() {
                     '/2fa/validate',
                     formData
                 );
-                absoluteToast(toast.success, response.data.message);
+                toast.success(response.data.message);
                 updateState({ verified: true });
             } catch (error) {
                 if (isAxiosError(error)) {
-                    absoluteToast(toast.error, error.response?.data.message);
+                    toast.error(error.response?.data.message);
                 }
             }
         };
@@ -34,10 +33,7 @@ function TwoFaVerfication() {
             if (/^[0-9]+$/.test(code)) {
                 validateCode();
             } else {
-                absoluteToast(
-                    toast.error,
-                    'Error: input is invalid: value is not a number'
-                );
+                toast.error('Error: input is invalid: value is not a number');
             }
         }
     }, [code]);
