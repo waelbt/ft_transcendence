@@ -4,7 +4,7 @@ import Verfication from '../pages/Verfication';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
-import {NavigationMenu, GlobalChat} from '.'
+import { NavigationMenu, GlobalChat } from '.';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
@@ -18,16 +18,22 @@ function Layout() {
             console.log(accessToken);
             try {
                 setIsLoading(true);
+                // ! convert this to a construct function
                 const { user, friends, block } = (
                     await axiosPrivate.get('/users/me')
                 ).data;
                 updateState({ active: true });
                 updateState(user);
-                updateState({ friends: friends, block: block });
-                const encodedFileName = encodeURIComponent(user.avatar);
                 updateState({
-                    avatar: `${import.meta.env.VITE_BASE_URL}${encodedFileName}`
-                }); // ! handle default image
+                    avatar: `${import.meta.env.VITE_UPLOADS_DESTINATION}/${
+                        user.data
+                    }`
+                });
+                updateState({ friends: friends, block: block });
+                // const encodedFileName = encodeURIComponent(user.avatar);
+                // updateState({
+                //     avatar: `${import.meta.env.VITE_BASE_URL}${encodedFileName}`
+                // }); // ! handle default image
 
                 initializeSocket(accessToken);
                 socket?.emit('message', { message: 'test' });

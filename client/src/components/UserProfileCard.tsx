@@ -1,4 +1,4 @@
-import { NavLink, useOutletContext } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
@@ -6,7 +6,8 @@ import { FC, useEffect, useState } from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
-import { actions } from 'react-table';
+import { ACTIONS_ENDPOINTS } from '../constants';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 type UserProfileCardProps = {
     id: string;
@@ -27,16 +28,16 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
         navLinks.push('setting'); //! protect this
     }
     const [actions, setActions] = useState<string[]>(['Block user']);
+    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
-        console.log('action  ', props.relationship);
         if (props.relationship) {
             let updatedActions = ['Block User']; // Default action
 
             switch (props.relationship) {
                 case 'friend':
                     updatedActions = [
-                        'Send Message',
+                        // 'Send Message',
                         'Remove Friend',
                         ...updatedActions
                     ];
@@ -54,16 +55,21 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                         ...updatedActions
                     ];
                     break;
-                // Default case is already handled by initializing updatedActions with 'Block'
             }
 
             setActions(updatedActions);
         }
-        // Define actions based on the props.relationshipship status
     }, [props.relationship]);
 
-    const handleAction = (action: string) => {
-        console.log(action);
+    const handleAction = async (action: string) => {
+        const endpoint = ACTIONS_ENDPOINTS[action];
+
+        try {
+            const response = await axiosPrivate.post(endpoint + '/' + props.id);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
@@ -127,27 +133,12 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 position="bottom center"
                                 nested
                             >
-                                {/* <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                        Add Friend
-                                    </div>
-                                </div>
-                                <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                        Block User
-                                    </div>
-                                </div>
-                                <div className="self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100">
-                                    <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                        Remove Friend
-                                    </div>
-                                </div> */}
                                 <div className="py-[5px] w-[200px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
                                     {actions?.map((action) => (
                                         <div
                                             key={action}
                                             className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                            // onClick={handleAction(action)}
+                                            onClick={() => handleAction(action)}
                                         >
                                             {action}
                                         </div>

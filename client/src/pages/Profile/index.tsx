@@ -1,30 +1,23 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { UserProfileCard } from '../../components/';
 import { useParams } from 'react-router-dom';
 import { useGetUserInfos } from '../../hooks/getUserInfos';
 import { useUserStore } from '../../stores/userStore';
 import Skeleton from 'react-loading-skeleton';
-import toast from 'react-hot-toast';
 
 export function Profile() {
     const { id: paramId } = useParams();
     const { id: userId } = useUserStore();
-    // const navigate = useNavigate()
-    // Determine the correct endpoint
     const isCurrentUser = paramId === 'me' || paramId === userId;
-    const endpoint = isCurrentUser ? '/users/me' : `/users/${paramId}/profile`;
-
-    const { data, isLoading, isError, error, refetch } = useGetUserInfos(
-        endpoint,
+    const { data, isLoading, isError, refetch } = useGetUserInfos(
+        paramId as string,
         ['profile', isCurrentUser ? 'me' : (paramId as string)],
         isCurrentUser
     );
 
     useEffect(() => {
-        // if (paramId === undefined)
-        //     navigate('/profile/me');
-        refetch(); // Refetch data when paramId changes
+        if (!isCurrentUser) refetch();
     }, [paramId, refetch]);
 
     if (isLoading) {
@@ -45,13 +38,10 @@ export function Profile() {
                         <Skeleton height={20} width={150} />
                     </div>
                 </div>
-                <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
-                    {' '}
-                    // ! seklton hre
-                </div>
+                <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow"></div>
             </div>
         );
-    } // or your custom loader component
+    }
 
     if (isError) {
         return <div>Error fetching profile</div>;
@@ -61,7 +51,7 @@ export function Profile() {
         <div className="flex-col h-full justify-center items-center inline-flex gap-5">
             <UserProfileCard
                 {...data.user}
-                relationship={isCurrentUser ? null : data.type.message}
+                relationship={isCurrentUser ? null : data.type?.message}
                 isCurrentUser={isCurrentUser}
             />
             <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">

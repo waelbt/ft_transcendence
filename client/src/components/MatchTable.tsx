@@ -20,7 +20,7 @@ const MatchTable = () => {
             }
         };
 
-        fetchData();
+        // fetchData();
     }, []);
 
     const columns = useMemo<Column<Match>[]>(

@@ -8,10 +8,12 @@ import { IoTrashOutline } from 'react-icons/io5';
 import useImageUpload from '../hooks/uploadImageHook';
 import { absoluteToast } from '../tools';
 import toast from 'react-hot-toast';
+import { HiLogout } from 'react-icons/hi';
+
 // import axios from 'axios';
 
 function ProfileCompletion() {
-    const { updateState } = useUserStore();
+    const { updateState, logout } = useUserStore();
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const axiosPrivate = useAxiosPrivate();
     const {
@@ -45,7 +47,7 @@ function ProfileCompletion() {
             );
         }
     };
-    
+
     return (
         <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5 mb-10">
             <div className="px-3.5 py-px flex-col justify-start items-start gap-12 flex">
@@ -173,6 +175,12 @@ function ProfileCompletion() {
                     fields={NICKNAME_FIELD}
                     onSubmit={handleSubmit}
                 />
+            </div>
+            <div
+                className="fixed inline-flex bottom-4 left-10 cursor-pointer mr-10 hover:underline underline-offset-1 text-white text-4xl font-normal font-['Acme']"
+                onClick={() => logout()}
+            >
+                leave
             </div>
         </div>
     );

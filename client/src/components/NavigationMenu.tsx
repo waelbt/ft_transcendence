@@ -94,8 +94,9 @@ function NavigationMenu() {
                                         key={index}
                                         className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
                                         onClick={() => {
-                                            field.path == '/' ? logout() : null;
-                                            navigate(field.path);
+                                            field.path == '/'
+                                                ? logout()
+                                                : navigate(field.path);
                                         }}
                                     >
                                         <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
