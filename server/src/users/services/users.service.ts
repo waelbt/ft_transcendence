@@ -105,14 +105,25 @@ export class UsersService {
         const user = await this.findOneUser(req.user.sub);
         if (!user)
             throw new NotFoundException(`User does not exist`);
-        console.log(file.filename);
-        return (file.filename);
+        
+        console.log('localhost:4000/upload/' + file.filename);
+        const filename = 'localhost:4000/upload/' + file.filename;
+        return (filename);
         // return (file.path);
     }
 
     async deleteImage(path: string) {
+        const url = 'localhost:4000/upload/';
+  
+        if (path.includes(url)) {
+          const splitedStrings = path.split(url);
+          var file = process.env.UPLOADS_DESTINATION + '/' + splitedStrings[1];
+        } else {
+          console.log('path: ', path);
+          return 'this is default it can not be deleted';
+        }
         try {
-            await this.deleteFile(path);
+            await this.deleteFile(file);
             return 'File deleted successfully';
         } catch (error) {
             return `Error deleting file: ${error.message}`;

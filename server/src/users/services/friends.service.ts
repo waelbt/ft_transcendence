@@ -87,9 +87,9 @@ export class friendsService {
             where: { userId1: userId2, userId2: userId1, status: 'pending' }
         });
 
-        console.log('wahd: ', userId1);
-        console.log('joj: ', userId2);
-        console.log('friends: ', friendship);
+        // console.log('wahd: ', userId1);
+        // console.log('joj: ', userId2);
+        // console.log('friends: ', friendship);
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
         }
