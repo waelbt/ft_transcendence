@@ -41,11 +41,11 @@ export const NICKNAME_FIELD = [
     }
 ];
 
-export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
-    'Remove Friend': '/friends/removeFriend/',
-    'Block User': '/users/blockUser/',
-    'Send Request': '/friends/sendFriendRequest/',
-    'Cancel Request': '/users/unblockUser/',
-    'Accept Request': '/friends/acceptFriendRequest/',
-    'Decline Request': '/friends/rejectFriendRequest/'
-};
+// export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
+//     'Remove Friend': '/friends/removeFriend/',
+//     'Block User': '/users/blockUser/',
+//     'Send Request': '/friends/sendFriendRequest/',
+//     'Cancel Request': '/users/unblockUser/',
+//     'Accept Request': '/friends/acceptFriendRequest/',
+//     'Decline Request': '/friends/rejectFriendRequest/'
+// };

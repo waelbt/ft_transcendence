@@ -6,8 +6,9 @@ import { FC, useEffect, useState } from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
-import { ACTIONS_ENDPOINTS } from '../constants';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useUserStore } from '../stores/userStore';
+// import { ACTIONS_ENDPOINTS } from '../constants';
 
 type UserProfileCardProps = {
     id: string;
@@ -24,6 +25,12 @@ type UserProfileCardProps = {
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     const navLinks = ['history', 'achivements', 'friends'];
+    const {
+        removeUserFriendId,
+        addUserBlockId,
+        removeUserBlockId,
+        addUserFriendId
+    } = useUserStore();
     if (props.isCurrentUser) {
         navLinks.push('setting'); //! protect this
     }
@@ -31,7 +38,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
-        console.log(props.relationship  )
+        console.log(props.relationship);
         if (props.relationship) {
             let updatedActions = ['Block User']; // Default action
 
@@ -63,10 +70,40 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     }, [props.relationship]);
 
     const handleAction = async (action: string) => {
-        const endpoint = ACTIONS_ENDPOINTS[action];
+        const ACTIONS_HANDLERS = {
+            'Remove Friend': async () => {
+                await axiosPrivate.post(`/friends/removeFriend/${props.id}`);
+                removeUserFriendId(props.id);
+            },
+            'Block User': async () => {
+                await axiosPrivate.post(`/users/blockUser/${props.id}`);
+                addUserBlockId(props.id);
+            },
+            'Send Request': async () => {
+                await axiosPrivate.post(
+                    `/friends/sendFriendRequest/${props.id}`
+                );
+                // Any additional logic if needed
+            },
+            'Cancel Request': async () => {
+                await axiosPrivate.post(`/users/unblockUser/${props.id}`);
+            },
+            'Accept Request': async () => {
+                await axiosPrivate.post(
+                    `/friends/acceptFriendRequest/${props.id}`
+                );
+                addUserFriendId(props.id);
+            },
+            'Decline Request': async () => {
+                await axiosPrivate.post(
+                    `/friends/rejectFriendRequest/${props.id}`
+                );
+            }
+        };
+        const endpoint = ACTIONS_HANDLERS[action];
 
         try {
-            const response = await axiosPrivate.post(endpoint + '/' + props.id);
+            // const response = await axiosPrivate.post(endpoint + '/' + props.id);
             console.log(response);
         } catch (e) {
             console.log(e);

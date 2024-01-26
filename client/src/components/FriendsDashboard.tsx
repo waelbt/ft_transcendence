@@ -47,7 +47,7 @@ const FriendsDashboard: React.FC = () => {
                             key={`friend${friendId}`}
                             friendId={friendId}
                         />
-
+                        {/* removeUserBlockId(props.id); */}
                         <MdCancel
                             className="text-neutral-200 cursor-pointer mr-4"
                             size={32}
@@ -60,3 +60,4 @@ const FriendsDashboard: React.FC = () => {
 };
 
 export default FriendsDashboard;
+// removeUserBlockId(props.id);
