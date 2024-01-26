@@ -1,10 +1,7 @@
-// import { request } from '../api';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
-// ! create a const object for defautl value to use it twice
 
 type UserStateType = {
     active: boolean;
@@ -21,8 +18,8 @@ type UserStateType = {
     F2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
-    friendsIds: string[]; //! rename to friendSId
-    blocksIds: string[]; //! rename to blockSId
+    friendsIds: string[];
+    blocksIds: string[];
 };
 
 type UserActionsType = {
@@ -90,13 +87,39 @@ export const useUserStore = createWithEqualityFn<
                         friendsIds: [],
                         blocksIds: []
                     },
-                    true // ? the state update should trigger a re-render of the components that subscribe to the store.
+                    true
                 );
             },
-            addUserFriendId: (id: string) => {},
-            removeUserFriendId: (id: string) => {},
-            addUserBlockId: (id: string) => {},
-            removeUserBlockId: (id: string) => {},
+            addUserFriendId: (id: string) => {
+                set((state) => {
+                    if (!state.friendsIds.includes(id)) {
+                        return { friendsIds: [...state.friendsIds, id] };
+                    }
+                    return state;
+                });
+            },
+            removeUserFriendId: (id: string) => {
+                set((state) => ({
+                    friendsIds: state.friendsIds.filter(
+                        (friendId) => friendId !== id
+                    )
+                }));
+            },
+            addUserBlockId: (id: string) => {
+                set((state) => {
+                    if (!state.blocksIds.includes(id)) {
+                        return { blocksIds: [...state.blocksIds, id] };
+                    }
+                    return state;
+                });
+            },
+            removeUserBlockId: (id: string) => {
+                set((state) => ({
+                    blocksIds: state.blocksIds.filter(
+                        (blockId) => blockId !== id
+                    )
+                }));
+            },
             updateState: (newState) =>
                 set((state) => ({ ...state, ...newState }))
         }),
