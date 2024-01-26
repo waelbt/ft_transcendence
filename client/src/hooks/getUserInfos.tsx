@@ -11,33 +11,40 @@ export const useGetUserInfos = (
     const { getState } = useUserStore();
 
     const fetchData = async () => {
-        const { data } = await axiosPrivate.get(`/users/${userId}/profile`);
-        return data;
+        const response = await axiosPrivate.get(`/users/${userId}/profile`);
+        return response.data;
     };
 
     const query = useQuery({
         queryKey: key,
         queryFn: fetchData,
         enabled: !isCurrentUser
-        // initialData: { user: getState() }
     });
+
     if (isCurrentUser) {
         const { friendsIds, blocksIds, ...user } = getState();
         return {
             isLoading: false,
             isError: false,
             error: null,
-            data: { friendsIds, blocksIds, user },
+            user,
+            friendsIds,
+            blocksIds,
             refetch: () => {
                 return { user: getState() };
             }
         };
     }
+
+    const { friendsIds, ...user } = query.data || {};
+
     return {
         isLoading: query.isLoading,
         isError: query.isError,
         error: query.error,
-        data: query.data,
+        user,
+        friendsIds,
+        blocksIds: [],
         refetch: query.refetch
     };
 };
