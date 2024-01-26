@@ -21,12 +21,12 @@ type UserStateType = {
     F2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
-    friends: string[];
-    block: string[];
+    friends: string[]; //! rename to friendSId
+    block: string[]; //! rename to blockSId
 };
 
 type UserActionsType = {
-    // constructor: (data : UserStateType) => void;
+    // constructor: (data: any) => void;
     getState: () => UserStateType;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;

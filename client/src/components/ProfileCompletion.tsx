@@ -13,6 +13,7 @@ function ProfileCompletion() {
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const axiosPrivate = useAxiosPrivate();
     const {
+        relativePath,
         progress,
         uploadData,
         imagePath,
@@ -24,15 +25,15 @@ function ProfileCompletion() {
 
     const handleSubmit = async (data: FieldValues) => {
         try {
-            if (success && imagePath) data['avatar'] = imagePath;
-            console.log(data);
+            if (success && imagePath) data['avatar'] = relativePath;
+            console.log('CONFIMATION DATA  ', data);
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             updateState({ nickName: data['nickName'] });
-            updateState({ avatar: data['avatar'] }); // ! handle default image
+            updateState({ avatar: imagePath });
             updateState({ completeProfile: true });
             updateState({ verified: true });
             toast.success('profile created successfully');
@@ -66,7 +67,7 @@ function ProfileCompletion() {
                             onChange={(event) => {
                                 const file = event.target.files?.[0];
                                 if (file) {
-                                    const objectURL = URL.createObjectURL( file);
+                                    const objectURL = URL.createObjectURL(file);
                                     setImagePath(objectURL);
                                     uploadData(file);
                                 }

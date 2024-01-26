@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-// import { useChatSocketStore } from '../stores/ChatSocketStore';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 import { NavigationMenu, GlobalChat } from '.';
 import { useEffectOnce } from 'usehooks-ts';
 
@@ -12,38 +12,9 @@ function Layout() {
     const { updateState, avatar, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    // const { initializeSocket, socket } = useChatSocketStore();
+    const { initializeSocket, socket } = useChatSocketStore();
 
-    useEffectOnce(() => {
-        const fetchData = async () => {
-            console.log(accessToken);
-            try {
-                setIsLoading(true);
-                // ! convert this to a construct function
-                const { user, friends, block } = (
-                    await axiosPrivate.get('/users/me')
-                ).data;
-                updateState({ active: true });
-                updateState(user);
-                updateState({
-                    avatar: `${
-                        import.meta.env.VITE_UPLOADS_DESTINATION
-                    }/${user.avatar?.replace(/ /g, '%20')}`
-                });
-                updateState({ friends: friends, block: block });
-                updateState({ verified: user.completeProfile && !user.F2A });
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        if (isLogged && !active) {
-            fetchData();
-        }
-    });
-
-    // useEffect(() => {
+    // useEffectOnce(() => {
     //     const fetchData = async () => {
     //         console.log(accessToken);
     //         try {
@@ -54,10 +25,11 @@ function Layout() {
     //             ).data;
     //             updateState({ active: true });
     //             updateState(user);
+    //             console.log(avatar);
     //             updateState({
     //                 avatar: `${
     //                     import.meta.env.VITE_UPLOADS_DESTINATION
-    //                 }/${user.avatar?.replace(/ /g, '%20')}`
+    //                 }/${encodeURIComponent(user.avatar)}`
     //             });
     //             updateState({ friends: friends, block: block });
     //             updateState({ verified: user.completeProfile && !user.F2A });
@@ -67,13 +39,43 @@ function Layout() {
     //             setIsLoading(false);
     //         }
     //     };
-    //     if (isLogged && !active) {
-    //         fetchData();
-    //     }
-    //     return () => {
-    //         socket?.disconnect();
-    //     };
-    // }, [isLogged]);
+    //     // if (isLogged && !active) {
+    //     fetchData();
+    //     // }
+    // });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log(accessToken);
+            try {
+                setIsLoading(true);
+                // ! convert this to a construct function
+                const { user, friends, block } = (
+                    await axiosPrivate.get('/users/me')
+                ).data;
+                updateState({ active: true });
+                updateState({ friends: friends, block: block });
+                updateState(user);
+                console.log('avatar  ', user.avatar);
+                updateState({
+                    avatar: `${
+                        import.meta.env.VITE_UPLOADS_DESTINATION
+                    }/${encodeURIComponent(user.avatar)}`
+                });
+                updateState({ verified: user.completeProfile && !user.F2A });
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (isLogged && !active) {
+            fetchData();
+        }
+        return () => {
+            socket?.disconnect();
+        };
+    }, [isLogged]);
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (

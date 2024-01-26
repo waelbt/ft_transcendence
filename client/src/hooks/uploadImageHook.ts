@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 
 const useImageUpload = () => {
     const [isloading, setIsloading] = useState(false);
+    const [relativePath, setRelativePath] = useState('');
     const [progress, setProgress] = useState(0);
     const [isFailed, setIsFailed] = useState<boolean>(false);
     const [success, setSuccess] = useState(false);
@@ -62,8 +63,11 @@ const useImageUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
+            setRelativePath(response.data);
             setImagePath(
-                `${import.meta.env.VITE_UPLOADS_DESTINATION}/${response.data}`
+                `${
+                    import.meta.env.VITE_UPLOADS_DESTINATION
+                }/${encodeURIComponent(response.data)}`
             );
             setSuccess(true);
         } catch (err) {
@@ -83,6 +87,7 @@ const useImageUpload = () => {
     };
 
     return {
+        relativePath,
         isloading,
         progress,
         isFailed,
