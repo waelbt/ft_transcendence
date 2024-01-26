@@ -56,12 +56,11 @@ function Layout() {
                 updateState({ active: true });
                 updateState({ friendsIds: friends, blocksIds: block });
                 updateState(user);
-                console.log('avatar  ', user.avatar);
+                console.log('before: ',user.avatar);
                 updateState({
-                    avatar: `${
-                        import.meta.env.VITE_UPLOADS_DESTINATION
-                    }/${encodeURIComponent(user.avatar)}`
+                    avatar: user.avatar
                 });
+                console.log(avatar);
                 updateState({ verified: user.completeProfile && !user.F2A });
             } catch (error) {
                 console.log(error);

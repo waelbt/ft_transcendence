@@ -22,7 +22,7 @@ function Setting() {
     const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
     const {
-        relativePath,
+        // relativePath,
         uploadData,
         imagePath,
         setImagePath,
@@ -54,8 +54,9 @@ function Setting() {
                 uploadData(file);
                 if (success) {
                     await axiosPrivate.post(
-                        `/users/UpdateAvatar/${relativePath}`
+                        `/users/UpdateAvatar/${imagePath}`
                     );
+                        // update end point put old and new path
                     if (imagePath) updateState({ avatar: imagePath });
                 }
             } catch (e) {

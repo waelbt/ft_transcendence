@@ -68,45 +68,37 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
             setActions(updatedActions);
         }
     }, [props.relationship]);
+    const actionEndpoints: { [key in string]: string } = {
+        'Remove Friend': `/friends/removeFriend/${props.id}`,
+        'Block User': `/users/blockUser/${props.id}`,
+        'Send Request': `/friends/sendFriendRequest/${props.id}`,
+        'Cancel Request': `/users/unblockUser/${props.id}`,
+        'Accept Request': `/friends/acceptFriendRequest/${props.id}`,
+        'Decline Request': `/friends/rejectFriendRequest/${props.id}`
+    };
+    const actionEffects: { [key in string]: (id: string) => void } = {
+        'Remove Friend': (id) => removeUserFriendId(id),
+        'Block User': (id) => addUserBlockId(id),
+        'Accept Request': (id) => addUserFriendId(id)
+    };
 
     const handleAction = async (action: string) => {
-        const ACTIONS_HANDLERS = {
-            'Remove Friend': async () => {
-                await axiosPrivate.post(`/friends/removeFriend/${props.id}`);
-                removeUserFriendId(props.id);
-            },
-            'Block User': async () => {
-                await axiosPrivate.post(`/users/blockUser/${props.id}`);
-                addUserBlockId(props.id);
-            },
-            'Send Request': async () => {
-                await axiosPrivate.post(
-                    `/friends/sendFriendRequest/${props.id}`
-                );
-                // Any additional logic if needed
-            },
-            'Cancel Request': async () => {
-                await axiosPrivate.post(`/users/unblockUser/${props.id}`);
-            },
-            'Accept Request': async () => {
-                await axiosPrivate.post(
-                    `/friends/acceptFriendRequest/${props.id}`
-                );
-                addUserFriendId(props.id);
-            },
-            'Decline Request': async () => {
-                await axiosPrivate.post(
-                    `/friends/rejectFriendRequest/${props.id}`
-                );
-            }
-        };
-        const endpoint = ACTIONS_HANDLERS[action];
+        const endpoint = actionEndpoints[action];
+        if (!endpoint) {
+            console.error(`No endpoint found for action: ${action}`);
+            return;
+        }
 
         try {
-            // const response = await axiosPrivate.post(endpoint + '/' + props.id);
-            console.log(response);
-        } catch (e) {
-            console.log(e);
+            const response = await axiosPrivate.post(endpoint);
+            console.log('Action response:', response);
+
+            const effect = actionEffects[action];
+            if (effect) {
+                effect(props.id);
+            }
+        } catch (error) {
+            console.error(`Error executing action '${action}':`, error);
         }
     };
 

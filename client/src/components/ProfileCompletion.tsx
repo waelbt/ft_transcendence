@@ -9,11 +9,10 @@ import useImageUpload from '../hooks/uploadImageHook';
 import toast from 'react-hot-toast';
 
 function ProfileCompletion() {
-    const { updateState, logout } = useUserStore();
+    const { updateState, avatar, logout } = useUserStore();
     const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
     const axiosPrivate = useAxiosPrivate();
     const {
-        relativePath,
         progress,
         uploadData,
         imagePath,
@@ -25,16 +24,15 @@ function ProfileCompletion() {
 
     const handleSubmit = async (data: FieldValues) => {
         try {
-            if (success && imagePath) data['avatar'] = relativePath;
-            console.log('CONFIMATION DATA  ', data);
+            data['avatar'] = success ? imagePath : avatar;
+            console.log(data)
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             updateState({ nickName: data['nickName'] });
-            if (imagePath)
-                updateState({ avatar: imagePath });
+            if (success && imagePath) updateState({ avatar: imagePath });
             updateState({ completeProfile: true });
             updateState({ verified: true });
             toast.success('profile created successfully');

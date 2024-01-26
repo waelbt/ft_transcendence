@@ -10,14 +10,16 @@ import { InvalidFileException } from './file.exception';
 export const multerOptions = {
     storage: diskStorage({
         destination: process.env.UPLOADS_DESTINATION,
-        filename: (req, file ,callback) => {
+        filename: (req, file, callback) => {
             const uniqueName =
                 Date.now() + '-' + Math.round(Math.random() * 1e9);
 
             const nameWithoutExtension = file.originalname.split('.')[0];
-
             const ext = extname(file.originalname);
-            const filename = `${nameWithoutExtension}-${uniqueName}${ext}`;
+            const filename = `${nameWithoutExtension.replace(
+                /\s+/g,
+                ''
+            )}-${uniqueName}${ext}`;
             callback(null, filename);
         }
     }),
@@ -48,7 +50,16 @@ export const multerOptions = {
     },
     // limits: { fileSize: 4 * 1024 * 1024 }, // 5MB
     key: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+
+        const nameWithoutExtension = file.originalname.split('.')[0];
+
+        const ext = extname(file.originalname);
+        const filename = `${nameWithoutExtension.replace(
+            /\s+/g,
+            ''
+        )}-${uniqueName}${ext}`;
         // Your custom filename logic here
-        cb(null, file.originalname + '-' + Date.now());
+        cb(null, filename);
     }
 };
