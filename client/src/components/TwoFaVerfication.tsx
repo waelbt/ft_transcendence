@@ -1,43 +1,92 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import CodeInput from './CodeInput';
 import { isAxiosError } from 'axios';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
+import { useDebounce } from 'usehooks-ts';
+
+// useEffect(() => {
+//     const validateCode = async () => {
+//         var formData = new FormData();
+//         formData.append('text', code);
+//         try {
+//             const response = await axiosPrivate.post(
+//                 '/2fa/validate',
+//                 formData
+//             );
+
+//         } catch (error) {
+//             if (isAxiosError(error)) {
+// toast.error(error.response?.data.message);
+//             }
+//         }
+//     };
+
+//     if (code.length === 6) {
+//         console.log(code);
+//         if (/^[0-9]+$/.test(code)) {
+//             validateCode();
+//         } else {
+//             toast.error('Error: input is invalid: value is not a number');
+//         }
+//     }
+// }, [code]);
 
 function TwoFaVerfication() {
-    const [code, setCode] = useState<string>('');
+    const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
     const { updateState } = useUserStore();
+    const debouncedValue = useDebounce<string[]>(code, 500);
 
-    useEffect(() => {
-        const validateCode = async () => {
-            var formData = new FormData();
-            formData.append('text', code);
-            try {
-                const response = await axiosPrivate.post(
-                    '/2fa/validate',
-                    formData
-                );
-                toast.success(response.data.message);
-                updateState({ verified: true });
-            } catch (error) {
-                if (isAxiosError(error)) {
-                    toast.error(error.response?.data.message);
-                }
+    const handleChange =
+        (index: number) => (event: FormEvent<HTMLInputElement>) => {
+            const newCode = [...code];
+            newCode[index] = event.currentTarget.value;
+
+            setCode(newCode);
+
+            if (event.currentTarget.value && index <= code.length - 1) {
+                document.getElementById(`input-${index + 1}`)?.focus();
             }
         };
 
-        if (code.length === 6) {
-            console.log(code);
-            if (/^[0-9]+$/.test(code)) {
-                validateCode();
-            } else {
+    const validateCode = async () => {
+        try {
+            const codeString = code.join('');
+            if (!/^[0-9]+$/.test(codeString)) {
                 toast.error('Error: input is invalid: value is not a number');
+                return;
             }
+            console.log('code ', codeString);
+            const response = await axiosPrivate.post(
+                '/2fa/validate',
+                {
+                    Code: codeString // Send the code as a JSON object
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            toast.success(response.data.message);
+            updateState({ verified: true });
+        } catch (error) {
+            if (isAxiosError(error)) {
+                toast.error(error.response?.data.message);
+            }
+        } finally {
+            setCode(['', '', '', '', '', '']);
         }
-    }, [code]);
+    };
 
+    useEffect(() => {
+        if (code.every((char) => char !== '')) {
+            console.log(code);
+            validateCode();
+        }
+    }, [debouncedValue]);
     return (
         <div className="h-80 flex-col justify-center items-center gap-[50px] inline-flex">
             <div className=" flex-col justify-center items-start gap-[30px] flex">
@@ -48,7 +97,7 @@ function TwoFaVerfication() {
                     Enter code from your two-factor authentication app
                 </div>
             </div>
-            <CodeInput setter={setCode} hide={false} />
+            <CodeInput code={code} HandleChangeType={handleChange} hide={F2A} />
         </div>
     );
 }
