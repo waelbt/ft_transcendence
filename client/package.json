@@ -41,6 +41,7 @@
         "reactjs-popup": "^2.0.6",
         "socket.io": "^4.7.2",
         "socket.io-client": "^4.7.2",
+        "usehooks-ts": "^2.10.0",
         "zustand": "^4.4.3"
     },
     "devDependencies": {

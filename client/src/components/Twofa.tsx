@@ -6,12 +6,13 @@ import { isAxiosError } from 'axios';
 import { useUserStore } from '../stores/userStore';
 import { IoIosLock } from 'react-icons/io';
 import { FormEvent } from 'react';
-
+import { useDebounce } from 'usehooks-ts';
 const TwoFA = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
     const { F2A, updateState } = useUserStore();
     const [image, setImage] = useState<string | null>(null);
+    const debouncedValue = useDebounce<string[]>(code, 500);
 
     const handleChange =
         (index: number) => (event: FormEvent<HTMLInputElement>) => {
@@ -28,7 +29,7 @@ const TwoFA = () => {
     const validateCode = async () => {
         try {
             const codeString = code.join('');
-            if (/^[0-9]+$/.test(codeString)) {
+            if (!/^[0-9]+$/.test(codeString)) {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
@@ -58,9 +59,10 @@ const TwoFA = () => {
 
     useEffect(() => {
         if (code.every((char) => char !== '')) {
+            console.log(code);
             validateCode();
         }
-    }, [code]);
+    }, [debouncedValue]);
 
     const toggleLock = async () => {
         try {
