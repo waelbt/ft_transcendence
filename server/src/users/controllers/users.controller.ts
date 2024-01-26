@@ -13,7 +13,8 @@ import {
     UnauthorizedException,
     HttpException,
     HttpStatus,
-    UseGuards
+    UseGuards,
+    Res
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import {
@@ -155,6 +156,26 @@ export class UsersController {
     @ApiOkResponse()
     removeUser(@Param('id') id: string) {
         return this.usersService.removeUser(String(id));
+    }
+
+    @Post('UpdateAvatar/:avatar')
+    async updateAvatar(
+        @Req() req,
+        @Res() res,
+        @Param('avatar') avatar: string
+    ) {
+        await this.usersService.updateAvatar(req.user.sub, avatar);
+        res.send('seccess');
+    }
+
+    @Post('UpdateNickName/:nickName')
+    async updateNickname(
+        @Req() req,
+        @Res() res,
+        @Param('nickName') name: string
+    ) {
+        await this.usersService.updateNickName(req.user.sub, name);
+        res.send('seccess');
     }
 
     @Post(':userId/blockUser/:blockedUserId')

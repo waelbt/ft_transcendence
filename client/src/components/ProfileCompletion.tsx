@@ -33,7 +33,8 @@ function ProfileCompletion() {
                 }
             });
             updateState({ nickName: data['nickName'] });
-            updateState({ avatar: imagePath });
+            if (imagePath)
+                updateState({ avatar: imagePath });
             updateState({ completeProfile: true });
             updateState({ verified: true });
             toast.success('profile created successfully');

@@ -7,21 +7,26 @@ import { ProfileOutletContextType } from '../types/global';
 import { useUserStore } from '../stores/userStore';
 import useImageUpload from '../hooks/uploadImageHook';
 // import { absoluteToast } from '../tools';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+
 import toast from 'react-hot-toast';
+import { FieldValues } from 'react-hook-form';
 
 function Setting() {
-    const { nickName, avatar } = useUserStore();
+    const { nickName, avatar, updateState } = useUserStore();
     const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
         isCurrentUser: false
     };
+    const axiosPrivate = useAxiosPrivate();
+
     const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
     const {
+        relativePath,
         uploadData,
         imagePath,
         setImagePath,
-        deleteData,
-        isFailed,
+        // deleteData,
         success
     } = useImageUpload();
 
@@ -30,11 +35,34 @@ function Setting() {
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
     }, [isCurrentUser]);
 
+    const updateNickname = async (data: FieldValues) => {
+        try {
+            // const oldAvatar = avatar;
+            await axiosPrivate.post(`/users/UpdateNickName/${data.nickName}`);
+            updateState({ nickName: data['nickName'] });
+            toast.success('nickname updated successfully');
+            // await delelte old path
+        } catch (e) {
+            console.log(e);
+            toast.error('that name is already taken. try a different one');
+        }
+    };
 
-    // useEffect(() => {
-
-    // }, secc)
-    // const onSubmit = () => {};
+    const updateAvatar = async () => {
+        if (file) {
+            try {
+                uploadData(file);
+                if (success) {
+                    await axiosPrivate.post(
+                        `/users/UpdateAvatar/${relativePath}`
+                    );
+                    if (imagePath) updateState({ avatar: imagePath });
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        } else toast.error('no image selected');
+    };
 
     return (
         <div className="h-full w-full gap-8 px-[60px] py-2.5 rounded-[20px] shadow justify-between items-center inline-flex ">
@@ -84,8 +112,7 @@ function Setting() {
                                 <div
                                     className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 "
                                     onClick={() => {
-                                        if (file) uploadData(file);
-                                        else toast.error('not to upload');
+                                        updateAvatar();
                                     }}
                                 >
                                     Upload Now
@@ -115,6 +142,7 @@ function Setting() {
                                 }
                             }
                         ]}
+                        onSubmit={updateNickname}
                     />
                 </div>
             </div>

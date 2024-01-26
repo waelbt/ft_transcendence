@@ -31,6 +31,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
+        console.log(props.relationship  )
         if (props.relationship) {
             let updatedActions = ['Block User']; // Default action
 

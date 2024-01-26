@@ -70,8 +70,26 @@ export class UsersService {
         });
     }
 
-    updateUser(id: string, user: User) {
-        return this.prisma.user.update({
+    async updateAvatar(id: string, avatar: string) {
+        const Avatar = await this.prisma.user.update({
+            where: { id: id },
+            data: {
+                avatar: avatar
+            }
+        });
+    }
+
+    async updateNickName(id: string, name: string) {
+        const nickName = await this.prisma.user.update({
+            where: { id: id },
+            data: {
+                nickName: name
+            }
+        });
+    }
+
+    async updateUser(id: string, user: User) {
+        return await this.prisma.user.update({
             where: { id },
             data: user
         });

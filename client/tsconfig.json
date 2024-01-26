@@ -20,13 +20,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": [
-        "src/**/*",
-        "types/**/*",
-        "deprecated/LoginForm.tsx",
-        "deprecated/RegisterForm.tsx",
-        "deprecated/context",
-        "deprecated/authHook.ts"
-    ],
+    "include": ["src/**/*", "types/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

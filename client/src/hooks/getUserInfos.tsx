@@ -18,10 +18,20 @@ export const useGetUserInfos = (
     const query = useQuery({
         queryKey: key,
         queryFn: fetchData,
-        enabled: !isCurrentUser,
-        initialData: { user: getState() }
+        enabled: !isCurrentUser
+        // initialData: { user: getState() }
     });
-
+    if (isCurrentUser) {
+        return {
+            isLoading: false,
+            isError: false,
+            error: null,
+            data: { user: getState() },
+            refetch: () => {
+                return { user: getState() };
+            }
+        };
+    }
     return {
         isLoading: query.isLoading,
         isError: query.isError,
