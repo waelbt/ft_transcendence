@@ -5,7 +5,7 @@ import { ProfileOutletContextType } from '../types/global';
 import { MdCancel } from 'react-icons/md';
 
 const FriendsDashboard: React.FC = () => {
-    const { isCurrentUser, friendsIds, blocksIds, paramId } =
+    const { isCurrentUser, friendsIds, blocksIds } =
         useOutletContext<ProfileOutletContextType>();
     const fields = ['all', 'blocked']; // !context
     const [friendsIdList, setFriendsIdList] = useState<string[]>([]);
@@ -13,8 +13,8 @@ const FriendsDashboard: React.FC = () => {
 
     useEffect(() => {
         filter == 'all'
-            ? setFriendsIdList(friends ? friends : [])
-            : setFriendsIdList(block ? block : []);
+            ? setFriendsIdList(friendsIds ? friendsIds : [])
+            : setFriendsIdList(blocksIds ? blocksIds : []);
     }, [filter]);
 
     return (
