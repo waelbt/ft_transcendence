@@ -20,15 +20,12 @@ export class AuthService {
     ) {}
 
     async setUpTokens(@Req() req, @Res() res, id: string) {
-        console.log('ann  = ', req.user);
         var isUser = await this.usersService.findOneUser(id);
         if (!isUser) await this.usersService.createUser(req.user, id);
         const { accessToken } = await this.generateATRT(res, req.user);
         const user = await this.usersService.getOneUser(id);
         req.res.setHeader('Authorization', `Bearer ${accessToken}`);
         console.log(accessToken);
-        console.log('sub: ', req.user.id);
-        console.log('avatar : ', req.user.Avatar);
         await this.usersService.updateAvatar(req.user.id, req.user.Avatar);
         // if (isUser) res.json({ message: 'User created', user: user });
         res.redirect(

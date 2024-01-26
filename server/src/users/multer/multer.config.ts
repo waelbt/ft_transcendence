@@ -10,7 +10,7 @@ import { InvalidFileException } from './file.exception';
 export const multerOptions = {
     storage: diskStorage({
         destination: process.env.UPLOADS_DESTINATION,
-        filename: (req, file, callback) => {
+        filename: (req, file ,callback) => {
             const uniqueName =
                 Date.now() + '-' + Math.round(Math.random() * 1e9);
 
