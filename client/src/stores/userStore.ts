@@ -21,8 +21,8 @@ type UserStateType = {
     F2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
-    friends: string[]; //! rename to friendSId
-    block: string[]; //! rename to blockSId
+    friendsIds: string[]; //! rename to friendSId
+    blocksIds: string[]; //! rename to blockSId
 };
 
 type UserActionsType = {
@@ -30,6 +30,10 @@ type UserActionsType = {
     getState: () => UserStateType;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
+    addUserFriendId: (id: string) => void;
+    removeUserFriendId: (id: string) => void;
+    addUserBlockId: (id: string) => void;
+    removeUserBlockId: (id: string) => void;
 };
 
 // ? remove storing in local storage and test the behavior
@@ -52,10 +56,18 @@ export const useUserStore = createWithEqualityFn<
             F2A: false,
             inGame: false,
             completeProfile: false,
-            friends: [],
-            block: [],
+            friendsIds: [],
+            blocksIds: [],
             getState: () => {
-                const { logout, updateState, getState, ...restOfState } = get();
+                const {
+                    logout,
+                    updateState,
+                    getState,
+                    addUserFriendId,
+                    removeUserFriendId,
+                    addUserBlockId,
+                    ...restOfState
+                } = get();
                 return restOfState;
             },
             logout: () => {
@@ -75,12 +87,16 @@ export const useUserStore = createWithEqualityFn<
                         F2A: false,
                         inGame: false,
                         completeProfile: false,
-                        friends: [],
-                        block: []
+                        friendsIds: [],
+                        blocksIds: []
                     },
                     true // ? the state update should trigger a re-render of the components that subscribe to the store.
                 );
             },
+            addUserFriendId: (id: string) => {},
+            removeUserFriendId: (id: string) => {},
+            addUserBlockId: (id: string) => {},
+            removeUserBlockId: (id: string) => {},
             updateState: (newState) =>
                 set((state) => ({ ...state, ...newState }))
         }),

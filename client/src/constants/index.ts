@@ -42,11 +42,10 @@ export const NICKNAME_FIELD = [
 ];
 
 export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
-    // 'Send Message': '/api/send-message',
-    'Remove Friend': '/api/remove-friend', ///friends/removeFriend/{friendId}
-    'Block User': '/users/blockUser/', // /users/{userId}/blockUser/{blockedUserId}
-    'Send Request': '/api/send-request', ///friends/sendFriendRequest/{friendId}
-    'Cancel Request': '/api/cancel-request', ///users/{userId}/unblockUser/{unblockedUserId}
-    'Accept Request': '/api/accept-request', ///friends/acceptFriendRequest/{friendId}
-    'Decline Request': '/api/decline-request' //w~/friends/rejectFriendRequest/{friendId}
+    'Remove Friend': '/friends/removeFriend/',
+    'Block User': '/users/blockUser/',
+    'Send Request': '/friends/sendFriendRequest/',
+    'Cancel Request': '/users/unblockUser/',
+    'Accept Request': '/friends/acceptFriendRequest/',
+    'Decline Request': '/friends/rejectFriendRequest/'
 };

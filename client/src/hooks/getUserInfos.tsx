@@ -22,11 +22,12 @@ export const useGetUserInfos = (
         // initialData: { user: getState() }
     });
     if (isCurrentUser) {
+        const { friendsIds, blocksIds, ...user } = getState();
         return {
             isLoading: false,
             isError: false,
             error: null,
-            data: { user: getState() },
+            data: { friendsIds, blocksIds, user },
             refetch: () => {
                 return { user: getState() };
             }

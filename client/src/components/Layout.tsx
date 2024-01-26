@@ -54,7 +54,7 @@ function Layout() {
                     await axiosPrivate.get('/users/me')
                 ).data;
                 updateState({ active: true });
-                updateState({ friends: friends, block: block });
+                updateState({ friendsIds: friends, blocksIds: block });
                 updateState(user);
                 console.log('avatar  ', user.avatar);
                 updateState({
