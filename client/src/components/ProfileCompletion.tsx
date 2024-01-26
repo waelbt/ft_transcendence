@@ -66,7 +66,7 @@ function ProfileCompletion() {
                             onChange={(event) => {
                                 const file = event.target.files?.[0];
                                 if (file) {
-                                    const objectURL = URL.createObjectURL(file);
+                                    const objectURL = URL.createObjectURL( file);
                                     setImagePath(objectURL);
                                     uploadData(file);
                                 }

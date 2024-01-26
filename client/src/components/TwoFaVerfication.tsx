@@ -6,33 +6,6 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { useDebounce } from 'usehooks-ts';
 
-// useEffect(() => {
-//     const validateCode = async () => {
-//         var formData = new FormData();
-//         formData.append('text', code);
-//         try {
-//             const response = await axiosPrivate.post(
-//                 '/2fa/validate',
-//                 formData
-//             );
-
-//         } catch (error) {
-//             if (isAxiosError(error)) {
-// toast.error(error.response?.data.message);
-//             }
-//         }
-//     };
-
-//     if (code.length === 6) {
-//         console.log(code);
-//         if (/^[0-9]+$/.test(code)) {
-//             validateCode();
-//         } else {
-//             toast.error('Error: input is invalid: value is not a number');
-//         }
-//     }
-// }, [code]);
-
 function TwoFaVerfication() {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
@@ -78,6 +51,7 @@ function TwoFaVerfication() {
             }
         } finally {
             setCode(['', '', '', '', '', '']);
+            document.getElementById(`input-0`)?.focus();
         }
     };
 
