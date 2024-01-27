@@ -28,6 +28,7 @@ export const useGetUserInfos = (
             isError: false,
             error: null,
             user,
+            relation: 'myself',
             friendsIds,
             blocksIds,
             refetch: () => {
@@ -36,13 +37,14 @@ export const useGetUserInfos = (
         };
     }
 
-    const { friendsIds, ...user } = query.data || {};
+    const { friendsIds, type, user } = query.data || {};
 
     return {
         isLoading: query.isLoading,
         isError: query.isError,
         error: query.error,
         user,
+        relation: type.message,
         friendsIds,
         blocksIds: [],
         refetch: query.refetch

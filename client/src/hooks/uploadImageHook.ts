@@ -65,8 +65,11 @@ const useImageUpload = () => {
             );
             // setRelativePath(response.data);
             setImagePath(response.data);
-            console.log(response.data)
+            console.log(response.data);
             setSuccess(true);
+            setIsloading(false);
+
+            return true;
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(
@@ -75,11 +78,11 @@ const useImageUpload = () => {
                 );
             }
             setIsFailed(true);
+            setIsloading(false);
 
             setImagePath(null);
             setProgress(0);
-        } finally {
-            setIsloading(false);
+            return false;
         }
     };
 

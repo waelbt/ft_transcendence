@@ -25,7 +25,7 @@ function ProfileCompletion() {
     const handleSubmit = async (data: FieldValues) => {
         try {
             data['avatar'] = success ? imagePath : avatar;
-            console.log(data)
+            console.log(data);
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
@@ -63,12 +63,12 @@ function ProfileCompletion() {
                             className="hidden"
                             id="inputTag"
                             type="file"
-                            onChange={(event) => {
+                            onChange={async (event) => {
                                 const file = event.target.files?.[0];
                                 if (file) {
                                     const objectURL = URL.createObjectURL(file);
                                     setImagePath(objectURL);
-                                    uploadData(file);
+                                    await uploadData(file);
                                 }
                             }}
                         />

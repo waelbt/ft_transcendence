@@ -51,12 +51,22 @@ function Setting() {
     const updateAvatar = async () => {
         if (file) {
             try {
-                uploadData(file);
+                const success = await uploadData(file);
                 if (success) {
-                    await axiosPrivate.post(
-                        `/users/UpdateAvatar/${imagePath}`
+                    const res = await axiosPrivate.post(
+                        `/users/UpdateAvatar`,
+                        {
+                            oldAvatar: avatar,
+                            newAvatar: imagePath
+                        },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
                     );
-                        // update end point put old and new path
+                    console.log('res', res);
+                    // update end point put old and new path
                     if (imagePath) updateState({ avatar: imagePath });
                 }
             } catch (e) {
@@ -81,8 +91,8 @@ function Setting() {
                         </div>
                         <div className="pt-5 pb-2.5 w-full justify-between items-center gap-[30px] inline-flex">
                             <Avatar
-                                imageUrl={imagePath ? imagePath : avatar}
-                                style="w-32 h-32"
+                                imageUrl={imagePath}
+                                style="w-32 h-32 cursor-default"
                             />
                             <div className="flex-col justify-center items-start gap-4 inline-flex ">
                                 <input
@@ -90,7 +100,8 @@ function Setting() {
                                     id="inputImage"
                                     type="file"
                                     onChange={(event) => {
-                                        setFIle(event.target.files?.[0]);
+                                        const file = event.target.files?.[0];
+                                        setFIle(file);
                                         if (file) {
                                             const objectURL =
                                                 URL.createObjectURL(file);

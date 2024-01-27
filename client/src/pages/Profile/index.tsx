@@ -10,12 +10,20 @@ export function Profile() {
     const { id: paramId } = useParams();
     const { id: userId } = useUserStore();
     const isCurrentUser = paramId === 'me' || paramId === userId;
-    const { user, friendsIds, blocksIds, isLoading, isError, error, refetch } =
-        useGetUserInfos(
-            paramId as string,
-            ['profile', isCurrentUser ? 'me' : (paramId as string)],
-            isCurrentUser
-        );
+    const {
+        user,
+        relation,
+        friendsIds,
+        blocksIds,
+        isLoading,
+        isError,
+        error,
+        refetch
+    } = useGetUserInfos(
+        paramId as string,
+        ['profile', isCurrentUser ? 'me' : (paramId as string)],
+        isCurrentUser
+    );
     useEffect(() => {
         refetch();
     }, [
@@ -24,6 +32,10 @@ export function Profile() {
         refetch,
         error
     ]);
+
+    useEffect(() => {
+        console.log(relation);
+    }, [relation]);
     if (isLoading) {
         return (
             <div className="flex-col h-full justify-center items-center inline-flex gap-5">
@@ -55,7 +67,7 @@ export function Profile() {
         <div className="flex-col h-full justify-center items-center inline-flex gap-5">
             <UserProfileCard
                 {...user}
-                relationship={isCurrentUser ? null : user.type?.message}
+                relationship={relation}
                 isCurrentUser={isCurrentUser}
             />
             <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">

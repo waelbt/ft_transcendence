@@ -12,7 +12,7 @@ function Layout() {
     const { updateState, avatar, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket, socket } = useChatSocketStore();
+    const { socket } = useChatSocketStore();
 
     // useEffectOnce(() => {
     //     const fetchData = async () => {
