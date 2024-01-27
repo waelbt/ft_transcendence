@@ -44,7 +44,7 @@ export const useGetUserInfos = (
         isError: query.isError,
         error: query.error,
         user,
-        relation: type.message,
+        relation: type?.message,
         friendsIds,
         blocksIds: [],
         refetch: query.refetch

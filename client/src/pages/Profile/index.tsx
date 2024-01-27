@@ -24,6 +24,7 @@ export function Profile() {
         ['profile', isCurrentUser ? 'me' : (paramId as string)],
         isCurrentUser
     );
+
     useEffect(() => {
         refetch();
     }, [

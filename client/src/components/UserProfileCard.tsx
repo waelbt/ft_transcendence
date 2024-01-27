@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
@@ -20,26 +20,32 @@ type UserProfileCardProps = {
     exp: 0;
     level: 0;
     isCurrentUser: boolean;
-    relationship: string | null;
+    relationship: string;
 };
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     const navLinks = ['history', 'achivements', 'friends'];
-    const {
-        removeUserFriendId,
-        addUserBlockId,
-        removeUserBlockId,
-        addUserFriendId
-    } = useUserStore();
+    const { removeUserFriendId, addUserBlockId, addUserFriendId } =
+        useUserStore();
     if (props.isCurrentUser) {
         navLinks.push('setting'); //! protect this
     }
+    const navigate = useNavigate();
     const [actions, setActions] = useState<string[]>(['Block user']);
     const axiosPrivate = useAxiosPrivate();
+    const [relation, setRelation] = useState<string>(props.relationship);
+    const actionToNewRelation: { [key: string]: string } = {
+        'Remove Friend': 'not friend',
+        'Block User': 'blocked',
+        'Send Request': 'invitation sender',
+        'Cancel Request': 'not friend',
+        'Accept Request': 'friend',
+        'Decline Request': 'not friend'
+    };
 
     useEffect(() => {
-        console.log(props.relationship);
         if (props.relationship) {
+            if (props.relationship == 'blocked') navigate('/error/403');
             let updatedActions = ['Block User']; // Default action
 
             switch (props.relationship) {
@@ -53,7 +59,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                 case 'not friend':
                     updatedActions = ['Send Request', ...updatedActions];
                     break;
-                case 'invitation sender':
+                case 'pending':
                     updatedActions = ['Cancel Request', ...updatedActions];
                     break;
                 case 'invitation receiver':
@@ -64,10 +70,9 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     ];
                     break;
             }
-
             setActions(updatedActions);
         }
-    }, [props.relationship]);
+    }, [relation]);
     const actionEndpoints: { [key in string]: string } = {
         'Remove Friend': `/friends/removeFriend/${props.id}`,
         'Block User': `/users/blockUser/${props.id}`,
@@ -96,6 +101,9 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
             const effect = actionEffects[action];
             if (effect) {
                 effect(props.id);
+            }
+            if (actionToNewRelation[action]) {
+                setRelation(actionToNewRelation[action]);
             }
         } catch (error) {
             console.error(`Error executing action '${action}':`, error);
