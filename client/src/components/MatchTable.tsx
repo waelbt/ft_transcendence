@@ -4,23 +4,24 @@ import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
 
-import { ProfileOutletContextType } from '../types/global';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
-
+    const axiosPrivate = useAxiosPrivate();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/matches');
-                const matches: Match[] = await response.json();
+                const matches: Match[] = (
+                    await axiosPrivate.get('/users/historyMatches')
+                ).data();
                 setData(matches);
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-        // fetchData();
+        fetchData();
     }, []);
 
     const columns = useMemo<Column<Match>[]>(

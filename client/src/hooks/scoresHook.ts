@@ -27,7 +27,7 @@ export function useScores() {
                             contact: socket,
                             id: id
                         })
-                    }).then((res) => console.log('data 1 ', res.json()));
+                    }).then((res) => // console.log('data 1 ', res.json()));
                     socket.emit('gameended');
                     window.location.reload();
                 }

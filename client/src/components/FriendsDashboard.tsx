@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import FriendCard from './FriendDataPreviou';
+// import FriendCard from './FriendDataPreviou';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { MdCancel } from 'react-icons/md';
+import FriendDataPreviou from './FriendDataPreviou';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 const FriendsDashboard: React.FC = () => {
     const { isCurrentUser, friendsIds, blocksIds } =
         useOutletContext<ProfileOutletContextType>();
-    const fields = ['all', 'blocked']; // !context
+    const fields = ['all', 'blocked'];
     const [friendsIdList, setFriendsIdList] = useState<string[]>([]);
     const [filter, setFilter] = useState('all');
-
+    const axiosPrivate = useAxiosPrivate();
     useEffect(() => {
         filter == 'all'
             ? setFriendsIdList(friendsIds ? friendsIds : [])
             : setFriendsIdList(blocksIds ? blocksIds : []);
     }, [filter]);
+
+    const handleUnblock = async (userId: string) => {
+        try {
+            await axiosPrivate.post(`/users/unblockUser/${userId}`);
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.message);
+        }
+    };
 
     return (
         <div className="overflow-y-auto max-h-[560px] w-full ">
@@ -43,15 +55,17 @@ const FriendsDashboard: React.FC = () => {
             <div className="flex flex-col w-full">
                 {friendsIdList.map((friendId: string) => (
                     <div className="flex py-4 border-b border-gray-200 justify-between items-center w-full ">
-                        <FriendCard
+                        <FriendDataPreviou
                             key={`friend${friendId}`}
                             friendId={friendId}
                         />
-                        {/* removeUserBlockId(props.id); */}
-                        <MdCancel
-                            className="text-neutral-200 cursor-pointer mr-4"
-                            size={32}
-                        />
+                        {filter === 'blocked' && (
+                            <MdCancel
+                                className="text-neutral-200 cursor-pointer mr-4"
+                                size={32}
+                                onclick={() => handleUnblock(friendId)}
+                            />
+                        )}
                     </div>
                 ))}
             </div>

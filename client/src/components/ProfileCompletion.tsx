@@ -25,7 +25,6 @@ function ProfileCompletion() {
     const handleSubmit = async (data: FieldValues) => {
         try {
             data['avatar'] = success ? imagePath : avatar;
-            console.log(data);
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'

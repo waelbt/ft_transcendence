@@ -46,7 +46,7 @@ export function Game() {
             updateState({ secondPaddlePos: newPosition });
 
         const playerDisconnectedListener = async () => {
-            console.log('player disconnected');
+            // console.log('player disconnected');
             const response = axiosPrivate.post(
                 '/game/create', //! post gane results
                 JSON.stringify({ room: 'dzdzed', id: id }),
@@ -56,7 +56,7 @@ export function Game() {
                     }
                 }
             );
-            console.log(response);
+            // console.log(response);
             // fetch('http://localhost:3001/game1', {
             //     method: 'POST',
             //     mode: 'no-cors',
@@ -64,7 +64,7 @@ export function Game() {
             //         'Content-Type': 'application/json'
             //     },
             //     body: JSON.stringify({ room: 'dzdzed', id: id })
-            // }).then((res) => console.log('data 1 ', res.json()));
+            // }).then((res) => // console.log('data 1 ', res.json()));
             window.location.reload();
         };
 

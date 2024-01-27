@@ -16,8 +16,8 @@ export const useSocketStore = create<SocketStateType & SocketActionType>(
         socket: socket,
         connect: () => {
             socket.on('connect', () => {
-                console.log('connected!');
-                console.log(socket.id);
+                // console.log('connected!');
+                // console.log(socket.id);
             });
         }
     })

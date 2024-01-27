@@ -16,14 +16,14 @@ function GlobalChat() {
     const [message, setMessage] = useState('');
     const { socket } = useChatSocketStore();
     const sendMessage = () => {
-        console.log(message);
+        // console.log(message);
         // socket.emit('');
         setMessage(''); // Clear the input after sending
     };
     useEffect(() => {
-         socket?.emit('globalChat', { message: 'test' });
+        socket?.emit('globalChat', { message: 'test' });
 
-        // console.log(params);
+        // // console.log(params);
     }, [socket]);
 
     return (

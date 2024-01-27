@@ -31,7 +31,6 @@ function Setting() {
     } = useImageUpload();
 
     useEffect(() => {
-        console.log(avatar);
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
     }, [isCurrentUser]);
 
@@ -43,7 +42,6 @@ function Setting() {
             toast.success('nickname updated successfully');
             // await delelte old path
         } catch (e) {
-            console.log(e);
             toast.error('that name is already taken. try a different one');
         }
     };
@@ -65,12 +63,11 @@ function Setting() {
                             }
                         }
                     );
-                    console.log('res', res);
                     // update end point put old and new path
                     if (imagePath) updateState({ avatar: imagePath });
                 }
             } catch (e) {
-                console.log(e);
+                // console.log(e); // ! here
             }
         } else toast.error('no image selected');
     };

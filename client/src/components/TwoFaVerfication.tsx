@@ -31,7 +31,6 @@ function TwoFaVerfication() {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            console.log('code ', codeString);
             const response = await axiosPrivate.post(
                 '/2fa/validate',
                 {
@@ -57,7 +56,6 @@ function TwoFaVerfication() {
 
     useEffect(() => {
         if (code.every((char) => char !== '')) {
-            console.log(code);
             validateCode();
         }
     }, [debouncedValue]);

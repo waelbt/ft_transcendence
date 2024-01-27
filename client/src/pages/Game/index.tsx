@@ -161,7 +161,7 @@ export function Game() {
     }, [mode, history]);
 
     React.useEffect(() => {
-        console.log('userid ', id);
+        // console.log('userid ', id);
         socket.on('leftscored', () => {
             setLeftScore((prevScore: number) => {
                 const newScore = prevScore + 1;
@@ -177,7 +177,7 @@ export function Game() {
                             contact: socket,
                             id: id
                         })
-                    }).then((res) => console.log('data 1 ', res.json()));
+                    }).then((res) => // console.log('data 1 ', res.json()));
                     socket.emit('gameended');
                     window.location.reload();
                 }
@@ -228,7 +228,7 @@ export function Game() {
             //     leftcolor = 'white';
             //     rightcolor = 'white';
             // }
-            console.log('player status: ', isSecondPlayer);
+            // console.log('player status: ', isSecondPlayer);
             setIsGameReady(true);
             roomid = room;
         });
@@ -298,7 +298,7 @@ export function Game() {
 
     React.useEffect(() => {
         socket.on('PlayerDisconnected', async () => {
-            console.log('player disconnected');
+            // console.log('player disconnected');
             fetch('http://localhost:3001/game1', {
                 method: 'POST',
                 mode: 'no-cors',
@@ -306,7 +306,7 @@ export function Game() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ room: 'dzdzed', id: id })
-            }).then((res) => console.log('data 1 ', res.json()));
+            }).then((res) => // console.log('data 1 ', res.json()));
             window.location.reload();
         });
         return () => {

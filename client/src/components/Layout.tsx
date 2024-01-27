@@ -16,7 +16,7 @@ function Layout() {
 
     // useEffectOnce(() => {
     //     const fetchData = async () => {
-    //         console.log(accessToken);
+    //         // console.log(accessToken);
     //         try {
     //             setIsLoading(true);
     //             // ! convert this to a construct function
@@ -25,7 +25,7 @@ function Layout() {
     //             ).data;
     //             updateState({ active: true });
     //             updateState(user);
-    //             console.log(avatar);
+    //             // console.log(avatar);
     //             updateState({
     //                 avatar: `${
     //                     import.meta.env.VITE_UPLOADS_DESTINATION
@@ -34,7 +34,7 @@ function Layout() {
     //             updateState({ friends: friends, block: block });
     //             updateState({ verified: user.completeProfile && !user.F2A });
     //         } catch (error) {
-    //             console.log(error);
+    //             // console.log(error);
     //         } finally {
     //             setIsLoading(false);
     //         }
@@ -46,7 +46,7 @@ function Layout() {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(accessToken);
+            // console.log('accesstoken', accessToken);
             try {
                 setIsLoading(true);
                 // ! convert this to a construct function
@@ -56,14 +56,12 @@ function Layout() {
                 updateState({ active: true });
                 updateState({ friendsIds: friends, blocksIds: block });
                 updateState(user);
-                console.log('before: ',user.avatar);
                 updateState({
                     avatar: user.avatar
                 });
-                console.log(avatar);
                 updateState({ verified: user.completeProfile && !user.F2A });
             } catch (error) {
-                console.log(error);
+                // console.log(error); //! handle this
             } finally {
                 setIsLoading(false);
             }

@@ -35,7 +35,7 @@ export function Profile() {
     ]);
 
     useEffect(() => {
-        console.log(relation);
+        // console.log(relation);
     }, [relation]);
     if (isLoading) {
         return (

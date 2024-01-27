@@ -11,7 +11,7 @@ interface AvatarProps {
     reset: () => void;
 }
 
-// !add the upload endpoint + fix logic 
+// !add the upload endpoint + fix logic
 const AvatarUploader: FC<AvatarProps> = ({
     imageUrl,
     // upload,
@@ -29,7 +29,7 @@ const AvatarUploader: FC<AvatarProps> = ({
     //             if (newProgress === 100) {
     //                 clearInterval(intervalRef.current as NodeJS.Timeout); // clear the interval when progress reaches 100
     //             }
-    //             console.log(newProgress);
+    //             // console.log(newProgress);
     //             return newProgress;
     //         });
     //     }, 1000);
@@ -58,12 +58,12 @@ const AvatarUploader: FC<AvatarProps> = ({
         //                 let percentCompleted = Math.round(
         //                     (progressEvent.loaded * 100) / progressEvent.total
         //                 );
-        //                 console.log(`Upload progress: ${percentCompleted}%`);
+        //                 // console.log(`Upload progress: ${percentCompleted}%`);
         //             }
         //         }
         //     })
         //         .then((response) => {
-        //             console.log('File uploaded successfully:', response.data);
+        //             // console.log('File uploaded successfully:', response.data);
         //         })
         //         .catch((error) => {
         //             console.error('Error uploading file:', error);

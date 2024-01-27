@@ -33,7 +33,6 @@ const TwoFA = () => {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            console.log('code ', codeString);
             const response = await axiosPrivate.post(
                 '/2fa/validate',
                 {
@@ -60,7 +59,6 @@ const TwoFA = () => {
 
     useEffect(() => {
         if (code.every((char) => char !== '')) {
-            console.log(code);
             validateCode();
         }
     }, [debouncedValue]);
@@ -83,7 +81,6 @@ const TwoFA = () => {
             try {
                 const response = await axiosPrivate.get('/2fa/generate');
                 setImage(response.data.qrCode);
-                console.log(image);
             } catch (error) {
                 console.error('Error fetching QR code:', error);
             }
