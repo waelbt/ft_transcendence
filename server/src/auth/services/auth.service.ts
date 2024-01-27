@@ -21,13 +21,15 @@ export class AuthService {
 
     async setUpTokens(@Req() req, @Res() res, id: string) {
         var isUser = await this.usersService.findOneUser(id);
-        if (!isUser) await this.usersService.createUser(req.user, id);
+        if (!isUser) {
+            console.log('i am new');
+            await this.usersService.createUser(req.user, id);
+            await this.usersService.updateAvatar(req.user.id, req.user.Avatar);
+        }
         const { accessToken } = await this.generateATRT(res, req.user);
         const user = await this.usersService.getOneUser(id);
         req.res.setHeader('Authorization', `Bearer ${accessToken}`);
         console.log(accessToken);
-        await this.usersService.updateAvatar(req.user.id, req.user.Avatar);
-        // if (isUser) res.json({ message: 'User created', user: user });
         res.redirect(
             `http://localhost:8000/auth_popup?accessToken=${accessToken}`
         );
