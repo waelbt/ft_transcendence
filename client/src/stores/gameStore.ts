@@ -1,6 +1,8 @@
 import { create } from 'zustand';
+import { Socket, io } from 'socket.io-client';
 
 type GameState = {
+    socket: Socket | null;
     roomId: string | null;
     mode: 'classic' | 'crazy' | 'IA' | null;
     isGameReady: boolean;
@@ -15,10 +17,12 @@ type GameState = {
 };
 
 type GameAction = {
+    initializeGameSocket: () => void;
     updateState: (newState: Partial<GameState>) => void;
 };
 
-const useGameStore = create<GameState & GameAction>((set) => ({
+const useGameStore = create<GameState & GameAction>((set, get) => ({
+    socket: null,
     roomId: null,
     mode: null,
     isGameOver: false,
@@ -30,6 +34,13 @@ const useGameStore = create<GameState & GameAction>((set) => ({
     ballPos: { x: 0, y: 0 },
     rightScore: 0,
     leftScore: 0,
+    initializeGameSocket: () => {
+        const { socket } = get();
+        if (!socket) {
+            const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`);
+            set({ socket: newSocket });
+        }
+    },
     updateState: (newState) => set((state) => ({ ...state, ...newState }))
 }));
 

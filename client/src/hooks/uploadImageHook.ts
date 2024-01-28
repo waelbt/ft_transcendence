@@ -14,12 +14,20 @@ const useImageUpload = () => {
     const axiosPrivate = useAxiosPrivate();
     const cancelTokenSource = useRef(axios.CancelToken.source());
 
-    const deleteData = async (path: string) => {
+    const deleteData = async () => {
         if (isloading) {
             cancelTokenSource.current.cancel('Upload cancelled by the user.');
             cancelTokenSource.current = axios.CancelToken.source();
         } else {
-            const res = await axiosPrivate.delete(`/users/delete/${path}`)
+            try{
+
+                const res = await axiosPrivate.delete(
+                    `/users/delete/${imagePath}`
+                    );
+            }
+            catch(e) {
+                console.log(e)
+            }
             setProgress(0);
         }
     };
@@ -48,7 +56,6 @@ const useImageUpload = () => {
                                     progressEvent.total
                             );
                             setProgress(percentCompleted);
-
                         }
                     },
                     cancelToken: cancelTokenSource.current.token

@@ -3,50 +3,50 @@ import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-import { useChatSocketStore } from '../stores/ChatSocketStore';
 import { NavigationMenu, GlobalChat } from '.';
+import useGameStore from '../stores/gameStore';
 // import { useEffectOnce } from 'usehooks-ts';
 
+// useEffectOnce(() => {
+//     const fetchData = async () => {
+//         // console.log(accessToken);
+//         try {
+//             setIsLoading(true);
+//             // ! convert this to a construct function
+//             const { user, friends, block } = (
+//                 await axiosPrivate.get('/users/me')
+//             ).data;
+//             updateState({ active: true });
+//             updateState(user);
+//             // console.log(avatar);
+//             updateState({
+//                 avatar: `${
+//                     import.meta.env.VITE_UPLOADS_DESTINATION
+//                 }/${encodeURIComponent(user.avatar)}`
+//             });
+//             updateState({ friends: friends, block: block });
+//             updateState({ verified: user.completeProfile && !user.F2A });
+//         } catch (error) {
+//             // console.log(error);
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     };
+//     // if (isLogged && !active) {
+//     fetchData();
+//     // }
+// });
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, avatar, accessToken, verified, isLogged, active } =
+    const { updateState, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { socket } = useChatSocketStore();
-
-    // useEffectOnce(() => {
-    //     const fetchData = async () => {
-    //         // console.log(accessToken);
-    //         try {
-    //             setIsLoading(true);
-    //             // ! convert this to a construct function
-    //             const { user, friends, block } = (
-    //                 await axiosPrivate.get('/users/me')
-    //             ).data;
-    //             updateState({ active: true });
-    //             updateState(user);
-    //             // console.log(avatar);
-    //             updateState({
-    //                 avatar: `${
-    //                     import.meta.env.VITE_UPLOADS_DESTINATION
-    //                 }/${encodeURIComponent(user.avatar)}`
-    //             });
-    //             updateState({ friends: friends, block: block });
-    //             updateState({ verified: user.completeProfile && !user.F2A });
-    //         } catch (error) {
-    //             // console.log(error);
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-    //     // if (isLogged && !active) {
-    //     fetchData();
-    //     // }
-    // });
+    // const { socket } = useChatSocketStore();
+    const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
+        console.log('accesstoken', accessToken);
         const fetchData = async () => {
-            // console.log('accesstoken', accessToken);
             try {
                 setIsLoading(true);
                 // ! convert this to a construct function
@@ -60,6 +60,10 @@ function Layout() {
                     avatar: user.avatar
                 });
                 updateState({ verified: user.completeProfile && !user.F2A });
+                console.log('before');
+                initializeGameSocket();
+                console.log('after');
+                gameSocket?.emit('gameMode', 'classic');
             } catch (error) {
                 // console.log(error); //! handle this
             } finally {
@@ -70,7 +74,7 @@ function Layout() {
             fetchData();
         }
         return () => {
-            socket?.disconnect();
+            gameSocket?.disconnect();
         };
     }, [isLogged]);
 
@@ -82,7 +86,7 @@ function Layout() {
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        <GlobalChat />
+                        {/* <GlobalChat /> */}
                     </div>
                 </div>
             ) : (

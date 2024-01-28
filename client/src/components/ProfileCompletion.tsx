@@ -93,11 +93,11 @@ function ProfileCompletion() {
                                 className={`absolute bg-[#f9164f] p-0.5 rounded-full border-w bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 border-4 border-white border-solid flex justify-center items-center z-10 cursor-pointer ${
                                     !imagePath ? 'hidden' : ''
                                 }`}
-                                onClick={(e) => {
+                                onClick={async (e) => {
                                     e.stopPropagation(); // This stops the event from reaching the label
                                     setImagePath(null);
                                     selectedItemIndex == -1
-                                        ? deleteData(imagePath as string)
+                                        ? await deleteData()
                                         : setSelectedItemIndex(-1);
                                 }}
                             >

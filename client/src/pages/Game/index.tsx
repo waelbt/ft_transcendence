@@ -151,14 +151,14 @@ export function Game() {
     const [isGameReady, setIsGameReady] = React.useState(false);
     const { socket } = useSocketStore();
     const { id } = useUserStore();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     // let history = useHistory();
 
-    useEffect(() => {
-        if (!MODES.includes(mode as string)) {
-            navigate('/test');
-        }
-    }, [mode, history]);
+    // useEffect(() => {
+    //     if (!MODES.includes(mode as string)) {
+    //         navigate('/test');
+    //     }
+    // }, [mode, history]);
 
     React.useEffect(() => {
         // console.log('userid ', id);
@@ -207,6 +207,14 @@ export function Game() {
             socket.off('rightcrored');
         };
     }, []);
+
+//     // Inside your Game component
+// useEffect(() => {
+//     socket.on('playerJoined', (playerData) => {
+//       // Use playerData (like ID, name, avatar, rank) as needed
+//       // Change state to indicate the game is ready to start
+//     });
+//   }, [socket]);
 
     // const [gameMode, setGameMode] = React.useState<
     //     null | 'classic' | 'crazy' | 'IA'
