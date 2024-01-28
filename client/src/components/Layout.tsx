@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Verfication from '../pages/Verfication';
+import Verfication from '../pages/verfication';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { NavigationMenu, GlobalChat } from '.';

@@ -11,42 +11,42 @@ const router = createBrowserRouter([
             {
                 index: true,
                 lazy: async () => {
-                    let { Lobby } = await import('./pages/Lobby');
-                    return { Component: Lobby };
+                    let { home } = await import('./pages/home');
+                    return { Component: home };
                 }
             },
             {
                 path: '/home',
                 lazy: async () => {
-                    let { Lobby } = await import('./pages/Lobby');
-                    return { Component: Lobby };
+                    let { home } = await import('./pages/home');
+                    return { Component: home };
                 }
             },
             {
                 path: '/chat',
                 lazy: async () => {
-                    let { Chat } = await import('./pages/Chat');
+                    let { Chat } = await import('./pages/chat');
                     return { Component: Chat };
                 }
             },
             {
-                path: '/game',
+                path: '/play/:roomId',
                 lazy: async () => {
-                    let { Game } = await import('./pages/Game');
-                    return { Component: Game };
+                    let { play } = await import('./pages/play');
+                    return { Component: play };
                 }
             },
             {
                 path: '/rooms',
                 lazy: async () => {
-                    let { Rooms } = await import('./pages/Rooms');
+                    let { Rooms } = await import('./pages/rooms');
                     return { Component: Rooms };
                 }
             },
             {
                 path: 'Profile/:id',
                 lazy: async () => {
-                    let { Profile } = await import('./pages/Profile');
+                    let { Profile } = await import('./pages/profile');
                     return { Component: Profile };
                 },
                 children: [

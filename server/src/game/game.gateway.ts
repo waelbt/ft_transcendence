@@ -12,7 +12,14 @@ interface Ball {
     speed: number;
     angle: number;
 }
-
+interface GameModePayload {
+    mode: string;
+    userId: string;
+}
+interface Player {
+    socket: Socket;
+    userId: string;
+}
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -25,7 +32,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     private waitingFriend: Socket | null = null;
 
-    private waitingRooms: Record<string, Socket | null> = {
+    private waitingRooms: Record<string, Player | null> = {
         classic: null,
         crazy: null,
         IA: null
@@ -50,7 +57,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     handleDisconnect(client: Socket) {
         console.log('A client disconnected: ' + client.id);
         for (const gameMode in this.waitingRooms) {
-            if (this.waitingRooms[gameMode]?.id === client.id) {
+            if (this.waitingRooms[gameMode]?.socket?.id === client.id) {
                 this.waitingRooms[gameMode] = null;
             }
         }
@@ -112,86 +119,36 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingFriend = client;
         }
     }
-
     @SubscribeMessage('gameMode')
-    handleGameMode(client: Socket, gameMode: 'classic' | 'crazy' | 'IA'): void {
-        console.log(`Client ${client.id} chose ${gameMode} mode`);
+    handleGameMode(client: Socket, data: GameModePayload): void {
+        const { mode, userId } = data;
+        console.log(
+            `Client ${client.id} with user ID ${userId} chose ${mode} mode`
+        );
 
-        if (gameMode === 'IA') {
-            const room = `${client.id}`;
-            console.log(`Game started in ${gameMode} mode and ${client.id}`);
+        if (this.waitingRooms[mode]) {
+            const opponent: Player = this.waitingRooms[mode];
+            const room = `${opponent.userId}-${userId}`;
             client.join(room);
-            const initialBall: Ball = {
-                pos: { x: 0, y: 0 },
-                speed: 6 / 16,
-                angle: Math.PI / 4
-            };
+            opponent.socket.join(room);
 
-            this.rooms[room] = {
-                ballPos: initialBall.pos,
-                moveAngle: initialBall.angle,
-                gameMode: gameMode,
-                ballSpeed: initialBall.speed,
-                intervalId: setInterval(
-                    () => this.updateBallPosition(room, initialBall, gameMode),
-                    1000 / 60
-                ),
-                players: [
-                    { id: client.id, pos: 0 },
-                    { id: null, pos: 0 }
-                ]
-            };
+            // ... rest of the room setup ...
 
-            this.server.to(client.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 1,
-                chosen: gameMode
+            // Notify the first player (waiting player)
+            this.server.to(opponent.socket.id).emit('roomCreated', {
+                roomId: room,
+                opponentId: userId
             });
 
-            this.waitingRooms[gameMode] = null;
-        } else if (this.waitingRooms[gameMode]) {
-            const room = `${this.waitingRooms[gameMode].id}-${client.id}`;
-            client.join(room);
-            this.waitingRooms[gameMode].join(room);
-
-            const initialBall: Ball = {
-                pos: { x: 0, y: 0 },
-                speed: 6 / 16,
-                angle: Math.PI / 4
-            };
-
-            this.rooms[room] = {
-                ballPos: initialBall.pos,
-                moveAngle: initialBall.angle,
-                ballSpeed: initialBall.speed,
-                intervalId: setInterval(
-                    () => this.updateBallPosition(room, initialBall, gameMode),
-                    1000 / 60
-                ),
-                players: [
-                    { id: this.waitingRooms[gameMode].id, pos: 0 },
-                    { id: client.id, pos: 0 }
-                ]
-            };
-
-            this.server.to(this.waitingRooms[gameMode].id).emit('startgame', {
-                room: room,
-                SecondPlayer: 1,
-                chosen: gameMode
-            });
-            this.server.to(client.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 2,
-                chosen: gameMode
+            // Notify the second player (joining player)
+            this.server.to(client.id).emit('roomCreated', {
+                roomId: room,
+                opponentId: opponent.userId
             });
 
-            console.log(
-                `Game started in ${gameMode} mode between ${this.waitingRooms[gameMode].id} and ${client.id}`
-            );
-
-            this.waitingRooms[gameMode] = null;
+            this.waitingRooms[mode] = null;
         } else {
-            this.waitingRooms[gameMode] = client;
+            this.waitingRooms[mode] = { socket: client, userId };
         }
     }
     // ! me

@@ -1,6 +1,6 @@
 import { useUserStore } from '../stores/userStore';
 import { Layout } from '.';
-import { Auth } from '../pages/Auth';
+import { Auth } from '../pages/auth';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // import useAuth from "../hooks/useAuth";

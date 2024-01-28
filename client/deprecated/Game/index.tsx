@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import './game.css';
-import { useGame } from '../../context/game-context';
-import { useUserStore } from '../../stores/userStore';
-import { useSocketStore } from '../../stores/socketStore';
+import { useGame } from '../../src/context/game-context';
+import { useUserStore } from '../../src/stores/userStore';
+import { useSocketStore } from '../../src/stores/socketStore';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MODES } from '../../constants';
+import { MODES } from '../../src/constants';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -94,7 +94,7 @@ const Ball = ({ gameSt }: { gameSt: string }) => {
     React.useEffect(() => {
         socket.on('ballmove', function (newPosition) {
             setBallPos(
-                isSecondPlayer === 2
+                isSecondPlayer
                     ? { x: -newPosition.x, y: newPosition.y }
                     : newPosition
             );
