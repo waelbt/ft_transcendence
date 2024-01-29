@@ -2,12 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Friend } from '../../../shared/types';
 import useAxiosPrivate from './axiosPrivateHook';
 
-type useFriendPreviousProps = {
-    friendId: string;
-};
-
-const useFriendPrevious = ({ friendId }: useFriendPreviousProps) => {
+const useFriendPrevious = (friendId: string) => {
     const axiosPrivate = useAxiosPrivate();
+
     const fetchFriendDetails = async (): Promise<Friend> => {
         const res = await axiosPrivate.get(`/users/previo/${friendId}`);
         return res.data;

@@ -27,6 +27,8 @@ import { Socket, io } from 'socket.io-client';
 
 type GameState = {
     socket: Socket | null;
+    roomId: string | null;
+    opponentId: string | null;
 };
 
 type GameAction = {
@@ -36,10 +38,18 @@ type GameAction = {
 
 const useGameStore = create<GameState & GameAction>((set, get) => ({
     socket: null,
+    roomId: null,
+    opponentId: null,
     initializeGameSocket: () => {
         const { socket } = get();
         if (!socket) {
-            const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`);
+            const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
+                transports: ['websocket'],
+                reconnection: true,
+                reconnectionDelay: 1000,
+                reconnectionDelayMax: 1000,
+                reconnectionAttempts: 5
+            });
             set({ socket: newSocket });
         }
     },

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { IoMdImages } from 'react-icons/io';
 import { CiImageOff } from 'react-icons/ci';
 interface AvatarProps {
-    imageUrl: string | null;
+    imageUrl: string | null | undefined;
     state?: string;
     style?: string;
     isloading?: boolean;

@@ -13,7 +13,7 @@ interface RoomCreatedData {
 export function home() {
     const { id } = useUserStore();
     const { isEventOpen, openEvent } = useModelStore();
-    const { socket } = useGameStore();
+    const { socket, updateState } = useGameStore();
     const navigate = useNavigate();
     const [elapsedTime, setElapsedTime] = useState(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -43,14 +43,12 @@ export function home() {
     useEffect(() => {
         // Define the event handler inside the effect
         const handleRoomCreated = (data: RoomCreatedData) => {
-            console.log('Room ID:', data.roomId);
-            console.log('Opponent ID:', data.opponentId);
+            updateState(data);
 
             if (timer) {
                 clearInterval(timer);
                 setTimer(null);
             }
-
             navigate(`/play/${data.roomId}`);
         };
 

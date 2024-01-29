@@ -7,9 +7,7 @@ type FriendDataPreviouProps = {
 };
 
 function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
-    const { isLoading, isError, error, friend } = useFriendPrevious({
-        friendId
-    });
+    const { isLoading, isError, error, friend } = useFriendPrevious(friendId);
 
     if (isLoading)
         return (

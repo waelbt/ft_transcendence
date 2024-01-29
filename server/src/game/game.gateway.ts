@@ -122,49 +122,34 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @SubscribeMessage('gameMode')
     handleGameMode(client: Socket, data: GameModePayload): void {
         const { mode, userId } = data;
+        const waitingClient = this.waitingRooms[mode];
+
         console.log(
             `Client ${client.id} with user ID ${userId} chose ${mode} mode`
         );
-
-        if (this.waitingRooms[mode]) {
-            const opponent: Player = this.waitingRooms[mode];
-            const room = `${opponent.userId}-${userId}`;
+        if (waitingClient && waitingClient.userId !== userId) {
+            const room = `${waitingClient.userId}${userId}`;
             client.join(room);
-            opponent.socket.join(room);
-
-            // ... rest of the room setup ...
-
-            // Notify the first player (waiting player)
-            this.server.to(opponent.socket.id).emit('roomCreated', {
+            waitingClient.socket.join(room);
+            this.server.to(waitingClient.socket.id).emit('roomCreated', {
                 roomId: room,
                 opponentId: userId
             });
-
-            // Notify the second player (joining player)
             this.server.to(client.id).emit('roomCreated', {
                 roomId: room,
-                opponentId: opponent.userId
+                opponentId: waitingClient.userId
             });
 
             this.waitingRooms[mode] = null;
-        } else {
+        } else if (!waitingClient) {
             this.waitingRooms[mode] = { socket: client, userId };
+        } else {
+            console.log(
+                `Client ${client.id} is already waiting for a ${mode} game`
+            );
         }
     }
-    // ! me
-    // @SubscribeMessage('gameMode')
-    // handleGameMode(client: Socket, mode: string): void {
-    //     // Logic to create a room and assign the client to it
-    //     const roomId = createRoom(client, mode); // Implement createRoom logic
-    //     client.emit('roomCreated', roomId);
-    // }
-
-    //     / Continuing in your WebSocket gateway
-    // secondPlayerJoin(roomId: string, secondClient: Socket): void {
-    //   // Logic for adding the second player to the room
-    //   // Emit event to both clients
-    //   this.server.to(roomId).emit('playerJoined', { /* player data */ });
-    // }
+ 
     updateBallPosition(room: string, ball: Ball, mode: string): void {
         let newX = ball.pos.x - ball.speed * Math.cos(ball.angle);
         let newY = ball.pos.y + ball.speed * Math.sin(ball.angle);
