@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import useGameStore from '../../stores/gameStore';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useModelStore } from '../../stores/ModelStore';
 import { Modal } from '../../components';
 import { useUserStore } from '../../stores/userStore';
+import useTimer from '../../hooks/timer';
 
 interface RoomCreatedData {
     roomId: string;
@@ -15,24 +16,7 @@ export function home() {
     const { isEventOpen, openEvent } = useModelStore();
     const { socket, updateState } = useGameStore();
     const navigate = useNavigate();
-    const [elapsedTime, setElapsedTime] = useState(0);
-    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-
-    const formatTime = (time: number): string => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds
-            .toString()
-            .padStart(2, '0')}`;
-    };
-
-    const startTimer = () => {
-        setElapsedTime(0);
-        const newTimer = setInterval(() => {
-            setElapsedTime((prevTime) => prevTime + 1);
-        }, 1000);
-        setTimer(newTimer);
-    };
+    const { elapsedTime, formatTime, startTimer, stopTimer } = useTimer();
 
     const handleClick = () => {
         socket?.emit('gameMode', { mode: 'classic', userId: id });
@@ -41,34 +25,19 @@ export function home() {
     };
 
     useEffect(() => {
-        // Define the event handler inside the effect
         const handleRoomCreated = (data: RoomCreatedData) => {
             updateState(data);
-
-            if (timer) {
-                clearInterval(timer);
-                setTimer(null);
-            }
+            stopTimer();
             navigate(`/play/${data.roomId}`);
         };
 
-        // Add the event listener
         socket?.on('roomCreated', handleRoomCreated);
 
-        // Return a cleanup function
         return () => {
-            // Clean up the event listener
-            if (socket) {
-                socket.off('roomCreated', handleRoomCreated);
-            }
-
-            // Clean up the timer
-            if (timer) {
-                clearInterval(timer);
-                setTimer(null);
-            }
+            if (socket) socket.off('roomCreated', handleRoomCreated);
+            stopTimer();
         };
-    }, [socket, navigate, timer]);
+    }, [socket, navigate]);
 
     return (
         <div className="flex flex-col gap-2">

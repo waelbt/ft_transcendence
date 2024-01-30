@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Friend } from '../../../shared/types';
 import useAxiosPrivate from './axiosPrivateHook';
 
-const useFriendPrevious = (friendId: string) => {
+const useFriendPrevious = (friendId: string | null) => {
     const axiosPrivate = useAxiosPrivate();
 
     const fetchFriendDetails = async (): Promise<Friend> => {
@@ -12,13 +12,15 @@ const useFriendPrevious = (friendId: string) => {
 
     const query = useQuery<Friend, Error>({
         queryKey: ['friend', friendId],
-        queryFn: fetchFriendDetails
+        queryFn: fetchFriendDetails,
+        enabled: !!friendId
     });
 
     return {
         isLoading: query.isLoading,
         isError: query.isError,
         error: query.error,
+        success: query.isSuccess,
         friend: query.data
     };
 };

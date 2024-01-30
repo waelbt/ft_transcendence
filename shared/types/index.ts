@@ -28,7 +28,7 @@ export interface Player {
 
 export interface Friend {
     id: number;
-    name: string;
+    nickName: string;
     avatar: string;
     status: string;
     actions: string[];
