@@ -107,7 +107,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     handlePaddleMove(client: Socket, data: { roomId: string; y: number }) {
         const roomID = data.roomId;
         const newY = data.y;
-    
+
         client.to(roomID).emit('opponentPaddleMove', { y: newY });
     }
 }

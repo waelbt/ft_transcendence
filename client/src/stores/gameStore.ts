@@ -46,6 +46,10 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     canvasWidth: 800,
     speed: 50,
     // Actions
+    updateBallPosition: (x: number, y: number) =>
+        set((state) => ({
+            ball: { ...state.ball, x, y }
+        })),
     initializeGameSocket: () => {
         const { socket } = get();
         if (!socket) {
@@ -69,11 +73,6 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
                     0
                 )
             }
-        }));
-    },
-    updateBallPosition: (x, y) => {
-        set((state) => ({
-            ball: { ...state.ball, x, y }
         }));
     },
     updateOpponentPaddlePosition: (y) => {
