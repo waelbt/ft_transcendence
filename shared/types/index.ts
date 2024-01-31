@@ -41,3 +41,15 @@ export interface Match {
     awarded: string;
     date: string;
 }
+
+
+// src/types.d.ts
+export interface Ball {
+    x: number;
+    y: number;
+}
+
+export interface Paddle {
+    x: number;
+    y: number;
+}

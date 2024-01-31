@@ -1,5 +1,11 @@
 import { Server } from 'socket.io';
 
+export enum GameMode {
+    Classic = 'classic',
+    Crazy = 'crazy',
+    Training = 'training'
+}
+
 interface Ball {
     x: number;
     y: number;
@@ -17,23 +23,41 @@ export class PongGame {
     private players: Player[];
     private gameInterval: NodeJS.Timer | null;
     private io: Server; // Reference to the Socket.IO server instance
+    private mode: GameMode; // The game mode
 
     // Constants for game dimensions
     private readonly GAME_WIDTH: number = 800; // Adjust as per your game's dimensions
     private readonly GAME_HEIGHT: number = 600;
-
-    constructor(io: Server) {
+    private isGameRunning: boolean = false;
+    constructor(io: Server, mode: GameMode) {
+        this.io = io;
+        this.mode = mode;
         this.ball = { x: 0, y: 0, vx: 5, vy: 5 };
         this.players = [
             { paddleY: 0, score: 0 },
             { paddleY: 0, score: 0 }
         ];
         this.gameInterval = null;
-        this.io = io; // Pass the Socket.IO server instance to the game
     }
 
     startGame() {
-        this.gameInterval = setInterval(() => this.gameTick(), 1000 / 60); // 60 FPS
+        if (!this.isGameRunning) {
+            this.gameInterval = setInterval(() => this.gameTick(), 1000 / 60);
+            this.isGameRunning = true;
+        }
+    }
+
+    pauseGame() {
+        if (this.gameInterval) {
+            clearInterval(this.gameInterval as unknown as number); // Cast to any to bypass type checking
+            this.gameInterval = null;
+        }
+        this.isGameRunning = false;
+    }
+    resumeGame() {
+        if (!this.gameInterval) {
+            this.startGame();
+        }
     }
 
     private gameTick() {
@@ -46,7 +70,8 @@ export class PongGame {
             this.ball.vy *= -1;
         }
 
-        // Add logic for collision with paddles and scoring
+        // Modify game logic based on the mode
+        // For example, different behavior for 'Crazy' or 'Training' mode
 
         // Broadcast updated game state to clients
         this.io.emit('gameUpdate', this.getState());

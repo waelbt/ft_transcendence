@@ -41,9 +41,10 @@ function Layout() {
     const { updateState, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    // const { socket } = useChatSocketStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
+
+    //! custom hook here
     useEffect(() => {
         console.log('accesstoken', accessToken);
         const fetchData = async () => {
@@ -60,10 +61,7 @@ function Layout() {
                     avatar: user.avatar
                 });
                 updateState({ verified: user.completeProfile && !user.F2A });
-                console.log('before');
-                initializeGameSocket();
-                console.log('after');
-                gameSocket?.emit('gameMode', 'classic');
+                // initializeGameSocket();
             } catch (error) {
                 // console.log(error); //! handle this
             } finally {
