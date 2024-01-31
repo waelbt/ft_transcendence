@@ -6,7 +6,23 @@ import useMousePaddleControl from '../../hooks/mousePaddleControl';
 const GameCanvas: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     useMousePaddleControl(canvasRef);
-    const { ball, myPaddle, opponentPaddle } = useGameStore();
+    const {
+        ball,
+        myPaddle,
+        opponentPaddle,
+        socket,
+        updateOpponentPaddlePosition
+    } = useGameStore();
+
+    useEffect(() => {
+        socket?.on('opponentPaddleMove', (data) => {
+            updateOpponentPaddlePosition(data.y);
+        });
+
+        return () => {
+            socket?.off('opponentPaddleMove');
+        };
+    }, [socket, updateOpponentPaddlePosition]);
 
     useEffect(() => {
         const canvas = canvasRef.current;

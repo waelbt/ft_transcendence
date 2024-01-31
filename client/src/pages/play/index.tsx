@@ -1,25 +1,35 @@
 import { useEffect } from 'react';
-import { MatchPanel } from '../../components/MatchPanel';
+// import { MatchPanel } from '../../components/MatchPanel';
 import useGameStore from '../../stores/gameStore';
 // import useTimer from '../../hooks/timer';
-import useFriendPrevious from '../../hooks/friendPreviousHook';
+// import useFriendPrevious from '../../hooks/friendPreviousHook';
 import Game from '../../components/game';
 import { useUserStore } from '../../stores/userStore';
 
 export const play = () => {
     const { id } = useUserStore();
-    const { socket, initializeGameSocket } = useGameStore();
+    const { socket, initializeGameSocket, updateState } = useGameStore();
 
     useEffect(() => {
         initializeGameSocket();
-
         return () => {
             socket?.disconnect();
         };
     }, []);
 
+    useEffect(() => {
+        socket?.on('gameSetup', (data) => {
+            updateState({
+                roomId: data.roomId,
+                opponentId: data.opponentUserId
+            });
+        });
+
+        return () => {
+            socket?.off('gameSetup');
+        };
+    }, [socket, initializeGameSocket, updateState]);
     const handleSubmit = () => {
-        console.log('wael');
         socket?.emit('selectMode', { userId: id, mode: 'classic' });
     };
     return (

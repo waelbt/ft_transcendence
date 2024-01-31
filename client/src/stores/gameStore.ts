@@ -31,6 +31,7 @@ type GameAction = {
     updateState: (newState: Partial<GameState>) => void;
     moveMyPaddle: (y: number) => void;
     updateBallPosition: (x: number, y: number) => void;
+    updateOpponentPaddlePosition: (y: number) => void;
 };
 
 const useGameStore = create<GameState & GameAction>((set, get) => ({
@@ -43,7 +44,7 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     opponentPaddle: { x: 760, y: 250, height: 100 },
     canvasHeight: 600,
     canvasWidth: 800,
-    speed: 20,
+    speed: 50,
     // Actions
     initializeGameSocket: () => {
         const { socket } = get();
@@ -73,6 +74,20 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     updateBallPosition: (x, y) => {
         set((state) => ({
             ball: { ...state.ball, x, y }
+        }));
+    },
+    updateOpponentPaddlePosition: (y) => {
+        set((state) => ({
+            opponentPaddle: {
+                ...state.opponentPaddle,
+                y: Math.max(
+                    Math.min(
+                        y,
+                        state.canvasHeight - state.opponentPaddle.height
+                    ),
+                    0
+                )
+            }
         }));
     }
 }));
