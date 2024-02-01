@@ -50,6 +50,9 @@ export class PongGame {
 
     startGame() {
         if (!this.isGameRunning) {
+            this.io.on('movePaddle', (data) => {
+                this.updatePlayerPaddle(data.userId, data.newY);
+            });
             this.gameInterval = setInterval(() => this.gameTick(), 1000 / 60);
             this.isGameRunning = true;
         }
@@ -68,47 +71,62 @@ export class PongGame {
         }
     }
 
-    private moveBall() {
-        this.ball.x += this.ball.vx;
-        this.ball.y += this.ball.vy;
-
-        // Collision with left and right walls
-        if (this.ball.x < 0 || this.ball.x > this.GAME_WIDTH) {
-            // Update score if needed
-            // Reset ball to center
-            this.ball.x = this.GAME_WIDTH / 2;
-            this.ball.y = this.GAME_HEIGHT / 2;
-        }
-
-        // Collision with top and bottom walls
+    private checkBallCollisions() {
         if (this.ball.y < 0 || this.ball.y > this.GAME_HEIGHT) {
             this.ball.vy = -this.ball.vy;
         }
     }
+
+    private updateBall() {
+        this.ball.x += this.ball.vx;
+        this.ball.y += this.ball.vy;
+    }
+
+    // ! modes handling
+    // private moveBall() {
+    //     if (this.mode === GameMode.Crazy) {
+    //         // Increase ball speed or add random movements
+    //         this.ball.vx *= 1.05; // Example of increasing speed
+    //     }
+    // Rest of the moveBall logic...
+    // }
+
+    private moveBall() {
+        this.updateBall();
+        this.checkBallCollisions();
+        this.updateScores();
+    }
+
+    private resetBall() {
+        this.ball.x = this.GAME_WIDTH / 2;
+        this.ball.y = this.GAME_HEIGHT / 2;
+        this.ball.vx = -this.ball.vx; // Reverse horizontal direction
+        this.ball.vy = 0; // Reset vertical velocity
+    }
     private checkPaddleCollisions() {
         this.players.forEach((player) => {
             if (this.ballIsCollidingWithPaddle(player)) {
-                const paddleCenter = player.paddleY + this.PADDLE_HEIGHT / 2;
-                const distanceFromPaddleCenter = paddleCenter - this.ball.y;
-
-                // Adjust vertical velocity based on where the ball hits the paddle
-                this.ball.vy += distanceFromPaddleCenter * -0.1;
-
                 // Reverse horizontal direction
                 this.ball.vx = -this.ball.vx;
+
+                // Adjust the ball's vertical velocity based on where it hits the paddle
+                const paddleCenter = player.paddleY + this.PADDLE_HEIGHT / 2;
+                const distanceFromPaddleCenter = this.ball.y - paddleCenter;
+                this.ball.vy += distanceFromPaddleCenter * 0.05;
             }
         });
     }
 
     private ballIsCollidingWithPaddle(player: Player): boolean {
-        // Assuming the paddle is vertical
+        // Check for collision with player's paddle
         return (
-            this.ball.x >= player.paddleY &&
+            this.ball.x >= player.paddleX &&
             this.ball.x <= player.paddleX + this.PADDLE_WIDTH &&
             this.ball.y >= player.paddleY &&
             this.ball.y <= player.paddleY + this.PADDLE_HEIGHT
         );
     }
+
     updatePlayerPaddle(userId: string, newY: number) {
         const player = this.players.find((p) => p.userId === userId);
         if (player) {
@@ -117,26 +135,63 @@ export class PongGame {
                 Math.min(newY, this.GAME_HEIGHT - this.PADDLE_HEIGHT),
                 0
             );
+            // Emit updated paddle position to clients
+            this.io.emit('paddleUpdate', {
+                userId: userId,
+                paddleY: player.paddleY
+            });
         }
     }
+
     private updateScores() {
         if (this.ball.x < 0) {
-            // Player 2 scores
             this.players[1].score += 1;
+            this.checkForWinner();
             this.resetBall();
         } else if (this.ball.x > this.GAME_WIDTH) {
-            // Player 1 scores
             this.players[0].score += 1;
+            this.checkForWinner();
             this.resetBall();
         }
     }
 
-    private resetBall() {
-        this.ball.x = this.GAME_WIDTH / 2;
-        this.ball.y = this.GAME_HEIGHT / 2;
-        this.ball.vx = 2; // Reset to initial velocity or randomize
-        this.ball.vy = 0;
+    private checkForWinner() {
+        // Check if any player has reached the winning score
+        const winningScore = 5;
+        if (
+            this.players[0].score >= winningScore ||
+            this.players[1].score >= winningScore
+        ) {
+            this.isGameRunning = false;
+            clearInterval(this.gameInterval as unknown as number);
+            this.gameInterval = null;
+            // Emit the end game event with the winner's information
+            this.io.emit('endGame', {
+                winner:
+                    this.players[0].score >= winningScore
+                        ? this.players[0].userId
+                        : this.players[1].userId
+            });
+        }
     }
+    // private checkForWinner() {
+    //     const winningScore = 5;
+    //     if (
+    //         this.players[0].score >= winningScore ||
+    //         this.players[1].score >= winningScore
+    //     ) {
+    //         this.isGameRunning = false;
+    //         clearInterval(this.gameInterval as unknown as number);
+    //         this.gameInterval = null;
+    //         // Emit the end game event with the winner's information
+    //         const winner =
+    //             this.players[0].score >= winningScore
+    //                 ? this.players[0].userId
+    //                 : this.players[1].userId;
+    //         this.io.emit('endGame', { winner: winner });
+    //         this.resetGame(); // Reset game state if necessary
+    //     }
+    // }
     private gameTick() {
         this.moveBall();
         this.checkPaddleCollisions();
@@ -145,18 +200,15 @@ export class PongGame {
         // Broadcast updated game state to clients
         this.io.emit('gameUpdate', this.getGameState());
     }
-    private checkBallCollisions() {
-        // Check for collisions with top and bottom walls
-        if (this.ball.y <= 0 || this.ball.y >= this.GAME_HEIGHT) {
-            this.ball.vy = -this.ball.vy;
-        }
-        // Add logic for side walls if needed
-    }
 
     private getGameState() {
         return {
-            ball: this.ball
-            // players: this.players
+            ball: this.ball,
+            players: this.players.map((player) => ({
+                userId: player.userId,
+                paddleY: player.paddleY,
+                score: player.score
+            }))
         };
     }
 }
