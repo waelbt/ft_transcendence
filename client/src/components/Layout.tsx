@@ -43,7 +43,6 @@ function Layout() {
     const [isLoading, setIsLoading] = useState(false);
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
-
     //! custom hook here
     useEffect(() => {
         console.log('accesstoken', accessToken);
@@ -61,7 +60,6 @@ function Layout() {
                     avatar: user.avatar
                 });
                 updateState({ verified: user.completeProfile && !user.F2A });
-                // initializeGameSocket();
             } catch (error) {
                 // console.log(error); //! handle this
             } finally {
@@ -71,6 +69,7 @@ function Layout() {
         if (isLogged && !active) {
             fetchData();
         }
+        initializeGameSocket();
         return () => {
             gameSocket?.disconnect();
         };

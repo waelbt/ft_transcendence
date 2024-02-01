@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import useGameStore from '../../stores/gameStore';
+import useGameStore, { GameMode } from '../../stores/gameStore';
 import { useEffect } from 'react';
 import { useModelStore } from '../../stores/ModelStore';
 import { Modal } from '../../components';
@@ -12,39 +12,39 @@ interface RoomCreatedData {
 }
 
 export function home() {
-    const { id } = useUserStore();
-    const { isEventOpen, openEvent } = useModelStore();
-    const { socket, updateState } = useGameStore();
+    // const { id } = useUserStore();
+    // const { isEventOpen, openEvent } = useModelStore();
+    const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
-    const { elapsedTime, formatTime, startTimer, stopTimer } = useTimer();
+    // const { elapsedTime, formatTime, startTimer, stopTimer } = useTimer();
 
     const handleClick = () => {
-        socket?.emit('gameMode', { mode: 'classic', userId: id });
-        openEvent();
-        startTimer();
+        updateState({ gameMode: GameMode.Classic });
+        socket?.emit('gameMode', 'classic');
+        navigate('/game');
     };
 
-    useEffect(() => {
-        const handleRoomCreated = (data: RoomCreatedData) => {
-            updateState(data);
-            stopTimer();
-            navigate(`/play/${data.roomId}`);
-        };
+    // useEffect(() => {
+    //     const handleRoomCreated = (data: RoomCreatedData) => {
+    //         updateState(data);
+    //         stopTimer();
+    //         navigate(`/play/${data.roomId}`);
+    //     };
 
-        socket?.on('roomCreated', handleRoomCreated);
+    //     socket?.on('roomCreated', handleRoomCreated);
 
-        return () => {
-            if (socket) socket.off('roomCreated', handleRoomCreated);
-            stopTimer();
-        };
-    }, [socket, navigate]);
+    //     return () => {
+    //         if (socket) socket.off('roomCreated', handleRoomCreated);
+    //         stopTimer();
+    //     };
+    // }, [socket, navigate]);
 
     return (
         <div className="flex flex-col gap-2">
             <button className="p-4 bg-red-500 text-white" onClick={handleClick}>
                 classic{' '}
             </button>
-            {isEventOpen && (
+            {/* {isEventOpen && (
                 <Modal removable={false}>
                     <div className="flex flex-col gap-4 text-white">
                         <h2 className=' font-["Acme"] text-7xl'>
@@ -57,9 +57,8 @@ export function home() {
                             <p>Waiting time: {formatTime(elapsedTime)}</p>
                         </div>
                     </div>
-                    {/* // ? cancel button here */}
                 </Modal>
-            )}
+            )} */}
         </div>
     );
 }
