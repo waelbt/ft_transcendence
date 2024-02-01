@@ -40,10 +40,10 @@ type GameState = {
 type GameAction = {
     initializeGameSocket: () => void;
     updateState: (newState: Partial<GameState>) => void;
-    // moveMyPaddle: (y: number) => void;
+    moveMyPaddle: (y: number) => void;
     updateBallPosition: (x: number, y: number) => void;
-    // updateOpponentPaddlePosition: (y: number) => void;
-    updatePaddlePosition: () => void;
+    updateOpponentPaddlePosition: (y: number) => void;
+    // updatePaddlePosition: () => void;
 };
 
 const useGameStore = create<GameState & GameAction>((set, get) => ({
@@ -81,30 +81,61 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
         set((state) => ({
             ball: { ...state.ball, x, y }
         })),
-    updatePaddlePosition: () => {
-        const { isGameOver, socket, roomId, movePaddle } = get();
-        if (!isGameOver) {
-            set((state) => {
-                const maxPos = 17.5;
-                const minPos = -17.187;
-                const newPosition = state.myPaddle.y + movePaddle;
-                const paddlePos = Math.min(
-                    Math.max(newPosition, minPos),
-                    maxPos
-                );
-                
-                socket?.emit('paddlemove', {
-                    room: roomId,
-                    pos: paddlePos,
-                    SecondPlayer: state.isSecondPlayer // Assuming you have a way to determine if the player is the second player
-                });
-
-                return { myPaddle: { ...state.myPaddle, y: paddlePos } };
-            });
-
-            requestAnimationFrame(get().updatePaddlePosition);
-        }
+    moveMyPaddle: (y) => {
+        set((state) => ({
+            myPaddle: {
+                ...state.myPaddle,
+                y: Math.max(
+                    Math.min(y, state.canvasHeight - state.myPaddle.height),
+                    0
+                )
+            }
+        }));
+        const { socket, myPaddle, roomId, isSecondPlayer } = get();
+        socket?.emit('paddlemove', {
+            room: roomId,
+            pos: myPaddle,
+            SecondPlayer: isSecondPlayer
+        });
+    },
+    updateOpponentPaddlePosition(y) {
+        set((state) => ({
+            opponentPaddle: {
+                ...state.opponentPaddle,
+                y
+            }
+        }));
     }
+    // updatePaddlePosition: () => {
+    //     const { isGameOver, socket, roomId, movePaddle } = get();
+    //     if (!isGameOver) {
+    //         set((state) => {
+    //             // const maxPos = 17.5;
+    //             // const minPos = -17.187;
+    //             // const newPosition = state.myPaddle.y + movePaddle;
+    //             const paddlePos = Math.max(
+    //                 Math.min(y, state.canvasHeight - state.myPaddle.height),
+    //                 0
+    //             );
+
+    //             return { myPaddle: { ...state.myPaddle, y: paddlePos } };
+    //         });
+
+    //         requestAnimationFrame(get().updatePaddlePosition);
+    //     }
+    // }
 }));
 
 export default useGameStore;
+
+// moveMyPaddle: (y) => {
+//     set((state) => ({
+//         myPaddle: {
+//             ...state.myPaddle,
+//             y: Math.max(
+//                 Math.min(y, state.canvasHeight - state.myPaddle.height),
+//                 0
+//             )
+//         }
+//     }));
+// },

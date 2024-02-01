@@ -12,25 +12,9 @@ export const Game: React.FC = () => {
         myPaddle,
         opponentPaddle,
         socket,
-        isGameReady,
         updateBallPosition,
-        updateState,
-        updatePaddlePosition
+        updateOpponentPaddlePosition
     } = useGameStore();
-
-    React.useEffect(() => {
-        console.log('test');
-        socket?.on('startgame', ({ room, SecondPlayer, chosen }) => {
-            updateState({ isSecondPlayer: SecondPlayer });
-            updateState({ isGameReady: true });
-            updateState({ roomId: room });
-            console.log(chosen);
-        });
-
-        return () => {
-            socket?.off('startgame');
-        };
-    }, [socket]);
 
     React.useEffect(() => {
         const handleBallMove = (newPosition: { x: number; y: number }) => {
@@ -43,10 +27,6 @@ export const Game: React.FC = () => {
             socket?.off('ballmove');
         };
     }, []);
-
-    useEffect(() => {
-        updatePaddlePosition();
-    }, [updatePaddlePosition]);
 
     React.useEffect(() => {
         socket?.on('PlayerDisconnected', async () => {
@@ -66,6 +46,16 @@ export const Game: React.FC = () => {
             socket?.off('PlayerDisconnected');
         };
     });
+
+    useEffect(() => {
+        socket?.on('paddlemove', function (newPosition) {
+            updateOpponentPaddlePosition(newPosition);
+        });
+
+        return () => {
+            socket?.off('paddlemove');
+        };
+    }, []);
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
@@ -93,22 +83,7 @@ export const Game: React.FC = () => {
 
     return (
         <div className="bg-white">
-            {isGameReady ? (
-                <canvas ref={canvasRef} width="800" height="600" />
-            ) : (
-                <div className="waiting-screen">
-                    <p
-                        style={{
-                            color: 'black',
-                            fontSize: '2em',
-                            textAlign: 'center',
-                            animation: 'fade 1.5s infinite'
-                        }}
-                    >
-                        Please wait for another player
-                    </p>
-                </div>
-            )}
+            <canvas ref={canvasRef} width="800" height="600" />
         </div>
     );
 };

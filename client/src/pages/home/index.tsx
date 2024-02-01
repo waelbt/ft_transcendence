@@ -21,8 +21,20 @@ export function home() {
     const handleClick = () => {
         updateState({ gameMode: GameMode.Classic });
         socket?.emit('gameMode', 'classic');
-        navigate('/game');
     };
+    useEffect(() => {
+        console.log('test');
+        socket?.on('startgame', ({ room, SecondPlayer, chosen }) => {
+            updateState({ isSecondPlayer: SecondPlayer });
+            updateState({ roomId: room });
+            navigate('/game');
+            console.log(chosen);
+        });
+
+        return () => {
+            socket?.off('startgame');
+        };
+    }, [socket]);
 
     // useEffect(() => {
     //     const handleRoomCreated = (data: RoomCreatedData) => {

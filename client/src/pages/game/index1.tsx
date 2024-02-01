@@ -279,6 +279,7 @@ export function Game() {
 
     useEffect(() => {
         socket?.on('paddlemove', function (newPosition) {
+            console.log(newPosition);
             setSecondPaddlePos(newPosition);
         });
 
@@ -290,14 +291,6 @@ export function Game() {
     React.useEffect(() => {
         socket?.on('PlayerDisconnected', async () => {
             console.log('player disconnected');
-            //   fetch("http://localhost:3001/game1", {
-            //   method: 'POST',
-            //   mode: 'no-cors',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify({room: 'dzdzed'}),
-            // }).then((res) => console.log('data 1 ',res.json()));
             window.location.reload();
         });
         return () => {
