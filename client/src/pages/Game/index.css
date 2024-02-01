@@ -6,18 +6,18 @@
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    outline: thick solid #FFFFFF;
+    outline: thick solid #ffffff;
     /* Changed border color */
 }
 
 .table-classic::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background:  black;
+    background: black;
     /* New gradient colors */
     opacity: 0.7;
     /* Adjusted opacity */
@@ -31,7 +31,7 @@
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    outline: thick solid #FFFFFF;
+    outline: thick solid #ffffff;
     /* Changed border color */
 }
 .table-IA {
@@ -42,12 +42,12 @@
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    outline: thick solid #FFFFFF;
+    outline: thick solid #ffffff;
     /* Changed border color */
 }
 
 .table-crazy::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -66,7 +66,7 @@
 
 .line {
     height: 99.4%;
-    border: 2px solid #FFFFFF;
+    border: 2px solid #ffffff;
     /* Changed border color */
     position: absolute;
     opacity: 0.5;
@@ -75,8 +75,8 @@
 
 /* Add any additional styles for other elements like paddles, ball, scores, buttons, etc., as per your new design requirements. */
 
-.container{
-    display:flex;
+.container {
+    display: flex;
     height: 80vh;
     width: 80vw;
     justify-content: center;
@@ -114,7 +114,7 @@
     bottom: 0;
     right: 0;
     z-index: -99999;
-    transition: all .4s;
+    transition: all 0.4s;
 }
 
 .button-86::before {
@@ -155,29 +155,29 @@
 
 @keyframes fade {
     0% {
-      opacity: 0.5;
+        opacity: 0.5;
     }
     50% {
-      opacity: 1;
+        opacity: 1;
     }
     100% {
-      opacity: 0.5;
+        opacity: 0.5;
     }
-  }
+}
 
-  .container {
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .button-container {
+}
+
+.button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .custom-button {
+}
+
+.custom-button {
     background-color: #3498db;
     border: none;
     color: white;
@@ -190,10 +190,8 @@
     transition: background-color 0.3s;
     font-family: 'Arial', sans-serif;
     font-size: 20px;
-  }
-  
-  .custom-button:hover {
+}
+
+.custom-button:hover {
     background-color: #2980b9;
-  }
-  
-  
+}

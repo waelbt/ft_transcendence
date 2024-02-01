@@ -13,12 +13,7 @@ interface Ball {
     angle: number;
 }
 
-@WebSocketGateway({
-    cors: {
-        origin: '*'
-    },
-    namespace: 'game'
-})
+@WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
     server: Server;
@@ -96,16 +91,20 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ]
             };
 
-            this.server.to(this.waitingFriend.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 1,
-                chosen: 'classic'
-            });
-            this.server.to(client.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 2,
-                chosen: 'classic'
-            });
+            this.server
+                .to(this.waitingFriend.id)
+                .emit('startgame', {
+                    room: room,
+                    SecondPlayer: 1,
+                    chosen: 'classic'
+                });
+            this.server
+                .to(client.id)
+                .emit('startgame', {
+                    room: room,
+                    SecondPlayer: 2,
+                    chosen: 'classic'
+                });
 
             this.waitingFriend = null;
         } else {
@@ -142,11 +141,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ]
             };
 
-            this.server.to(client.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 1,
-                chosen: gameMode
-            });
+            this.server
+                .to(client.id)
+                .emit('startgame', {
+                    room: room,
+                    SecondPlayer: 1,
+                    chosen: gameMode
+                });
 
             this.waitingRooms[gameMode] = null;
         } else if (this.waitingRooms[gameMode]) {
@@ -174,16 +175,20 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ]
             };
 
-            this.server.to(this.waitingRooms[gameMode].id).emit('startgame', {
-                room: room,
-                SecondPlayer: 1,
-                chosen: gameMode
-            });
-            this.server.to(client.id).emit('startgame', {
-                room: room,
-                SecondPlayer: 2,
-                chosen: gameMode
-            });
+            this.server
+                .to(this.waitingRooms[gameMode].id)
+                .emit('startgame', {
+                    room: room,
+                    SecondPlayer: 1,
+                    chosen: gameMode
+                });
+            this.server
+                .to(client.id)
+                .emit('startgame', {
+                    room: room,
+                    SecondPlayer: 2,
+                    chosen: gameMode
+                });
 
             console.log(
                 `Game started in ${gameMode} mode between ${this.waitingRooms[gameMode].id} and ${client.id}`
@@ -194,20 +199,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[gameMode] = client;
         }
     }
-    // ! me
-    // @SubscribeMessage('gameMode')
-    // handleGameMode(client: Socket, mode: string): void {
-    //     // Logic to create a room and assign the client to it
-    //     const roomId = createRoom(client, mode); // Implement createRoom logic
-    //     client.emit('roomCreated', roomId);
-    // }
 
-    //     / Continuing in your WebSocket gateway
-    // secondPlayerJoin(roomId: string, secondClient: Socket): void {
-    //   // Logic for adding the second player to the room
-    //   // Emit event to both clients
-    //   this.server.to(roomId).emit('playerJoined', { /* player data */ });
-    // }
     updateBallPosition(room: string, ball: Ball, mode: string): void {
         let newX = ball.pos.x - ball.speed * Math.cos(ball.angle);
         let newY = ball.pos.y + ball.speed * Math.sin(ball.angle);

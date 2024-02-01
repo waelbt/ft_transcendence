@@ -60,10 +60,6 @@ function Layout() {
                     avatar: user.avatar
                 });
                 updateState({ verified: user.completeProfile && !user.F2A });
-                console.log('before');
-                initializeGameSocket();
-                console.log('after');
-                gameSocket?.emit('gameMode', 'classic');
             } catch (error) {
                 // console.log(error); //! handle this
             } finally {
@@ -73,6 +69,7 @@ function Layout() {
         if (isLogged && !active) {
             fetchData();
         }
+        initializeGameSocket();
         return () => {
             gameSocket?.disconnect();
         };
@@ -84,10 +81,10 @@ function Layout() {
             {verified ? (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />
-                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
-                        <Outlet />
-                        {/* <GlobalChat /> */}
-                    </div>
+                    {/* <div className="flex-grow inline-flex justify-center items-center w-full gap-20"> */}
+                    <Outlet />
+                    {/* <GlobalChat /> */}
+                    {/* </div> */}
                 </div>
             ) : (
                 <Verfication />
