@@ -1,30 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import useGameStore, { GameMode } from '../../stores/gameStore';
-import { useEffect } from 'react';
+import { useUserStore } from '../../stores/userStore';
 
 export function Lobby() {
-    const { updateState, socket, initializeGameSocket } = useGameStore();
+    const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
+    const { id } = useUserStore();
 
     const handleClick = () => {
+        console.log('handleClick');
         updateState({ gameMode: GameMode.Classic });
-        socket?.emit('gameMode', 'classic');
+        socket?.emit('gameMode', {gameMode: 'classic', id});
+        navigate('/game');
+
     };
 
-    useEffect(() => {
-
-        socket?.on('startgame', ({ room, SecondPlayer, chosen }) => {
-            updateState({ isSecondPlayer: SecondPlayer });
-            updateState({ roomId: room });
-            updateState({ isGameReady: true });
-            navigate('/game');
-            console.log(chosen);
-        });
-
-        return () => {
-            socket?.off('startgame');
-        };
-    }, []);
 
     return (
         <div className="flex flex-col gap-2">

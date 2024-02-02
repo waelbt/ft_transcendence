@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Socket, io } from 'socket.io-client';
+import { useEffect } from 'react';
 
 interface Ball {
     x: number;
@@ -21,10 +22,10 @@ export enum GameMode {
 }
 
 type GameState = {
-    isSecondPlayer: false;
+    isSecondPlayer: false | boolean;
     socket: Socket | null;
     roomId: string | null;
-    gameMode: null | GameMode;
+    gameMode: undefined | GameMode;
     opponentId: string | null;
     ball: Ball;
     myPaddle: Paddle;
@@ -52,7 +53,7 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     socket: null,
     roomId: null,
     opponentId: null,
-    gameMode: null,
+    gameMode: undefined,
     ball: { x: 400, y: 300, vx: 5, vy: 5 },
     myPaddle: { x: 30, y: 250, height: 100 },
     opponentPaddle: { x: 760, y: 250, height: 100 },
@@ -76,6 +77,7 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
             });
             set({ socket: newSocket });
         }
+        
     },
     updateBallPosition: (x: number, y: number) =>
         set((state) => ({

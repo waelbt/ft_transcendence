@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import './index.css';
 import useGameStore from '../../stores/gameStore';
+import { Lobby } from '../Lobby';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
 }
 
 let paddlepos1: number;
-let roomid: any;
-let isSecondPlayer: number;
+// let roomId: any;
+// let isSecondPlayer: number;
 let chosenMode: string;
 let leftcolor: string;
 let rightcolor: string;
@@ -71,11 +72,11 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     return <div style={paddleStyle}></div>;
 };
 
-const Ball = () => {
+const Ball = ({}, {}) => {
     const [ballPos, setBallPos] = React.useState({ x: 0, y: 0 });
     const [ballColor, setBallColor] = React.useState('white');
     const [shadow, setShadow] = React.useState('0 0 1.25rem white');
-    const { socket, gameMode } = useGameStore();
+    const { socket, gameMode, isSecondPlayer } = useGameStore();
     const ballStyle: React.CSSProperties = {
         width: '1.5625rem', // 25px
         height: '1.5625rem', // 25px
@@ -87,11 +88,10 @@ const Ball = () => {
         top: `${ballPos.y}rem`,
         boxShadow: shadow // 20px
     };
-
     React.useEffect(() => {
         socket?.on('ballmove', function (newPosition) {
             setBallPos(
-                isSecondPlayer === 2
+                isSecondPlayer === false
                     ? { x: -newPosition.x, y: newPosition.y }
                     : newPosition
             );
@@ -100,7 +100,7 @@ const Ball = () => {
         return () => {
             socket?.off('ballmove');
         };
-    }, []);
+    }, [socket]);
     if (gameMode == 'crazy') {
         React.useEffect(() => {
             const interval = setInterval(() => {
@@ -144,13 +144,15 @@ export function Game() {
     const [rightscore, setRightScore] = React.useState(0);
 
     const [gameOver, setGameOver] = React.useState(false);
-    const { socket, isGameReady } = useGameStore();
+    const { socket, isGameReady, gameMode, isSecondPlayer, roomId } = useGameStore();
 
     React.useEffect(() => {
-        socket?.on('leftscored', () => {
+        socket?.on('leftscored', async (playerIds : string[]) => {
             setLeftScore((prevScore: number) => {
                 const newScore = prevScore + 1;
-                if (removeDecimalPart(newScore / 2) === 5) {
+                setRightScore((prvRightscore: number) => {
+                    if (removeDecimalPart(newScore) === 5) {
+                    console.log('player won', playerIds,' and left score is ',newScore, 'right score is ',prvRightscore);
                     //9alab 3la data lighay htaj khona o siftha lih
                     setGameOver(true);
                     // fetch("http://localhost:3001/game1", {
@@ -166,6 +168,8 @@ export function Game() {
                     socket?.emit('gameended');
                     window.location.reload();
                 }
+                return prvRightscore;
+            });
                 return newScore;
             });
         });
@@ -173,13 +177,13 @@ export function Game() {
         return () => {
             socket?.off('leftscrored');
         };
-    }, []);
+    }, [socket]);
 
     React.useEffect(() => {
         socket?.on('rightscored', () => {
             setRightScore((prevScore: number) => {
                 const newScore = prevScore + 1;
-                if (removeDecimalPart(newScore / 2) === 5) {
+                if (removeDecimalPart(newScore) === 5) {
                     setGameOver(true);
                     window.location.reload();
                     socket?.emit('gameended');
@@ -191,13 +195,13 @@ export function Game() {
         return () => {
             socket?.off('rightcrored');
         };
-    }, []);
+    }, [socket]);
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'ArrowUp' || e.key === 'w') {
-            movePaddle.current = -0.2;
+            movePaddle.current = -0.1;
         } else if (e.key === 'ArrowDown' || e.key === 's') {
-            movePaddle.current = 0.2;
+            movePaddle.current = 0.1;
         }
     };
 
@@ -218,9 +222,9 @@ export function Game() {
                         maxPos
                     );
                     socket?.emit('paddlemove', {
-                        room: roomid,
-                        pos: paddlepos1,
-                        SecondPlayer: isSecondPlayer
+                        room: roomId,
+                        pos:paddlepos1,
+                        SecondPlayer: isSecondPlayer === true ? 1 : 2
                     });
                     return paddlepos1;
                 });
@@ -239,7 +243,7 @@ export function Game() {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [gameOver]);
+    }, [gameOver, socket, setFirstPaddlePos, isSecondPlayer, roomId]);
 
     useEffect(() => {
         socket?.on('paddlemove', function (newPosition) {
@@ -249,11 +253,12 @@ export function Game() {
         return () => {
             socket?.off('paddlemove');
         };
-    }, []);
+    }, [socket, setSecondPaddlePos]);
 
     React.useEffect(() => {
-        socket?.on('PlayerDisconnected', async () => {
+        socket?.on('PlayerDisconnected', async (playerIds : string[]) => {
             console.log('player disconnected');
+            console.log('ids :' ,playerIds);
             //   fetch("http://localhost:3001/game1", {
             //   method: 'POST',
             //   mode: 'no-cors',
@@ -263,16 +268,24 @@ export function Game() {
             //   body: JSON.stringify({room: 'dzdzed'}),
             // }).then((res) => console.log('data 1 ',res.json()));
             window.location.reload();
-        });
+        }); 
         return () => {
             socket?.off('PlayerDisconnected');
         };
     });
+    useEffect(() => {
+        console.log(gameMode);
+        console.log(isSecondPlayer);
+    }, [gameMode, socket]);
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
-                {!isGameReady && (
+            <div className="flex flex-col w-full items-center justify-center h-full bg-gray-900">
+                
+                
+                {gameMode === undefined ? 
+                <Lobby />
+                    : !isGameReady ? (
                     <div className="waiting-screen">
                         <p
                             style={{
@@ -285,22 +298,30 @@ export function Game() {
                             Please wait for another player
                         </p>
                     </div>
-                )}
-                {isGameReady && (
-                    <div className={`table-${chosenMode}`}>
-                        <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-                        <Ball />
-                        <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
-                        <Score
-                            leftScore={removeDecimalPart(leftscore / 2)}
-                            rightScore={removeDecimalPart(rightscore / 2)}
-                            lColor={leftcolor}
-                            rColor={rightcolor}
-                        />
-                        <div className="lineC">
-                            <div className="line"></div>
+                ) : (
+                    <>
+                    
+                    <div className='w-full px-20 flex justify-between mb-20' >
+                        <div className='w-5 h-5 text-red-600' >{leftscore}</div>
+                        <div className='w-5 h-5 text-red-600' >{rightscore}</div>
+                    </div>
+                    <div className='w-[1168px] h-[663px]'>
+                        <div className={`table-${gameMode}`}>
+                            <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
+                            <Ball />
+                            <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
+                            <Score
+                                leftScore={removeDecimalPart(leftscore)}
+                                rightScore={removeDecimalPart(rightscore )}
+                                lColor={'white'}
+                                rColor={'white'}
+                            />
+                            <div className="lineC">
+                                <div className="line"></div>
+                            </div>
                         </div>
                     </div>
+                    </>
                 )}
             </div>
         </>
