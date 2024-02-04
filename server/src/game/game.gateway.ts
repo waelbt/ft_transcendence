@@ -120,7 +120,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @SubscribeMessage('gameMode')
     handleGameMode(
         client: Socket,
-        payload: { gameMode: 'classic' | 'crazy' | 'training'; userid: string }
+        payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
     ): void {
         console.log(`Client ${client.id} chose ${payload.gameMode} mode`);
 
@@ -154,7 +154,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     { id: client.id, pos: 0 },
                     { id: null, pos: 0 }
                 ],
-                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userid]
+                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userId]
             };
 
             this.server.to(client.id).emit('startgame', {
@@ -197,20 +197,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     { id: this.waitingRooms[payload.gameMode].id, pos: 0 },
                     { id: client.id, pos: 0 }
                 ],
-                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userid]
+                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userId]
             };
-
             this.server
                 .to(this.waitingRooms[payload.gameMode].id)
                 .emit('startgame', {
                     room: room,
                     SecondPlayer: 1,
-                    chosen: payload.gameMode
+                    opponentId: payload.userId
+                    // chosen: payload.gameMode,
                 });
             this.server.to(client.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 2,
-                chosen: payload.gameMode
+                opponentId: this.waitibgRoomIds[payload.gameMode]
+                // chosen: payload.gameMode,
             });
 
             console.log(
@@ -222,7 +223,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] = null;
         } else if (this.waitingRooms[payload.gameMode] === null) {
             this.waitingRooms[payload.gameMode] = client;
-            this.waitibgRoomIds[payload.gameMode] = payload.userid;
+            this.waitibgRoomIds[payload.gameMode] = payload.userId;
         }
     }
 

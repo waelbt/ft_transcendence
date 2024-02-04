@@ -3,6 +3,7 @@ import './index.css';
 import useGameStore from '../../stores/gameStore';
 import { Lobby } from '../Lobby';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
+import { useNavigate } from 'react-router-dom';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -143,11 +144,12 @@ export function Game() {
 
     const [leftscore, setLeftScore] = React.useState(0);
     const [rightscore, setRightScore] = React.useState(0);
+    const navigate = useNavigate();
 
     const [gameOver, setGameOver] = React.useState(false);
     const { socket, isGameReady, gameMode, isSecondPlayer, roomId } =
         useGameStore();
-    const axiosPrivate = useAxiosPrivate();
+    // const axiosPrivate = useAxiosPrivate();
     React.useEffect(() => {
         socket?.on('leftscored', async (playerIds: string[]) => {
             setLeftScore((prevScore: number) => {
@@ -162,10 +164,13 @@ export function Game() {
                             'right score is ',
                             prvRightscore
                         );
-                        //9alab 3la data lighay htaj khona o siftha lih
                         setGameOver(true);
-                        const response = axiosPrivate.post('/game/create', {});
-                        console.log(response);
+                        // const response = axiosPrivate.post('/game/create', {
+                        //     winnerId: playerIds,
+                        //     loserId: 'string',
+                        //     result: `${newScore}-${prvRightscore}`,
+                        //     mode: 'string'
+                        // });
                         // fetch("http://localhost:3001/game1", {
                         //   method: 'POST',
                         //   mode: 'no-cors',
@@ -177,7 +182,7 @@ export function Game() {
                         //   }),
                         // }).then((res) => console.log('data 1 ',res.json()));
                         socket?.emit('gameended');
-                        window.location.reload();
+                        navigate('/');
                     }
                     return prvRightscore;
                 });
@@ -278,7 +283,8 @@ export function Game() {
             //   },
             //   body: JSON.stringify({room: 'dzdzed'}),
             // }).then((res) => console.log('data 1 ',res.json()));
-            window.location.reload();
+            // window.location.reload();
+            navigate('/');
         });
         return () => {
             socket?.off('PlayerDisconnected');
@@ -292,7 +298,7 @@ export function Game() {
     return (
         <>
             <div className="flex flex-col w-full items-center justify-center h-full bg-gray-900">
-                {!isGameReady ? (
+                {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
                             style={{
@@ -305,40 +311,36 @@ export function Game() {
                             Please wait for another player
                         </p>
                     </div>
-                ) : (
-                    <>
-                        <div className="w-full px-20 flex justify-between mb-20">
-                            <div className="w-5 h-5 text-red-600">
-                                {leftscore}
-                            </div>
-                            <div className="w-5 h-5 text-red-600">
-                                {rightscore}
-                            </div>
-                        </div>
-                        <div className="w-[1168px] h-[663px]">
-                            <div className={`table-${gameMode}`}>
-                                <Paddle
-                                    color="#E6E6E9"
-                                    pos={`${firstPaddlePos}rem`}
-                                />
-                                <Ball />
-                                <Paddle
-                                    color="#E6E6E9"
-                                    pos={`${secondPaddlePos}rem`}
-                                />
-                                <Score
-                                    leftScore={removeDecimalPart(leftscore)}
-                                    rightScore={removeDecimalPart(rightscore)}
-                                    lColor={'white'}
-                                    rColor={'white'}
-                                />
-                                <div className="lineC">
-                                    <div className="line"></div>
-                                </div>
+                ) : ( */}
+                <>
+                    <div className="w-full px-20 flex justify-between mb-20">
+                        <div className="w-5 h-5 text-red-600">{leftscore}</div>
+                        <div className="w-5 h-5 text-red-600">{rightscore}</div>
+                    </div>
+                    <div className="w-[1168px] h-[663px]">
+                        <div className={`table-${gameMode}`}>
+                            <Paddle
+                                color="#E6E6E9"
+                                pos={`${firstPaddlePos}rem`}
+                            />
+                            <Ball />
+                            <Paddle
+                                color="#E6E6E9"
+                                pos={`${secondPaddlePos}rem`}
+                            />
+                            <Score
+                                leftScore={removeDecimalPart(leftscore)}
+                                rightScore={removeDecimalPart(rightscore)}
+                                lColor={'white'}
+                                rColor={'white'}
+                            />
+                            <div className="lineC">
+                                <div className="line"></div>
                             </div>
                         </div>
-                    </>
-                )}
+                    </div>
+                </>
+                {/* )} */}
             </div>
         </>
     );
