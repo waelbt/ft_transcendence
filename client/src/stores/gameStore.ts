@@ -15,17 +15,17 @@ interface Paddle {
     height: number; // Paddle height
 }
 
-export enum GameMode {
-    Classic = 'classic',
-    Crazy = 'crazy',
-    Training = 'AI'
-}
+// export enum GameMode {
+//     Classic = 'classic',
+//     Crazy = 'crazy',
+//     Training = 'AI'
+// }
 
 type GameState = {
     isSecondPlayer: false | boolean;
     socket: Socket | null;
     roomId: string | null;
-    gameMode: undefined | GameMode;
+    gameMode: string | null;
     opponentId: string | null;
     ball: Ball;
     myPaddle: Paddle;
@@ -53,7 +53,7 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     socket: null,
     roomId: null,
     opponentId: null,
-    gameMode: undefined,
+    gameMode: null,
     ball: { x: 400, y: 300, vx: 5, vy: 5 },
     myPaddle: { x: 30, y: 250, height: 100 },
     opponentPaddle: { x: 760, y: 250, height: 100 },
@@ -77,7 +77,6 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
             });
             set({ socket: newSocket });
         }
-        
     },
     updateBallPosition: (x: number, y: number) =>
         set((state) => ({
