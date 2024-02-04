@@ -7,6 +7,6 @@ export default axios.create({
 
 export const axiosPrivate = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, //!  change this to json
+    headers: { 'Content-Type': 'application/json' }, //!  change this to json
     withCredentials: false
 });

@@ -51,18 +51,10 @@ function Setting() {
             try {
                 const success = await uploadData(file);
                 if (success) {
-                    const res = await axiosPrivate.post(
-                        `/users/UpdateAvatar`,
-                        {
-                            oldAvatar: avatar,
-                            newAvatar: imagePath
-                        },
-                        {
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    );
+                    const res = await axiosPrivate.post(`/users/UpdateAvatar`, {
+                        oldAvatar: avatar,
+                        newAvatar: imagePath
+                    });
                     // update end point put old and new path
                     if (imagePath) updateState({ avatar: imagePath });
                 }

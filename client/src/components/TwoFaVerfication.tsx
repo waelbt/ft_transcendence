@@ -31,17 +31,9 @@ function TwoFaVerfication() {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            const response = await axiosPrivate.post(
-                '/2fa/validate',
-                {
-                    Code: codeString // Send the code as a JSON object
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
+            const response = await axiosPrivate.post('/2fa/validate', {
+                Code: codeString // Send the code as a JSON object
+            });
             toast.success(response.data.message);
             updateState({ verified: true });
         } catch (error) {
