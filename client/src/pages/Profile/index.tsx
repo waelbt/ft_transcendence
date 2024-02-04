@@ -71,7 +71,7 @@ export function Profile() {
                 relationship={relation}
                 isCurrentUser={isCurrentUser}
             />
-            <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
+            <div className="flex-grow max-h-[560px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
                 <Outlet
                     context={{ isCurrentUser, paramId, friendsIds, blocksIds }}
                 />

@@ -73,7 +73,7 @@ function Setting() {
     };
 
     return (
-        <div className="h-full w-full gap-8 px-[60px] py-2.5 rounded-[20px] shadow justify-between items-center inline-flex ">
+        <div className="h-full w-full gap-8 px-[60px] py-2.5 rounded-[20px]  justify-between items-center inline-flex ">
             <div className="self-stretch flex-col justify-between items-center inline-flex px-4 py-4 flex-grow">
                 {/* {' '}
                 gap-8 */}
