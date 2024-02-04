@@ -3,15 +3,15 @@ import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
 
 export function Lobby() {
-    const MODES = ['classic', 'crazy' , 'IA'];
+    const MODES = ['classic', 'crazy', 'training'];
     const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
     const { id } = useUserStore();
 
-    const handleClick = (mode: string) => {
+    const handleClick = (gameMode: string) => {
         console.log('handleClick');
-        updateState({ gameMode: mode });
-        socket?.emit('gameMode', { gameMode: mode, id });
+        updateState({ gameMode: gameMode });
+        socket?.emit('gameMode', { gameMode, id });
         navigate('/game');
     };
 
