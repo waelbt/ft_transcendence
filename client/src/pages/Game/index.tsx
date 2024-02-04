@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import './index.css';
 import useGameStore from '../../stores/gameStore';
 import { Lobby } from '../Lobby';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -144,32 +145,42 @@ export function Game() {
     const [rightscore, setRightScore] = React.useState(0);
 
     const [gameOver, setGameOver] = React.useState(false);
-    const { socket, isGameReady, gameMode, isSecondPlayer, roomId } = useGameStore();
-
+    const { socket, isGameReady, gameMode, isSecondPlayer, roomId } =
+        useGameStore();
+    const axiosPrivate = useAxiosPrivate();
     React.useEffect(() => {
-        socket?.on('leftscored', async (playerIds : string[]) => {
+        socket?.on('leftscored', async (playerIds: string[]) => {
             setLeftScore((prevScore: number) => {
                 const newScore = prevScore + 1;
                 setRightScore((prvRightscore: number) => {
                     if (removeDecimalPart(newScore) === 5) {
-                    console.log('player won', playerIds,' and left score is ',newScore, 'right score is ',prvRightscore);
-                    //9alab 3la data lighay htaj khona o siftha lih
-                    setGameOver(true);
-                    // fetch("http://localhost:3001/game1", {
-                    //   method: 'POST',
-                    //   mode: 'no-cors',
-                    //   headers: {
-                    //     'Content-Type': 'application/json',
-                    //   },
-                    //   body: JSON.stringify({
-                    //     contact: socket,
-                    //   }),
-                    // }).then((res) => console.log('data 1 ',res.json()));
-                    socket?.emit('gameended');
-                    window.location.reload();
-                }
-                return prvRightscore;
-            });
+                        console.log(
+                            'player won',
+                            playerIds,
+                            ' and left score is ',
+                            newScore,
+                            'right score is ',
+                            prvRightscore
+                        );
+                        //9alab 3la data lighay htaj khona o siftha lih
+                        setGameOver(true);
+                        const response = axiosPrivate.post('/game/create', {});
+                        console.log(response);
+                        // fetch("http://localhost:3001/game1", {
+                        //   method: 'POST',
+                        //   mode: 'no-cors',
+                        //   headers: {
+                        //     'Content-Type': 'application/json',
+                        //   },
+                        //   body: JSON.stringify({
+                        //     contact: socket,
+                        //   }),
+                        // }).then((res) => console.log('data 1 ',res.json()));
+                        socket?.emit('gameended');
+                        window.location.reload();
+                    }
+                    return prvRightscore;
+                });
                 return newScore;
             });
         });
@@ -223,7 +234,7 @@ export function Game() {
                     );
                     socket?.emit('paddlemove', {
                         room: roomId,
-                        pos:paddlepos1,
+                        pos: paddlepos1,
                         SecondPlayer: isSecondPlayer === true ? 1 : 2
                     });
                     return paddlepos1;
@@ -256,9 +267,9 @@ export function Game() {
     }, [socket, setSecondPaddlePos]);
 
     React.useEffect(() => {
-        socket?.on('PlayerDisconnected', async (playerIds : string[]) => {
+        socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
             console.log('player disconnected');
-            console.log('ids :' ,playerIds);
+            console.log('ids :', playerIds);
             //   fetch("http://localhost:3001/game1", {
             //   method: 'POST',
             //   mode: 'no-cors',
@@ -268,7 +279,7 @@ export function Game() {
             //   body: JSON.stringify({room: 'dzdzed'}),
             // }).then((res) => console.log('data 1 ',res.json()));
             window.location.reload();
-        }); 
+        });
         return () => {
             socket?.off('PlayerDisconnected');
         };
@@ -281,11 +292,7 @@ export function Game() {
     return (
         <>
             <div className="flex flex-col w-full items-center justify-center h-full bg-gray-900">
-                
-                
-                {gameMode === undefined ? 
-                <Lobby />
-                    : !isGameReady ? (
+                {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
                             style={{
@@ -300,27 +307,36 @@ export function Game() {
                     </div>
                 ) : (
                     <>
-                    
-                    <div className='w-full px-20 flex justify-between mb-20' >
-                        <div className='w-5 h-5 text-red-600' >{leftscore}</div>
-                        <div className='w-5 h-5 text-red-600' >{rightscore}</div>
-                    </div>
-                    <div className='w-[1168px] h-[663px]'>
-                        <div className={`table-${gameMode}`}>
-                            <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-                            <Ball />
-                            <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
-                            <Score
-                                leftScore={removeDecimalPart(leftscore)}
-                                rightScore={removeDecimalPart(rightscore )}
-                                lColor={'white'}
-                                rColor={'white'}
-                            />
-                            <div className="lineC">
-                                <div className="line"></div>
+                        <div className="w-full px-20 flex justify-between mb-20">
+                            <div className="w-5 h-5 text-red-600">
+                                {leftscore}
+                            </div>
+                            <div className="w-5 h-5 text-red-600">
+                                {rightscore}
                             </div>
                         </div>
-                    </div>
+                        <div className="w-[1168px] h-[663px]">
+                            <div className={`table-${gameMode}`}>
+                                <Paddle
+                                    color="#E6E6E9"
+                                    pos={`${firstPaddlePos}rem`}
+                                />
+                                <Ball />
+                                <Paddle
+                                    color="#E6E6E9"
+                                    pos={`${secondPaddlePos}rem`}
+                                />
+                                <Score
+                                    leftScore={removeDecimalPart(leftscore)}
+                                    rightScore={removeDecimalPart(rightscore)}
+                                    lColor={'white'}
+                                    rColor={'white'}
+                                />
+                                <div className="lineC">
+                                    <div className="line"></div>
+                                </div>
+                            </div>
+                        </div>
                     </>
                 )}
             </div>
