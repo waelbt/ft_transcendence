@@ -17,7 +17,6 @@ export function Lobby() {
         console.log('handleClick');
         updateState({ gameMode: gameMode });
         socket?.emit('gameMode', { gameMode, userId: id });
-        // navigate('/game');
         openEvent();
         startTimer();
     };
@@ -31,7 +30,7 @@ export function Lobby() {
             updateState({ opponentId: opponentId });
             console.log(opponentId, '   ', id);
             closeEvent();
-            navigate('/game');
+            navigate(`/game/${room}`);
         });
 
         return () => {
@@ -40,8 +39,9 @@ export function Lobby() {
     });
     return (
         <div className="flex flex-col gap-2">
-            {MODES.map((mode) => (
+            {MODES.map((mode, index) => (
                 <button
+                    key={`mode-${index}`}
                     className="p-4 bg-red-500 text-white"
                     onClick={() => handleClick(mode)}
                 >

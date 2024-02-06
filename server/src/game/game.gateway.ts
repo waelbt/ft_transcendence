@@ -168,8 +168,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] &&
             this.waitingRooms[payload.gameMode] !== client
         ) {
-            const room = `${this.waitingRooms[payload.gameMode].id}-${
-                client.id
+            const room = `${this.waitibgRoomIds[payload.gameMode]}${
+                payload.userId
             }`;
             client.join(room);
             this.waitingRooms[payload.gameMode].join(room);

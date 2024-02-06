@@ -30,7 +30,7 @@ const router = createBrowserRouter([
                 }
             },
             {
-                path: '/game',
+                path: '/game/:roomId',
                 lazy: async () => {
                     let { Game } = await import('./pages/Game');
                     return { Component: Game };

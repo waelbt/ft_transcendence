@@ -3,7 +3,7 @@ import { IoMdSettings } from 'react-icons/io';
 
 export const DEFAULT_PATH = './src/assets/images/default';
 
-export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
+export const NAV_LINKS = ['Home', 'Chat', 'Rooms'];
 
 export const MODES = ['classic', 'crazy', 'IA'];
 

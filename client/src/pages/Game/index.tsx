@@ -4,6 +4,7 @@ import useGameStore from '../../stores/gameStore';
 import { Lobby } from '../Lobby';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../stores/userStore';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -147,47 +148,52 @@ export function Game() {
     const navigate = useNavigate();
 
     const [gameOver, setGameOver] = React.useState(false);
-    const { socket, isGameReady, gameMode, isSecondPlayer, roomId } =
-        useGameStore();
-    // const axiosPrivate = useAxiosPrivate();
+    const {
+        socket,
+        isGameReady,
+        opponentId,
+        gameMode,
+        isSecondPlayer,
+        roomId
+    } = useGameStore();
+    const { id } = useUserStore();
+    React.useEffect(() => {
+        if (!isGameReady) navigate('/home');
+    }, [isGameReady]);
+    const axiosPrivate = useAxiosPrivate();
     React.useEffect(() => {
         socket?.on('leftscored', async (playerIds: string[]) => {
-            setLeftScore((prevScore: number) => {
-                const newScore = prevScore + 1;
-                setRightScore((prvRightscore: number) => {
-                    if (removeDecimalPart(newScore) === 5) {
-                        console.log(
-                            'player won',
-                            playerIds,
-                            ' and left score is ',
-                            newScore,
-                            'right score is ',
-                            prvRightscore
-                        );
-                        setGameOver(true);
-                        // const response = axiosPrivate.post('/game/create', {
-                        //     winnerId: playerIds,
-                        //     loserId: 'string',
-                        //     result: `${newScore}-${prvRightscore}`,
-                        //     mode: 'string'
-                        // });
-                        // fetch("http://localhost:3001/game1", {
-                        //   method: 'POST',
-                        //   mode: 'no-cors',
-                        //   headers: {
-                        //     'Content-Type': 'application/json',
-                        //   },
-                        //   body: JSON.stringify({
-                        //     contact: socket,
-                        //   }),
-                        // }).then((res) => console.log('data 1 ',res.json()));
-                        socket?.emit('gameended');
-                        navigate('/');
-                    }
-                    return prvRightscore;
+            setLeftScore((prevScore: number) => prevScore + 1);
+            // setLeftScore((prevScore: number) => {
+            // const newScore = prevScore + 1;
+            // setRightScore((prvRightscore: number) => {
+            if (leftscore === 5) {
+                console.log(
+                    'player won',
+                    playerIds,
+                    ' and left score is ',
+                    leftscore,
+                    'right score is ',
+                    rightscore
+                );
+                setGameOver(true);
+                // ! store result in both cases
+                const response = await axiosPrivate.post('/game/create', {
+                    winnerId: id,
+                    loserId: opponentId,
+                    result: `${leftscore}-${rightcolor}`,
+                    mode: gameMode
                 });
-                return newScore;
-            });
+
+                console.log(response);
+
+                socket?.emit('gameended');
+                navigate('/');
+            }
+            //     return prvRightscore;
+            // });
+            // return newScore;
+            // });
         });
 
         return () => {
@@ -297,7 +303,7 @@ export function Game() {
 
     return (
         <>
-            <div className="flex flex-col w-full items-center justify-center h-full bg-gray-900">
+            <div className="flex flex-col w-full items-center justify-center h-full ">
                 {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
