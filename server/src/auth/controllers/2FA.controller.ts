@@ -41,8 +41,8 @@ export class twoFAController{
         // if (user.F2A) {
         //     return res.status(400).json({ message: '2FA already enabled!' });
         // }
-        const token = code;
-		const isValidToken = otplib.authenticator.check(token, user.f2A_Secret);
+        // const token = code;
+		const isValidToken = otplib.authenticator.check(code, user.f2A_Secret);
         console.log('code: ', code);
         console.log('hada :  ', isValidToken);
         if (!isValidToken) {

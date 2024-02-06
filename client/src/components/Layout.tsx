@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Verfication from '../pages/Verfication';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-import { NavigationMenu, GlobalChat } from '.';
+import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
 // import { useEffectOnce } from 'usehooks-ts';
 

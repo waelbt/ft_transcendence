@@ -74,11 +74,7 @@ const Table = <D extends object>({
                         );
                     })
                 ) : (
-                    <tr>
-                        <td colSpan={columns.length} className="text-center py-5">
-                            Empty
-                        </td>
-                    </tr>
+                   null
                 )}
             </tbody>
         </table>
