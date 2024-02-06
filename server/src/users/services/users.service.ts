@@ -219,9 +219,13 @@ export class UsersService {
             userId
         );
 
-        const friendsIds = friends.map((friends) => {
-            return friends.id;
-        })
+        if (!friends) {
+            var friendsIds = friends.map((friends) => {
+                return friends.id;
+            })
+        } else {
+            friendsIds = [];
+        }
 
         const user = await this.getOneUser(userId);
         delete user.HashPassword;
