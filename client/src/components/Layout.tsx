@@ -12,7 +12,10 @@ function Layout() {
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket } = useChatSocketStore();
+    const {id } = useUserStore();
+    console.log("hellooooooooo");
 
+    console.log(id);
     useEffect(() => {
         const fetchData = async () => {
             console.log(accessToken);
@@ -55,7 +58,7 @@ function Layout() {
                     <NavigationMenu />
                     <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                         <Outlet />
-                        <GlobalChat />
+                        {/* <GlobalChat /> */}
                     </div>
                 </div>
             ) : (

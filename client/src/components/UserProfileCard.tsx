@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
@@ -8,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Popup from 'reactjs-popup';
 import { ACTIONS_ENDPOINTS } from '../constants';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 
 type UserProfileCardProps = {
     id: string;
@@ -23,6 +25,8 @@ type UserProfileCardProps = {
 };
 
 const UserProfileCard: FC<UserProfileCardProps> = (props) => {
+    const {socket } = useChatSocketStore();
+    const navigate = useNavigate();
     const navLinks = ['history', 'achivements', 'friends'];
     if (props.isCurrentUser) {
         navLinks.push('setting'); //! protect this
@@ -43,7 +47,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     ];
                     break;
                 case 'not friend':
-                    updatedActions = ['Send Request', ...updatedActions];
+                    updatedActions = ['Send Message','Send Request', ...updatedActions];
                     break;
                 case 'invitation sender':
                     updatedActions = ['Cancel Request', ...updatedActions];
@@ -62,13 +66,20 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     }, [props.relationship]);
 
     const handleAction = async (action: string) => {
-        const endpoint = ACTIONS_ENDPOINTS[action];
-
-        try {
-            const response = await axiosPrivate.post(endpoint + '/' + props.id);
-            console.log(response);
-        } catch (e) {
-            console.log(e);
+        if (action === 'Send Message') {
+            socket?.emit('sendMessage', { userId: props.id });
+            navigate('/chat');
+            console.log('Send a message button');
+        } 
+        else {
+            const endpoint = ACTIONS_ENDPOINTS[action];
+    
+            try {
+                const response = await axiosPrivate.post(endpoint + '/' + props.id);
+                console.log(response);
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
 
@@ -136,12 +147,20 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                                 <div className="py-[5px] w-[200px] bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
                                     {actions?.map((action) => (
                                         <div
-                                            key={action}
-                                            className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                            onClick={() => handleAction(action)}
-                                        >
-                                            {action}
-                                        </div>
+                                        key={action}
+                                        className={"text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"}
+                                        onClick={() => handleAction(action)}
+                                    >
+                                        {action === 'Send Message' ? (
+                                            <button
+                                                onClick={() => handleAction('Send Message')}
+                                            >
+                                                Send Message
+                                            </button>
+                                        ) : (
+                                            <div>{action}</div>
+                                        )}
+                                    </div>
                                     ))}
                                 </div>
                             </Popup>
