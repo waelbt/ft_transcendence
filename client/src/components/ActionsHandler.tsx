@@ -4,6 +4,8 @@ import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { FC, useEffect, useState } from 'react';
+import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -33,7 +35,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
         'Remove Friend': `/friends/removeFriend/${target}`,
         'Block User': `/users/blockUser/${target}`,
         'Send Request': `/friends/sendFriendRequest/${target}`,
-        'Cancel Request': `/users/removeSentFriendRequest/${target}`,
+        'Cancel Request': `/friends/removeSentFriendRequest/${target}`,
         'Accept Request': `/friends/acceptFriendRequest/${target}`,
         'Decline Request': `/friends/rejectFriendRequest/${target}`
     };
@@ -45,9 +47,9 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     };
 
     useEffect(() => {
-        console.log(relation)
+        console.log(relation);
         if (relation) {
-            if (relation == 'blocked') navigate('/error/403');
+            // if (relation == 'blocked') navigate('/error/403');
             let updatedActions = ['Block User']; // Default action
 
             switch (relation) {
@@ -94,7 +96,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
                 setRelation(actionToNewRelation[action]);
             }
         } catch (error) {
-            console.error(`Error executing action '${action}':`, error);
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
     };
 
