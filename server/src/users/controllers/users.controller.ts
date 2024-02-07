@@ -9,6 +9,7 @@ import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
 import { avatarDTO } from '../dto/avatar.dto';
 import { match_history } from '../dto/matchHistory.dto';
+import { mydata } from '../dto/mydata.dto';
 
 
 @ApiTags('users')
@@ -22,6 +23,12 @@ export class UsersController {
   @Get(':id/profile')
   // @ApiResponse({ status: 404, description: 'Not Found' })
   async userInfos(@Req() req, @Param('id') userId: string) {
+    const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, userId);
+    console.log('logs: ', isItBlocked);
+    if (isItBlocked){
+      console.log('im heeeere');
+      throw new NotFoundException('this user does not exist');
+    }
     const user = await this.usersService.findOneUser(userId);
     if (!user){
       throw new NotFoundException('this user does not exist');
@@ -30,12 +37,9 @@ export class UsersController {
   }
 
   @Get('me')
-  async myInfos(@Req() req){
-    console.log('Welcom To our Website again');
-    // if (userId != req.user.sub){
-    //   console.log('user1: ', userId, 'sub: ', req.user.sub);
-    //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
-    // }
+  @ApiOperation({ summary: 'Get my data'})
+  @ApiResponse({ status: 200, description: 'Returns my data', type: mydata,})
+  async myInfos(@Req() req): Promise<mydata> {
     return (await this.usersService.myInfos(req));
   }
 
@@ -57,7 +61,6 @@ export class UsersController {
       if (!file) {
         throw new InvalidFileException('No file provided.');
       }
-      console.log('all: ', file);
       return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {

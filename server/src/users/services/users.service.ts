@@ -15,6 +15,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { friendsService } from './friends.service';
 import { BlockService } from './blocked.service';
 import { match_history } from '../dto/matchHistory.dto';
+import { mydata, user } from '../dto/mydata.dto';
 
 @Injectable()
 export class UsersService {
@@ -268,7 +269,7 @@ export class UsersService {
         return info;
     }
 
-    async myInfos(@Req() req) {
+    async myInfos(@Req() req): Promise<mydata>{
         const user = await this.getOneUser(req.user.sub);
         delete user.HashPassword;
         console.log(user);
@@ -286,8 +287,7 @@ export class UsersService {
             return block.id;
         })
 
-        const info = { user, friendsIds, blocksIds };
-        return info;
+        return { user, friendsIds, blocksIds };
     }
 
     async userData(userId: string){

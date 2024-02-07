@@ -51,7 +51,7 @@ model Friendship {
 }
 
 model Block {
-	id            String   @id @unique
+	id            	Int     @id @default(autoincrement())
 	userId        String
 	blockedUserId String
 
