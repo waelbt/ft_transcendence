@@ -98,6 +98,28 @@ CREATE TABLE "Message" (
 );
 
 -- CreateTable
+CREATE TABLE "DMRooms" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "roomTitle" TEXT NOT NULL,
+    "friendId" TEXT NOT NULL,
+
+    CONSTRAINT "DMRooms_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "dmMessage" (
+    "id" SERIAL NOT NULL,
+    "message" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "senderId" TEXT NOT NULL,
+    "dmId" INTEGER NOT NULL,
+
+    CONSTRAINT "dmMessage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_FriendshipToUser" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -105,6 +127,12 @@ CREATE TABLE "_FriendshipToUser" (
 
 -- CreateTable
 CREATE TABLE "_RoomToUser" (
+    "A" INTEGER NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_DMRoomsToUser" (
     "A" INTEGER NOT NULL,
     "B" TEXT NOT NULL
 );
@@ -134,6 +162,9 @@ CREATE UNIQUE INDEX "Achievement_UserId_key" ON "Achievement"("UserId");
 CREATE UNIQUE INDEX "Room_roomTitle_key" ON "Room"("roomTitle");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "DMRooms_roomTitle_key" ON "DMRooms"("roomTitle");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_FriendshipToUser_AB_unique" ON "_FriendshipToUser"("A", "B");
 
 -- CreateIndex
@@ -144,6 +175,12 @@ CREATE UNIQUE INDEX "_RoomToUser_AB_unique" ON "_RoomToUser"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_RoomToUser_B_index" ON "_RoomToUser"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_DMRoomsToUser_AB_unique" ON "_DMRoomsToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_DMRoomsToUser_B_index" ON "_DMRoomsToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "Block" ADD CONSTRAINT "Block_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -170,6 +207,12 @@ ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("sende
 ALTER TABLE "Message" ADD CONSTRAINT "Message_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "dmMessage" ADD CONSTRAINT "dmMessage_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dmMessage" ADD CONSTRAINT "dmMessage_dmId_fkey" FOREIGN KEY ("dmId") REFERENCES "DMRooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_FriendshipToUser" ADD CONSTRAINT "_FriendshipToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Friendship"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -180,3 +223,9 @@ ALTER TABLE "_RoomToUser" ADD CONSTRAINT "_RoomToUser_A_fkey" FOREIGN KEY ("A") 
 
 -- AddForeignKey
 ALTER TABLE "_RoomToUser" ADD CONSTRAINT "_RoomToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_DMRoomsToUser" ADD CONSTRAINT "_DMRoomsToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "DMRooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_DMRoomsToUser" ADD CONSTRAINT "_DMRoomsToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
