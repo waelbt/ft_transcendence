@@ -4,15 +4,17 @@ import {
     NotFoundException,
     Param,
     Req,
+    UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { catchError, firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { friendsService } from './friends.service';
 import { BlockService } from './blocked.service';
+import { match_history } from '../dto/matchHistory.dto';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +24,9 @@ export class UsersService {
         private friendService: friendsService,
         private blockUsers: BlockService
     ) {}
+
+    // const prisma = new PrismaClient();
+
 
     async createUser(user: any, id: string) {
         const User = await this.prisma.user.create({
@@ -80,12 +85,19 @@ export class UsersService {
     }
 
     async updateNickName(id: string, name: string) {
-        const nickName = await this.prisma.user.update({
-            where:{ id: id},
-            data:{
-                nickName: name,
-            },
-        });
+        try {
+            const nickName = await this.prisma.user.update({
+                where:{ id: id},
+                data:{
+                    nickName: name,
+                },
+            });
+        } catch (error) {
+            if (error.code === 'P2002') {
+                throw new UnauthorizedException('Nickname is already in use.');
+            }
+            throw error;
+        }
     }
 
     async updateUser(id: string, user: User) {
@@ -142,7 +154,24 @@ export class UsersService {
         });
     }
 
-    async matchHistory(userId: string){
+    async searchBar(keyword: string) {
+        const result = await this.prisma.user.findMany({
+            where: {
+                nickName: { contains: keyword, mode: 'insensitive' },
+            }
+          });
+        // const result = await this.prisma.user.findMany({
+        //     where: {
+        //       body: {
+        //         search: 'cat | dog',
+        //       },
+        //     },
+        //   })
+        console.log(result);
+        return result;
+    }
+
+    async matchHistory(userId: string): Promise<match_history[]>{
         const matchs = await this.prisma.game.findMany({
             where:{
                 OR: [
@@ -155,7 +184,7 @@ export class UsersService {
         const match = await Promise.all( matchs.map( async (matche) =>{
 
             var user;
-            var addedXp;
+            var addedXp : any;
             if (matche.winnerId == userId)
             {
                 user = await this.getOneUser(matche.loserId);
@@ -164,12 +193,12 @@ export class UsersService {
                 user = await this.getOneUser(matche.winnerId);
                 addedXp = 100;
             }
-            const score = matche.result.split('-');
-            const id = matche.id;
-            const date = matche.createdAt;
-            const level = user.level;
-            const name = user.fullName;
-            const avatar = user.avatar;
+            const score : string[] = matche.result.split('-');
+            const id : number = matche.id;
+            const date : Date = matche.createdAt;
+            const level : string = user.level;
+            const name : string = user.fullName;
+            const avatar : string  = user.avatar;
             return {
                 id,
                 name,
@@ -180,6 +209,9 @@ export class UsersService {
                 date,
             }
         }));
+        // exampleFunction().finally(() => {
+        //     prisma.$disconnect(); // Disconnect Prisma client
+        //   });
         return match;
     }
 

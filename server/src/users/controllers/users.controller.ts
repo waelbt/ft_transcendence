@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, UnauthorizedException, HttpException, HttpStatus, UseGuards, Res } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
 import { InvalidFileException } from '../multer/file.exception';
@@ -8,6 +8,7 @@ import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
 import { avatarDTO } from '../dto/avatar.dto';
+import { match_history } from '../dto/matchHistory.dto';
 
 
 @ApiTags('users')
@@ -56,7 +57,7 @@ export class UsersController {
       if (!file) {
         throw new InvalidFileException('No file provided.');
       }
-      console.log(file);
+      console.log('all: ', file);
       return await this.usersService.uploadAvatar(file, req);
     }catch (error) {
       if (error instanceof InvalidFileException) {
@@ -98,7 +99,9 @@ export class UsersController {
   }
 
   @Get('historyMatchs')
-  async match_history(@Req() req){
+  @ApiOperation({ summary: 'Get match history'})
+  @ApiResponse({ status: 200, description: 'Returns the match history of the user', type: match_history,})
+  async match_history(@Req() req): Promise<match_history[]>{
     return await this.usersService.matchHistory(req.user.sub);
   }
 
@@ -111,6 +114,11 @@ export class UsersController {
     if (!findUser)
       throw new NotFoundException(`User with the  id ${id} does not exist`);
     return (findUser);
+  }
+
+  @Get('search/:keyword')
+  async searchBar(@Param('keyword') keyword: string) {
+    return (this.usersService.searchBar(keyword));
   }
 
   @Patch(':id')
