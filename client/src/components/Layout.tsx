@@ -56,10 +56,10 @@ function Layout() {
             {verified ? (
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />
-                    <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
+                    {/* <div className="flex-grow inline-flex justify-center items-center w-full gap-20"> */}
                         <Outlet />
                         {/* <GlobalChat /> */}
-                    </div>
+                    {/* </div> */}
                 </div>
             ) : (
                 <Verfication />

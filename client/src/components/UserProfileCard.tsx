@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, createBrowserRouter } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
@@ -32,7 +32,17 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
         navLinks.push('setting'); //! protect this
     }
     const [actions, setActions] = useState<string[]>(['Block user']);
+    
     const axiosPrivate = useAxiosPrivate();
+
+    // const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    // const [conversationId, setConversationId] = useState<string | null>(null);
+
+    // useEffect(() => {
+    //     if (props.id) {
+    //         checkConversation(props.id);
+    //     }
+    // }, [props.id]);
 
     useEffect(() => {
         if (props.relationship) {
@@ -65,11 +75,40 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
         }
     }, [props.relationship]);
 
+    // const checkConversation = (userId: string) => {
+    //     socket?.emit('checkConversation', { userId});
+
+    //     socket?.on('conversationDetails', (data: { conversationId: string }) => {
+    //     const { conversationId } = data;
+    //     if (conversationId) {
+    //         setConversationId(conversationId);
+    //       } else {
+    //         setConversationId(null);
+    //       }
+    //     socket?.disconnect();
+    //     });
+    // };
+
     const handleAction = async (action: string) => {
-        if (action === 'Send Message') {
-            socket?.emit('sendMessage', { userId: props.id });
-            navigate('/chat');
-            console.log('Send a message button');
+        if (action === 'Send Message') 
+        {
+            // if (selectedUserId) 
+            // {
+            //     if (conversationId) 
+            //     {
+            //         navigate(`/chat/${selectedUserId}?conversationId=${conversationId}`);
+            //     }
+            //     else 
+            //     {
+            //     }
+            //     setSelectedUserId(props.id);
+
+
+                socket?.emit('sendMessage', { userId: props.id });
+                navigate('/chat');
+            
+                console.log('Send a message button');
+            // }
         } 
         else {
             const endpoint = ACTIONS_ENDPOINTS[action];

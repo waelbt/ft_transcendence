@@ -4,11 +4,19 @@ import io, { Socket } from 'socket.io-client';
 
 type SocketState = {
     socket: Socket | null;
+    messages : string[];
+    pushMessage: (msg: string) => void;
     initializeSocket: (token: string | null) => void;
 };
 
 export const useChatSocketStore = create<SocketState>((set, get) => ({
     socket: null,
+    messages: [],
+    pushMessage:(msg) => (
+        const {messages} = get();
+        const newMessages;
+        [newMessages] = message
+    ),
     initializeSocket: (token) => {
         const { socket } = get();
         if (token && !socket) {
