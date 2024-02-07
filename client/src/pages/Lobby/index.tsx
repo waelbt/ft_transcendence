@@ -22,7 +22,6 @@ export function Lobby() {
     };
 
     useEffect(() => {
-        console.log('useEffect');
         socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
             updateState({ isSecondPlayer: SecondPlayer === 1 });
             updateState({ roomId: room });

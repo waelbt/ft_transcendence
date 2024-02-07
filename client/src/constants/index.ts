@@ -1,7 +1,6 @@
 import { HiLogout } from 'react-icons/hi';
 import { IoMdSettings } from 'react-icons/io';
 
-export const DEFAULT_PATH = './src/assets/images/default';
 
 export const NAV_LINKS = ['Home', 'Chat', 'Rooms'];
 

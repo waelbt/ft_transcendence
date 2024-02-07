@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
-import { DEFAULT_PATH, NICKNAME_FIELD } from '../constants';
+import { NICKNAME_FIELD } from '../constants';
 import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 function ProfileCompletion() {
     const { updateState, avatar, logout } = useUserStore();
-    const [selectedItemIndex, setSelectedItemIndex] = useState<Number>(-1);
+    const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const axiosPrivate = useAxiosPrivate();
     const {
         progress,
@@ -19,19 +19,26 @@ function ProfileCompletion() {
         setImagePath,
         deleteData,
         isFailed,
-        success
+        success,
+        setProgress
     } = useImageUpload();
 
     const handleSubmit = async (data: FieldValues) => {
         try {
-            data['avatar'] = success ? imagePath : avatar;
+            if (selectedItemIndex != -1) {
+                console.log(selectedItemIndex);
+                data['avatar'] = `${import.meta.env.VITE_DEFAULT_AVATAR}${
+                    selectedItemIndex + 1
+                }.png`;
+            } else data['avatar'] = success ? imagePath : avatar;
+            console.log(data)
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             updateState({ nickName: data['nickName'] });
-            if (success && imagePath) updateState({ avatar: imagePath });
+            updateState({ avatar: data['avatar'] });
             updateState({ completeProfile: true });
             updateState({ verified: true });
             toast.success('profile created successfully');
@@ -98,7 +105,8 @@ function ProfileCompletion() {
                                     setImagePath(null);
                                     selectedItemIndex == -1
                                         ? await deleteData()
-                                        : setSelectedItemIndex(-1);
+                                        : (setSelectedItemIndex(-1),
+                                          setProgress(0));
                                 }}
                             >
                                 <div className="w-9 h-9 flex justify-center items-center">
@@ -142,18 +150,20 @@ function ProfileCompletion() {
                                             key={index}
                                             onClick={() => {
                                                 setImagePath(
-                                                    `${DEFAULT_PATH}${
-                                                        index + 1
-                                                    }.png`
+                                                    `${
+                                                        import.meta.env
+                                                            .VITE_DEFAULT_AVATAR
+                                                    }${index + 1}.png`
                                                 );
                                                 setSelectedItemIndex(index);
                                             }}
                                         >
                                             <img
                                                 className="w-full h-full object-cover rounded-full"
-                                                src={`${DEFAULT_PATH}${
-                                                    index + 1
-                                                }.png`}
+                                                src={`${
+                                                    import.meta.env
+                                                        .VITE_DEFAULT_AVATAR
+                                                }${index + 1}.png`}
                                             />
                                         </li>
                                     ))}

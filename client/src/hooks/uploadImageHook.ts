@@ -19,14 +19,12 @@ const useImageUpload = () => {
             cancelTokenSource.current.cancel('Upload cancelled by the user.');
             cancelTokenSource.current = axios.CancelToken.source();
         } else {
-            try{
-
+            try {
                 const res = await axiosPrivate.delete(
-                    `/users/delete/${imagePath}`
-                    );
-            }
-            catch(e) {
-                console.log(e)
+                    `/users/delete/${encodeURIComponent(imagePath as string)}`
+                );
+            } catch (e) {
+                console.log(e);
             }
             setProgress(0);
         }
@@ -93,7 +91,8 @@ const useImageUpload = () => {
         uploadData,
         deleteData,
         imagePath,
-        setImagePath
+        setImagePath,
+        setProgress
     };
 };
 
