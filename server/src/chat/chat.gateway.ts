@@ -19,6 +19,10 @@ import { use } from 'passport';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { LeaveRoomDto } from './DTOS/leave-room.dto';
 import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
+import { CreateDmDto } from './DTOS/create-dm.dto';
+import { AnonymousSubject } from 'rxjs/internal/Subject';
+import { SendMessageDto } from './DTOS/send-message-dto';
+import { send } from 'process';
 
 @WebSocketGateway({
     cors: {
@@ -49,8 +53,11 @@ export class ChatGateway
         const { sockets } = this.server.sockets;
 
         this.logger.log(`This client ${client.id} connected`);
+        // const userCheck = await this.wsService.getUserFromAccessToken(
+        //     client.handshake.auth.token
+        // console.log(client.handshake);
         const userCheck = await this.wsService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
@@ -163,6 +170,32 @@ export class ChatGateway
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
         await this.wsService.unmuteUser(unmuteUserDto, userCheck.userData.sub);
+    }
+
+    @SubscribeMessage('dm')
+    async sendDM(client: any, sendMessage: SendMessageDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else
+        {
+            // function to check if they have already talked
+            const dmroom = await this.wsService.sendDM(userCheck.userData.sub, sendMessage.receiverId, sendMessage.message);
+            this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages);
+        }
+    }
+
+    @SubscribeMessage('checkDm')
+    async checkDM(client: any, createDmDto: CreateDmDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else
+        {
+            const dm = await this.wsService.CheckForExistingDmRoom(userCheck.userData.sub, createDmDto.friendId);
+            console.log('room that should be sent', dm);
+            this.server.emit('checkDM', dm);
+        }
     }
 
     async handleDisconnect(client: any) {

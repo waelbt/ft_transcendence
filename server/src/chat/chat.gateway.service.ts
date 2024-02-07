@@ -7,6 +7,7 @@ import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { RoomPrivacy } from '@prisma/client';
 import { JoinRoomDto } from './DTOS/join-room.dto';
+import { CreateDmDto } from './DTOS/create-dm.dto';
 
 @Injectable()
 export class WebSocketService {
@@ -16,11 +17,12 @@ export class WebSocketService {
         private readonly jwt: JwtService
     ) {}
 
-    async joinUserSocketToItsRooms(
-        userSocket: string,
-        userId: string,
-        server: Server
-    ) {
+    // async joinUserSocketToItsRooms(
+    //     userSocket: string,
+    //     userId: string,
+    //     server: Server
+    // ) {
+    async joinUserSocketToItsRooms( userSocket: string, userId: string, server: Server) {
         let joinedRooms;
         try {
             joinedRooms = await this.roomService.getMyRooms(userId);
@@ -28,6 +30,11 @@ export class WebSocketService {
             console.log(err);
         }
         console.log(joinedRooms);
+        const dms = await this.getAllDms(userId);
+        for (let j = 0; j < dms.length; j++) {
+            server.in(userSocket).socketsJoin(dms[j].roomTitle);
+            console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
+        }
         if (!joinedRooms) {
             console.log('No rooms found for user:', userId);
             return;
@@ -134,5 +141,101 @@ export class WebSocketService {
     async joinUserSocketToGlobalChat(userSocket: string, server: Server) {
         const title = 'GlobalChat';
         server.in(userSocket).socketsJoin(title);
+    }
+
+    async createDm(user1id: string, user2id: string) {
+        const title : string = user1id + user2id;
+        const newDm = await this.prisma.dMRooms.create({
+            data: {
+                roomTitle: title,
+                friendId: user2id,
+                users: {
+                    connect: [
+                        { id: user1id },
+                        { id: user2id },
+                    ]
+                },
+            },
+            include : {
+                users: true,
+                messages: true,
+            },
+        });
+        return (newDm);
+    }
+
+    async CheckForExistingDmRoom(user1id: string, user2id: string) {
+        const dm = await this.prisma.dMRooms.findFirst({
+            where : {
+                AND: [
+                    { users: { some: { id: user1id } } },
+                    { users: { some: { id: user2id } } },
+                ]
+            },
+            include : {
+                users: true,
+                messages: true,
+            }
+        });
+
+        let newDm;
+        if (!dm)
+        {
+            newDm = await this.createDm(user1id, user2id);
+            console.log(newDm, 'first time talking');
+            return (newDm);
+        }
+        return (dm);
+    }
+    
+    async sendDM(user1id: string, user2id: string, message: string) {
+        const dm = await this.prisma.dMRooms.findFirst({
+            where : {
+                AND: [
+                    { users: { some: { id: user1id } } },
+                    { users: { some: { id: user2id } } },
+                ]
+            },
+            include : {
+                users: true,
+                messages: true,
+            }
+        });
+        console.log('test for id', dm);
+        const newMessage = await this.prisma.dmMessage.create({
+            data: {
+                message: message,
+                sender: {
+                    connect: {
+                        id: user1id,
+                    },
+                },
+                dmroom: {
+                    connect: {
+                        id: dm.id,
+                    }
+                },
+            },
+            include : {
+                sender: true,
+                dmroom: true,
+            }
+        });
+        console.log('check message creation', newMessage);
+        return (dm);
+    }
+
+    async getAllDms(userId: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                dm: true,
+            }
+        });
+
+        console.log('dms are', user.dm);
+        return (user.dm);
     }
 }
