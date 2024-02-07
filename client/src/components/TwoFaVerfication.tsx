@@ -4,7 +4,7 @@ import CodeInput from './CodeInput';
 import { isAxiosError } from 'axios';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-import { useDebounce } from 'usehooks-ts';
+import { useDebounce } from '../hooks/debouncerHook';
 
 function TwoFaVerfication() {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);

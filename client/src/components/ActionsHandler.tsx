@@ -6,6 +6,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { FC, useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { ACTIONS_ENDPOINTS, ACTION_TO_KNOW_RELATION } from '../constants';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -22,43 +23,23 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const { removeUserFriendId, addUserBlockId, addUserFriendId } =
         useUserStore();
 
-    const actionToNewRelation: { [key: string]: string } = {
-        'Remove Friend': 'not friend',
-        'Block User': 'blocked',
-        'Send Request': 'invitation sender',
-        'Cancel Request': 'not friend',
-        'Accept Request': 'friend',
-        'Decline Request': 'not friend'
-    };
-
-    const actionEndpoints: { [key in string]: string } = {
-        'Remove Friend': `/friends/removeFriend/${target}`,
-        'Block User': `/users/blockUser/${target}`,
-        'Send Request': `/friends/sendFriendRequest/${target}`,
-        'Cancel Request': `/friends/removeSentFriendRequest/${target}`,
-        'Accept Request': `/friends/acceptFriendRequest/${target}`,
-        'Decline Request': `/friends/rejectFriendRequest/${target}`
-    };
-
     const actionEffects: { [key in string]: (id: string) => void } = {
         'Remove Friend': (id) => removeUserFriendId(id),
-        'Block User': (id) => addUserBlockId(id),
+        'Block User': (id) => {
+            addUserBlockId(id);
+            navigate(-1);
+        },
         'Accept Request': (id) => addUserFriendId(id)
     };
 
     useEffect(() => {
         console.log(relation);
         if (relation) {
-            // if (relation == 'blocked') navigate('/error/403');
-            let updatedActions = ['Block User']; // Default action
+            let updatedActions = ['Block User'];
 
             switch (relation) {
                 case 'friend':
-                    updatedActions = [
-                        // 'Send Message',
-                        'Remove Friend',
-                        ...updatedActions
-                    ];
+                    updatedActions = ['Remove Friend', ...updatedActions];
                     break;
                 case 'not friend':
                     updatedActions = ['Send Request', ...updatedActions];
@@ -77,23 +58,23 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
             setActions(updatedActions);
         }
     }, [relation]);
+
     const handleAction = async (action: string) => {
-        const endpoint = actionEndpoints[action];
+        const endpoint = ACTIONS_ENDPOINTS[action];
         if (!endpoint) {
             console.error(`No endpoint found for action: ${action}`);
             return;
         }
 
         try {
-            const response = await axiosPrivate.post(endpoint);
-            console.log('Action response:', response);
+            await axiosPrivate.post(`${endpoint}${target}`);
 
             const effect = actionEffects[action];
             if (effect) {
                 effect(target);
             }
-            if (actionToNewRelation[action]) {
-                setRelation(actionToNewRelation[action]);
+            if (ACTION_TO_KNOW_RELATION[action]) {
+                setRelation(ACTION_TO_KNOW_RELATION[action]);
             }
         } catch (error) {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);

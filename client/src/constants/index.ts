@@ -1,7 +1,6 @@
 import { HiLogout } from 'react-icons/hi';
 import { IoMdSettings } from 'react-icons/io';
 
-
 export const NAV_LINKS = ['Home', 'Chat', 'Rooms'];
 
 export const MODES = ['classic', 'crazy', 'IA'];
@@ -40,11 +39,20 @@ export const NICKNAME_FIELD = [
     }
 ];
 
-// export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
-//     'Remove Friend': '/friends/removeFriend/',
-//     'Block User': '/users/blockUser/',
-//     'Send Request': '/friends/sendFriendRequest/',
-//     'Cancel Request': '/users/unblockUser/',
-//     'Accept Request': '/friends/acceptFriendRequest/',
-//     'Decline Request': '/friends/rejectFriendRequest/'
-// };
+export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
+    'Remove Friend': `/friends/removeFriend/`,
+    'Block User': `/users/blockUser/`,
+    'Send Request': `/friends/sendFriendRequest/`,
+    'Cancel Request': `/friends/removeSentFriendRequest/`,
+    'Accept Request': `/friends/acceptFriendRequest/`,
+    'Decline Request': `/friends/rejectFriendRequest/`
+};
+
+export const ACTION_TO_KNOW_RELATION: { [key: string]: string } = {
+    'Remove Friend': 'not friend',
+    'Block User': 'blocked',
+    'Send Request': 'invitation sender',
+    'Cancel Request': 'not friend',
+    'Accept Request': 'friend',
+    'Decline Request': 'not friend'
+};

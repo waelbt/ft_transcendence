@@ -6,7 +6,8 @@ import { isAxiosError } from 'axios';
 import { useUserStore } from '../stores/userStore';
 import { IoIosLock } from 'react-icons/io';
 import { FormEvent } from 'react';
-import { useDebounce } from 'usehooks-ts';
+import { useDebounce } from '../hooks/debouncerHook';
+
 const TwoFA = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();

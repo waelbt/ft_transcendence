@@ -8,7 +8,7 @@ import useGameStore from '../stores/gameStore';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, accessToken, verified, isLogged, active } =
+    const { id, updateState, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     // const { socket } = useChatSocketStore();
@@ -36,7 +36,10 @@ function Layout() {
         if (isLogged && !active) {
             fetchData();
         }
+        
         initializeGameSocket();
+
+        console.log(id);
         return () => {
             gameSocket?.disconnect();
         };
