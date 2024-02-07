@@ -24,13 +24,18 @@ export class UsersService {
     ) {}
 
     async createUser(user: any, id: string) {
-        return await this.prisma.user.create({
+        const User = await this.prisma.user.create({
             data: {
                 id: id,
                 email: user.email,
                 fullName: user.fullName,
                 avatar: user.avatar,
                 nickName: user.nickName
+            }
+        });
+        const achievement = await this.prisma.achievement.create({
+            data: {
+                UserId: User.id
             }
         });
     }
@@ -51,8 +56,8 @@ export class UsersService {
 
     async saveUser(user: User): Promise<User> {
         return this.prisma.user.update({
-          where: { id: user.id },
-          data: user,
+            where: { id: user.id },
+            data: user
         });
     }
 
@@ -80,10 +85,10 @@ export class UsersService {
 
     async uploadAvatar(file: Express.Multer.File, @Req() req): Promise<any> {
         const user = await this.findOneUser(req.user.sub);
-        if (!user)
-            throw new NotFoundException(`User does not exist`);
-
-        return file.path;
+        if (!user) throw new NotFoundException(`User does not exist`);
+        console.log(file.filename);
+        return file.filename;
+        // return (file.path);
     }
 
     async deleteImage(path: string) {
@@ -107,6 +112,44 @@ export class UsersService {
         });
     }
 
+    async matchHistory(userId: string) {
+        const matchs = await this.prisma.game.findMany({
+            where: {
+                OR: [{ winnerId: userId }, { loserId: userId }]
+            }
+        });
+
+        const match = await Promise.all(
+            matchs.map(async (matche) => {
+                var user;
+                var addedXp;
+                if (matche.winnerId == userId) {
+                    user = await this.getOneUser(matche.loserId);
+                    addedXp = 400;
+                } else {
+                    user = await this.getOneUser(matche.winnerId);
+                    addedXp = 100;
+                }
+                const score = matche.result.split('-');
+                const id = matche.id;
+                const date = matche.createdAt;
+                const level = user.level;
+                const name = user.fullName;
+                const avatar = user.avatar;
+                return {
+                    id,
+                    name,
+                    avatar,
+                    level,
+                    score,
+                    addedXp,
+                    date
+                };
+            })
+        );
+        return match;
+    }
+
     async userInfo(@Req() req, avatar: string, nickName: string) {
         console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
@@ -114,26 +157,30 @@ export class UsersService {
         //update user avatar and nickName if the front send them if not do not do anything
         //serach if the userName exist or not because it's need to be unique
         if (avatar && nickName) {
-            await this.updateAvatarNickname(req.user.sub, avatar, nickName)
+            await this.updateAvatarNickname(req.user.sub, avatar, nickName);
         }
 
         await this.prisma.user.update({
-            where: {id: req.user.sub},
+            where: { id: req.user.sub },
             data: {
-                completeProfile: true,
+                completeProfile: true
             }
         });
         const user = await this.getOneUser(req.user.sub);
         return user;
     }
 
-    async updateAvatarNickname(userId: string, avatar: string, nickName: string){
+    async updateAvatarNickname(
+        userId: string,
+        avatar: string,
+        nickName: string
+    ) {
         const update = await this.prisma.user.update({
-            where: {id: userId},
+            where: { id: userId },
             data: {
                 avatar: avatar,
-                nickName: nickName,
-            },
+                nickName: nickName
+            }
         });
     }
 
@@ -145,14 +192,17 @@ export class UsersService {
 
         const friendsIds = friends.map((friends) => {
             return friends.id;
-        })
+        });
 
         const user = await this.getOneUser(userId);
         delete user.HashPassword;
         console.log(user);
         //add the type of profile string
-        const type = await this.friendService.typeOfProfile(req.user.sub, userId);
-        const info = { user, friendsIds , type};
+        const type = await this.friendService.typeOfProfile(
+            req.user.sub,
+            userId
+        );
+        const info = { user, friendsIds, type };
         return info;
     }
 
@@ -165,32 +215,48 @@ export class UsersService {
 
         const friendsIds = friends.map((friends) => {
             return friends.id;
-        })
+        });
 
         console.log(friendsIds);
 
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
         const blocksIds = block.map((block) => {
             return block.id;
-        })
+        });
 
         const info = { user, friendsIds, blocksIds };
         return info;
     }
 
-    async getAllUsersRank(){
+    async userData(userId: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId }
+        });
+        if (!user) throw new NotFoundException(`User does not exist`);
+
+        const id = user.id;
+        const avatar = user.avatar;
+        const fullName = user.fullName;
+        return {
+            id,
+            avatar,
+            fullName
+        };
+    }
+
+    async getAllUsersRank() {
         const users = await this.findAllUser();
-        
+
         console.log(users);
 
         const sortedUsers = users.sort((user1, user2) => {
             if (user1.level !== user2.level) {
-              return user2.level - user1.level; // Sort user2y level in descending order
+                return user2.level - user1.level; // Sort user2y level in descending order
             } else {
-              return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
+                return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
             }
-          });
-          console.log(sortedUsers);
-          return sortedUsers;
+        });
+        console.log(sortedUsers);
+        return sortedUsers;
     }
 }

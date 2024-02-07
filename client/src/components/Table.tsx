@@ -1,4 +1,4 @@
-import { useTable, TableOptions, Column } from 'react-table';
+import { useTable, TableOptions, Column, Row } from 'react-table';
 
 interface TableStyles {
     tableStyle?: string;
@@ -18,8 +18,11 @@ type TableProps<D extends object> = {
 const Table = <D extends object>({
     columns,
     data,
-    styles = {}
-}: TableProps<D>): JSX.Element => {
+    styles = {},
+    getRowProps = () => ({}) // Default to no-op function if not provided
+}: TableProps<D> & {
+    getRowProps?: (row: Row<D>) => object;
+}): JSX.Element => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable<D>({
             columns,
@@ -27,10 +30,8 @@ const Table = <D extends object>({
         } as TableOptions<D>);
 
     return (
-        <table
-            {...getTableProps()}
-            className={`tableScroll ${styles.tableStyle || ''}`}
-        >
+        // <div className='"max-h-[300px] overflow-y-auto"'>
+        <table {...getTableProps()} className={` ${styles.tableStyle || ''}`}>
             <thead className={styles.theadStyle || ''}>
                 {headerGroups.map((headerGroup) => (
                     <tr
@@ -55,6 +56,7 @@ const Table = <D extends object>({
                         <tr
                             {...row.getRowProps()}
                             className={styles.trStyle || ''}
+                            {...getRowProps(row)}
                         >
                             {row.cells.map((cell) => (
                                 <td
@@ -69,6 +71,7 @@ const Table = <D extends object>({
                 })}
             </tbody>
         </table>
+        // </div>
     );
 };
 

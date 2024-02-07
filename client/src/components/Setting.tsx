@@ -1,175 +1,143 @@
-import { InputField } from '.';
-import { ForAppStore, ForGooglePlay } from '../assets/custom-icons';
+import { useEffect, useState } from 'react';
+import { Avatar, FormComponent, Twofa } from '.';
+// import { NICKNAME_FIELD } from '../constants';
+
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { ProfileOutletContextType } from '../types/global';
+import { useUserStore } from '../stores/userStore';
+import useImageUpload from '../hooks/uploadImageHook';
+// import { absoluteToast } from '../tools';
+import toast from 'react-hot-toast';
 
 function Setting() {
+    const { nickName, avatar } = useUserStore();
+    const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
+        isCurrentUser: false
+    };
+    const [file, setFIle] = useState<File | undefined>();
+    const navigate = useNavigate();
+    const {
+        uploadData,
+        imagePath,
+        setImagePath,
+        deleteData,
+        isFailed,
+        success
+    } = useImageUpload();
+
+    useEffect(() => {
+        console.log(avatar);
+        if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
+    }, [isCurrentUser]);
+
+
+    // useEffect(() => {
+
+    // }, secc)
+    // const onSubmit = () => {};
+
     return (
-        <>
-            {/* <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->  */}
-            <ul className="relative m-0 w-full list-none overflow-hidden p-0 transition-[height] duration-200 ease-in-out">
-                {/* <!--First item--> */}
-                <li className="relative h-fit after:absolute after:left-[2.45rem] after:top-[3.6rem] after:mt-px after:h-[calc(100%-2.45rem)] after:w-px after:bg-[#e0e0e0] after:content-[''] dark:after:bg-neutral-600">
-                    <div className="flex cursor-pointer items-center p-6 leading-[1.3rem] no-underline">
-                        <span className="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-[black] text-sm font-medium text-white">
-                            1
-                        </span>
-                        <span className="text-black text-2xl font-['Acme] ">
-                            Download Google Authenticator
-                        </span>
-                    </div>
-                    <div className="left-0 overflow-hidden pb-2 pl-[3.75rem] pr-6 duration-300 ease-in-out">
-                        Google Authentication in available in the following app
-                        stores :
-                    </div>
-                    <div className="left-0 overflow-hidden pb-2 pl-[3.75rem] pr-6 duration-300 ease-in-out flex flex-row gap-5">
-                        <ForAppStore />
-                        <ForGooglePlay />
-                    </div>
-                </li>
-
-                {/* <!--Second item--> */}
-                <li className="relative h-fit after:absolute after:left-[2.45rem] after:top-[3.6rem] after:mt-px after:h-[calc(100%-2.45rem)] after:w-px after:bg-[#e0e0e0] after:content-[''] dark:after:bg-neutral-600">
-                    <div className="flex cursor-pointer items-center p-6 leading-[1.3rem] no-underline">
-                        <span className="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-black text-sm font-medium text-white">
-                            2
-                        </span>
-                        <span className="text-black text-2xl font-['Acme] ">
-                            Scan the QR code
-                        </span>
-                    </div>
-                    <div className="left-0 overflow-hidden  pl-[3.75rem]  duration-300 ease-in-out flex flex-col">
-                        <p>hold your camera at QR code :</p>
-                    </div>
-                </li>
-
-                {/* <!--Third item--> */}
-                <li className="relative h-fit">
-                    <div className="flex cursor-pointer items-center p-6 leading-[1.3rem] no-underline">
-                        <span className="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-black text-sm font-medium text-white">
-                            3
-                        </span>
-                        <span className="text-black text-2xl font-['Acme] ">
-                            Enter your 2FA code
-                        </span>
-                    </div>
-                    <div className="left-0 overflow-hidden pb-2 pl-[3.75rem] pr-6 duration-300 ease-in-out">
-                        please enter two factor token from Google Authenticator
-                        to verify correct setup!
-                        <InputField placeholder="code" />
-                    </div>
-                </li>
-            </ul>
-
-            {/* <div className="w-[720px] self-stretch flex-col justify-start items-center gap-5 inline-flex">
-                <div className="justify-center items-center gap-2.5 inline-flex">
-                    <div className="w-[16.06px] h-[23.75px] relative"></div>
-                    <div className="text-neutral-400 text-[32px] font-normal font-['Acme']">
-                        two factor authentication{' '}
-                    </div>
+        <div className="h-full w-full gap-8 px-[60px] py-2.5 rounded-[20px] shadow justify-between items-center inline-flex ">
+            <div className="self-stretch flex-col justify-between items-center inline-flex px-4 py-4 flex-grow">
+                {/* {' '}
+                gap-8 */}
+                <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+                    Appearance
                 </div>
-                <div className="self-stretch h-[508px] p-2.5 flex-col justify-center items-start gap-2.5 flex">
-                    <div className="py-2.5 flex-col justify-start items-start gap-2.5 flex">
-                        <div className="justify-center items-center gap-5 inline-flex">
-                            <div className="flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="justify-center items-center gap-2.5 inline-flex">
-                                    <div className="w-8 h-8 relative">
-                                        <div className="w-8 h-8 left-0 top-0 absolute bg-black rounded-full" />
-                                        <div className="w-[11.43px] h-[21.71px] left-[10.50px] top-[5.50px] absolute text-center text-white text-xl font-medium font-['Roboto']">
-                                            1
-                                        </div>
+                <div className="h-full w-full flex-col inline-flex justify-center items-center gap-14">
+                    {' '}
+                    <div className="w-full flex-col items-start justify-center">
+                        <div className="text-neutral-500 text-2xl font-normal font-['Acme']">
+                            edit avatar
+                        </div>
+                        <div className="pt-5 pb-2.5 w-full justify-between items-center gap-[30px] inline-flex">
+                            <Avatar
+                                imageUrl={imagePath ? imagePath : avatar}
+                                style="w-32 h-32"
+                            />
+                            <div className="flex-col justify-center items-start gap-4 inline-flex ">
+                                <input
+                                    className="hidden"
+                                    id="inputImage"
+                                    type="file"
+                                    onChange={(event) => {
+                                        setFIle(event.target.files?.[0]);
+                                        if (file) {
+                                            const objectURL =
+                                                URL.createObjectURL(file);
+                                            setImagePath(objectURL);
+                                        }
+                                    }}
+                                />
+                                <label
+                                    className="p-3 bg-white rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex cursor-pointer"
+                                    htmlFor="inputImage"
+                                >
+                                    <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">
+                                        Choose image
                                     </div>
+                                </label>
+
+                                <div className="text-center text-zinc-400 text-sm font-normal font-['Poppins']">
+                                    JPG or PNG. Max size of 4Mo
                                 </div>
-                                <div className="w-[62px] h-[0px] origin-top-left rotate-90 bg-neutral-400 border border-neutral-400"></div>
-                            </div>
-                            <div className="flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="flex-col justify-center items-start gap-2.5 flex">
-                                    <div className="text-center text-zinc-600 text-lg font-normal font-['Acme']">
-                                        Download Google Authenticator{' '}
-                                    </div>
-                                    <div className="text-center text-black text-lg font-normal font-['Acme']">
-                                        Google Authentication in available in
-                                        the following app stores :
-                                    </div>
-                                </div>
-                                <div className="flex md:ml-auto md:mr-0 mx-auto items-center flex-shrink-0 space-x-4">
-                                    <ForAppStore />
-                                    <ForGooglePlay />
+                                <div
+                                    className="px-5 py-3 bg-stone-100 rounded-[32px] flex-col justify-center items-center gap-2.5 flex text-center text-neutral-500 text-sm font-normal font-['Acme'] cursor-pointer hover:bg-stone-200 "
+                                    onClick={() => {
+                                        if (file) uploadData(file);
+                                        else toast.error('not to upload');
+                                    }}
+                                >
+                                    Upload Now
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="py-2.5 flex-col justify-start items-start gap-2.5 flex">
-                        <div className="justify-center items-center gap-5 inline-flex">
-                            <div className="justify-center items-center flex">
-                                <div className="flex-col justify-center items-center gap-2.5 inline-flex">
-                                    <div className="w-[62px] h-[0px] origin-top-left rotate-90 bg-neutral-400 border border-neutral-400"></div>
-                                    <div className="justify-center items-center gap-2.5 inline-flex">
-                                        <div className="w-8 h-8 relative">
-                                            <div className="w-8 h-8 left-0 top-0 absolute bg-black rounded-full" />
-                                            <div className="w-[11.43px] h-[21.71px] left-[10.50px] top-[5.50px] absolute text-center text-white text-xl font-medium font-['Roboto']">
-                                                2<br />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="w-[62px] h-[0px] origin-top-left rotate-90 bg-neutral-400 border border-neutral-400"></div>
-                                </div>
-                            </div>
-                            <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-                                <div className="text-center text-zinc-600 text-[22px] font-normal font-['Acme']">
-                                    Scan the QR code
-                                </div>
-                                <div className="text-center text-black text-lg font-normal font-['Acme']">
-                                    hold your camera at QR code :{' '}
-                                </div>
-                            </div>
-                            <div className="p-2.5 bg-black rounded-[5px] justify-center items-center gap-2.5 flex">
-                                <div className="w-[100px] h-[100px] relative"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="py-2.5 flex-col justify-start items-start gap-2.5 flex">
-                        <div className="justify-center items-center gap-5 inline-flex">
-                            <div className="flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="w-[62px] h-[0px] origin-top-left rotate-90 bg-neutral-400 border border-neutral-400"></div>
-                                <div className="justify-center items-center gap-2.5 inline-flex">
-                                    <div className="w-8 h-8 relative">
-                                        <div className="w-8 h-8 left-0 top-0 absolute bg-black rounded-full" />
-                                        <div className="w-[11.43px] h-[21.71px] left-[10.50px] top-[5.50px] absolute text-center text-white text-xl font-medium font-['Roboto']">
-                                            3
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="flex-col justify-center items-start gap-2.5 flex">
-                                    <div className="text-center text-zinc-600 text-[22px] font-normal font-['Acme']">
-                                        Enter your 2FA code{' '}
-                                    </div>
-                                    <div className="text-center text-black text-lg font-normal font-['Acme']">
-                                        please enter two factor token from
-                                        Google Authenticator to verify correct
-                                        setup!
-                                    </div>
-                                </div>
-                                <div className="justify-center items-center gap-5 inline-flex">
-                                    <div className="justify-center items-center gap-[11px] flex">
-                                        <div className="w-[273px] h-10 p-2.5 bg-stone-50 rounded-[5px] border border-neutral-200 justify-start items-center gap-2.5 flex">
-                                            <div className="text-neutral-400 text-base font-normal font-['Outfit']">
-                                                Code
-                                            </div>
-                                        </div>
-                                        <div className="w-[111px] p-2.5 bg-red-800 rounded-[5px] border border-neutral-200 justify-start items-center gap-2.5 flex">
-                                            <div className="text-white text-base font-normal font-['Outfit']">
-                                                Activate 2FA
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <FormComponent
+                        fields={[
+                            {
+                                label: '',
+                                type: 'text',
+                                name: 'nickName',
+                                placeholder: nickName,
+                                validation: {
+                                    required: 'Nickname is required!',
+                                    maxLength: {
+                                        value: 15,
+                                        message:
+                                            'Nickname must be less than 15 characters'
+                                    },
+                                    minLength: {
+                                        value: 5,
+                                        message:
+                                            'Nickname must be at least 5 characters'
+                                    }
+                                }
+                            }
+                        ]}
+                    />
                 </div>
-            </div> */}
-        </>
+            </div>
+            <div className="w-px h-[90%] relative bg-neutral-300" />{' '}
+            <div className="self-stretch flex-col justify-between items-center inline-flex gap-8 px-4 py-4 flex-grow">
+                <div className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+                    Security
+                </div>
+                <div className="h-full w-full flex-col inline-flex justify-center items-center gap-4">
+                    {' '}
+                    <div className="flex-col justify-center items-start gap-2.5 flex">
+                        <div className="text-center text-black text-base font-normal font-['Poppins']">
+                            Two-Factor Authentication
+                        </div>
+                        <div className="w-[440px] text-neutral-400 text-sm font-light font-['Poppins']">
+                            Download the Google Authenticator app from the app
+                            store and scan the QR code below
+                        </div>
+                    </div>
+                    <Twofa />
+                </div>
+            </div>
+        </div>
     );
 }
 

@@ -59,7 +59,7 @@ model Block {
 }
 
 model Achievement{
-	id            	String  @id @unique
+	id            	Int     @id @default(autoincrement())
   	user       		User?   @relation(fields: [UserId], references: [id])
   	UserId     		String  @unique
 	welcome			Boolean @default(false) // if u win ur first game

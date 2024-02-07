@@ -6,7 +6,7 @@ export const useUserProfile = (userId: string) => {
     const axiosPrivate = useAxiosPrivate();
     const user = useUserStore();
     const fetchData = async () => {
-        const { data } = await axiosPrivate.get(`users/${userId}`);
+        const { data } = await axiosPrivate.get(`users/${userId}/me`);
         return data;
     };
 

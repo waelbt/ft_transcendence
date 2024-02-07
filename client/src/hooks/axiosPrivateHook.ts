@@ -1,26 +1,47 @@
-import { axiosPrivate, request } from '../api';
+import { axiosPrivate } from '../api';
 import { useEffect } from 'react';
+import { useUserStore } from '../stores/userStore';
+import useRefreshToken from './refreshTokenHook';
 
 const useAxiosPrivate = () => {
-    // const refresh =
+    const refresh = useRefreshToken();
+    const { accessToken, updateState } = useUserStore();
 
     useEffect(() => {
+        const requestIntercept = axiosPrivate.interceptors.request.use(
+            (config) => {
+                if (!config.headers['Authorization']) {
+                    config.headers['Authorization'] = `Bearer ${
+                        accessToken ? accessToken : ''
+                    }`;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error)
+        );
         const responseIntercept = axiosPrivate.interceptors.response.use(
             (response) => response,
             async (error) => {
                 const prevRequest = error?.config;
-                if (error?.response?.status === 403 && !prevRequest.sent) {
+                if (error?.response?.status === 401 && !prevRequest.sent) {
                     prevRequest.sent = true;
                     // gerenate new access token
-                    const response = await request.get('/auth/refresh'); // this endpoint will return seccus or 
+                    console.log('new old token ', accessToken);
+                    const newAccessToken = await refresh();
+                    console.log('new access token ', newAccessToken);
+                    prevRequest.headers[
+                        'Authorization'
+                    ] = `Bearer ${newAccessToken}`;
+                    updateState({ accessToken: newAccessToken });
                     return axiosPrivate(prevRequest);
                 }
                 return Promise.reject(error);
             }
         );
         return () => {
+            axiosPrivate.interceptors.request.eject(requestIntercept);
             axiosPrivate.interceptors.response.eject(responseIntercept);
-        }
+        };
     }, []);
     return axiosPrivate;
 };

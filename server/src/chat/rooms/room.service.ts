@@ -172,7 +172,7 @@ export class RoomService {
             },
         });
 
-        // here i should check if the room has no more users
+        // here i should check if the room has no  users
         // if yes
         // i should delete all the messages that belongs to it
         // and delete the room it self

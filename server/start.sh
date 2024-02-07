@@ -1,7 +1,7 @@
-sleep 10
+#!/bin/bash
 
-prisma generate
+npx prisma generate
 
-prisma migrate deploy
+npx prisma migrate dev --name transcendence
 
 npm run start:dev

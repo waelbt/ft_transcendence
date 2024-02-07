@@ -31,6 +31,36 @@
   align-items: center;
   justify-content: center;
   padding: 10px 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  /* overflow: auto; */
+  border: .1px solid #E0E0E0;
+  /* align-items: start;
+  justify-content: center; */
+   width: 30%;
+
+}
+
+
+.main__chatlist .chatlist_search {
+  /* width: 350px; */
+  height: 110px;
+  border-bottom: 1px solid #E0E0E0;
+  /* width: clamp(60px, 100%, 350px); */
+  /* margin-bottom: 10px; */
+  width: 100%;
+
+  
+}
+
+.main__chatlist .chatlist_search .search-bar { 
+  /* width: clamp(60px, 100%, 350px); */
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0px 0px 0px;
 }
 
 .main__chatlist .chatlist_search .search-bar .icon {
@@ -154,4 +184,8 @@ letter-spacing: 0.17px;
 .conversation .conversation-item p:last-child {
   color: #777; 
   font-size: 12px; 
+}
+
+.conversation-item.selected {
+  background-color: #f0f0f0; /* or any other styling you prefer */
 }

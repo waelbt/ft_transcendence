@@ -5,17 +5,26 @@ import { Avatar } from '.';
 import { DEFAULT_PATH } from '../constants';
 import { BsFillSendFill } from 'react-icons/bs';
 
+import { io, Socket } from 'socket.io-client';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
+
+// Create a socket instance
+const socket: Socket = io('http://localhost:4000/chat');
+
 function GlobalChat() {
     const params = useParams();
     const [message, setMessage] = useState('');
-
+    const { socket } = useChatSocketStore();
     const sendMessage = () => {
         console.log(message);
+        // socket.emit('');
         setMessage(''); // Clear the input after sending
     };
     useEffect(() => {
-        console.log(params);
-    }, [params]);
+         socket?.emit('globalChat', { message: 'test' });
+
+        // console.log(params);
+    }, [socket]);
 
     return (
         <div className="w-[380px] self-stretch p-2.5 bg-white rounded-[20px] shadow flex-col justify-center items-center gap-[13px] inline-flex mt-9 mb-7">
