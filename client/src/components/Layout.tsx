@@ -12,8 +12,8 @@ function Layout() {
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket } = useChatSocketStore();
-    const {id } = useUserStore();
-    console.log("hellooooooooo");
+    const { id } = useUserStore();
+    console.log('hellooooooooo');
 
     console.log(id);
     useEffect(() => {
@@ -57,8 +57,8 @@ function Layout() {
                 <div className="relative flex flex-col h-screen bg-primary-white">
                     <NavigationMenu />
                     {/* <div className="flex-grow inline-flex justify-center items-center w-full gap-20"> */}
-                        <Outlet />
-                        {/* <GlobalChat /> */}
+                    <Outlet />
+                    {/* <GlobalChat /> */}
                     {/* </div> */}
                 </div>
             ) : (

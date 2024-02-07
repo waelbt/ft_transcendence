@@ -9,14 +9,15 @@ type SocketState = {
     initializeSocket: (token: string | null) => void;
 };
 
+
 export const useChatSocketStore = create<SocketState>((set, get) => ({
     socket: null,
     messages: [],
-    pushMessage:(msg) => (
-        const {messages} = get();
-        const newMessages;
-        [newMessages] = message
-    ),
+    pushMessage: (msg) => {
+        const { messages } = get();
+        const newMessages = [...messages, msg]; // Add the new message to the existing messages array
+        set({ messages: newMessages }); // Update the messages state with the new array
+    },
     initializeSocket: (token) => {
         const { socket } = get();
         if (token && !socket) {
