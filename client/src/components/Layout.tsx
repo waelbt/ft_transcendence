@@ -18,19 +18,19 @@ function Layout() {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const { user, friends, block } = (
+                const { user, friendsIds, blocksIds } = (
                     await axiosPrivate.get('/users/me')
                 ).data;
-
+                console.log();
                 updateState({
                     active: true,
-                    friendsIds: friends,
-                    blocksIds: block,
+                    friendsIds,
+                    blocksIds,
                     ...user,
                     verified: user.completeProfile && !user.F2A
                 });
             } catch (error) {
-                console.log(error); //! handle this
+                console.log(error);
             } finally {
                 setIsLoading(false);
             }
@@ -41,7 +41,7 @@ function Layout() {
 
         initializeGameSocket();
 
-        console.log("id ", id);
+        console.log('id ', id);
         return () => {
             gameSocket?.disconnect();
         };

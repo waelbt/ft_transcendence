@@ -167,16 +167,18 @@ export class UsersService {
         //       },
         //     },
         //   })
-        const data = await Promise.all( users.map( async (user) =>{
-            const id = user.id;
-            const nickName = user.nickName;
-            const avatar = user.avatar;
-            return {
-                id,
-                nickName,
-                avatar,
-            };
-        }));
+        const data = await Promise.all(
+            users.map(async (user) => {
+                const id = user.id;
+                const nickName = user.nickName;
+                const avatar = user.avatar;
+                return {
+                    id,
+                    nickName,
+                    avatar
+                };
+            })
+        );
 
         console.log(data);
         return data;
@@ -223,11 +225,14 @@ export class UsersService {
         return match;
     }
 
-    async userInfo(@Req() req, avatar: string, nickName: string): Promise<User> {
+    async userInfo(
+        @Req() req,
+        avatar: string,
+        nickName: string
+    ): Promise<User> {
         console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
-        if (!isUser)
-            throw new NotFoundException(`User does not exist`);
+        if (!isUser) throw new NotFoundException(`User does not exist`);
         //update user avatar and nickName if the front send them if not do not do anything
         //serach if the userName exist or not because it's need to be unique
         if (avatar && nickName) {
@@ -264,7 +269,7 @@ export class UsersService {
             userId
         );
 
-        if (!friends) {
+        if (friends) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
             });
@@ -291,8 +296,9 @@ export class UsersService {
         console.log(user);
 
         const friends = await this.friendService.listFriends(user.id);
-
-        console.log('friends<;  ', friends);
+        console.log('......................................................');
+        console.log(friends);
+        console.log('......................................................');
 
         const friendsIds = friends.map((friends) => {
             return friends.id;
@@ -317,12 +323,12 @@ export class UsersService {
 
         const id = user.id;
         const avatar = user.avatar;
-        const fullName = user.fullName;
-        return ({
+        const nickName = user.nickName;
+        return {
             id,
             avatar,
-            fullName,
-        });
+            nickName
+        };
     }
 
     async getAllUsersRank() {
