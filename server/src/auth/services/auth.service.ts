@@ -1,9 +1,4 @@
-import {
-    Injectable,
-    Req,
-    Res,
-    UnauthorizedException
-} from '@nestjs/common';
+import { Injectable, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -31,7 +26,7 @@ export class AuthService {
         req.res.setHeader('Authorization', `Bearer ${accessToken}`);
         console.log(accessToken);
         res.redirect(
-            `http://localhost:8000/auth_popup?accessToken=${accessToken}`
+            `http://localhost:8000/auth_popup?accessToken=${accessToken}&2fa=${user.f2A}&profileComplete=${user.completeProfile}`
         );
     }
 

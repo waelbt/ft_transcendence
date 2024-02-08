@@ -38,10 +38,8 @@ const TwoFA = () => {
                 Code: codeString // Send the code as a JSON object
             });
             toast.success(response.data.message);
-            updateState({ f2A: true });
         } catch (error) {
             if (isAxiosError(error)) {
-                updateState({ f2A: false });
                 toast.error(error.response?.data.message);
             }
         } finally {

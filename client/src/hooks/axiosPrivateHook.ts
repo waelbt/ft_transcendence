@@ -41,11 +41,12 @@ const useAxiosPrivate = () => {
                         logout();
                         return Promise.reject(refreshError);
                     }
-                // } else if (error?.response?.status === 403) {
-                //     navigate('/error/403', { replace: true });
+                    // } else if (error?.response?.status === 403) {
+                    //     navigate('/error/403', { replace: true });
                 } else if (error?.response?.status === 404) {
                     navigate('/error/400', { replace: true });
                 } else if (error?.response?.status === 500) {
+                    console.log('here');
                     navigate('/error/500', { replace: true });
                 }
                 return Promise.reject(error);

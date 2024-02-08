@@ -27,7 +27,7 @@ function Setting() {
         imagePath,
         setImagePath,
         // deleteData,
-        success
+        // success
     } = useImageUpload();
 
     useEffect(() => {

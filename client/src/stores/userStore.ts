@@ -3,9 +3,9 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 type UserStateType = {
-    active: boolean;
     isLogged: boolean;
-    verified: boolean;
+    redirectedFor2FA: boolean;
+    redirectedForProfileCompletion: boolean;
     accessToken: string | null;
     id: string;
     email: string;
@@ -19,6 +19,25 @@ type UserStateType = {
     completeProfile: boolean;
     friendsIds: string[];
     blocksIds: string[];
+};
+
+const initialState: UserStateType = {
+    isLogged: false,
+    redirectedFor2FA: false,
+    redirectedForProfileCompletion: false,
+    accessToken: null,
+    id: '',
+    email: '',
+    avatar: '',
+    nickName: '',
+    fullName: '',
+    createdAt: '',
+    status: false,
+    f2A: false,
+    inGame: false,
+    completeProfile: false,
+    friendsIds: [],
+    blocksIds: []
 };
 
 type UserActionsType = {
@@ -38,22 +57,9 @@ export const useUserStore = createWithEqualityFn<
 >()(
     persist(
         (set, get) => ({
-            active: false,
-            isLogged: false,
-            verified: true,
-            accessToken: null,
-            id: '',
-            email: '',
-            avatar: '', // ! tmp
-            nickName: '',
-            fullName: '',
-            createdAt: '',
-            status: false,
-            f2A: false,
-            inGame: false,
-            completeProfile: false,
-            friendsIds: [],
-            blocksIds: [],
+            // ! here
+            ...initialState,
+            // ! end
             getState: () => {
                 const {
                     logout,
@@ -68,26 +74,7 @@ export const useUserStore = createWithEqualityFn<
             },
             logout: () => {
                 window.history.replaceState(null, '', '/');
-                set(
-                    {
-                        active: false,
-                        isLogged: false,
-                        verified: true,
-                        accessToken: null,
-                        id: '',
-                        email: '',
-                        avatar: '',
-                        nickName: '',
-                        fullName: '',
-                        status: false,
-                        f2A: false,
-                        inGame: false,
-                        completeProfile: false,
-                        friendsIds: [],
-                        blocksIds: []
-                    },
-                    true
-                );
+                set({ ...initialState }, true);
             },
             addUserFriendId: (id: string) => {
                 set((state) => {

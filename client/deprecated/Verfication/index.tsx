@@ -1,5 +1,5 @@
-import { TwoFaVerfication, ProfileCompletion } from '../../components';
-import { useUserStore } from '../../stores/userStore';
+import { TwoFaVerfication, ProfileCompletion } from '../../src/components';
+import { useUserStore } from '../../src/stores/userStore';
 
 function Verfication() {
     const { f2A } = useUserStore();

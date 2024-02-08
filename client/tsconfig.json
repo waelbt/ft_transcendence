@@ -20,6 +20,11 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/**/*", "types/**/*", "deprecated/authHook.ts"],
+    "include": [
+        "src/**/*",
+        "types/**/*",
+        // "deprecated/authHook.ts",
+        // "deprecated/Verfication"
+    ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

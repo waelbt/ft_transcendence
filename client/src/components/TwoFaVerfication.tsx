@@ -35,7 +35,7 @@ function TwoFaVerfication() {
                 Code: codeString // Send the code as a JSON object
             });
             toast.success(response.data.message);
-            updateState({ verified: true });
+            updateState({ redirectedFor2FA: true });
         } catch (error) {
             if (isAxiosError(error)) {
                 toast.error(error.response?.data.message);
@@ -52,16 +52,36 @@ function TwoFaVerfication() {
         }
     }, [debouncedValue]);
     return (
-        <div className="h-80 flex-col justify-center items-center gap-[50px] inline-flex">
-            <div className=" flex-col justify-center items-start gap-[30px] flex">
-                <div className="text-neutral-900 text-[40px] font-normal font-['Acme']">
-                    Welcome Back !
+        <div className="flex flex-col h-screen shadow-2xl">
+            {/* Content */}
+            <div className="flex flex-col flex-grow shadow-custom z-0">
+                {/* Header */}
+                <div className="px-7 py-8 justify-start items-center gap-2.5 inline-flex">
+                    <div className="text-black text-lg font-lemonada font-bold">
+                        LaughTale
+                    </div>
                 </div>
-                <div className="text-center text-zinc-900 text-xl font-normal font-['Poppins']">
-                    Enter code from your two-factor authentication app
+                {/* content */}
+                <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
+                    <div className="h-80 flex-col justify-center items-center gap-[50px] inline-flex">
+                        <div className=" flex-col justify-center items-start gap-[30px] flex">
+                            <div className="text-neutral-900 text-[40px] font-normal font-['Acme']">
+                                Welcome Back !
+                            </div>
+                            <div className="text-center text-zinc-900 text-xl font-normal font-['Poppins']">
+                                Enter code from your two-factor authentication
+                                app
+                            </div>
+                        </div>
+                        <CodeInput
+                            code={code}
+                            HandleChangeType={handleChange}
+                        />
+                    </div>
                 </div>
+                {/* Footer */}
+                <div className="h-1/4 w-screen -z-1 bg-footer-image bg-cover bg-no-repeat"></div>
             </div>
-            <CodeInput code={code} HandleChangeType={handleChange}  />
         </div>
     );
 }
