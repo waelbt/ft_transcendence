@@ -35,22 +35,7 @@ export class twoFAController{
         },
     })
     async enableTwoFA(@Body("Code") code, @Req() req, @Res() res){
-        const user = await this.userService.getOneUser(req.user.sub);
-        if (!user)
-            throw new NotFoundException(`User does not exist`);
-        // if (user.F2A) {
-        //     return res.status(400).json({ message: '2FA already enabled!' });
-        // }
-        // const token = code;
-		const isValidToken = otplib.authenticator.check(code, user.f2A_Secret);
-        console.log('code: ', code);
-        console.log('hada :  ', isValidToken);
-        if (!isValidToken) {
-            return res.status(401).json({ message: 'Invalid 2FA token' });
-        }
-        else{
-            return res.status(200).json({ message: '2FA enabled successfully'});
-        }
+		return (await this.twoFAService.validateTwoFA(req, code, res));
     }
 
     @Post('validate')
@@ -65,7 +50,6 @@ export class twoFAController{
         },
     })
     async validateTwoFA(@Body("Code") Code, @Req() req, @Res() res) {
-        console.log('token : ', Code);
         return (await this.twoFAService.validateTwoFA(req, Code, res));
     }
 

@@ -4,20 +4,31 @@ import { UsersService } from './users.service';
 
 @Injectable()
 export class BlockService {
-    constructor(private prisma: PrismaOrmService) {}
-    async blockUser(userId: string, blockedUserId: string) {
-        await this.prisma.block.create({
-            data: {
-                id: userId + blockedUserId,
-                userId,
-                blockedUserId
-            }
+    constructor(private prisma: PrismaOrmService){}
+    async blockUser(userId: string, blockedUserId: string){
+        const block = await this.prisma.block.findFirst({
+            where: { 
+                  OR: [
+                      { userId: userId , blockedUserId: blockedUserId },
+                      { userId: blockedUserId , blockedUserId: userId },
+                  ],
+              },
         });
+        
+        if (!block){
+            await this.prisma.block.create({
+                data: {
+                    userId,
+                    blockedUserId,
+                  },
+            });
+        }
+
     }
 
     async unblockUser(userId: string, blockedUserId: string): Promise<void> {
         await this.prisma.block.deleteMany({
-            where: { id: userId + blockedUserId }
+          where: { userId: userId },
         });
     }
 
@@ -28,11 +39,12 @@ export class BlockService {
         const block = await this.prisma.block.findFirst({
             where: {
                 OR: [
-                    { id: userId + blockedUserId },
-                    { id: blockedUserId + userId }
-                ]
-            }
+                    { userId: userId , blockedUserId: blockedUserId },
+                    { userId: blockedUserId , blockedUserId: userId },
+                ],
+            },
         });
+        console.log('block: ', !!block);
         return !!block;
     }
 

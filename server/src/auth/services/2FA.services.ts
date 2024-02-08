@@ -57,9 +57,7 @@ export class twoFAService {
     async validateTwoFAToken(token: string, secret: string): Promise<boolean> {
         const isValidToken = speakeasy.totp.verify({
             secret,
-            encoding: 'base32',
             token,
-            window: 1
         });
         return isValidToken;
     }
@@ -69,9 +67,11 @@ export class twoFAService {
         const user = await this.prisma.user.findUnique({
             where: { id: req.user.sub }
         });
-        if (!user) throw new NotFoundException(`User does not exist`);
 
-        console.log(user.f2A_Secret);
+        if (!user) 
+            throw new NotFoundException(`User does not exist`);
+
+        console.log('secret: ', user.f2A_Secret);
         const isValidToken = await this.validateTwoFAToken(
             code,
             user.f2A_Secret
