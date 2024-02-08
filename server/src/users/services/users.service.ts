@@ -120,13 +120,13 @@ export class UsersService {
             throw new NotFoundException(`User does not exist`);
         
         console.log('localhost:4000/upload/' + file.filename);
-        const filename = 'localhost:4000/upload/' + file.filename;
+        const filename = 'http://localhost:4000/upload/' + file.filename;
         return (filename);
         // return (file.path);
     }
 
     async deleteImage(path: string) {
-        const url = 'localhost:4000/upload/';
+        const url = 'http://localhost:4000/upload/';
   
         if (path.includes(url)) {
           const splitedStrings = path.split(url);

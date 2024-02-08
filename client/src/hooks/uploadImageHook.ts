@@ -59,6 +59,7 @@ const useImageUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
+            console.log(response.data)
             // setRelativePath(response.data);
             setImagePath(response.data);
             // console.log(response.data);
