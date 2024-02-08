@@ -1,4 +1,5 @@
 import {
+    ForbiddenException,
     Inject,
     Injectable,
     NotFoundException,
@@ -136,7 +137,7 @@ export class friendsService {
         });
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
