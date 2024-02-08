@@ -8,7 +8,6 @@ export class dto {
     nickName: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     @IsString()
     avatar: string;
 }

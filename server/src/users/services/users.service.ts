@@ -234,8 +234,18 @@ export class UsersService {
             throw new NotFoundException(`User does not exist`);
         //update user avatar and nickName if the front send them if not do not do anything
         //serach if the userName exist or not because it's need to be unique
-        if (avatar && nickName) {
-            await this.updateAvatarNickname(req.user.sub, avatar, nickName)
+        // if (avatar && nickName) {
+        //     await this.updateAvatarNickname(req.user.sub, avatar, nickName)
+        // }
+
+        if (avatar.length !== 0){
+            console.log('update avatar');
+            await this.updateAvatar(req.user.sub, avatar);
+        }
+        
+        if (nickName){
+            console.log('update nickname');
+            await this.updateNickName(req.user.sub, nickName);
         }
 
         await this.prisma.user.update({
