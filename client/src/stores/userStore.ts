@@ -2,7 +2,6 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-
 type UserStateType = {
     active: boolean;
     isLogged: boolean;
@@ -92,8 +91,17 @@ export const useUserStore = createWithEqualityFn<
             },
             addUserFriendId: (id: string) => {
                 set((state) => {
+                    // First, remove the id from blocksIds if it's there
+                    const newBlocksIds = state.blocksIds.filter(
+                        (blockId) => blockId !== id
+                    );
+
+                    // Add to friendsIds if not already present
                     if (!state.friendsIds.includes(id)) {
-                        return { friendsIds: [...state.friendsIds, id] };
+                        return {
+                            friendsIds: [...state.friendsIds, id],
+                            blocksIds: newBlocksIds
+                        };
                     }
                     return state;
                 });
@@ -107,8 +115,15 @@ export const useUserStore = createWithEqualityFn<
             },
             addUserBlockId: (id: string) => {
                 set((state) => {
+                    const newFriendsIds = state.friendsIds.filter(
+                        (friendId) => friendId !== id
+                    );
+
                     if (!state.blocksIds.includes(id)) {
-                        return { blocksIds: [...state.blocksIds, id] };
+                        return {
+                            blocksIds: [...state.blocksIds, id],
+                            friendsIds: newFriendsIds
+                        };
                     }
                     return state;
                 });

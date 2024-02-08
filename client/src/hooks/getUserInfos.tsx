@@ -23,12 +23,13 @@ export const useGetUserInfos = (
 
     if (isCurrentUser) {
         const { friendsIds, blocksIds, ...user } = getState();
+        // console.log(friendsIds)
         return {
             isLoading: false,
             isError: false,
             error: null,
             user,
-            relation: 'myself',
+            relation: 'me',
             friendsIds,
             blocksIds,
             refetch: () => {

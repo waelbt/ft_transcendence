@@ -11,7 +11,6 @@ function Layout() {
     const { id, updateState, accessToken, verified, isLogged, active } =
         useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    // const { socket } = useChatSocketStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
@@ -42,7 +41,7 @@ function Layout() {
 
         initializeGameSocket();
 
-        console.log(id);
+        console.log("id ", id);
         return () => {
             gameSocket?.disconnect();
         };

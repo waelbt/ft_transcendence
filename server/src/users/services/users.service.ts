@@ -296,11 +296,11 @@ export class UsersService {
 
         const id = user.id;
         const avatar = user.avatar;
-        const fullName = user.fullName;
+        const nickName = user.nickName;
         return ({
             id,
             avatar,
-            fullName,
+            nickName,
         });
     }
 

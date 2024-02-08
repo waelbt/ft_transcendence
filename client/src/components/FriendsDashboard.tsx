@@ -6,6 +6,7 @@ import FriendDataPreviou from './FriendDataPreviou';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { useUserStore } from '../stores/userStore';
 
 const FriendsDashboard: React.FC = () => {
     const { isCurrentUser, friendsIds, blocksIds } =
@@ -14,7 +15,7 @@ const FriendsDashboard: React.FC = () => {
     const [friendsIdList, setFriendsIdList] = useState<string[]>([]);
     const [filter, setFilter] = useState('all');
     const axiosPrivate = useAxiosPrivate();
-
+    const { removeUserBlockId } = useUserStore();
     useEffect(() => {
         if (isCurrentUser) {
             setFields((prevFields) => [...prevFields, 'blocked']);
@@ -22,16 +23,17 @@ const FriendsDashboard: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        filter == 'all'
-            ? setFriendsIdList(friendsIds ? friendsIds : [])
-            : setFriendsIdList(blocksIds ? blocksIds : []);
-    }, [filter]);
+        setFriendsIdList(filter === 'all' ? friendsIds || [] : blocksIds || []);
+    }, [filter, blocksIds, friendsIds]);
 
     const handleUnblock = async (userId: string) => {
+        console.log('clicked');
         try {
             await axiosPrivate.post(`/users/unblockUser/${userId}`);
+            removeUserBlockId(userId);
         } catch (error) {
-            if (isAxiosError(error)) toast.error(error.message);
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+            else console.error(error);
         }
     };
 
@@ -70,7 +72,7 @@ const FriendsDashboard: React.FC = () => {
                         />
                         {filter === 'blocked' && (
                             <MdCancel
-                                className="text-neutral-200 cursor-pointer mr-4"
+                                className="text-black cursor-pointer mr-4"
                                 size={32}
                                 onClick={() => handleUnblock(friendId)}
                             />
@@ -83,4 +85,3 @@ const FriendsDashboard: React.FC = () => {
 };
 
 export default FriendsDashboard;
-// removeUserBlockId(props.id);

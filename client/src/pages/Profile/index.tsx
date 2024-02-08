@@ -27,16 +27,8 @@ export function Profile() {
 
     useEffect(() => {
         refetch();
-    }, [
-        isCurrentUser,
-        isCurrentUser ? useUserStore() : paramId,
-        refetch,
-        error
-    ]);
+    }, [isCurrentUser, isCurrentUser ? useUserStore : paramId, refetch, error]);
 
-    useEffect(() => {
-        // console.log(relation);
-    }, [relation]);
     if (isLoading) {
         return (
             <div className="flex-col h-full justify-center items-center inline-flex gap-5">
