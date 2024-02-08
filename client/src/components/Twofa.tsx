@@ -34,7 +34,7 @@ const TwoFA = () => {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            const response = await axiosPrivate.post('/2fa/validate', {
+            const response = await axiosPrivate.post('/2fa/enable', {
                 Code: codeString // Send the code as a JSON object
             });
             toast.success(response.data.message);
