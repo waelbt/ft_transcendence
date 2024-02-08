@@ -724,4 +724,43 @@ export class RoomService {
         else
             throw Error("You Are Muted");
     }
+
+    async getAllMyDms(userId: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                dm: {
+                    include: {
+                        users: true,
+                        messages: true,
+                    },
+                },
+            },
+        });
+        // const dmRooms = await this.prisma.dMRooms.findMany({
+        //     where: {
+        //       users: {
+        //         some: {
+        //           id: userId,
+        //         },
+        //       },
+        //     },
+        //     include: {
+        //         users: true,
+        //     },
+        //   });
+
+        //   console.log('rooms are', dmRooms[0].)
+        for (let i = 0; i < user.dm.length; i++)
+        {
+            user.dm[i].users = user.dm[i].users.filter(user => user.id != userId);
+        }
+        for (let i = 0; i < user.dm.length; i++)
+        {
+            console.log('dm', user.dm[i]);
+        }
+        // console.log('dms', user.dm);
+    }
 }

@@ -46,8 +46,15 @@ export class ChatController {
 
     }
 
+    @Get('mydms')
+    async getMyDms(@Req() req) {
+        console.log('helooooooooooooo', req.user.sub);
+        return (this.roomService.getAllMyDms(req.user.sub));
+    }
+
     @Get('myRooms')
     async getMyRooms(@Req() req, res: Response) {
+        console.log('hellooooooooooo', req.user.sub)
 
         return await (this.roomService.getMyRooms(req.user.sub));
     }
@@ -102,4 +109,5 @@ export class ChatController {
 
         return (this.roomService.unmuteUser(unmuteUserDto, req.user.sub));
     }
+
 }
