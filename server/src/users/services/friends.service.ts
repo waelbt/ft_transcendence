@@ -60,6 +60,8 @@ export class friendsService {
             where: { userId1: userId2, userId2: userId1, status: 'pending' }
         });
 
+        console.log('id1: ', userId2, 'id2: ', userId1);
+
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
         }
@@ -217,11 +219,11 @@ export class friendsService {
         var friendListWithAction = await Promise.all(
             userFriends
                 .map(async (friendship) => {
-                    console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
-                    if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
-                        console.log('im in');
-                        return ;
-                    }
+                    // console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
+                    // if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
+                    //     console.log('im in');
+                    //     return ;
+                    // }
                     const friendId =
                         friendship.userId1 === userId
                             ? friendship.userId2

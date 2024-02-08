@@ -26,6 +26,7 @@ export class friendsController {
             if (isItBlocked)
                 throw new NotFoundException('this user does not exist');
 
+            console.log('my id: ', req.user.sub, 'ur id: ', friendId);
             try{
                 await this.friendsService.sendFriendRequest(req.user.sub, friendId);
                 return { message: 'Friend request sent successfully' };

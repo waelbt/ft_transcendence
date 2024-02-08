@@ -264,11 +264,13 @@ export class UsersService {
             userId
         );
 
-        if (!friends) {
+        console.log('FFF: ', friends);
+        if (friends) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
             })
         } else {
+            console.log('hi');
             friendsIds = [];
         }
 
