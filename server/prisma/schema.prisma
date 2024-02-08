@@ -119,8 +119,6 @@ enum RoomPrivacy {
   PUBLIC
   PRIVATE
   PROTECTED
-<<<<<<< HEAD
-=======
 }
 
 model DMRooms {
@@ -141,5 +139,4 @@ model dmMessage {
   senderId    String
   dmroom      DMRooms     @relation(fields: [dmId], references: [id])
   dmId    Int
->>>>>>> newChat
 }
