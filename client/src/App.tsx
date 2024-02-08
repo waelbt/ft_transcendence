@@ -1,6 +1,6 @@
 import AllRoutes from './Routes';
 import { Toaster } from 'react-hot-toast';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
     QueryOptions,
     QueryClient,
@@ -29,7 +29,7 @@ function App() {
                     duration: 3000
                 }}
             />
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools />
         </QueryClientProvider>
     );
 }

@@ -67,7 +67,8 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
         }
 
         try {
-            await axiosPrivate.post(`${endpoint}${target}`);
+            const res = await axiosPrivate.post(`${endpoint}${target}`);
+            console.log('res', res);
 
             const effect = actionEffects[action];
             if (effect) {

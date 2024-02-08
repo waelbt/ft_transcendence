@@ -12,6 +12,7 @@ export const useGetUserInfos = (
 
     const fetchData = async () => {
         const response = await axiosPrivate.get(`/users/${userId}/profile`);
+        console.log(response)
         return response.data;
     };
 

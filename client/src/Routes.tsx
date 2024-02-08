@@ -110,6 +110,15 @@ const router = createBrowserRouter([
                 }
             },
             {
+                path: '/error/400',
+                lazy: async () => {
+                    let { NotFound } = await import(
+                        './components/errorPages/NotFound'
+                    );
+                    return { Component: NotFound };
+                }
+            },
+            {
                 path: '*',
                 lazy: async () => {
                     let { NotFound } = await import(

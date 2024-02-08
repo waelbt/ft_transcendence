@@ -222,8 +222,7 @@ export class friendsService {
                         viewerId
                     );
                     if (
-                        friendship.userId1 == viewerId ||
-                        friendship.userId2 == viewerId
+                        friendship.userId1 == viewerId
                     ) {
                         console.log('im in');
                         return;

@@ -27,6 +27,7 @@ export class UsersController {
     console.log('logs: ', isItBlocked);
     if (isItBlocked){
       console.log('im heeeere');
+      
       throw new NotFoundException('this user does not exist');
     }
     const user = await this.usersService.findOneUser(userId);
