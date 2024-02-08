@@ -6,23 +6,13 @@ import { UsersService } from './users.service';
 export class BlockService {
     constructor(private prisma: PrismaOrmService){}
     async blockUser(userId: string, blockedUserId: string){
-        const block = await this.prisma.block.findFirst({
-            where: { 
-                  OR: [
-                      { userId: userId , blockedUserId: blockedUserId },
-                      { userId: blockedUserId , blockedUserId: userId },
-                  ],
-              },
+
+        await this.prisma.block.create({
+            data: {
+                userId,
+                blockedUserId,
+                },
         });
-        
-        if (!block){
-            await this.prisma.block.create({
-                data: {
-                    userId,
-                    blockedUserId,
-                  },
-            });
-        }
 
     }
 
@@ -54,21 +44,19 @@ export class BlockService {
             where: { id: userId },
             include: { blockedUsers: true }
         });
-        const blockedUsers = await Promise.all(
-            listBlocked.blockedUsers.map(async (user) => {
-                const blockedUser = await this.prisma.user.findUnique({
-                    where: { id: user.blockedUserId }
-                });
-                const id = blockedUser.id;
-                const name = blockedUser.fullName;
-                const avatar = blockedUser.avatar;
-                // console.log('ana hna : ', blockedUser);
-                return {
-                    id,
-                    name,
-                    avatar
-                };
-            })
+        const blockedUsers = await Promise.all (
+            listBlocked.blockedUsers.map(async (user)=> {
+            const blockedUser = await this.prisma.user.findUnique({where: {id: user.blockedUserId}});
+            const id = blockedUser.id;
+            const nickName = blockedUser.nickName;
+            const avatar = blockedUser.avatar;
+            // console.log('ana hna : ', blockedUser);
+            return {
+                id,
+                nickName,
+                avatar,
+            };
+        }),
         );
         return blockedUsers;
     }

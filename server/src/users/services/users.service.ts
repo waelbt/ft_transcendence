@@ -155,7 +155,7 @@ export class UsersService {
     }
 
     async searchBar(keyword: string) {
-        const result = await this.prisma.user.findMany({
+        const users = await this.prisma.user.findMany({
             where: {
                 nickName: { contains: keyword, mode: 'insensitive' }
             }
@@ -167,8 +167,19 @@ export class UsersService {
         //       },
         //     },
         //   })
-        console.log(result);
-        return result;
+        const data = await Promise.all( users.map( async (user) =>{
+            const id = user.id;
+            const nickName = user.nickName;
+            const avatar = user.avatar;
+            return {
+                id,
+                nickName,
+                avatar,
+            };
+        }));
+
+        console.log(data);
+        return data;
     }
 
     async matchHistory(userId: string): Promise<match_history[]> {
@@ -212,10 +223,11 @@ export class UsersService {
         return match;
     }
 
-    async userInfo(@Req() req, avatar: string, nickName: string) {
+    async userInfo(@Req() req, avatar: string, nickName: string): Promise<User> {
         console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
-        if (!isUser) throw new NotFoundException(`User does not exist`);
+        if (!isUser)
+            throw new NotFoundException(`User does not exist`);
         //update user avatar and nickName if the front send them if not do not do anything
         //serach if the userName exist or not because it's need to be unique
         if (avatar && nickName) {
@@ -252,14 +264,12 @@ export class UsersService {
             userId
         );
 
-        console.log('wlo<; ', friends, userId);
-        console.log('............................................................');
         if (!friends) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
             });
         } else {
-            friendsIds = [5];
+            friendsIds = [];
         }
 
         const user = await this.getOneUser(userId);
@@ -307,12 +317,12 @@ export class UsersService {
 
         const id = user.id;
         const avatar = user.avatar;
-        const nickName = user.nickName;
-        return {
+        const fullName = user.fullName;
+        return ({
             id,
             avatar,
-            nickName
-        };
+            fullName,
+        });
     }
 
     async getAllUsersRank() {
