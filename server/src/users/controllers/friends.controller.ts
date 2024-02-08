@@ -1,14 +1,18 @@
 import { Controller, Get, NotFoundException, Param, Post, Req} from "@nestjs/common";
 import { friendsService } from "../services/friends.service";
 import { UsersService } from "../services/users.service";
-import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { BlockService } from "../services/blocked.service";
+import { smallData } from "../dto/smallData.dto";
+import { friendsData } from "../dto/friendsData";
 
 @ApiBearerAuth()
 @ApiTags('friends')
 @Controller('friends')
 export class friendsController {
     constructor(private readonly friendsService: friendsService,
-        private readonly userService: UsersService){}
+        private readonly userService: UsersService,
+        private readonly blockService: BlockService,){}
 
     //endPoint to send request (post)
     @Post('sendFriendRequest/:friendId')
@@ -17,6 +21,11 @@ export class friendsController {
     async sendFriendRequest(
         @Req() req,
         @Param('friendId') friendId: string){
+
+            const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, friendId);
+            if (isItBlocked)
+                throw new NotFoundException('this user does not exist');
+
             try{
                 await this.friendsService.sendFriendRequest(req.user.sub, friendId);
                 return { message: 'Friend request sent successfully' };
@@ -36,6 +45,11 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
+
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, friendId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
         try{
             await this.friendsService.acceptFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request Accepted successfully'};
@@ -53,6 +67,11 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
+
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, friendId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
         try{
             await this.friendsService.rejectFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request Rejected successfully'};
@@ -65,12 +84,15 @@ export class friendsController {
     }
 
     //endPoint to return which type of profile to display
-    @Get('typeProfile/:id2')
+    @Get('typeProfile/:id')
     async typeOfProfile(
         @Req() req,
-        @Param('id2') userId2: string,
+        @Param('id') userId: string,
     ){
-        return (await this.friendsService.typeOfProfile(req.user.sub, userId2));
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, userId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+        return (await this.friendsService.typeOfProfile(req.user.sub, userId));
     }
 
     //endPoint to remove user from friend list
@@ -79,6 +101,11 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
+
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, friendId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
         try{
             await this.friendsService.removeSentFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request sent remove successfully'};
@@ -96,6 +123,11 @@ export class friendsController {
         @Req() req,
         @Param('friendId') friendId: string,
     ){
+
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, friendId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
         try{
             await this.friendsService.removeFriend(req.user.sub, friendId);
             return { message: 'Friend remove successfully'};
@@ -123,10 +155,12 @@ export class friendsController {
 
     //endPoint for the list of friends
     @Get('listFriends')
-    async getListFriends(@Req() req){
+    @ApiOperation({ summary: 'get list of my friends'})
+	@ApiResponse({ status: 200, description: 'Returns list of my friends', type: smallData})
+    async getListFriends(@Req() req): Promise<smallData[]>{
         try {
             const friends = await this.friendsService.listFriends(req.user.sub);
-            return { friends };
+            return friends;
           } catch (error) {
             if (error instanceof NotFoundException) {
               throw new NotFoundException('User not found');
@@ -137,13 +171,20 @@ export class friendsController {
 
     //endPoint to list friends for another user
     @Get('friends/:viewerId')
+    @ApiOperation({ summary: 'get list of another user friends'})
+	@ApiResponse({ status: 200, description: 'Returns list of my friends', type: friendsData})
     async userListFriends(
         @Req() req,
         @Param('viewerId') viewerId: string,
-    ){
+    ): Promise<friendsData[]> {
+
+        const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, viewerId);
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
         try {
             const friends = await this.friendsService.userListFriends(req.user.sub, viewerId);
-            return { friends };
+            return friends;
           } catch (error) {
             if (error instanceof NotFoundException) {
               throw new NotFoundException('User not found');

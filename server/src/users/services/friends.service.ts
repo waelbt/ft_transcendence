@@ -9,6 +9,8 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { UsersService } from './users.service';
 import { BlockService } from './blocked.service';
 import { use } from 'passport';
+import { smallData } from '../dto/smallData.dto';
+import { friendsData } from '../dto/friendsData';
 
 @Injectable()
 export class friendsService {
@@ -183,20 +185,20 @@ export class friendsService {
                 if (friendUser.id !== userId){
                     const id = friendUser.id;
                     const avatar = friendUser.avatar;
-                    const name = friendUser.fullName;
+                    const nickName = friendUser.nickName;
                     return {
                         id,
                         avatar,
-                        name
+                        nickName
                     };
                 }
                 const id = frienduser2.id;
                 const avatar = frienduser2.avatar;
-                const name = frienduser2.fullName;
+                const nickName = frienduser2.nickName;
                 return {
                     id,
                     avatar,
-                    name
+                    nickName
                 };
             })
             .filter((friend) => friend.id !== userId);
@@ -204,7 +206,7 @@ export class friendsService {
         return friends;
     }
 
-    async userListFriends(viewerId: string, userId: string): Promise<any[]> {
+    async userListFriends(viewerId: string, userId: string){
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { friends: true }
@@ -234,11 +236,11 @@ export class friendsService {
                         where: { id: friendId }
                     });
                     const id = user.id;
-                    const name = user.fullName;
+                    const nickName = user.nickName;
                     const avatar = user.avatar;
                     return {
                         id,
-                        name,
+                        nickName,
                         avatar,
                         action: isFriend ? 'Send Message' : 'Add Friend'
                     };
