@@ -61,7 +61,7 @@ function TwoFaVerfication() {
                     Enter code from your two-factor authentication app
                 </div>
             </div>
-            <CodeInput code={code} HandleChangeType={handleChange} hide={F2A} />
+            <CodeInput code={code} HandleChangeType={handleChange}  />
         </div>
     );
 }

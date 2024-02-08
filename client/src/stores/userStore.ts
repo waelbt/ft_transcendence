@@ -14,7 +14,7 @@ type UserStateType = {
     fullName: string;
     createdAt: string;
     status: boolean;
-    F2A: boolean;
+    f2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
     friendsIds: string[];
@@ -49,7 +49,7 @@ export const useUserStore = createWithEqualityFn<
             fullName: '',
             createdAt: '',
             status: false,
-            F2A: false,
+            f2A: false,
             inGame: false,
             completeProfile: false,
             friendsIds: [],
@@ -80,7 +80,7 @@ export const useUserStore = createWithEqualityFn<
                         nickName: '',
                         fullName: '',
                         status: false,
-                        F2A: false,
+                        f2A: false,
                         inGame: false,
                         completeProfile: false,
                         friendsIds: [],

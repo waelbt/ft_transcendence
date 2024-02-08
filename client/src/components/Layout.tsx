@@ -27,7 +27,7 @@ function Layout() {
                     friendsIds,
                     blocksIds,
                     ...user,
-                    verified: user.completeProfile && !user.F2A
+                    verified: user.completeProfile && !user.f2A
                 });
             } catch (error) {
                 console.log(error);

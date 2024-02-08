@@ -11,7 +11,7 @@ import { useDebounce } from '../hooks/debouncerHook';
 const TwoFA = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
-    const { F2A, updateState } = useUserStore();
+    const { f2A, updateState } = useUserStore();
     const [image, setImage] = useState<string | null>(null);
     const debouncedValue = useDebounce<string[]>(code, 500);
 
@@ -38,10 +38,10 @@ const TwoFA = () => {
                 Code: codeString // Send the code as a JSON object
             });
             toast.success(response.data.message);
-            updateState({ F2A: true });
+            updateState({ f2A: true });
         } catch (error) {
             if (isAxiosError(error)) {
-                updateState({ F2A: false });
+                updateState({ f2A: false });
                 toast.error(error.response?.data.message);
             }
         } finally {
@@ -59,7 +59,7 @@ const TwoFA = () => {
     const toggleLock = async () => {
         try {
             await axiosPrivate.post('/2fa/disable');
-            updateState({ F2A: false });
+            updateState({ f2A: false });
             toast.success('2FA disable successfully');
         } catch (error) {
             if (isAxiosError(error))
@@ -84,7 +84,7 @@ const TwoFA = () => {
 
     return (
         <div className="relative">
-            {F2A && (
+            {f2A && (
                 <IoIosLock
                     className="text-black absolute top-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                     size={130}
@@ -93,7 +93,7 @@ const TwoFA = () => {
             )}
             <div
                 style={
-                    F2A
+                    f2A
                         ? {
                               filter: 'blur(4px)',
                               pointerEvents: 'none'
@@ -129,7 +129,7 @@ const TwoFA = () => {
                     <CodeInput
                         code={code}
                         HandleChangeType={handleChange}
-                        hide={F2A}
+                        hide={f2A}
                         style="w-[45px] h-[50px] text-center text-black text-xl relative bg-white
                 rounded-[10px] border border-neutral-400"
                     />
