@@ -25,25 +25,37 @@ function ProfileCompletion() {
 
     const handleSubmit = async (data: FieldValues) => {
         try {
-            if (selectedItemIndex != -1) {
-                console.log(selectedItemIndex);
-                data['avatar'] = `${import.meta.env.VITE_DEFAULT_AVATAR}${
+            let avatarPath: string | null = null;
+
+            if (selectedItemIndex !== -1) {
+                avatarPath = `${import.meta.env.VITE_DEFAULT_AVATAR}${
                     selectedItemIndex + 1
                 }.png`;
-            } else data['avatar'] = success ? imagePath : avatar;
-            console.log(data)
+            } else {
+                avatarPath = success ? imagePath : avatar;
+            }
+
+            if (avatarPath) {
+                data.avatar = avatarPath;
+            }
+
             await axiosPrivate.post('/users/info', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            updateState({ nickName: data['nickName'] });
-            updateState({ avatar: data['avatar'] });
-            updateState({ completeProfile: true });
-            updateState({ verified: true });
-            toast.success('profile created successfully');
-        } catch (e) {
-            toast.error('that name is already taken. try a different one');
+
+            const updatedState = {
+                nickName: data.nickName,
+                avatar: data.avatar,
+                completeProfile: true,
+                verified: true
+            };
+
+            updateState(updatedState);
+            toast.success('Profile created successfully');
+        } catch (error) {
+            toast.error('That name is already taken. Try a different one');
         }
     };
 
