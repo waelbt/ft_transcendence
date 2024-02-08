@@ -8,8 +8,8 @@ import Skeleton from 'react-loading-skeleton';
 
 export function Profile() {
     const { id: paramId } = useParams();
-    const { id: userId } = useUserStore();
-    const isCurrentUser = paramId === 'me' || paramId === userId;
+    const currentUser = useUserStore();
+    const isCurrentUser = paramId === 'me' || paramId === currentUser.id;
     const {
         user,
         relation,
@@ -27,7 +27,7 @@ export function Profile() {
 
     useEffect(() => {
         refetch();
-    }, [isCurrentUser, isCurrentUser ? useUserStore : paramId, refetch, error]);
+    }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
 
     if (isLoading) {
         return (
