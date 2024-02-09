@@ -762,5 +762,6 @@ export class RoomService {
             console.log('dm', user.dm[i]);
         }
         // console.log('dms', user.dm);
+        return (user.dm);
     }
 }
