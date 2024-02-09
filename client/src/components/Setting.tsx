@@ -25,7 +25,7 @@ function Setting() {
         // relativePath,
         uploadData,
         imagePath,
-        setImagePath,
+        setImagePath
         // deleteData,
         // success
     } = useImageUpload();
@@ -51,7 +51,7 @@ function Setting() {
             try {
                 const success = await uploadData(file);
                 if (success) {
-                    const res = await axiosPrivate.post(`/users/UpdateAvatar`, {
+                    await axiosPrivate.post(`/users/UpdateAvatar`, {
                         oldAvatar: avatar,
                         newAvatar: imagePath
                     });

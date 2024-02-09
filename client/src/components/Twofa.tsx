@@ -34,9 +34,10 @@ const TwoFA = () => {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            const response = await axiosPrivate.post('/2fa/enable', {
+            const response = await axiosPrivate.post('/2fa/validate', {
                 Code: codeString // Send the code as a JSON object
             });
+            updateState({ f2A: true });
             toast.success(response.data.message);
         } catch (error) {
             if (isAxiosError(error)) {
@@ -71,6 +72,7 @@ const TwoFA = () => {
         const GenerateQRCode = async () => {
             try {
                 const response = await axiosPrivate.get('/2fa/generate');
+                console.log('secert updated');
                 setImage(response.data.qrCode);
             } catch (error) {
                 console.error('Error fetching QR code:', error);
