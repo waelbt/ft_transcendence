@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
-import * as otplib from 'otplib';
-import * as qrcodeLib from 'qrcode';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 
@@ -33,7 +31,7 @@ export class twoFAService {
         } catch (error) {
             console.error('Error generating QR code:', error);
             return res
-                .status(500)
+                .status(403)
                 .json({ message: 'Error generating QR code' });
         }
     }
@@ -87,7 +85,7 @@ export class twoFAService {
                 .status(200)
                 .json({ message: '2FA validation successful', user });
         } else {
-            return res.status(401).json({ message: 'Invalid 2FA token' });
+            return res.status(403).json({ message: 'Invalid 2FA token' });
         }
     }
 

@@ -2,15 +2,11 @@ import {
     Inject,
     Injectable,
     NotFoundException,
-    UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { UsersService } from './users.service';
 import { BlockService } from './blocked.service';
-import { use } from 'passport';
-import { smallData } from '../dto/smallData.dto';
-import { friendsData } from '../dto/friendsData';
 
 @Injectable()
 export class friendsService {
@@ -33,7 +29,7 @@ export class friendsService {
         );
 
         if (existRequest) {
-            throw new UnauthorizedException('Friend request already sent'); //need to handle this because it causes 500
+            throw new NotFoundException('Friend request already sent'); //need to handle this because it causes 500
         }
 
         //create a new friendship request

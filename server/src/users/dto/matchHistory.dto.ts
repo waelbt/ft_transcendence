@@ -1,10 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class match_history {
-    @ApiProperty()
-    id: number;
-
+export class Player {
     @ApiProperty()
     @IsString()
     name: string;
@@ -15,13 +12,31 @@ export class match_history {
 
     @ApiProperty()
     @IsString()
-    level: string;
+    rating: number;
+}
+
+export class score {
+    @ApiProperty()
+    @IsString()
+    score1: number;
 
     @ApiProperty()
-    score: string[];
+    @IsString()
+    score2: number;
+}
+
+export class match_history {
+    @ApiProperty()
+    id: number;
 
     @ApiProperty()
-    addedXp: any;
+    opponent: Player;
+
+    @ApiProperty()
+    score: score;
+
+    @ApiProperty()
+    awarded: string;
 
     @ApiProperty()
     date: Date;

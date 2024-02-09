@@ -1,21 +1,29 @@
 import {
+    ForbiddenException,
     Inject,
     Injectable,
     NotFoundException,
-    Param,
     Req,
-    UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Prisma, User } from '@prisma/client';
-import { catchError, firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { friendsService } from './friends.service';
 import { BlockService } from './blocked.service';
 import { match_history } from '../dto/matchHistory.dto';
-import { mydata, user } from '../dto/mydata.dto';
+import { mydata } from '../dto/mydata.dto';
+
+export interface Player {
+    avatar: string;
+    name: string;
+    rating: number;
+}
+
+interface score {
+    score1: number;
+    score2: number;
+}
 
 @Injectable()
 export class UsersService {
@@ -95,7 +103,7 @@ export class UsersService {
             });
         } catch (error) {
             if (error.code === 'P2002') {
-                throw new UnauthorizedException('Nickname is already in use.');
+                throw new ForbiddenException('Nickname is already in use.');
             }
             throw error;
         }
@@ -192,32 +200,41 @@ export class UsersService {
                 ],
             },
         });
-    
+
         const match = await Promise.all( matchs.map( async (matche) =>{
 
             var user;
-            var addedXp : any;
+            var awarded : string;
             if (matche.winnerId == userId)
             {
                 user = await this.getOneUser(matche.loserId);
-                addedXp = 400;
+                awarded = "400";
             }else{
                 user = await this.getOneUser(matche.winnerId);
-                addedXp = 100;
+                awarded = "100";
             }
-            const score : string[] = matche.result.split('-');
+            const result : string[] = matche.result.split('-');
+            const score1 : number = +result[0];
+            const score2 : number = +result[1];
             const id : number = matche.id;
             const date : Date = matche.createdAt;
-            const level : string = user.level;
+            const rating : number = user.level;
             const name : string = user.fullName;
             const avatar : string  = user.avatar;
+            const opponent : Player = {
+                avatar,
+                name,
+                rating,
+            };
+            const score : score= {
+                score1,
+                score2,
+            };
             return {
                 id,
-                name,
-                avatar,
-                level,
+                opponent,
                 score,
-                addedXp,
+                awarded,
                 date,
             }
         }));
