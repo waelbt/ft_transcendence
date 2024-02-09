@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 
 const useImageUpload = () => {
     const [isloading, setIsloading] = useState(false);
-    const [relativePath, setRelativePath] = useState('');
     const [progress, setProgress] = useState(0);
     const [isFailed, setIsFailed] = useState<boolean>(false);
     const [success, setSuccess] = useState(false);
@@ -38,7 +37,6 @@ const useImageUpload = () => {
         setIsFailed(false);
         setSuccess(false);
 
-        // ! intercept this request
         try {
             var formData = new FormData();
             formData.append('file', file);
@@ -62,14 +60,10 @@ const useImageUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
-            console.log(response.data);
-            // setRelativePath(response.data);
             setImagePath(response.data);
-            // console.log(response.data);
             setSuccess(true);
             setIsloading(false);
-
-            return true;
+            return response.data;
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(
@@ -79,7 +73,6 @@ const useImageUpload = () => {
             }
             setIsFailed(true);
             setIsloading(false);
-
             setImagePath(null);
             setProgress(0);
             return false;
@@ -87,7 +80,6 @@ const useImageUpload = () => {
     };
 
     return {
-        relativePath,
         isloading,
         progress,
         isFailed,

@@ -11,6 +11,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 import toast from 'react-hot-toast';
 import { FieldValues } from 'react-hook-form';
+import { isAxiosError } from 'axios';
 
 function Setting() {
     const { nickName, avatar, updateState } = useUserStore();
@@ -21,14 +22,7 @@ function Setting() {
 
     const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
-    const {
-        // relativePath,
-        uploadData,
-        imagePath,
-        setImagePath
-        // deleteData,
-        // success
-    } = useImageUpload();
+    const { uploadData, imagePath, setImagePath } = useImageUpload();
 
     useEffect(() => {
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
@@ -47,21 +41,20 @@ function Setting() {
     };
 
     const updateAvatar = async () => {
-        if (file) {
-            try {
-                const success = await uploadData(file);
-                if (success) {
+        try {
+            if (file) {
+                const path = await uploadData(file);
+                if (path) {
                     await axiosPrivate.post(`/users/UpdateAvatar`, {
                         oldAvatar: avatar,
-                        newAvatar: imagePath
+                        newAvatar: path
                     });
-                    // update end point put old and new path
-                    if (imagePath) updateState({ avatar: imagePath });
+                    updateState({ avatar: path });
                 }
-            } catch (e) {
-                // console.log(e); // ! here
-            }
-        } else toast.error('no image selected');
+            } else toast.error('no image selected');
+        } catch (e) {
+            if (isAxiosError(e)) toast.error(e.response?.data?.message);
+        }
     };
 
     return (
@@ -95,6 +88,7 @@ function Setting() {
                                             const objectURL =
                                                 URL.createObjectURL(file);
                                             setImagePath(objectURL);
+                                            event.target.value = '';
                                         }
                                     }}
                                 />

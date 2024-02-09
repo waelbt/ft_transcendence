@@ -7,7 +7,7 @@ import useGameStore from '../stores/gameStore';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, accessToken, isLogged } = useUserStore();
+    const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
@@ -39,7 +39,7 @@ function Layout() {
             redirectedForProfileCompletion: true
         });
         initializeGameSocket();
-
+        console.log('id  ', id);
         return () => {
             gameSocket?.disconnect();
         };
