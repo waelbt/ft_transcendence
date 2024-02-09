@@ -30,6 +30,7 @@ function ProfileCompletion() {
                     selectedItemIndex + 1
                 }.png`;
             } else {
+                console.log(imagePath, success);
                 data['avatar'] = success ? imagePath : '';
             }
 
@@ -53,7 +54,7 @@ function ProfileCompletion() {
             updateState(updatedState);
             toast.success('Profile created successfully');
         } catch (error) {
-            console.log(error);
+            // console.log(error.response.data.);
             toast.error('That name is already taken. Try a different one');
         }
     };
@@ -99,6 +100,7 @@ function ProfileCompletion() {
                                                     URL.createObjectURL(file);
                                                 setImagePath(objectURL);
                                                 await uploadData(file);
+                                                event.target.value = '';
                                             }
                                         }}
                                     />

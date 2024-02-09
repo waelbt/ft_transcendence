@@ -20,14 +20,17 @@ const useImageUpload = () => {
             cancelTokenSource.current = axios.CancelToken.source();
         } else {
             try {
-                const res = await axiosPrivate.delete(
-                    `/users/delete/${encodeURIComponent(imagePath as string)}`
-                );
+                await axiosPrivate.delete(`/users/delete`, {
+                    data: {
+                        path: imagePath
+                    }
+                });
             } catch (e) {
                 console.log(e);
             }
             setProgress(0);
         }
+        setSuccess(false);
     };
 
     const uploadData = async (file: File) => {
@@ -59,7 +62,7 @@ const useImageUpload = () => {
                     cancelToken: cancelTokenSource.current.token
                 }
             );
-            console.log(response.data)
+            console.log(response.data);
             // setRelativePath(response.data);
             setImagePath(response.data);
             // console.log(response.data);
