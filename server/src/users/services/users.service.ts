@@ -302,6 +302,9 @@ export class UsersService {
         }
 
         const user = await this.getOneUser(userId);
+        if (!user){
+			throw new NotFoundException('this user does not exist');
+		}
         delete user.HashPassword;
         console.log(user);
         //add the type of profile string
@@ -312,6 +315,10 @@ export class UsersService {
 
     async myInfos(@Req() req): Promise<mydata>{
         const user = await this.getOneUser(req.user.sub);
+        if (!user){
+			throw new NotFoundException('this user does not exist');
+		}
+
         delete user.HashPassword;
         console.log(user);
 

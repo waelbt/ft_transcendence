@@ -248,7 +248,7 @@ export class friendsService {
         return friendListWithAction;
     }
 
-    private async areUsersFriends(
+    async areUsersFriends(
         userId1: string,
         userId2: string
     ): Promise<boolean> {

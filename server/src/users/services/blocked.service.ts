@@ -1,11 +1,19 @@
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { UsersService } from "./users.service";
+import { friendsService } from "./friends.service";
 
 @Injectable()
 export class BlockService {
-    constructor(private prisma: PrismaOrmService){}
+    constructor(private prisma: PrismaOrmService,
+        @Inject(forwardRef(() => friendsService))
+        private friendsService: friendsService,){}
     async blockUser(userId: string, blockedUserId: string){
+
+        const friends = await this.friendsService.areUsersFriends(userId, blockedUserId);
+        if (friends){
+            this.friendsService.removeFriend(userId, blockedUserId);
+        }
 
         await this.prisma.block.create({
             data: {
