@@ -78,9 +78,8 @@ const TwoFA = () => {
                 console.error('Error fetching QR code:', error);
             }
         };
-
-        GenerateQRCode();
-    }, []);
+        if (!f2A) GenerateQRCode();
+    }, [f2A]);
 
     return (
         <div className="relative">
