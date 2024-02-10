@@ -8,11 +8,16 @@ const useAuthPopup = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get('accessToken');
-        // const refreshToken = queryParams.get('refreshToken');
+        const f2A = queryParams.get('2fa') === 'true';
+        const completeProfile = queryParams.get('profileComplete') === 'true';
 
         if (accessToken) {
-            // Update the user store with the received tokens and set logged in status
-            updateState({ accessToken, isLogged: true });
+            updateState({
+                accessToken,
+                isLogged: true,
+                f2A,
+                completeProfile
+            });
             window.close();
             window.opener.location.reload();
         }

@@ -1,15 +1,11 @@
-// import { request } from '../api';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
-
-// ! create a const object for defautl value to use it twice
 
 type UserStateType = {
-    active: boolean;
     isLogged: boolean;
-    verified: boolean;
+    redirectedFor2FA: boolean;
+    redirectedForProfileCompletion: boolean;
     accessToken: string | null;
     id: string;
     email: string;
@@ -18,18 +14,41 @@ type UserStateType = {
     fullName: string;
     createdAt: string;
     status: boolean;
-    F2A: boolean;
+    f2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
-    friends: string[];
-    block: string[];
+    friendsIds: string[];
+    blocksIds: string[];
+};
+
+const initialState: UserStateType = {
+    isLogged: false,
+    redirectedFor2FA: false,
+    redirectedForProfileCompletion: false,
+    accessToken: null,
+    id: '',
+    email: '',
+    avatar: '',
+    nickName: '',
+    fullName: '',
+    createdAt: '',
+    status: false,
+    f2A: false,
+    inGame: false,
+    completeProfile: false,
+    friendsIds: [],
+    blocksIds: []
 };
 
 type UserActionsType = {
-    // constructor: (data : UserStateType) => void;
+    // constructor: (data: any) => void;
     getState: () => UserStateType;
     logout: () => void;
     updateState: (newState: Partial<UserStateType>) => void;
+    addUserFriendId: (id: string) => void;
+    removeUserFriendId: (id: string) => void;
+    addUserBlockId: (id: string) => void;
+    removeUserBlockId: (id: string) => void;
 };
 
 // ? remove storing in local storage and test the behavior
@@ -38,48 +57,70 @@ export const useUserStore = createWithEqualityFn<
 >()(
     persist(
         (set, get) => ({
-            active: false,
-            isLogged: false,
-            verified: true,
-            accessToken: null,
-            id: '',
-            email: '',
-            avatar: '', // ! tmp
-            nickName: '',
-            fullName: '',
-            createdAt: '',
-            status: false,
-            F2A: false,
-            inGame: false,
-            completeProfile: false,
-            friends: [],
-            block: [],
+            // ! here
+            ...initialState,
+            // ! end
             getState: () => {
-                const { logout, updateState, getState, ...restOfState } = get();
+                const {
+                    logout,
+                    updateState,
+                    getState,
+                    addUserFriendId,
+                    removeUserFriendId,
+                    addUserBlockId,
+                    ...restOfState
+                } = get();
                 return restOfState;
             },
             logout: () => {
                 window.history.replaceState(null, '', '/');
-                set(
-                    {
-                        active: false,
-                        isLogged: false,
-                        verified: true,
-                        accessToken: null,
-                        id: '',
-                        email: '',
-                        avatar: '',
-                        nickName: '',
-                        fullName: '',
-                        status: false,
-                        F2A: false,
-                        inGame: false,
-                        completeProfile: false,
-                        friends: [],
-                        block: []
-                    },
-                    true // ? the state update should trigger a re-render of the components that subscribe to the store.
-                );
+                set({ ...initialState }, true);
+            },
+            addUserFriendId: (id: string) => {
+                set((state) => {
+                    // First, remove the id from blocksIds if it's there
+                    const newBlocksIds = state.blocksIds.filter(
+                        (blockId) => blockId !== id
+                    );
+
+                    // Add to friendsIds if not already present
+                    if (!state.friendsIds.includes(id)) {
+                        return {
+                            friendsIds: [...state.friendsIds, id],
+                            blocksIds: newBlocksIds
+                        };
+                    }
+                    return state;
+                });
+            },
+            removeUserFriendId: (id: string) => {
+                set((state) => ({
+                    friendsIds: state.friendsIds.filter(
+                        (friendId) => friendId !== id
+                    )
+                }));
+            },
+            addUserBlockId: (id: string) => {
+                set((state) => {
+                    const newFriendsIds = state.friendsIds.filter(
+                        (friendId) => friendId !== id
+                    );
+
+                    if (!state.blocksIds.includes(id)) {
+                        return {
+                            blocksIds: [...state.blocksIds, id],
+                            friendsIds: newFriendsIds
+                        };
+                    }
+                    return state;
+                });
+            },
+            removeUserBlockId: (id: string) => {
+                set((state) => ({
+                    blocksIds: state.blocksIds.filter(
+                        (blockId) => blockId !== id
+                    )
+                }));
             },
             updateState: (newState) =>
                 set((state) => ({ ...state, ...newState }))

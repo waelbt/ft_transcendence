@@ -1,4 +1,3 @@
-import { TbForbid2 } from 'react-icons/tb';
 export function NotFound() {
     return (
         <div className="fixed top-0 left-0 w-full h-full px-5 py-2.5 flex-col justify-start items-start gap-2.5 inline-flex bg-white">

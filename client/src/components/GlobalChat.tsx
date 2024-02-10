@@ -2,7 +2,7 @@ import { useParams } from 'react-router';
 import { MessageIcon } from '../assets/custom-icons';
 import { useEffect, useState } from 'react';
 import { Avatar } from '.';
-import { DEFAULT_PATH } from '../constants';
+// import { DEFAULT_PATH } from '../constants';
 import { BsFillSendFill } from 'react-icons/bs';
 
 import { io, Socket } from 'socket.io-client';
@@ -16,14 +16,14 @@ function GlobalChat() {
     const [message, setMessage] = useState('');
     const { socket } = useChatSocketStore();
     const sendMessage = () => {
-        console.log(message);
+        // console.log(message);
         // socket.emit('');
         setMessage(''); // Clear the input after sending
     };
     useEffect(() => {
-         socket?.emit('globalChat', { message: 'test' });
+        socket?.emit('globalChat', { message: 'test' });
 
-        // console.log(params);
+        // // console.log(params);
     }, [socket]);
 
     return (
@@ -44,7 +44,9 @@ function GlobalChat() {
                         {Array.from({ length: 3 }, (_, index) => (
                             <li key={index}>
                                 <Avatar
-                                    imageUrl={`${DEFAULT_PATH}${index + 1}.png`}
+                                    imageUrl={`${
+                                        import.meta.env.VITE_DEFAULT_AVATAR
+                                    }${index + 1}.png`}
                                     style="w-6 h-6 bg-black rounded-[150px] border border-white"
                                 />
                             </li>

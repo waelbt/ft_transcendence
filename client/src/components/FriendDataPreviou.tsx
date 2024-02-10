@@ -1,6 +1,7 @@
 import { Avatar } from '.';
 import { Link } from 'react-router-dom';
 import useFriendPrevious from '../hooks/friendPreviousHook';
+import { useEffect } from 'react';
 
 type FriendDataPreviouProps = {
     friendId: string;
@@ -11,6 +12,9 @@ function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
         friendId
     });
 
+    useEffect(() => {
+        console.log(friend)
+    }, [friend])
     if (isLoading)
         return (
             <div className="flex py-4 border-b border-gray-200 justify-between items-center w-full">
@@ -38,7 +42,7 @@ function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
                 />
                 <div className="flex flex-col justify-center items-start gap-[5px]">
                     <div className="text-black text-xl font-normal font-['Acme']">
-                        {friend?.name}
+                        {friend?.nickName}
                     </div>
                     <div className="text-zinc-500 text-sm font-normal font-['Acme']">
                         {friend?.status}

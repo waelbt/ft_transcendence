@@ -2,10 +2,13 @@ import { axiosPrivate } from '../api';
 import { useEffect } from 'react';
 import { useUserStore } from '../stores/userStore';
 import useRefreshToken from './refreshTokenHook';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const useAxiosPrivate = () => {
     const refresh = useRefreshToken();
-    const { accessToken, updateState } = useUserStore();
+    const { logout, accessToken, updateState } = useUserStore();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -24,16 +27,26 @@ const useAxiosPrivate = () => {
             async (error) => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 401 && !prevRequest.sent) {
-                    prevRequest.sent = true;
-                    // gerenate new access token
-                    console.log('new old token ', accessToken);
-                    const newAccessToken = await refresh();
-                    console.log('new access token ', newAccessToken);
-                    prevRequest.headers[
-                        'Authorization'
-                    ] = `Bearer ${newAccessToken}`;
-                    updateState({ accessToken: newAccessToken });
-                    return axiosPrivate(prevRequest);
+                    prevRequest.sent = true; // Marking that a token refresh attempt was made
+                    try {
+                        const newAccessToken = await refresh();
+                        prevRequest.headers[
+                            'Authorization'
+                        ] = `Bearer ${newAccessToken}`;
+                        updateState({ accessToken: newAccessToken });
+                        return axiosPrivate(prevRequest);
+                    } catch (refreshError) {
+                        toast.error('Session expired. Please log in again.');
+                        logout();
+                        return Promise.reject(refreshError);
+                    }
+                    // } else if (error?.response?.status === 403) {
+                    //     navigate('/error/403', { replace: true });
+                } else if (error?.response?.status === 404) {
+                    navigate('/error/400', { replace: true });
+                } else if (error?.response?.status === 500) {
+                    console.log('here');
+                    navigate('/error/500', { replace: true });
                 }
                 return Promise.reject(error);
             }

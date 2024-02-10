@@ -1,9 +1,7 @@
 import { HiLogout } from 'react-icons/hi';
 import { IoMdSettings } from 'react-icons/io';
 
-export const DEFAULT_PATH = './src/assets/images/default';
-
-export const NAV_LINKS = ['Home', 'Chat', 'Rooms', 'Game'];
+export const NAV_LINKS = ['Home', 'Chat', 'Rooms'];
 
 export const MODES = ['classic', 'crazy', 'IA'];
 
@@ -30,23 +28,31 @@ export const NICKNAME_FIELD = [
         validation: {
             required: 'Nickname is required!',
             maxLength: {
-                value: 15,
-                message: 'Nickname must be less than 15 characters'
+                value: 10,
+                message: 'Nickname must be less than 10 characters'
             },
             minLength: {
-                value: 5,
-                message: 'Nickname must be at least 5 characters'
+                value: 3,
+                message: 'Nickname must be at least 3 characters'
             }
         }
     }
 ];
 
 export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
-    // 'Send Message': '/api/send-message',
-    'Remove Friend': '/api/remove-friend', ///friends/removeFriend/{friendId}
-    'Block User': '/users/blockUser/', // /users/{userId}/blockUser/{blockedUserId}
-    'Send Request': '/api/send-request', ///friends/sendFriendRequest/{friendId}
-    'Cancel Request': '/api/cancel-request', ///users/{userId}/unblockUser/{unblockedUserId}
-    'Accept Request': '/api/accept-request', ///friends/acceptFriendRequest/{friendId}
-    'Decline Request': '/api/decline-request' //w~/friends/rejectFriendRequest/{friendId}
+    'Remove Friend': `/friends/removeFriend/`,
+    'Block User': `/users/blockUser/`,
+    'Send Request': `/friends/sendFriendRequest/`,
+    'Cancel Request': `/friends/removeSentFriendRequest/`,
+    'Accept Request': `/friends/acceptFriendRequest/`,
+    'Decline Request': `/friends/rejectFriendRequest/`
+};
+
+export const ACTION_TO_KNOW_RELATION: { [key: string]: string } = {
+    'Remove Friend': 'not friend',
+    'Block User': 'blocked',
+    'Send Request': 'invitation sender',
+    'Cancel Request': 'not friend',
+    'Accept Request': 'friend',
+    'Decline Request': 'not friend'
 };

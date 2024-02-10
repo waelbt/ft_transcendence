@@ -6,6 +6,8 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
+// import { useEffect } from 'react';
+// import useGameStore from './stores/gameStore';
 
 const queryClient = new QueryClient({
     defaultOptions: {

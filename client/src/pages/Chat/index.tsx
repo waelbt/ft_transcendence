@@ -1,8 +1,8 @@
 import  { useState } from 'react';
 import "./chatBody.css";
 import ChatList from "../../components/chat/chatList/ChatList";
-import ChatContent from "../../components/chat/chatcontent/ChatContent";
 import ChatProfile from "../../components/chat/chatprofile/ChatProfile";
+import ChatContent from '../../components/chat/chatcontent/ChatContent';
 
 
 interface Contact {

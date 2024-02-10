@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { gameDto } from './dto/game.dto';
 import { Achievement } from '@prisma/client';
@@ -34,7 +34,7 @@ export class gameService {
         const user = await this.userService.getOneUser(userId);
 
         if (!user)
-            throw new UnauthorizedException('user not found');
+            throw new NotFoundException('user not found');
         
         user.exp += earnedXP;
         const xpForThisLevel = this.calculateExperienceRequiredForNextLevel(user.level);

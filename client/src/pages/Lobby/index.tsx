@@ -1,58 +1,72 @@
-// import { MouseEvent } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useSocketStore } from '../../stores/socketStore';
-// import { MODES } from '../../constants';
-import { useState } from 'react';
-import { MatchResultModal, Modal } from '../../components';
+import { useNavigate } from 'react-router-dom';
+import useGameStore from '../../stores/gameStore';
+import { useUserStore } from '../../stores/userStore';
 import { useModelStore } from '../../stores/ModelStore';
-// import { useUserStore } from '../../stores/userStore';
+import useTimer from '../../hooks/timer';
+import { Modal } from '../../components';
+import { useEffect } from 'react';
 
 export function Lobby() {
-    const { isEventOpen, openEvent } = useModelStore();
-    // const [isModalOpen, setIsModalOpen] = useState(true);
-    const closeModal = () => setIsModalOpen(false);
-    // const { socket } = useSocketStore();
-    // const navigate = useNavigate();
-    // const user = useUserStore();
+    const MODES = ['classic', 'crazy', 'training'];
+    const { updateState, socket } = useGameStore();
+    const navigate = useNavigate();
+    const { id } = useUserStore();
+    const { isEventOpen, openEvent, closeEvent } = useModelStore();
+    const { elapsedTime, formatTime, startTimer, stopTimer } = useTimer();
+    const handleClick = (gameMode: string) => {
+        console.log('handleClick');
+        updateState({ gameMode: gameMode });
+        socket?.emit('gameMode', { gameMode, userId: id });
+        openEvent();
+        startTimer();
+    };
 
+    useEffect(() => {
+        socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
+            updateState({ isSecondPlayer: SecondPlayer === 1 });
+            updateState({ roomId: room });
+            updateState({ isGameReady: true });
+            updateState({ opponentId: opponentId });
+            console.log(opponentId, '   ', id);
+            closeEvent();
+            navigate(`/game/${room}`);
+        });
+
+        return () => {
+            socket?.off('startgame');
+        };
+    });
     return (
         <div className="flex flex-col gap-2">
-            {/* {MODES.map((mode) => (
+            {MODES.map((mode, index) => (
                 <button
+                    key={`mode-${index}`}
                     className="p-4 bg-red-500 text-white"
-                    onClick={() => {
-                        navigate(`/game/${mode}`);
-                        socket.emit('selectMode', mode);
-                    }}
+                    onClick={() => handleClick(mode)}
                 >
                     {mode}
                 </button>
-            ))} */}
-            <div className="container">
-                <button
-                    onClick={() => {
-                        openEvent();
-                    }}
-                >
-                    Open modal
-                </button>
-                {isEventOpen && (
-                    <Modal>
-                        <MatchResultModal />
-                    </Modal>
-                )}
-            </div>
+            ))}
+            {isEventOpen && (
+                <Modal removable={false}>
+                    <div
+                        className="flex flex-col gap-4 text-white"
+                        style={{
+                            animation: 'fade 1.5s infinite'
+                        }}
+                    >
+                        <h2 className=' font-["Acme"] text-7xl'>
+                            Searching for a match...
+                        </h2>
+                        <p className="text-xl">
+                            Please wait while we find an opponent for you..
+                        </p>{' '}
+                        <div className="w-full text-left">
+                            <p>Waiting time: {formatTime(elapsedTime)}</p>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }
-
-// <div className="flex flex-col gap-1">
-//     <div>nickName {user.nickName}</div>
-//     <div>fullName {user.fullName}</div>
-//     <div>email {user.email}</div>
-//     <div>createdAt {user.createdAt}</div>
-//     <div>inGame {user.inGame}</div>
-//     <div>isLogged {user.isLogged ? 'true' : false}</div>
-//     <div>id {user.id}</div>
-//     <div>F2A {user.F2A}</div>
-// </div>

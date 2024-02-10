@@ -4,23 +4,26 @@ import { Column } from 'react-table';
 import { VersusIcon } from '../assets/custom-icons';
 import Table from './Table';
 
-import { ProfileOutletContextType } from '../types/global';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { AxiosResponse } from 'axios';
+import { formatDateTime } from '../tools/date_parsing';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
-
+    const axiosPrivate = useAxiosPrivate();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/matches');
-                const matches: Match[] = await response.json();
-                setData(matches);
+                const matches: AxiosResponse = await axiosPrivate.get(
+                    '/users/historyMatchs'
+                );
+                setData(matches?.data);
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-        // fetchData();
+        fetchData();
     }, []);
 
     const columns = useMemo<Column<Match>[]>(
@@ -31,7 +34,7 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         <div className="flex-col justify-center items-center inline-flex">
-                            {value}
+                            {formatDateTime(value)}
                         </div>
                     );
                 }
@@ -46,11 +49,11 @@ const MatchTable = () => {
                             <div className="flex-col justify-center items-center gap-1 inline-flex">
                                 <img
                                     className="w-8 h-8 relative rounded-[60px] border border-black"
-                                    src={value.avatar}
+                                    src={value?.avatar}
                                 />
                             </div>
                             <div className="text-black">
-                                {value.name} ({value.rating})
+                                {value?.name} ({value?.rating})
                             </div>
                         </div>
                     </div>
@@ -92,7 +95,7 @@ const MatchTable = () => {
                         'w-full text-xl text-neutral-500 font-normal font-["Acme"]',
                     theadStyle:
                         'sticky top-0 z-10 border-b border-neutral-100 bg-white ',
-                    tbodyStyle: 'overflow-y-auto w-full',
+                    tbodyStyle: 'overflow-y-auto w-full ',
                     trStyle: '',
                     thStyle: 'px-2 py-5',
                     tdStyle: 'p-2 text-center align-middle'

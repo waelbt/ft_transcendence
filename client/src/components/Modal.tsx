@@ -4,26 +4,29 @@ import { useModelStore } from '../stores/ModelStore';
 
 type ModalProps = {
     children: React.ReactNode;
+    removable?: boolean;
 };
 
-const Modal = ({ children }: ModalProps) => {
+const Modal = ({ children, removable }: ModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const { isEventOpen, closeEvent } = useModelStore();
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                modalRef.current &&
-                !modalRef.current.contains(event.target as Node)
-            ) {
-                closeEvent();
-            }
-        };
+        if (removable) {
+            const handleClickOutside = (event: MouseEvent) => {
+                if (
+                    modalRef.current &&
+                    !modalRef.current.contains(event.target as Node)
+                ) {
+                    closeEvent();
+                }
+            };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
     }, [modalRef, closeEvent]);
 
     if (!isEventOpen) {
@@ -39,3 +42,37 @@ const Modal = ({ children }: ModalProps) => {
 };
 
 export default Modal;
+
+// import { useNavigate } from 'react-router-dom';
+// import useGameStore from '../../stores/gameStore';
+// import { useEffect } from 'react';
+// import { useUserStore } from '../../stores/userStore';
+
+// export function home() {
+//     // const { isEventOpen, openEvent } = useModelStore();
+//     // const [isModalOpen, setIsModalOpen] = useState(true);
+//     // const closeModal = () => setIsModalOpen(false);
+
+//     return (
+//         <div className="flex flex-col gap-2">
+{
+    /* <div className="container">
+                <button
+                    onClick={() => {
+                        openEvent();
+                    }}
+                >
+                    Open modal
+                </button>
+                {isEventOpen && (
+                    <Modal>
+                        <MatchResultModal />
+                    </Modal>
+                )}
+            </div> */
+}
+{
+    /* </div>
+    );
+} */
+}

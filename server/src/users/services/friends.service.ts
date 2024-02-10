@@ -1,8 +1,8 @@
 import {
+    ForbiddenException,
     Inject,
     Injectable,
     NotFoundException,
-    UnauthorizedException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -30,7 +30,7 @@ export class friendsService {
         );
 
         if (existRequest) {
-            throw new UnauthorizedException('Friend request already sent'); //need to handle this because it causes 500
+            throw new NotFoundException('Friend request already sent'); //need to handle this because it causes 500
         }
 
         //create a new friendship request
@@ -56,6 +56,8 @@ export class friendsService {
         const friendship = await this.prisma.friendship.findFirst({
             where: { userId1: userId2, userId2: userId1, status: 'pending' }
         });
+
+        console.log('id1: ', userId2, 'id2: ', userId1);
 
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
@@ -83,9 +85,12 @@ export class friendsService {
         // const friendship = await this.findFirstStatusPending(userId1, userId2);
 
         const friendship = await this.prisma.friendship.findFirst({
-            where: { userId1: userId1, userId2: userId2, status: 'pending' }
+            where: { userId1: userId2, userId2: userId1, status: 'pending' }
         });
 
+        // console.log('wahd: ', userId1);
+        // console.log('joj: ', userId2);
+        // console.log('friends: ', friendship);
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
         }
@@ -128,7 +133,7 @@ export class friendsService {
         });
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
@@ -179,20 +184,20 @@ export class friendsService {
                 if (friendUser.id !== userId) {
                     const id = friendUser.id;
                     const avatar = friendUser.avatar;
-                    const name = friendUser.fullName;
+                    const nickName = friendUser.nickName;
                     return {
                         id,
                         avatar,
-                        name
+                        nickName
                     };
                 }
                 const id = frienduser2.id;
                 const avatar = frienduser2.avatar;
-                const name = frienduser2.fullName;
+                const nickName = frienduser2.nickName;
                 return {
                     id,
                     avatar,
-                    name
+                    nickName
                 };
             })
             .filter((friend) => friend.id !== userId);
@@ -200,7 +205,7 @@ export class friendsService {
         return friends;
     }
 
-    async userListFriends(viewerId: string, userId: string): Promise<any[]> {
+    async userListFriends(viewerId: string, userId: string){
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { friends: true }
@@ -211,19 +216,11 @@ export class friendsService {
         var friendListWithAction = await Promise.all(
             userFriends
                 .map(async (friendship) => {
-                    console.log(
-                        'wahd: ',
-                        friendship.userId1,
-                        '\njoj: ',
-                        viewerId
-                    );
-                    if (
-                        friendship.userId1 == viewerId ||
-                        friendship.userId2 == viewerId
-                    ) {
-                        console.log('im in');
-                        return;
-                    }
+                    // console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
+                    // if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
+                    //     console.log('im in');
+                    //     return ;
+                    // }
                     const friendId =
                         friendship.userId1 === userId
                             ? friendship.userId2
@@ -238,11 +235,11 @@ export class friendsService {
                         where: { id: friendId }
                     });
                     const id = user.id;
-                    const name = user.fullName;
+                    const nickName = user.nickName;
                     const avatar = user.avatar;
                     return {
                         id,
-                        name,
+                        nickName,
                         avatar,
                         action: isFriend ? 'Send Message' : 'Add Friend'
                     };
@@ -252,7 +249,7 @@ export class friendsService {
         return friendListWithAction;
     }
 
-    private async areUsersFriends(
+    async areUsersFriends(
         userId1: string,
         userId2: string
     ): Promise<boolean> {
@@ -275,7 +272,7 @@ export class friendsService {
         const friends = await this.areUsersFriends(userId1, userId2);
         if (friends) return { message: 'friend' };
         const pending = await this.isUserPending(userId1, userId2);
-        if (pending) return { message: 'RemovePendingFriend' };
+        if (pending) return { message: 'invitation sender' };
         const acceptORreject = await this.isUserNeedToAcceptOrReject(
             userId1,
             userId2

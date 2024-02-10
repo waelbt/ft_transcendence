@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
-import './game.css';
-import { useGame } from '../../context/game-context';
+import './index.css';
+import useGameStore from '../../stores/gameStore';
+import { Lobby } from '../Lobby';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
+import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore';
-import { useSocketStore } from '../../stores/socketStore';
-import { useNavigate, useParams } from 'react-router-dom';
-import { MODES } from '../../constants';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
 }
 
-let roomid: any;
-let isSecondPlayer: number;
+let paddlepos1: number;
+// let roomId: any;
+// let isSecondPlayer: number;
 let chosenMode: string;
-// let leftcolor: string;
-// let rightcolor: string;
+let leftcolor: string;
+let rightcolor: string;
 
 const Score = ({
     leftScore,
@@ -32,7 +33,7 @@ const Score = ({
         left: '15%',
         top: '0',
         textAlign: 'center',
-        color: 'white',
+        color: `${lColor}`,
         fontSize: '3rem',
         paddingTop: '5%',
         fontFamily: 'Arial, sans-serif',
@@ -44,7 +45,7 @@ const Score = ({
         right: '15%',
         top: '0',
         textAlign: 'center',
-        color: 'white',
+        color: `${rColor}`,
         fontSize: '3rem',
         paddingTop: '5%',
         fontFamily: 'Arial, sans-serif',
@@ -74,11 +75,11 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     return <div style={paddleStyle}></div>;
 };
 
-const Ball = ({ gameSt }: { gameSt: string }) => {
+const Ball = ({}, {}) => {
     const [ballPos, setBallPos] = React.useState({ x: 0, y: 0 });
     const [ballColor, setBallColor] = React.useState('white');
     const [shadow, setShadow] = React.useState('0 0 1.25rem white');
-    const { socket } = useGame();
+    const { socket, gameMode, isSecondPlayer } = useGameStore();
     const ballStyle: React.CSSProperties = {
         width: '1.5625rem', // 25px
         height: '1.5625rem', // 25px
@@ -90,21 +91,20 @@ const Ball = ({ gameSt }: { gameSt: string }) => {
         top: `${ballPos.y}rem`,
         boxShadow: shadow // 20px
     };
-
     React.useEffect(() => {
-        socket.on('ballmove', function (newPosition) {
+        socket?.on('ballmove', function (newPosition) {
             setBallPos(
-                isSecondPlayer === 2
+                isSecondPlayer === false
                     ? { x: -newPosition.x, y: newPosition.y }
                     : newPosition
             );
         });
 
         return () => {
-            socket.off('ballmove');
+            socket?.off('ballmove');
         };
-    }, []);
-    if (gameSt == 'crazy') {
+    }, [socket]);
+    if (gameMode == 'crazy') {
         React.useEffect(() => {
             const interval = setInterval(() => {
                 // Toggle the ball color between its original color and the background color
@@ -138,7 +138,6 @@ const Ball = ({ gameSt }: { gameSt: string }) => {
 };
 
 export function Game() {
-    const { mode } = useParams();
     const [firstPaddlePos, setFirstPaddlePos] = React.useState(0);
     const movePaddle = React.useRef(0);
 
@@ -146,103 +145,85 @@ export function Game() {
 
     const [leftscore, setLeftScore] = React.useState(0);
     const [rightscore, setRightScore] = React.useState(0);
+    const navigate = useNavigate();
 
     const [gameOver, setGameOver] = React.useState(false);
-    const [isGameReady, setIsGameReady] = React.useState(false);
-    const { socket } = useSocketStore();
+    const {
+        socket,
+        isGameReady,
+        opponentId,
+        gameMode,
+        isSecondPlayer,
+        roomId
+    } = useGameStore();
     const { id } = useUserStore();
-    const navigate = useNavigate();
-    // let history = useHistory();
-
-    useEffect(() => {
-        if (!MODES.includes(mode as string)) {
-            navigate('/test');
-        }
-    }, [mode, history]);
-
     React.useEffect(() => {
-        console.log('userid ', id);
-        socket.on('leftscored', () => {
-            setLeftScore((prevScore: number) => {
-                const newScore = prevScore + 1;
-                if (removeDecimalPart(newScore / 2) === 5) {
-                    setGameOver(true);
-                    fetch('http://localhost:3001/game1', {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            contact: socket,
-                            id: id
-                        })
-                    }).then((res) => console.log('data 1 ', res.json()));
-                    socket.emit('gameended');
-                    window.location.reload();
-                }
-                return newScore;
-            });
+        if (!isGameReady) navigate('/home');
+    }, [isGameReady]);
+    const axiosPrivate = useAxiosPrivate();
+    React.useEffect(() => {
+        socket?.on('leftscored', async (playerIds: string[]) => {
+            setLeftScore((prevScore: number) => prevScore + 1);
+            // setLeftScore((prevScore: number) => {
+            // const newScore = prevScore + 1;
+            // setRightScore((prvRightscore: number) => {
+            if (leftscore === 5) {
+                console.log(
+                    'player won',
+                    playerIds,
+                    ' and left score is ',
+                    leftscore,
+                    'right score is ',
+                    rightscore
+                );
+                setGameOver(true);
+                // ! store result in both cases
+                const response = await axiosPrivate.post('/game/create', {
+                    winnerId: id,
+                    loserId: opponentId,
+                    result: `${leftscore}-${rightcolor}`,
+                    mode: gameMode
+                });
+
+                console.log(response);
+
+                socket?.emit('gameended');
+                navigate('/');
+            }
+            //     return prvRightscore;
+            // });
+            // return newScore;
+            // });
         });
 
         return () => {
-            socket.off('leftscrored');
+            socket?.off('leftscrored');
         };
-    }, []);
+    }, [socket]);
 
     React.useEffect(() => {
-        socket.on('rightscored', () => {
+        socket?.on('rightscored', () => {
             setRightScore((prevScore: number) => {
                 const newScore = prevScore + 1;
-                if (newScore === 5) {
+                if (removeDecimalPart(newScore) === 5) {
                     setGameOver(true);
-                    window.location.reload(); // ! dos replace reload
-                    socket.emit('gameended');
+                    window.location.reload();
+                    socket?.emit('gameended');
                 }
                 return newScore;
             });
         });
 
         return () => {
-            socket.off('rightcrored');
+            socket?.off('rightcrored');
         };
-    }, []);
-
-    // const [gameMode, setGameMode] = React.useState<
-    //     null | 'classic' | 'crazy' | 'IA'
-    // >(null);
-
-    // let gameSt: string;
-
-    React.useEffect(() => {
-        socket.on('startgame', ({ room, SecondPlayer, chosen }) => {
-            isSecondPlayer = SecondPlayer;
-            chosenMode = chosen;
-            // if (chosenMode === 'classic') {
-            //     leftcolor = 'white';
-            //     rightcolor = 'white';
-            // } else if (chosenMode === 'crazy') {
-            //     leftcolor = 'white';
-            //     rightcolor = 'white';
-            // } else if (chosenMode === 'IA') {
-            //     leftcolor = 'white';
-            //     rightcolor = 'white';
-            // }
-            console.log('player status: ', isSecondPlayer);
-            setIsGameReady(true);
-            roomid = room;
-        });
-
-        return () => {
-            socket.off('startgame');
-        };
-    }, []);
+    }, [socket]);
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'ArrowUp' || e.key === 'w') {
-            movePaddle.current = -0.2;
+            movePaddle.current = -0.1;
         } else if (e.key === 'ArrowDown' || e.key === 's') {
-            movePaddle.current = 0.2;
+            movePaddle.current = 0.1;
         }
     };
 
@@ -258,14 +239,14 @@ export function Game() {
                     const maxPos = 17.5;
                     const minPos = -17.187;
 
-                    const paddlepos1 = Math.min(
+                    paddlepos1 = Math.min(
                         Math.max(newPosition, minPos),
                         maxPos
                     );
-                    socket.emit('paddlemove', {
-                        room: roomid,
+                    socket?.emit('paddlemove', {
+                        room: roomId,
                         pos: paddlepos1,
-                        SecondPlayer: isSecondPlayer
+                        SecondPlayer: isSecondPlayer === true ? 1 : 2
                     });
                     return paddlepos1;
                 });
@@ -284,66 +265,46 @@ export function Game() {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [gameOver]);
+    }, [gameOver, socket, setFirstPaddlePos, isSecondPlayer, roomId]);
 
     useEffect(() => {
-        socket.on('paddlemove', function (newPosition) {
+        socket?.on('paddlemove', function (newPosition) {
             setSecondPaddlePos(newPosition);
         });
 
         return () => {
-            socket.off('paddlemove');
+            socket?.off('paddlemove');
         };
-    }, []);
+    }, [socket, setSecondPaddlePos]);
 
     React.useEffect(() => {
-        socket.on('PlayerDisconnected', async () => {
+        socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
             console.log('player disconnected');
-            fetch('http://localhost:3001/game1', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ room: 'dzdzed', id: id })
-            }).then((res) => console.log('data 1 ', res.json()));
-            window.location.reload();
+            console.log('ids :', playerIds);
+            //   fetch("http://localhost:3001/game1", {
+            //   method: 'POST',
+            //   mode: 'no-cors',
+            //   headers: {
+            //     'Content-Type': 'application/json',
+            //   },
+            //   body: JSON.stringify({room: 'dzdzed'}),
+            // }).then((res) => console.log('data 1 ',res.json()));
+            // window.location.reload();
+            navigate('/');
         });
         return () => {
-            socket.off('PlayerDisconnected');
+            socket?.off('PlayerDisconnected');
         };
     });
+    useEffect(() => {
+        console.log(gameMode);
+        console.log(isSecondPlayer);
+    }, [gameMode, socket]);
 
-    // if (gameMode === null) {
-    //     return (
-    //         <div className="container">
-    //             <button
-    //                 className="custom-button"
-    //                 onClick={() => setGameMode('classic')}
-    //             >
-    //                 Classic
-    //             </button>
-    //             <button
-    //                 className="custom-button"
-    //                 onClick={() => setGameMode('crazy')}
-    //             >
-    //                 Crazy
-    //             </button>
-    //             <button
-    //                 className="custom-button"
-    //                 onClick={() => setGameMode('IA')}
-    //             >
-    //                 IA
-    //             </button>
-    //         </div>
-    //     );
-    // }
-
-    // gameSt = gameMode;
     return (
         <>
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
-                {!isGameReady && (
+            <div className="flex flex-col w-full items-center justify-center h-full ">
+                {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
                             style={{
@@ -356,55 +317,37 @@ export function Game() {
                             Please wait for another player
                         </p>
                     </div>
-                )}
-                {isGameReady && (
-                    <div className={`table-${chosenMode}`}>
-                        <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-                        <Ball gameSt={mode as string} />
-                        <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
-                        {/* <Score
-                            leftScore={removeDecimalPart(leftscore / 2)}
-                            rightScore={removeDecimalPart(rightscore / 2)}
-                            // lColor={leftcolor}
-                            // rColor={rightcolor}
-                        /> */}
-                        <div className="lineC">
-                            <div className="line"></div>
+                ) : ( */}
+                <>
+                    <div className="w-full px-20 flex justify-between mb-20">
+                        <div className="w-5 h-5 text-red-600">{leftscore}</div>
+                        <div className="w-5 h-5 text-red-600">{rightscore}</div>
+                    </div>
+                    <div className="w-[1168px] h-[663px]">
+                        <div className={`table-${gameMode}`}>
+                            <Paddle
+                                color="#E6E6E9"
+                                pos={`${firstPaddlePos}rem`}
+                            />
+                            <Ball />
+                            <Paddle
+                                color="#E6E6E9"
+                                pos={`${secondPaddlePos}rem`}
+                            />
+                            <Score
+                                leftScore={removeDecimalPart(leftscore)}
+                                rightScore={removeDecimalPart(rightscore)}
+                                lColor={'white'}
+                                rColor={'white'}
+                            />
+                            <div className="lineC">
+                                <div className="line"></div>
+                            </div>
                         </div>
                     </div>
-                )}
+                </>
+                {/* )} */}
             </div>
         </>
     );
 }
-
-// ! use this component in the home page
-// import React from 'react';
-// // Make sure to import or initialize your socket connection appropriately
-// // import socket from 'your-socket-connection-file';
-
-// const GameModeButtons = () => {
-//     const gameModes = ['classic', 'crazy', 'IA'];
-
-//     const handleButtonClick = (gameMode) => {
-//         // Assuming you have a function setGameMode to update your state or context
-//         setGameMode(gameMode);
-//         socket.emit('gameMode', gameMode);
-//     };
-
-//     return (
-//         <div className="container">
-//             {gameModes.map((gameMode, index) => (
-//                 <button
-//                     key={index}
-//                     className="custom-button"
-//                     onClick={() => handleButtonClick(gameMode)}
-//                 >
-//                     {gameMode.charAt(0).toUpperCase() + gameMode.slice(1)}
-//                 </button>
-//             ))}
-//         </div>
-//     );
-// };
-
-// export default GameModeButtons;

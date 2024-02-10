@@ -1,7 +1,7 @@
 interface CodeInputProps {
     code: string[];
     style?: string;
-    hide: boolean;
+    hide?: boolean;
     HandleChangeType: (
         index: number
     ) => (event: React.FormEvent<HTMLInputElement>) => void;

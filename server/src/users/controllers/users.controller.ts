@@ -1,20 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    NotFoundException,
-    UseInterceptors,
-    UploadedFile,
-    Req,
-    UnauthorizedException,
-    HttpException,
-    HttpStatus,
-    UseGuards
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, UploadedFile, Req, HttpException, HttpStatus, UseGuards, Res } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import {
     ApiCreatedResponse,
@@ -22,7 +6,8 @@ import {
     ApiTags,
     ApiBearerAuth,
     ApiBody,
-    ApiOperation
+    ApiOperation,
+    ApiResponse
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
@@ -30,6 +15,11 @@ import { InvalidFileException } from '../multer/file.exception';
 import { BlockService } from '../services/blocked.service';
 import { userInfos } from '../dto/userInfo.dto';
 import { dto } from '../dto/completeProfile.dto';
+import { avatarDTO } from '../dto/avatar.dto';
+import { match_history } from '../dto/matchHistory.dto';
+import { mydata } from '../dto/mydata.dto';
+import { user, userData } from '../dto/userData.dto';
+import { smallData } from '../dto/smallData.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -41,27 +31,35 @@ export class UsersController {
     ) {}
 
     @Get(':id/profile')
+    @ApiOperation({ summary: 'Get data of another user' })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns data of another user',
+        type: userData
+    })
     // @ApiResponse({ status: 404, description: 'Not Found' })
     async userInfos(@Req() req, @Param('id') userId: string) {
+        const isItBlocked = await this.blockService.isUserBlocked(
+            req.user.sub,
+            userId
+        );
+        if (isItBlocked)
+            throw new NotFoundException('this user does not exist');
+
+        const user = await this.usersService.findOneUser(userId);
+        if (!user) {
+            throw new NotFoundException('this user does not exist');
+        }
+
         return await this.usersService.userInfos(req, userId);
     }
 
     @Get('me')
-    async myInfos(@Req() req) {
-        console.log('Welcom To our Website again');
-        // if (userId != req.user.sub){
-        //   console.log('user1: ', userId, 'sub: ', req.user.sub);
-        //   throw new UnauthorizedException('You are not allowed to remove this user from friends');
-        // }
+    @ApiOperation({ summary: 'Get my data' })
+    @ApiResponse({ status: 200, description: 'Returns my data', type: mydata })
+    async myInfos(@Req() req): Promise<mydata> {
         return await this.usersService.myInfos(req);
     }
-
-    // @Post()
-    // @ApiCreatedResponse()
-    // createUser(@Body() user: User) {
-    //   console.log('userId /////', user)
-    //   return (this.usersService.createUser(user, user.id));
-    // }
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
@@ -74,7 +72,6 @@ export class UsersController {
             if (!file) {
                 throw new InvalidFileException('No file provided.');
             }
-            console.log(file);
             return await this.usersService.uploadAvatar(file, req);
         } catch (error) {
             if (error instanceof InvalidFileException) {
@@ -97,24 +94,50 @@ export class UsersController {
         }
     }
 
-    @Delete('/delete/:image')
-    async deleteImage(@Param('image') path: string) {
-        const file = process.env.upload + '/' + path;
-        console.log(file);
-        return await this.usersService.deleteImage(file);
+    @Delete('/delete')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                path: {
+                    type: 'string'
+                }
+            }
+        }
+    })
+    async deleteImage(@Body('path') path) {
+        console.log('.............................................');
+        console.log('path :', path);
+        console.log('.............................................');
+        return await this.usersService.deleteImage(path);
     }
 
     @Post('/info')
     @ApiBody({ type: dto })
-    async UserInfo(@Req() req, @Body() dto: dto) {
-        console.log('ana hnaya');
-        console.log('avatar: ', dto.avatar);
-        console.log('nickName: ', dto.nickName);
+    @ApiOperation({ summary: 'update user nickName and avatar' })
+    @ApiResponse({ status: 200, description: 'Returns my data', type: user })
+    async UserInfo(@Req() req, @Body() dto: dto): Promise<User> {
+        console.log('hi');
+        console.log('avatar: ', dto.avatar, 'nick: ', dto.nickName);
         return await this.usersService.userInfo(req, dto.avatar, dto.nickName);
     }
 
     @Get('/previo/:id')
-    async userData(@Param('id') id: string) {
+    @ApiOperation({ summary: 'get small data for a user' })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns small data of a user',
+        type: smallData
+    })
+    async userData(@Req() req, @Param('id') id: string): Promise<smallData> {
+        const isItBlocked = await this.blockService.isUserBlocked(
+            req.user.sub,
+            id
+        );
+        if (isItBlocked) {
+            throw new NotFoundException('this user does not exist');
+        }
+
         return await this.usersService.userData(id);
     }
 
@@ -126,11 +149,17 @@ export class UsersController {
     }
 
     @Get('historyMatchs')
-    async match_history(@Req() req) {
+    @ApiOperation({ summary: 'Get match history' })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns the match history of the user',
+        type: match_history
+    })
+    async match_history(@Req() req): Promise<match_history[]> {
         return await this.usersService.matchHistory(req.user.sub);
     }
 
-    @Get(':id')
+    @Get(':id/user')
     @ApiBearerAuth()
     @ApiOkResponse()
     async findOneUser(@Param('id') id: string) {
@@ -141,6 +170,17 @@ export class UsersController {
                 `User with the  id ${id} does not exist`
             );
         return findUser;
+    }
+
+    @Get('search/:keyword')
+    @ApiOperation({ summary: 'get small data for a user' })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns small data of search bar',
+        type: smallData
+    })
+    async searchBar(@Param('keyword') keyword: string): Promise<smallData[]> {
+        return this.usersService.searchBar(keyword);
     }
 
     @Patch(':id')
@@ -157,64 +197,69 @@ export class UsersController {
         return this.usersService.removeUser(String(id));
     }
 
-    @Post(':userId/blockUser/:blockedUserId')
-    async blockUser(
-        @Req() req,
-        @Param('userId') userId: string,
-        @Param('blockedUserId') blockedUserId: string
-    ) {
-        if (userId != req.user.sub) {
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException(
-                'You are not allowed to reject this friend request'
-            );
-        }
-        this.blockService.blockUser(userId, blockedUserId);
+    @Post('UpdateAvatar/')
+    async updateAvatar(@Req() req, @Res() res, @Body() dto: avatarDTO) {
+        await this.usersService.deleteImage(dto.oldAvatar);
+        await this.usersService.updateAvatar(req.user.sub, dto.newAvatar);
+        res.send('seccess');
     }
 
-    @Post(':userId/unblockUser/:unblockedUserId')
+    @Post('UpdateNickName/')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                nickName: {
+                    type: 'string'
+                }
+            }
+        }
+    })
+    async updateNickname(@Req() req, @Res() res, @Body('nickName') name) {
+        await this.usersService.updateNickName(req.user.sub, name);
+        res.send('seccess');
+    }
+
+    @Post('/blockUser/:blockedUserId')
+    async blockUser(@Req() req, @Param('blockedUserId') blockedUserId: string) {
+        const isBlocked = await this.blockService.isUserBlocked(
+            req.user.sub,
+            blockedUserId
+        );
+        if (isBlocked) throw new NotFoundException('this user does not exist');
+
+        this.blockService.blockUser(req.user.sub, blockedUserId);
+    }
+
+    @Post('/unblockUser/:unblockedUserId')
     async unblockUser(
         @Req() req,
-        @Param('userId') userId: string,
         @Param('unblockedUserId') unblockedUserId: string
     ) {
-        if (userId != req.user.sub) {
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException(
-                'You are not allowed to reject this friend request'
-            );
-        }
-        this.blockService.unblockUser(userId, unblockedUserId);
+        this.blockService.unblockUser(req.user.sub, unblockedUserId);
     }
 
-    @Get(':userId/canInteractWith/:otherUserId')
+    @Get('/canInteractWith/:otherUserId')
     async canInteractWith(
         @Req() req,
-        @Param('userId') userId: string,
         @Param('otherUserId') otherUserId: string
     ): Promise<Boolean> {
-        if (userId != req.user.sub) {
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException(
-                'You are not allowed to reject this friend request'
-            );
-        }
         const isItBlocked = await this.blockService.isUserBlocked(
-            userId,
+            req.user.sub,
             otherUserId
         );
         return isItBlocked ? false : true;
     }
 
-    @Get(':userId/blockedUsers')
-    async listOfBlockedUsers(@Req() req, @Param('userId') userId: string) {
-        if (userId != req.user.sub) {
-            console.log('user1: ', userId, 'sub: ', req.user.sub);
-            throw new UnauthorizedException(
-                'You are not allowed to reject this friend request'
-            );
-        }
-        return await this.blockService.listOfBlockedUsers(userId);
+    @Get('/blockedUsers')
+    @ApiOperation({ summary: 'get small data for a user' })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns small data of blocked Users',
+        type: smallData
+    })
+    async listOfBlockedUsers(@Req() req): Promise<smallData[]> {
+        return await this.blockService.listOfBlockedUsers(req.user.sub);
     }
     // Close Prisma client when done
     // prisma.$disconnect();

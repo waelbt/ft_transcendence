@@ -6,12 +6,14 @@ import { isAxiosError } from 'axios';
 import { useUserStore } from '../stores/userStore';
 import { IoIosLock } from 'react-icons/io';
 import { FormEvent } from 'react';
+import { useDebounce } from '../hooks/debouncerHook';
 
 const TwoFA = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
     const axiosPrivate = useAxiosPrivate();
-    const { F2A, updateState } = useUserStore();
+    const { f2A, updateState } = useUserStore();
     const [image, setImage] = useState<string | null>(null);
+    const debouncedValue = useDebounce<string[]>(code, 500);
 
     const handleChange =
         (index: number) => (event: FormEvent<HTMLInputElement>) => {
@@ -28,31 +30,22 @@ const TwoFA = () => {
     const validateCode = async () => {
         try {
             const codeString = code.join('');
-            if (/^[0-9]+$/.test(codeString)) {
+            if (!/^[0-9]+$/.test(codeString)) {
                 toast.error('Error: input is invalid: value is not a number');
                 return;
             }
-            console.log('code ', codeString);
-            const response = await axiosPrivate.post(
-                '/2fa/validate',
-                {
-                    Code: codeString // Send the code as a JSON object
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
+            const response = await axiosPrivate.post('/2fa/validate', {
+                Code: codeString // Send the code as a JSON object
+            });
+            updateState({ f2A: true });
             toast.success(response.data.message);
-            updateState({ F2A: true });
         } catch (error) {
             if (isAxiosError(error)) {
-                updateState({ F2A: false });
                 toast.error(error.response?.data.message);
             }
         } finally {
             setCode(['', '', '', '', '', '']);
+            document.getElementById(`input-0`)?.focus();
         }
     };
 
@@ -60,12 +53,12 @@ const TwoFA = () => {
         if (code.every((char) => char !== '')) {
             validateCode();
         }
-    }, [code]);
+    }, [debouncedValue]);
 
     const toggleLock = async () => {
         try {
             await axiosPrivate.post('/2fa/disable');
-            updateState({ F2A: false });
+            updateState({ f2A: false });
             toast.success('2FA disable successfully');
         } catch (error) {
             if (isAxiosError(error))
@@ -79,19 +72,18 @@ const TwoFA = () => {
         const GenerateQRCode = async () => {
             try {
                 const response = await axiosPrivate.get('/2fa/generate');
+                console.log('secert updated');
                 setImage(response.data.qrCode);
-                console.log(image);
             } catch (error) {
                 console.error('Error fetching QR code:', error);
             }
         };
-
-        GenerateQRCode();
-    }, []);
+        if (!f2A) GenerateQRCode();
+    }, [f2A]);
 
     return (
         <div className="relative">
-            {F2A && (
+            {f2A && (
                 <IoIosLock
                     className="text-black absolute top-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                     size={130}
@@ -100,7 +92,7 @@ const TwoFA = () => {
             )}
             <div
                 style={
-                    F2A
+                    f2A
                         ? {
                               filter: 'blur(4px)',
                               pointerEvents: 'none'
@@ -109,7 +101,7 @@ const TwoFA = () => {
                 }
                 className="flex-col justify-cemter items-center inline-flex gap-6"
             >
-                <div className="border border-gray-200 w-[202px] h-[203px] relative">
+                <div className="border border-gray-400 rounded-md w-[202px] h-[203px] relative">
                     {image ? (
                         <img
                             src={image}
@@ -136,7 +128,7 @@ const TwoFA = () => {
                     <CodeInput
                         code={code}
                         HandleChangeType={handleChange}
-                        hide={F2A}
+                        hide={f2A}
                         style="w-[45px] h-[50px] text-center text-black text-xl relative bg-white
                 rounded-[10px] border border-neutral-400"
                     />
@@ -147,115 +139,3 @@ const TwoFA = () => {
 };
 
 export default TwoFA;
-
-// // Import CSS keyframes from styled-components
-
-// // Keyframe animations for lock/unlock
-
-// const TwoFA = () => {
-//     const [code, setCode] = useState<string>('');
-//     const [isLocked, setIsLocked] = useState(true); // New state for lock status
-//     // ... rest of your states and useEffects
-
-//     // Toggle lock/unlock
-
-//     return (
-//         <div className="relative">
-//             {isLocked ? (
-//                 <StyledLockIcon
-//                     className="text-black absolute bottom-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-//                     size={77}
-//                     onClick={toggleLock}
-//                 />
-//             ) : (
-//                 <StyledUnlockIcon
-//                     className="text-black absolute bottom-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-//                     size={77}
-//                     onClick={toggleLock}
-//                 />
-//             )}
-//             <div
-//                 style={
-//                     isLocked
-//                         ? {
-//                               filter: 'blur(4px)',
-//                               pointerEvents: 'none'
-//                           }
-//                         : {}
-//                 }
-//                 className="flex-col justify-center items-center inline-flex gap-6"
-//             >
-//                 {/* Rest of your component */}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default TwoFA;
-
-// Import CSS keyframes from styled-components
-// import styled, { keyframes } from 'styled-components';
-
-// // Keyframe animations for lock/unlock
-// const fadeIn = keyframes`
-//   from {
-//     opacity: 0;
-//   }
-//   to {
-//     opacity: 1;
-//   }
-// `;
-
-// const StyledLockIcon = styled(IoIosLock)`
-//   animation: ${fadeIn} 0.5s;
-// `;
-
-// const StyledUnlockIcon = styled(IoIosUnlock)`
-//   animation: ${fadeIn} 0.5s;
-// `;
-
-// const TwoFA = () => {
-//     const [code, setCode] = useState<string>('');
-//     const [isLocked, setIsLocked] = useState(true); // New state for lock status
-//     // ... rest of your states and useEffects
-
-//     // Toggle lock/unlock
-//     const toggleLock = () => {
-//         setIsLocked(!isLocked);
-//         updateState({ F2A: !isLocked });
-//         // Additional logic if needed
-//     };
-
-//     return (
-//         <div className="relative">
-//             {isLocked ? (
-//                 <StyledLockIcon
-//                     className="text-black absolute bottom-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-//                     size={77}
-//                     onClick={toggleLock}
-//                 />
-//             ) : (
-//                 <StyledUnlockIcon
-//                     className="text-black absolute bottom-1/2 left-1/2 z-10 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-//                     size={77}
-//                     onClick={toggleLock}
-//                 />
-//             )}
-//             <div
-//                 style={
-//                     isLocked
-//                         ? {
-//                               filter: 'blur(4px)',
-//                               pointerEvents: 'none'
-//                           }
-//                         : {}
-//                 }
-//                 className="flex-col justify-center items-center inline-flex gap-6"
-//             >
-//                 {/* Rest of your component */}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default TwoFA;

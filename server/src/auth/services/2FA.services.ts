@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
-import * as otplib from 'otplib';
-import * as qrcodeLib from 'qrcode';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 
@@ -33,7 +31,7 @@ export class twoFAService {
         } catch (error) {
             console.error('Error generating QR code:', error);
             return res
-                .status(500)
+                .status(403)
                 .json({ message: 'Error generating QR code' });
         }
     }
@@ -57,9 +55,7 @@ export class twoFAService {
     async validateTwoFAToken(token: string, secret: string): Promise<boolean> {
         const isValidToken = speakeasy.totp.verify({
             secret,
-            encoding: 'base32',
             token,
-            window: 1
         });
         return isValidToken;
     }
@@ -69,9 +65,11 @@ export class twoFAService {
         const user = await this.prisma.user.findUnique({
             where: { id: req.user.sub }
         });
-        if (!user) throw new NotFoundException(`User does not exist`);
 
-        console.log(user.f2A_Secret);
+        if (!user) 
+            throw new NotFoundException(`User does not exist`);
+
+        console.log('secret: ', user.f2A_Secret);
         const isValidToken = await this.validateTwoFAToken(
             code,
             user.f2A_Secret
@@ -87,7 +85,7 @@ export class twoFAService {
                 .status(200)
                 .json({ message: '2FA validation successful', user });
         } else {
-            return res.status(401).json({ message: 'Invalid 2FA token' });
+            return res.status(403).json({ message: 'Invalid 2FA token' });
         }
     }
 

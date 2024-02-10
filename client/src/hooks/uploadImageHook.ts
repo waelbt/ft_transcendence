@@ -13,21 +13,23 @@ const useImageUpload = () => {
     const axiosPrivate = useAxiosPrivate();
     const cancelTokenSource = useRef(axios.CancelToken.source());
 
-    const deleteData = async (path: string) => {
+    const deleteData = async () => {
         if (isloading) {
             cancelTokenSource.current.cancel('Upload cancelled by the user.');
             cancelTokenSource.current = axios.CancelToken.source();
         } else {
-            // axiosPrivate
-            //     .delete(`/users/delete/image/${path}`)
-            //     .then((response) => {
-            //         console.log('Response:', response.data);
-            //     })
-            //     .catch((error) => {
-            //         console.error('Error:', error);
-            //     });
+            try {
+                await axiosPrivate.delete(`/users/delete`, {
+                    data: {
+                        path: imagePath
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
             setProgress(0);
         }
+        setSuccess(false);
     };
 
     const uploadData = async (file: File) => {
@@ -35,7 +37,6 @@ const useImageUpload = () => {
         setIsFailed(false);
         setSuccess(false);
 
-        // ! intercept this request
         try {
             var formData = new FormData();
             formData.append('file', file);
@@ -54,18 +55,15 @@ const useImageUpload = () => {
                                     progressEvent.total
                             );
                             setProgress(percentCompleted);
-                            console.log(
-                                `Upload progress: ${percentCompleted}%`
-                            );
                         }
                     },
                     cancelToken: cancelTokenSource.current.token
                 }
             );
-            setImagePath(
-                `${import.meta.env.VITE_UPLOADS_DESTINATION}/${response.data}`
-            );
+            setImagePath(response.data);
             setSuccess(true);
+            setIsloading(false);
+            return response.data;
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(
@@ -74,11 +72,10 @@ const useImageUpload = () => {
                 );
             }
             setIsFailed(true);
-
+            setIsloading(false);
             setImagePath(null);
             setProgress(0);
-        } finally {
-            setIsloading(false);
+            return false;
         }
     };
 
@@ -90,7 +87,8 @@ const useImageUpload = () => {
         uploadData,
         deleteData,
         imagePath,
-        setImagePath
+        setImagePath,
+        setProgress
     };
 };
 

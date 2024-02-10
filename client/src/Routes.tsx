@@ -31,7 +31,7 @@ const router = createBrowserRouter([
                 }
             },
             {
-                path: '/game',
+                path: '/game/:roomId',
                 lazy: async () => {
                     let { Game } = await import('./pages/Game');
                     return { Component: Game };
@@ -93,9 +93,38 @@ const router = createBrowserRouter([
                 ]
             },
             {
+                path: '/error/403',
+                lazy: async () => {
+                    let { Forbidden } = await import(
+                        './components/errorPages/Forbidden'
+                    );
+                    return { Component: Forbidden };
+                }
+            },
+            {
+                path: '/error/500',
+                lazy: async () => {
+                    let { ServerError } = await import(
+                        './components/errorPages/ServerError'
+                    );
+                    return { Component: ServerError };
+                }
+            },
+            {
+                path: '/error/400',
+                lazy: async () => {
+                    let { NotFound } = await import(
+                        './components/errorPages/NotFound'
+                    );
+                    return { Component: NotFound };
+                }
+            },
+            {
                 path: '*',
                 lazy: async () => {
-                    let { NotFound } = await import('./components/errorPages/');
+                    let { NotFound } = await import(
+                        './components/errorPages/NotFound'
+                    );
                     return { Component: NotFound };
                 }
             }

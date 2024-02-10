@@ -8,17 +8,26 @@ import Skeleton from 'react-loading-skeleton';
 
 export function Profile() {
     const { id: paramId } = useParams();
-    const { id: userId } = useUserStore();
-    const isCurrentUser = paramId === 'me' || paramId === userId;
-    const { data, isLoading, isError, refetch } = useGetUserInfos(
+    const currentUser = useUserStore();
+    const isCurrentUser = paramId === 'me' || paramId === currentUser.id;
+    const {
+        user,
+        relation,
+        friendsIds,
+        blocksIds,
+        isLoading,
+        isError,
+        error,
+        refetch
+    } = useGetUserInfos(
         paramId as string,
         ['profile', isCurrentUser ? 'me' : (paramId as string)],
         isCurrentUser
     );
 
     useEffect(() => {
-        if (!isCurrentUser) refetch();
-    }, [paramId, refetch]);
+        refetch();
+    }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
 
     if (isLoading) {
         return (
@@ -50,12 +59,14 @@ export function Profile() {
     return (
         <div className="flex-col h-full justify-center items-center inline-flex gap-5">
             <UserProfileCard
-                {...data.user}
-                relationship={isCurrentUser ? null : data.type?.message}
+                {...user}
+                relationship={relation}
                 isCurrentUser={isCurrentUser}
             />
-            <div className="flex-grow max-h-[560px] w-full bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
-                <Outlet context={{ isCurrentUser, paramId }} />
+            <div className="flex-grow max-h-[560px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
+                <Outlet
+                    context={{ isCurrentUser, paramId, friendsIds, blocksIds }}
+                />
             </div>
         </div>
     );

@@ -49,26 +49,33 @@ const Table = <D extends object>({
                     </tr>
                 ))}
             </thead>
-            <tbody {...getTableBodyProps()} className={styles.tbodyStyle || ''}>
-                {rows.map((row) => {
-                    prepareRow(row);
-                    return (
-                        <tr
-                            {...row.getRowProps()}
-                            className={styles.trStyle || ''}
-                            {...getRowProps(row)}
-                        >
-                            {row.cells.map((cell) => (
-                                <td
-                                    {...cell.getCellProps()}
-                                    className={styles.tdStyle || ''}
-                                >
-                                    {cell.render('Cell')}
-                                </td>
-                            ))}
-                        </tr>
-                    );
-                })}
+            <tbody
+                {...getTableBodyProps()}
+                className={(styles.tbodyStyle || '')}
+            >
+               {rows.length > 0 ? (
+                    rows.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                {...row.getRowProps()}
+                                className={styles.trStyle || ''}
+                                {...getRowProps(row)}
+                            >
+                                {row.cells.map((cell) => (
+                                    <td
+                                        {...cell.getCellProps()}
+                                        className={styles.tdStyle || ''}
+                                    >
+                                        {cell.render('Cell')}
+                                    </td>
+                                ))}
+                            </tr>
+                        );
+                    })
+                ) : (
+                   null
+                )}
             </tbody>
         </table>
         // </div>

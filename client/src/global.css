@@ -67,8 +67,8 @@ body {
         background-position: 468px 0;
     }
 }
-/* 
-.debug {
+
+/* .debug {
     border: 2px solid red !important;
     & > * {
         border: 2px solid green !important;
@@ -110,4 +110,27 @@ body {
     100% {
         background-position: -100% 0; /* Move to the opposite end */
     }
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: #b5b5b5;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }
