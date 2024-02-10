@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Post, UnauthorizedException } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/services/users.service';
 import { gameService } from './game.service';
 import { gameDto } from './dto/game.dto';
@@ -32,6 +32,6 @@ export class GameController {
         const user2 = await this.userService.findOneUser(userId2);
 
         if (!user1 || !user2)
-            throw new UnauthorizedException('user not found');
+            throw new NotFoundException('user not found');
     }
 }

@@ -23,20 +23,20 @@ export class twoFAController{
         // return res.status(200).json({message: await this.twoFAService.generate2FA(res, user)});
     }
 
-    @Post('enable')
-    @ApiBody({ 
-        schema: {
-          type: 'object',
-          properties: {
-            Code: {
-              type: 'string',
-            },
-          },
-        },
-    })
-    async enableTwoFA(@Body("Code") code, @Req() req, @Res() res){
-		return (await this.twoFAService.validateTwoFA(req, code, res));
-    }
+    // @Post('enable')
+    // @ApiBody({ 
+    //     schema: {
+    //       type: 'object',
+    //       properties: {
+    //         Code: {
+    //           type: 'string',
+    //         },
+    //       },
+    //     },
+    // })
+    // async enableTwoFA(@Body("Code") code, @Req() req, @Res() res){
+		// return (await this.twoFAService.validateTwoFA(req, code, res));
+    // }
 
     @Post('validate')
     @ApiBody({ 

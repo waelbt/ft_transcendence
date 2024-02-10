@@ -31,7 +31,9 @@ function Setting() {
     const updateNickname = async (data: FieldValues) => {
         try {
             // const oldAvatar = avatar;
-            await axiosPrivate.post(`/users/UpdateNickName/${data.nickName}`);
+            await axiosPrivate.post(`/users/UpdateNickName`, {
+                nickName: data.nickName
+            });
             updateState({ nickName: data['nickName'] });
             toast.success('nickname updated successfully');
             // await delelte old path
@@ -125,12 +127,12 @@ function Setting() {
                                 validation: {
                                     required: 'Nickname is required!',
                                     maxLength: {
-                                        value: 15,
+                                        value: 10,
                                         message:
                                             'Nickname must be less than 15 characters'
                                     },
                                     minLength: {
-                                        value: 5,
+                                        value: 4,
                                         message:
                                             'Nickname must be at least 5 characters'
                                     }
