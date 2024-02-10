@@ -239,12 +239,12 @@ export class UsersService {
         //     await this.updateAvatarNickname(req.user.sub, avatar, nickName)
         // }
 
-        if (avatar.length !== 0){
+        if (avatar.length !== 0) {
             console.log('update avatar');
             await this.updateAvatar(req.user.sub, avatar);
         }
-        
-        if (nickName){
+
+        if (nickName) {
             console.log('update nickname');
             await this.updateNickName(req.user.sub, nickName);
         }
@@ -302,6 +302,9 @@ export class UsersService {
 
     async myInfos(@Req() req): Promise<mydata> {
         const user = await this.getOneUser(req.user.sub);
+        if (!user) {
+            throw new NotFoundException('this user does not exist');
+        }
         delete user.HashPassword;
         console.log(user);
 

@@ -27,7 +27,6 @@ const useAxiosPrivate = () => {
             async (error) => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 401 && !prevRequest.sent) {
-                    prevRequest.sent = true;
                     prevRequest.sent = true; // Marking that a token refresh attempt was made
                     try {
                         const newAccessToken = await refresh();

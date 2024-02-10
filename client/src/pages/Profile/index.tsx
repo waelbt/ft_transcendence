@@ -24,7 +24,7 @@ export function Profile() {
         ['profile', isCurrentUser ? 'me' : (paramId as string)],
         isCurrentUser
     );
-    
+
     useEffect(() => {
         refetch();
     }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
@@ -63,7 +63,7 @@ export function Profile() {
                 relationship={relation}
                 isCurrentUser={isCurrentUser}
             />
-            <div className="flex-grow max-h-[560px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow">
+            <div className="flex-grow max-h-[560px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
                 <Outlet
                     context={{ isCurrentUser, paramId, friendsIds, blocksIds }}
                 />

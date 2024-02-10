@@ -67,8 +67,8 @@ body {
         background-position: 468px 0;
     }
 }
-/* 
-.debug {
+
+/* .debug {
     border: 2px solid red !important;
     & > * {
         border: 2px solid green !important;

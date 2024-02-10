@@ -28,12 +28,12 @@ export const NICKNAME_FIELD = [
         validation: {
             required: 'Nickname is required!',
             maxLength: {
-                value: 15,
-                message: 'Nickname must be less than 15 characters'
+                value: 10,
+                message: 'Nickname must be less than 10 characters'
             },
             minLength: {
-                value: 5,
-                message: 'Nickname must be at least 5 characters'
+                value: 3,
+                message: 'Nickname must be at least 3 characters'
             }
         }
     }

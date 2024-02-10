@@ -12,7 +12,6 @@ function Layout() {
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
-        console.log('accesstoken', accessToken);
         const fetchData = async () => {
             try {
                 setIsLoading(true);
