@@ -12,7 +12,6 @@ const ProgressBar = ({ value, max = 100 }: ProgressBarProps) => {
         const finalWidth = `${Math.min((value / max) * 100, 100)}%`;
 
         const styleSheet = document.createElement('style');
-        styleSheet.type = 'text/css';
         styleSheet.innerText = `
             @keyframes expandBar {
                 from { width: 0%; }

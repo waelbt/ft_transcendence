@@ -1,17 +1,24 @@
-// const dateString = "2024-02-09T22:48:36.409Z";
-// const date = new Date(dateString);
+export const formatDate = (dateString: string) => {
+    //! profile card
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+    }).format(date);
+};
 
-// const formattedDate = date.toLocaleDateString('en-US', {
-//     year: 'numeric',
-//     month: 'short',
-//     day: 'numeric'
-// });
-// console.log(formattedDate);  // Output: "Feb 9, 2024"
-
-// const dateString = "2024-02-09T22:48:36.409Z";
-// const date = new Date(dateString);
-
-// const formattedDate =
-//     `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-
-// console.log(formattedDate);  // Output: "09-02-2024 22:48"
+export const formatDateTime = (dateString: string) => {
+    // ! history card
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    })
+        .format(date)
+        .replace(',', '');
+};

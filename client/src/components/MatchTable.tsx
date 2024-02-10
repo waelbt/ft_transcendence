@@ -6,6 +6,7 @@ import Table from './Table';
 
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { AxiosResponse } from 'axios';
+import { formatDateTime } from '../tools/date_parsing';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
@@ -33,7 +34,7 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         <div className="flex-col justify-center items-center inline-flex">
-                            {value}
+                            {formatDateTime(value)}
                         </div>
                     );
                 }

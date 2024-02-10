@@ -101,7 +101,7 @@ const TwoFA = () => {
                 }
                 className="flex-col justify-cemter items-center inline-flex gap-6"
             >
-                <div className="border border-gray-200 w-[202px] h-[203px] relative">
+                <div className="border border-gray-400 rounded-md w-[202px] h-[203px] relative">
                     {image ? (
                         <img
                             src={image}

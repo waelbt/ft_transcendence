@@ -5,6 +5,8 @@ import { Avatar } from '.';
 import { FC } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import ActionsHandler from './ActionsHandler';
+import { formatDate } from '../tools/date_parsing';
+import { GiNewBorn } from 'react-icons/gi';
 
 type UserProfileCardProps = {
     id: string;
@@ -23,7 +25,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     const navLinks = ['history', 'achivements', 'friends'];
 
     if (props.isCurrentUser) {
-        navLinks.push('setting'); //! protect this
+        navLinks.push('setting');
     }
 
     return (
@@ -84,12 +86,11 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                             0/13 achievement
                         </div>
                     </div>
-                    <div className="px-1 justify-center items-center gap-1.5 inline-flex">
-                        <JoinIcon />
-                        <div className="text-neutral-400 text-sm font-normal font-['Acme']">
-                            {/* Jan 19, 2019 */}
-                            {props.createdAt}
-                        </div>
+                    <div className="tooltip cursor-context-menu text-neutral-400 text-sm font-normal font-['Acme']">
+                        {formatDate(props.createdAt)}
+                        <span className="tooltiptext text-sm font-thin font-['Acme']">
+                            Join Date
+                        </span>
                     </div>
                 </div>
             </div>
