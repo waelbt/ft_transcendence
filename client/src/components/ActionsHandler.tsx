@@ -7,6 +7,7 @@ import { FC, useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { ACTIONS_ENDPOINTS, ACTION_TO_KNOW_RELATION } from '../constants';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -15,7 +16,7 @@ type ActionsHandlerProps = {
 
 const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const navigate = useNavigate();
-
+    const { socket } = useChatSocketStore();
     const axiosPrivate = useAxiosPrivate();
     const [actions, setActions] = useState<string[]>(['Block user']);
     const [relation, setRelation] = useState<string>(relationship);
@@ -35,7 +36,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     useEffect(() => {
         console.log(relation);
         if (relation) {
-            let updatedActions = ['Block User'];
+            let updatedActions = ['Send Message', 'Block User'];
 
             switch (relation) {
                 case 'friend':
@@ -60,25 +61,33 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     }, [relation]);
 
     const handleAction = async (action: string) => {
-        const endpoint = ACTIONS_ENDPOINTS[action];
-        if (!endpoint) {
-            console.error(`No endpoint found for action: ${action}`);
-            return;
-        }
-
-        try {
-            const res = await axiosPrivate.post(`${endpoint}${target}`);
-            console.log('res', res);
-
-            const effect = actionEffects[action];
-            if (effect) {
-                effect(target);
+        if (action === 'Send Message') {
+            //! hena 
+            socket?.emit('sendMessage', { userId: target });
+            navigate('/chat');
+            // ! 7bssi hna 
+        } else {
+            const endpoint = ACTIONS_ENDPOINTS[action];
+            if (!endpoint) {
+                console.error(`No endpoint found for action: ${action}`);
+                return;
             }
-            if (ACTION_TO_KNOW_RELATION[action]) {
-                setRelation(ACTION_TO_KNOW_RELATION[action]);
+
+            try {
+                const res = await axiosPrivate.post(`${endpoint}${target}`);
+                console.log('res', res);
+
+                const effect = actionEffects[action];
+                if (effect) {
+                    effect(target);
+                }
+                if (ACTION_TO_KNOW_RELATION[action]) {
+                    setRelation(ACTION_TO_KNOW_RELATION[action]);
+                }
+            } catch (error) {
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
             }
-        } catch (error) {
-            if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
     };
 
