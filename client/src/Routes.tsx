@@ -23,8 +23,14 @@ const router = createBrowserRouter([
                 }
             },
             {
+                path: '/chat/:userId',
+                lazy: async () => {
+                    let { Chat } = await import('./pages/Chat');
+                    return { Component: Chat };
+                }
+            },
+            {
                 path: '/chat',
-                // path: '/chat/:userId',
                 lazy: async () => {
                     let { Chat } = await import('./pages/Chat');
                     return { Component: Chat };

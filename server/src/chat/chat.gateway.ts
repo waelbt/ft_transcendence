@@ -57,7 +57,7 @@ export class ChatGateway
         //     client.handshake.auth.token
         // console.log(client.handshake);
         const userCheck = await this.wsService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
@@ -174,7 +174,7 @@ export class ChatGateway
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.token);
         if (userCheck.state === false)
             await this.handleDisconnect(client);
         else
@@ -187,7 +187,8 @@ export class ChatGateway
 
     @SubscribeMessage('checkDm')
     async checkDM(client: any, createDmDto: CreateDmDto) {
-        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        console.log('hello world')
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.token);
         if (userCheck.state === false)
             await this.handleDisconnect(client);
         else

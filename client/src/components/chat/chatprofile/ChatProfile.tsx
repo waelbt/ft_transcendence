@@ -1,21 +1,66 @@
 import './ChatProfile.css';
-// import ChallengeIcon from './ChallengeIcon.tsx';
+import  { useState,  useEffect } from 'react';
+
 import contre from '../images/contre.png';
 import sortie from '../images/sortie.png';
 import interdit from '../images/interdit.png';
+import { useChatSocketStore } from '../../../stores/ChatSocketStore';
+import useAxiosPrivate from '../../../hooks/axiosPrivateHook';
+
 interface ChatProfileProps {
-  userProfileImage: string;
-  userName: string;
+  onContactClick: (contact: Contact) => void;
+  selectedContact: Contact | null; 
 }
 
-const ChatProfile: React.FC<ChatProfileProps> = ({ userProfileImage, userName }) => {
+interface Contact {
+  avatar: string;
+  id: string;
+  nickName: string;
+  time: string;
+}
+
+const ChatProfile: React.FC<ChatProfileProps> = ({ onContactClick, selectedContact }) => {
+
+  // const [contacts, setContacts] = useState<Contact[]>([]);
+  // const axiosPrivate = useAxiosPrivate();
+  // useEffect(() => {
+  //   // Fetch backend endpoint when the component mounts
+  //   fetchUserData();
+  // }, []);
+
+  // const fetchUserData = async () => {
+  //   try {
+      
+  //     const response = await axiosPrivate.get('/chat/mydms');
+  //     console.log('response', response.data)
+  //     const newContacts: Contact[] = [];
+  //     response.data.forEach((room: any) => {
+  //       const users = room.users;
+  //       users.forEach((user: any) => {
+  //         const contact: Contact = {
+  //           avatar: user.avatar,
+  //           id: user.id,
+  //           nickName: user.nickName,
+  //           time: user.time 
+  //         };
+  //         console.log('contact.nickName= ', contact.nickName)
+  //         newContacts.push(contact);
+  //       });
+  //     });
+  //     setContacts(newContacts);
+  //   } catch (error) {
+  //     console.error('Error fetching contacts:', error);
+      
+  //   }
+  // };
+
   return (
     <div className="chat-profile"><center>
       <div className="profile-image">
-        <img  src="https://cdn.intra.42.fr/users/440a1a4a4ffbd36581c07bc5a146e82e/mbouhaba.jpg" alt={`Profile of ${userName}`} />
+        <img  src={selectedContact?.avatar} alt={`Profile of ${selectedContact?.nickName}`} />
       </div>
       <div className="user-details">
-        <p className="user-name">Dos os</p>
+        <p className="user-name">{selectedContact?.nickName}</p>
       </div>
       <div className="action-buttons">
         

@@ -11,7 +11,6 @@ function Layout() {
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket } = useChatSocketStore();
-    console.log('hellooooooooo');
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     console.log(id);

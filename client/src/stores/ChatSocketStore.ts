@@ -1,21 +1,42 @@
 import { create } from 'zustand';
 import io, { Socket } from 'socket.io-client';
 
-type SocketState = {
-    socket: Socket | null;
-    messages : string[];
-    pushMessage: (msg: string) => void;
-    initializeSocket: (token: string | null) => void;
+type Room = {
+    id: number;
+    // Add any other properties you need for a room
 };
 
+type SocketState = {
+    socket: Socket | null;
+    messages : { message: string }[];
+    rooms: Room[];
+};
 
-export const useChatSocketStore = create<SocketState>((set, get) => ({
+type MethodState = {
+    pushMessage: (msg: string) => void;
+    clearMessage: () => void;
+    initializeSocket: (token: string | null) => void;
+    updateState: (newState: Partial<SocketState>) => void;
+    addRoom: (room: Room) => void;
+};
+
+export const useChatSocketStore = create<SocketState & MethodState>((set, get) => ({
     socket: null,
     messages: [],
+    rooms: [],
     pushMessage: (msg) => {
         const { messages } = get();
-        const newMessages = [...messages, msg]; // Add the new message to the existing messages array
+        const newMessage = { message: msg }; // Wrap the msg into an object
+        const newMessages = [...messages, newMessage]; // Add the new message object to the existing messages array
         set({ messages: newMessages }); // Update the messages state with the new array
+    },
+
+    clearMessage: () => {
+    set({ messages: [] });
+    },
+    
+    updateState: (newState) => {
+    set((state) => ({ ...state, ...newState }))
     },
     initializeSocket: (token) => {
         const { socket } = get();
@@ -27,7 +48,12 @@ export const useChatSocketStore = create<SocketState>((set, get) => ({
                 auth: { token: token }
             });
             set({ socket: newSocket });
-            // Setup socket event listeners here if needed
+
         }
+    },
+
+    addRoom: (room) => {
+        set((state) => ({ rooms: [...state.rooms, room] }));
     }
+    
 }));

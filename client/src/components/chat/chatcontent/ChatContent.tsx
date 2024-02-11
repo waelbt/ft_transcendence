@@ -1,71 +1,66 @@
 // Inside ChatContent.tsx
 import React, { useState, useEffect } from 'react';
-// import { io } from 'socket.io-client';
+// import { useParams } from 'react-router-dom';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 import './ChatContent.css';
 import { useChatSocketStore } from '../../../stores/ChatSocketStore';
 
-// const socket = io('http://localhost:4000/chat');
 
-interface Message {
-    isMyMessage: boolean;
-    message: string;
-}
 
 interface Contact {
     image: string;
-    id: number;
+    id: string;
     name: string;
     time: string;
 }
 
+
 interface ChatContentProps {
     selectedContact: Contact | null;
+    userId: string;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ selectedContact }) => {
-    const [selectedContactMessages, setSelectedContactMessages] = useState<
-        Message[]
-    >([]);
-    const { socket, pushMessage } = useChatSocketStore();
-    useEffect(() => {
-        if (selectedContact) {
-            const contactMessages = getMessagesForContact(selectedContact.id);
-            setSelectedContactMessages(contactMessages);
-        }
+const ChatContent: React.FC<ChatContentProps> = ({ selectedContact, userId }) => {
+  const {socket, pushMessage, clearMessage, addRoom } = useChatSocketStore();
+  const {rooms} = useChatSocketStore();
+  // const axiosPrivate = useAxiosPrivate();
 
-        socket?.on('receive_message', (message: string) => {
-            pushMessage(message);
-            // setSelectedContactMessages((prevMessages) => [...prevMessages, message]);
-        });
+  console.log('getterofroom', rooms);
 
-        return () => {
-            socket?.off('receive_message');
-        };
-    }, [selectedContact]);
+  
+ 
+  useEffect(() => {
 
-    const handleSendClick = (message: string) => {
-        const messageData = { isMyMessage: true, message };
-        socket?.emit('message', messageData);
-        console.log(message);
+      socket?.on('dmMessage', (messages) => {
+      console.log("Received message:", messages);  
+      //  messages.forEach((message) => {
+    // Push each message to the pushMessage function
+      // pushMessage(message.message);
+  // });
+    });
+    return () => {
+        socket?.off('dmMessage');
+        clearMessage();
     };
+    }, []);
 
-    const getMessagesForContact = (contactId: number): Message[] => {
-        return [
-            { isMyMessage: true, message: 'Hello!' },
-            { isMyMessage: false, message: 'How are you?' }
-        ];
-    };
+  const handleSendClick = (message: string) => {
+    console.log("send to ", userId);
+    socket?.emit('dm', {message: message, receiverId: userId});
 
-    return (
-        <div className="main__chatcontent">
-            <MessageList messages={selectedContactMessages} />
-            <div className="content__footer">
-                <MessageInput onSendClick={handleSendClick} maxLength={500} />
-            </div>
-        </div>
-    );
+    pushMessage(message);
+    console.log('mymessage', message);
+  };
+
+  return (
+    <div className="main__chatcontent">
+      <MessageList  />
+      <div className="content__footer">
+        <MessageInput onSendClick={handleSendClick} maxLength={500} />
+      </div>
+    </div>
+  );
 };
 
 export default ChatContent;

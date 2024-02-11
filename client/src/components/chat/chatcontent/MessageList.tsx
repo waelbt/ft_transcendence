@@ -1,25 +1,26 @@
-import React from 'react';
+
 import "./MessageList.css";
+import { useChatSocketStore } from '../../../stores/ChatSocketStore';
 
 interface Message {
-  isMyMessage: boolean;
   message: string;
 }
 
-interface MessageListProps {
-  messages: Message[];
-}
-
-const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+const MessageList = () => {
+  const { messages } = useChatSocketStore()
+  console.log('messagelist')
   return (
     <div id="chat-message-list">
       {messages.map((message, index) => (
-        <div key={index} className={message.isMyMessage ? 'my-message' : 'other-message'}>
-          {message.message}
+        <div key={index} >
+          {message.message} 
         </div>
       ))}
     </div>
+  
   );
 };
 
 export default MessageList;
+
+
