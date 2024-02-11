@@ -359,7 +359,7 @@ export class UsersService {
 
         const sortedUsers = users.sort((user1, user2) => {
             if (user1.level !== user2.level) {
-              return user2.level - user1.level; // Sort user2y level in descending order
+              return user2.level - user1.level;
             } else {
               return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
             }

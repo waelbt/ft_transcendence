@@ -1,0 +1,24 @@
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { verify } from 'jsonwebtoken';
+import { Socket } from 'socket.io';
+
+@Injectable()
+export class WebSocketAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+    const client : Socket = context.switchToWs().getClient();
+    const token = client.handshake.auth.token;
+    WebSocketAuthGuard.validate(client);
+    return true;
+  }
+
+  static validate(client : Socket)
+  {
+      const { authorization } = client.handshake.headers;
+      const token : string = authorization.split(' ')[1];
+      client.data.playload = verify(token, process.env.SECRET_KEY);
+      return client;
+  }
+}

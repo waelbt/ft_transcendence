@@ -173,6 +173,12 @@ export class UsersController {
     	res.send('seccess');
   	}
 
+    @Get('rank')
+    async allUsersRank(){
+      console.log('hana');
+      return await this.usersService.getAllUsersRank();
+    }
+
   	@Post('/blockUser/:blockedUserId')
 	async blockUser(
 	@Req() req,
