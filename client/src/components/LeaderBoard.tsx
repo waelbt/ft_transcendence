@@ -134,23 +134,29 @@ function LeaderBoard() {
     }, []);
 
     return (
-        <div className="overflow-y-auto max-h-[350px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
+        <div className="overflow-y-auto h-[470px] w-[1100px] bg-white  items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
             <Table
                 columns={columns}
                 data={data}
                 styles={{
                     tableStyle:
-                        'w-full text-xl text-neutral-500 font-normal font-["Acme"]',
+                        'w-full  text-zinc-500 text-base font-normal font-["Acme"]',
                     theadStyle:
                         'sticky top-0 z-10 border-b border-neutral-100 bg-white ',
                     tbodyStyle: 'overflow-y-auto w-full ',
                     trStyle: '',
-                    thStyle: 'px-2 py-5',
+                    thStyle: 'px-3 py-[25px]',
                     tdStyle: 'p-2 text-center align-middle'
                 }}
             />
         </div>
     );
+}
+
+{
+    /* <div className="w-[229.20px] h-[71px] px-3 py-[25px] bg-white flex-col justify-center items-center inline-flex">
+    <div className="text-zinc-500 text-base font-normal font-['Acme'] leading-tight">Player</div>
+</div> */
 }
 
 export default LeaderBoard;

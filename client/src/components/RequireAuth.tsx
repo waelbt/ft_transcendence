@@ -21,7 +21,6 @@ const RequireAuth = () => {
     if (!isLogged) return <Auth />;
 
     if (!redirectedFor2FA && f2A) {
-        console.log(redirectedFor2FA, '   ', f2A);
         return <TwoFaVerfication />;
     }
 
