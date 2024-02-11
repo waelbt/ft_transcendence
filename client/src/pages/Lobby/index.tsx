@@ -16,7 +16,6 @@ export function Lobby() {
     const { elapsedTime, formatTime, startTimer } = useTimer();
 
     const handleClick = (gameMode: string) => {
-        console.log('handleClick');
         updateState({ gameMode: gameMode });
         socket?.emit('gameMode', { gameMode, userId: id });
         openEvent();
@@ -25,11 +24,12 @@ export function Lobby() {
 
     useEffect(() => {
         socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
-            updateState({ isSecondPlayer: SecondPlayer === 1 });
-            updateState({ roomId: room });
-            updateState({ isGameReady: true });
-            updateState({ opponentId: opponentId });
-            console.log(opponentId, '   ', id);
+            updateState({
+                isSecondPlayer: SecondPlayer === 1,
+                roomId: room,
+                isGameReady: true,
+                opponentId
+            });
             closeEvent();
             navigate(`/game/${room}`);
         });

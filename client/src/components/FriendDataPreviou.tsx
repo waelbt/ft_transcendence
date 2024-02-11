@@ -9,12 +9,12 @@ type FriendDataPreviouProps = {
 
 function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
     const { isLoading, isError, error, friend } = useFriendPrevious({
-        friendId
+        id: friendId
     });
 
     useEffect(() => {
-        console.log(friend)
-    }, [friend])
+        console.log(friend);
+    }, [friend]);
     if (isLoading)
         return (
             <div className="flex py-4 border-b border-gray-200 justify-between items-center w-full">

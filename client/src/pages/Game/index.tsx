@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import './index.css';
 import useGameStore from '../../stores/gameStore';
-import { Lobby } from '../Lobby';
+// import { Lobby } from '../Lobby';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore';
+import useFriendPrevious from '../../hooks/friendPreviousHook';
+import { Avatar } from '../../components';
+import Skeleton from 'react-loading-skeleton';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -13,52 +16,52 @@ function removeDecimalPart(number: number): number {
 let paddlepos1: number;
 // let roomId: any;
 // let isSecondPlayer: number;
-let chosenMode: string;
-let leftcolor: string;
-let rightcolor: string;
+// let chosenMode: string;
+// let leftcolor: string;
+// let rightcolor: string;
 
-const Score = ({
-    leftScore,
-    rightScore,
-    lColor,
-    rColor
-}: {
-    leftScore: number;
-    rightScore: number;
-    lColor: string;
-    rColor: string;
-}) => {
-    const leftScoreStyle: React.CSSProperties = {
-        position: 'absolute',
-        left: '15%',
-        top: '0',
-        textAlign: 'center',
-        color: `${lColor}`,
-        fontSize: '3rem',
-        paddingTop: '5%',
-        fontFamily: 'Arial, sans-serif',
-        zIndex: 1
-    };
+// const Score = ({
+//     leftScore,
+//     rightScore,
+//     lColor,
+//     rColor
+// }: {
+//     leftScore: number;
+//     rightScore: number;
+//     lColor: string;
+//     rColor: string;
+// }) => {
+//     const leftScoreStyle: React.CSSProperties = {
+//         position: 'absolute',
+//         left: '15%',
+//         top: '0',
+//         textAlign: 'center',
+//         color: `${lColor}`,
+//         fontSize: '3rem',
+//         paddingTop: '5%',
+//         fontFamily: 'Arial, sans-serif',
+//         zIndex: 1
+//     };
 
-    const rightScoreStyle: React.CSSProperties = {
-        position: 'absolute',
-        right: '15%',
-        top: '0',
-        textAlign: 'center',
-        color: `${rColor}`,
-        fontSize: '3rem',
-        paddingTop: '5%',
-        fontFamily: 'Arial, sans-serif',
-        zIndex: 1
-    };
+//     const rightScoreStyle: React.CSSProperties = {
+//         position: 'absolute',
+//         right: '15%',
+//         top: '0',
+//         textAlign: 'center',
+//         color: `${rColor}`,
+//         fontSize: '3rem',
+//         paddingTop: '5%',
+//         fontFamily: 'Arial, sans-serif',
+//         zIndex: 1
+//     };
 
-    return (
-        <>
-            <div style={leftScoreStyle}>{leftScore}</div>
-            <div style={rightScoreStyle}>{rightScore}</div>
-        </>
-    );
-};
+//     return (
+//         <>
+//             <div style={leftScoreStyle}>{leftScore}</div>
+//             <div style={rightScoreStyle}>{rightScore}</div>
+//         </>
+//     );
+// };
 
 const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     const paddleStyle: React.CSSProperties = {
@@ -148,6 +151,7 @@ export function Game() {
     const navigate = useNavigate();
 
     const [gameOver, setGameOver] = React.useState(false);
+    const { avatar } = useUserStore();
     const {
         socket,
         isGameReady,
@@ -156,17 +160,19 @@ export function Game() {
         isSecondPlayer,
         roomId
     } = useGameStore();
-    const { id } = useUserStore();
+    // const { id } = useUserStore();
+    // const axiosPrivate = useAxiosPrivate();
+    const { isLoading, friend } = useFriendPrevious({
+        id: opponentId
+    });
+
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
-    const axiosPrivate = useAxiosPrivate();
+
     React.useEffect(() => {
         socket?.on('leftscored', async (playerIds: string[]) => {
             setLeftScore((prevScore: number) => prevScore + 1);
-            // setLeftScore((prevScore: number) => {
-            // const newScore = prevScore + 1;
-            // setRightScore((prvRightscore: number) => {
             if (leftscore === 5) {
                 console.log(
                     'player won',
@@ -178,22 +184,18 @@ export function Game() {
                 );
                 setGameOver(true);
                 // ! store result in both cases
-                const response = await axiosPrivate.post('/game/create', {
-                    winnerId: id,
-                    loserId: opponentId,
-                    result: `${leftscore}-${rightcolor}`,
-                    mode: gameMode
-                });
+                // const response = await axiosPrivate.post('/game/create', {
+                //     winnerId: id,
+                //     loserId: opponentId,
+                //     result: `${leftscore}-${rightscore}`,
+                //     mode: gameMode
+                // });
 
-                console.log(response);
+                // console.log(response);
 
+                // navigate('/');
                 socket?.emit('gameended');
-                navigate('/');
             }
-            //     return prvRightscore;
-            // });
-            // return newScore;
-            // });
         });
 
         return () => {
@@ -207,7 +209,7 @@ export function Game() {
                 const newScore = prevScore + 1;
                 if (removeDecimalPart(newScore) === 5) {
                     setGameOver(true);
-                    window.location.reload();
+                    // navigate('/');
                     socket?.emit('gameended');
                 }
                 return newScore;
@@ -221,9 +223,9 @@ export function Game() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'ArrowUp' || e.key === 'w') {
-            movePaddle.current = -0.1;
+            movePaddle.current = -0.5;
         } else if (e.key === 'ArrowDown' || e.key === 's') {
-            movePaddle.current = 0.1;
+            movePaddle.current = 0.5;
         }
     };
 
@@ -296,10 +298,6 @@ export function Game() {
             socket?.off('PlayerDisconnected');
         };
     });
-    useEffect(() => {
-        console.log(gameMode);
-        console.log(isSecondPlayer);
-    }, [gameMode, socket]);
 
     return (
         <>
@@ -320,8 +318,32 @@ export function Game() {
                 ) : ( */}
                 <>
                     <div className="w-full px-20 flex justify-between mb-20">
-                        <div className="w-5 h-5 text-red-600">{leftscore}</div>
-                        <div className="w-5 h-5 text-red-600">{rightscore}</div>
+                        <div className="inline-flex gap-4 justify-center items-center">
+                            <Avatar
+                                imageUrl={avatar}
+                                style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-amber-500 ring-offset-base-100 ring-offset-1"
+                            />
+                            <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
+                                <div className="text-white text-[29px] font-normal font-['Acme']">
+                                    {leftscore}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="inline-flex gap-4 justify-center items-center">
+                            <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
+                                <div className="text-white text-[29px] font-normal font-['Acme']">
+                                    {rightscore}
+                                </div>
+                            </div>
+                            {isLoading ? (
+                                <Skeleton circle height={80} width={80} />
+                            ) : (
+                                <Avatar
+                                    imageUrl={friend?.avatar}
+                                    style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
+                                />
+                            )}
+                        </div>
                     </div>
                     <div className="w-[1168px] h-[663px]">
                         <div className={`table-${gameMode}`}>
@@ -334,12 +356,12 @@ export function Game() {
                                 color="#E6E6E9"
                                 pos={`${secondPaddlePos}rem`}
                             />
-                            <Score
-                                leftScore={removeDecimalPart(leftscore)}
-                                rightScore={removeDecimalPart(rightscore)}
-                                lColor={'white'}
-                                rColor={'white'}
-                            />
+                            {/* <Score
+                                    leftScore={removeDecimalPart(leftscore)}
+                                    rightScore={removeDecimalPart(rightscore)}
+                                    lColor={'white'}
+                                    rColor={'white'}
+                                /> */}
                             <div className="lineC">
                                 <div className="line"></div>
                             </div>

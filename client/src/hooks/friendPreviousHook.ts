@@ -3,19 +3,20 @@ import { Friend } from '../../../shared/types';
 import useAxiosPrivate from './axiosPrivateHook';
 
 type useFriendPreviousProps = {
-    friendId: string;
+    id: string | null;
 };
 
-const useFriendPrevious = ({ friendId }: useFriendPreviousProps) => {
+const useFriendPrevious = ({ id }: useFriendPreviousProps) => {
     const axiosPrivate = useAxiosPrivate();
     const fetchFriendDetails = async (): Promise<Friend> => {
-        const res = await axiosPrivate.get(`/users/previo/${friendId}`);
+        const res = await axiosPrivate.get(`/users/previo/${id}`);
         return res.data;
     };
 
     const query = useQuery<Friend, Error>({
-        queryKey: ['friend', friendId],
-        queryFn: fetchFriendDetails
+        queryKey: ['friend', id],
+        queryFn: fetchFriendDetails,
+        enabled: !!id
     });
 
     return {

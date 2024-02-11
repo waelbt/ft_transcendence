@@ -40,9 +40,7 @@ const ProgressBar = ({ value, max = 100 }: ProgressBarProps) => {
             transparent 75%,
             transparent
         )`,
-        animation: loaded
-            ? 'expandBar 2s ease-in-out forwards, progressAnimationStrike 6s linear infinite'
-            : ''
+        animation: loaded ? 'expandBar 2s ease-in-out forwards' : ''
     };
 
     return (
