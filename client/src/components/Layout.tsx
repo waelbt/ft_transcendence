@@ -4,13 +4,17 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { GlobalChat, NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
+import { useChatSocketStore } from '../stores/ChatSocketStore';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
+    const { initializeSocket } = useChatSocketStore();
+    console.log('hellooooooooo');
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
+    console.log(id);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -37,6 +41,7 @@ function Layout() {
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
         });
+        initializeSocket(accessToken);
         initializeGameSocket();
         console.log('id  ', id);
         return () => {

@@ -38,6 +38,8 @@ model User {
 	loser        		Game[] 			@relation("Loser")
 	rooms        		Room[]
 	messages     		Message[]
+	dm					DMRooms[]
+	dmMessages			dmMessage[]	
 }
 
 model Friendship {
@@ -118,4 +120,24 @@ enum RoomPrivacy {
   PUBLIC
   PRIVATE
   PROTECTED
+}
+
+model DMRooms {
+  id             Int         @id @default(autoincrement())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  roomTitle      String      @unique
+  users          User[]
+  messages       dmMessage[]
+  friendId		 String
+}
+
+model dmMessage {
+  id        Int      @id @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+  sender      User     @relation(fields: [senderId], references: [id])
+  senderId    String
+  dmroom      DMRooms     @relation(fields: [dmId], references: [id])
+  dmId    Int
 }

@@ -1,5 +1,5 @@
-import './ChatProfile.css'; // Make sure to create this CSS file
-import ChallengeIcon from './ChallengeIcon.tsx';
+import './ChatProfile.css';
+// import ChallengeIcon from './ChallengeIcon.tsx';
 import contre from '../images/contre.png';
 import sortie from '../images/sortie.png';
 import interdit from '../images/interdit.png';

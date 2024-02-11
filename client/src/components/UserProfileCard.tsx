@@ -1,12 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { AchievementIcon, JoinIcon } from '../assets/custom-icons';
+import { AchievementIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
 import { FC } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import ActionsHandler from './ActionsHandler';
 import { formatDate } from '../tools/date_parsing';
-import { GiNewBorn } from 'react-icons/gi';
 
 type UserProfileCardProps = {
     id: string;

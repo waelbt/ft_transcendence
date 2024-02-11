@@ -3,9 +3,12 @@ import "./ChatList.css";
 import { CiSearch } from "react-icons/ci";
 
 
-interface SearchBarProps {
+interface ChatListProps {
   onSearch: (searchText: string) => void;
+  onContactClick: (contact: Contact) => void;
+  selectedContact: Contact | null; 
 }
+
 interface Contact {
   image: string;
   id: number;
@@ -13,9 +16,8 @@ interface Contact {
   time: string;
 }
 
-const ChatList: React.FC<SearchBarProps> = ({ onSearch }) => {
+const ChatList: React.FC<ChatListProps> = ({ onSearch, onContactClick, selectedContact }) => {
   const [searchText, setSearchText] = useState<string>("");
-  // const [containerColor, setContainerColor] = useState<string>('red');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -23,9 +25,6 @@ const ChatList: React.FC<SearchBarProps> = ({ onSearch }) => {
     onSearch(e.target.value);
   };
 
-  // const changeColor = (color: string) => {
-  //   setContainerColor(color); // Change the container color on click
-  // };
 
     const contacts: Contact[] = [
     {
@@ -59,35 +58,35 @@ const ChatList: React.FC<SearchBarProps> = ({ onSearch }) => {
     {
       image:
        "https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG",
-      id: 4,
+      id: 5,
       name: "yyy",
       time: '09:45',
     },
     {
       image:
       "https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg",
-      id: 5,
+      id: 6,
       name: "soufiane",
       time: '09:45',
     },
     {
       image:
        "https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG",
-      id: 4,
+      id: 7,
       name: "yyy",
       time: '09:45',
     },
     {
       image:
       "https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg",
-      id: 4,
+      id: 8,
       name: "soufiane",
       time: '09:45',
     },
     {
       image:
         "https://cdn.intra.42.fr/users/ea4d0a8aa80f54aaf6e2904e00258a09/mannahri.jpg",
-      id: 3,
+      id: 9,
       name: "wae",
       time: '09:45',
     },
@@ -144,7 +143,9 @@ const ChatList: React.FC<SearchBarProps> = ({ onSearch }) => {
       </div>
       <div className="conversation">
       {contacts.map((contact) => (
-        <div key={contact.id} className="conversation-item"  >
+        <div key={contact.id}
+        className={`conversation-item ${selectedContact && selectedContact.id === contact.id ? 'selected' : ''}`}
+        onClick={() => onContactClick(contact)}  >
            
           <img src={contact.image} alt={contact.name} />
           <div>
