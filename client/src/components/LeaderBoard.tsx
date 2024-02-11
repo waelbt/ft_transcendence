@@ -7,7 +7,7 @@ import { Table } from '.';
 
 function LeaderBoard() {
     // const axiosPrivate = useAxiosPrivate();
-    const rankColors = ['', 'red-600', 'orange-700', 'amber-500'];
+    const rankColors = ['', 'red-600', 'orange-8    00', 'amber-500'];
     const [data, setData] = useState<LeaderboardEntry[]>([]);
     const columns = useMemo<Column<LeaderboardEntry>[]>(
         () => [
@@ -134,7 +134,7 @@ function LeaderBoard() {
     }, []);
 
     return (
-        <div className="overflow-y-auto max-h-[560px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
+        <div className="overflow-y-auto max-h-[350px] w-[1100px] bg-white p-1 items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
             <Table
                 columns={columns}
                 data={data}
