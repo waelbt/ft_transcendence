@@ -1,78 +1,53 @@
 {
-    "friends": [
-        "1135462382143224724995",
-        "112965",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9"
-    ],
-    "friendDetails": [
+    "leaderboard": [
         {
-            "id": 1135462382143224724995,
-            "name": "messaada",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "id": 0,
+            "rank": 1,
+            "nickName": "dsos404",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "9.01"
         },
         {
-            "id": 112965,
-            "name": "ibouchaf",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "id": 1,
+            "rank": 2,
+            "nickName": "dsos404",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "9.01"
+        },
+        {
+            "id": 2,
+            "rank": 3,
+            "nickName": "dsos404",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "9.01"
         },
         {
             "id": 3,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "rank": 4,
+            "nickName": "dsos404",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "9.01"
         },
         {
             "id": 4,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "rank": 5,
+            "nickName": "Judy444",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "8.97"
         },
         {
             "id": 5,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "rank": 6,
+            "nickName": "Judy444",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "8.97"
         },
         {
             "id": 6,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 7,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 8,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
-        },
-        {
-            "id": 9,
-            "name": "dos404",
-            "avatar": "https://tecdn.b-cdn.net/img/new/avatars/2.webp",
-            "status": "online",
-            "actions": ["block", "unfriend", "challenge"]
+            "rank": 7,
+            "nickName": "Judy444",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707618053616-877316673.png",
+            "level": "8.97"
         }
     ],
     "matches": [
@@ -84,132 +59,6 @@
             "score": ["string"],
             "addedXp": {},
             "date": "2024-02-09T21:12:27.311Z"
-        },
-        {
-            "id": 1,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+50 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 2,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 1,
-                "score2": 6
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 3,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 4,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 5,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 6,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 7,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 8,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
-        },
-        {
-            "id": 9,
-            "opponent": {
-                "avatar": "./src/assets/images/default1.png",
-                "name": "simpzoa",
-                "rating": 8.58
-            },
-            "score": {
-                "score1": 5,
-                "score2": 0
-            },
-            "awarded": "+10 exp",
-            "date": "12-12-2023 17:39"
         }
     ]
 }

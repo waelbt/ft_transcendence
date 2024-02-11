@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-import { NavigationMenu } from '.';
+import { GlobalChat, NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
 
 function Layout() {
@@ -51,6 +51,7 @@ function Layout() {
                 <NavigationMenu />
                 <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                     <Outlet />
+                    <GlobalChat />
                 </div>
             </div>
         </>

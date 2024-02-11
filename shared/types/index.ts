@@ -41,3 +41,11 @@ export interface Match {
     awarded: string;
     date: string;
 }
+
+export interface LeaderboardEntry {
+    id: string;
+    rank: number;
+    nickName: string;
+    avatar: string;
+    level: string;
+}

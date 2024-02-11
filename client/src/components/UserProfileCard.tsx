@@ -35,7 +35,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <Avatar
                         imageUrl={props.avatar}
                         state="online"
-                        style="w-40 h-40"
+                        style="w-40 h-40 ring ring-stone-300 ring-offset-base-100 ring-offset-1"
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
                         {props.nickName}

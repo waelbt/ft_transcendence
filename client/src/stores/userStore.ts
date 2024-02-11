@@ -49,7 +49,7 @@ type UserActionsType = {
     removeUserFriendId: (id: string) => void;
     addUserBlockId: (id: string) => void;
     removeUserBlockId: (id: string) => void;
-};
+}; 
 
 // ? remove storing in local storage and test the behavior
 export const useUserStore = createWithEqualityFn<
