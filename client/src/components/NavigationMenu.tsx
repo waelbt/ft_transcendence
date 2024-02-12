@@ -4,6 +4,7 @@ import Popup from 'reactjs-popup';
 import { IoIosNotifications } from 'react-icons/io';
 import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
+import SearchBar from './SearchBar';
 
 function NavigationMenu() {
     const navigate = useNavigate();
@@ -21,12 +22,13 @@ function NavigationMenu() {
                     </div>
 
                     {/* <!-- Menu Section --> */}
-                    <div className="justify-center items-center gap-2.5 inline-flex">
+                    <SearchBar />
+                    {/* <div className="justify-center items-center gap-2.5 inline-flex">
                         {NAV_LINKS.map((link) => (
                             <NavLink
                                 key={link}
                                 to={`/${link}`}
-                                className={({ isActive }) =>
+                                className={({ isA   ctive }) =>
                                     `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
                                         isActive
                                             ? 'text-black border-b-4 border-black '
@@ -37,7 +39,7 @@ function NavigationMenu() {
                                 {link}
                             </NavLink>
                         ))}
-                    </div>
+                    </div> */}
                     {/* <!-- avatar && notifaction uSection --> */}
                     <div className=" px-2.5 justify-start items-center gap-[30px] inline-flex">
                         {/* <!-- notifaction Section --> */}

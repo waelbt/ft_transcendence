@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
-import { GlobalChat, NavigationMenu } from '.';
+import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
 import { useChatSocketStore } from '../stores/ChatSocketStore';
 
@@ -11,10 +11,8 @@ function Layout() {
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket } = useChatSocketStore();
-    console.log('hellooooooooo');
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
-    console.log(id);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -35,6 +33,7 @@ function Layout() {
                 setIsLoading(false);
             }
         };
+        console.log(accessToken);
 
         fetchData();
         updateState({

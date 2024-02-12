@@ -76,7 +76,7 @@ const MatchTable = () => {
                 Cell: ({ value }) => {
                     return (
                         // ! for responsive add md on padding
-                        <div>{value}</div>
+                        <div>{value} xp</div>
                     );
                 }
             }

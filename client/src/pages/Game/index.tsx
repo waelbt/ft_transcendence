@@ -172,32 +172,34 @@ export function Game() {
 
     React.useEffect(() => {
         socket?.on('leftscored', async (playerIds: string[]) => {
-            setLeftScore((prevScore: number) => prevScore + 1);
-            if (leftscore === 5) {
-                console.log(
-                    'player won',
-                    playerIds,
-                    ' and left score is ',
-                    leftscore,
-                    'right score is ',
-                    rightscore
-                );
-                setGameOver(true);
-                // ! store result in both cases
-                // const response = await axiosPrivate.post('/game/create', {
-                //     winnerId: id,
-                //     loserId: opponentId,
-                //     result: `${leftscore}-${rightscore}`,
-                //     mode: gameMode
-                // });
-
-                // console.log(response);
-
-                // navigate('/');
-                socket?.emit('gameended');
-            }
+            setLeftScore((prevScore: number) => {
+                const newScore = prevScore + 1;
+                setRightScore((prvRightscore: number) => {
+                    if (removeDecimalPart(newScore) === 5) {
+                        console.log(
+                            'player won',
+                            playerIds,
+                            ' and left score is ',
+                            newScore,
+                            'right score is ',
+                            prvRightscore
+                        );
+                        //9alab 3la data lighay htaj khona o siftha lih
+                        setGameOver(true);
+                        // const response = await axiosPrivate.post('/game/create', {
+                        //     winnerId: id,
+                        //     loserId: opponentId,
+                        //     result: `${leftscore}-${rightscore}`,
+                        //     mode: gameMode
+                        // });
+                        socket?.emit('gameended');
+                        window.location.reload();
+                    }
+                    return prvRightscore;
+                });
+                return newScore;
+            });
         });
-
         return () => {
             socket?.off('leftscrored');
         };
@@ -209,7 +211,7 @@ export function Game() {
                 const newScore = prevScore + 1;
                 if (removeDecimalPart(newScore) === 5) {
                     setGameOver(true);
-                    // navigate('/');
+                    window.location.reload();
                     socket?.emit('gameended');
                 }
                 return newScore;
@@ -223,9 +225,9 @@ export function Game() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'ArrowUp' || e.key === 'w') {
-            movePaddle.current = -0.5;
+            movePaddle.current = -0.3;
         } else if (e.key === 'ArrowDown' || e.key === 's') {
-            movePaddle.current = 0.5;
+            movePaddle.current = 0.3;
         }
     };
 

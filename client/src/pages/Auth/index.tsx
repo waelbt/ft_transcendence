@@ -12,7 +12,6 @@ export const Auth = () => {
             'width=600,height=600'
         );
     };
-
     useAuthPopup();
 
     return (

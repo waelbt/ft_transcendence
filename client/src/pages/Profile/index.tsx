@@ -26,6 +26,7 @@ export function Profile() {
     );
 
     useEffect(() => {
+        console.log(user);
         refetch();
     }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
 

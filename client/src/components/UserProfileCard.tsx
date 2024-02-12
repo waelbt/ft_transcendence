@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { AchievementIcon } from '../assets/custom-icons';
 import ProgressBar from './ProgressBar';
 import { Avatar } from '.';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import ActionsHandler from './ActionsHandler';
 import { formatDate } from '../tools/date_parsing';
@@ -27,6 +27,10 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
         navLinks.push('setting');
     }
 
+    useEffect(() => {
+        console.log((props.exp / 1200) * 100);
+    }, []);
+
     return (
         <>
             <div className=" px-2.5 rounded-[20px] shadow justify-start items-center gap-5 inline-flex bg-white mt-4  border border-stone-300">
@@ -49,9 +53,11 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <div className="w-[553px] h-[130px] px-10 py-[35px] border-l-2 border-r-2 border-gray-200 flex-col justify-center items-start gap-2.5 flex ">
                         <div className="self-stretch justify-between items-start  inline-flex text-black text-xl font-normal font-['Acme']">
                             <span>level {props.level}</span>
-                            <span>{props.exp}/3000</span>
+                            <span>
+                                {props.exp}/{(props.level + 1) * 1200} xp
+                            </span>
                         </div>
-                        <ProgressBar value={40} />
+                        <ProgressBar value={(props.exp / 1200) * 100} />
                     </div>
                     <div className="self-stretch px-10 justify-start items-start gap-2.5 inline-flex">
                         {navLinks.map((link, index) => (

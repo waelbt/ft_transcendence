@@ -7,7 +7,7 @@ import { Table } from '.';
 
 function LeaderBoard() {
     // const axiosPrivate = useAxiosPrivate();
-    const rankColors = ['', 'red-600', 'orange-8    00', 'amber-500'];
+    const rankColors = ['', 'red-600', 'orange-800', 'amber-500'];
     const [data, setData] = useState<LeaderboardEntry[]>([]);
     const columns = useMemo<Column<LeaderboardEntry>[]>(
         () => [
@@ -123,7 +123,7 @@ function LeaderBoard() {
                     'http://localhost:3000/leaderboard'
                 );
                 const LeaderBoard = await response.json();
-                console.log(LeaderBoard);
+                // console.log(LeaderBoard);
                 setData(LeaderBoard);
             } catch (error) {
                 console.error('Error:', error);
