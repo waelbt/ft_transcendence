@@ -128,8 +128,10 @@ export class UsersController {
     	return this.usersService.findAllUser();
 	}
 
-	// @Get('achievements')
-	// async userAchievements
+	@Get('achievements/:id')
+	async userAchievements(@Req() req, @Param('id') id: string){
+		return await this.usersService.userAchievements(id);
+	}
 
 	@Get('historyMatchs/:id')
 	@ApiOperation({ summary: 'Get match history'})
