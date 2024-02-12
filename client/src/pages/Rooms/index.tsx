@@ -6,11 +6,6 @@ import "./Room_Body.css";
 
 export function Rooms() {
  
-  
-  const handleSearch = (searchText: string) => {
-    // Your search logic here
-    console.log(`Searching for: ${searchText}`);
-  };
 
   const roomData = {
     roomName: 'groupe 1',
@@ -30,7 +25,7 @@ export function Rooms() {
 
   return (
     <div className="room_body">
-        <RoomList onSearch={handleSearch} />
+        <RoomList  />
         <RoomContent />
         <RoomInfo
         roomName={roomData.roomName}

@@ -1,41 +1,75 @@
-import  { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./chatBody.css";
 import ChatList from "../../components/chat/chatList/ChatList";
 import ChatProfile from "../../components/chat/chatprofile/ChatProfile";
 import ChatContent from '../../components/chat/chatcontent/ChatContent';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useChatSocketStore } from '../../stores/ChatSocketStore';
-import { useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 
 interface Contact {
-  image: string;
+  avatar: string;
   id: string;
-  name: string;
+  nickName: string;
   time: string;
 }
 
 export function Chat()  {
-
   const { userId } = useParams();
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  console.log('userparam', userId)
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null); // State to hold the selected contact
+  const [response, setResponse] = useState<any>(null);
   const navigate = useNavigate();
   const {socket, pushMessage, clearMessage } = useChatSocketStore();    
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    fetchdms();
+  }, []);
 
   const handleSearch = (searchText: string) => {
     console.log(`Searching for: ${searchText}`);
   };
-
+  
   const handleContactClick = (contact: Contact) => {
-    // clearMessage();
-    setSelectedContact(contact);
+    setSelectedContact(contact); // Update the selected contact when clicked
     navigate(`/chat/${contact.id}`);
+  };
+
+  const fetchdms = async () => {
+    try {
+      
+      const response = await axiosPrivate.get('/chat/mydms');
+      console.log('response', response.data)
+      setResponse(response.data); 
+      const newContacts: Contact[] = [];
+      response.data.forEach((room: any) => {
+        const users = room.users;
+        users.forEach((user: any) => {
+          const contact: Contact = {
+            avatar: user.avatar,
+            id: user.id,
+            nickName: user.nickName,
+            time: user.time 
+          };
+          console.log('contact.nickName= ', contact.nickName)
+          newContacts.push(contact);
+        });
+      });
+      setContacts(newContacts);
+    } catch (error) {
+      console.error('Error fetching mydms:', error);
+    }
   };
 
   return (
     <div className="main__chatbody">
-      <ChatList onSearch={handleSearch} onContactClick={handleContactClick} selectedContact={selectedContact} />
-      <ChatContent userId={userId} selectedContact={selectedContact}/>
-      <ChatProfile onContactClick={handleContactClick} selectedContact={selectedContact}  />
+      <ChatList contacts={contacts} onSearch={handleSearch} onContactClick={handleContactClick} />
+      <ChatContent response={response} userId={userId} selectedContact={selectedContact}/>
+      <ChatProfile selectedContact={selectedContact} /> 
     </div>
   );
 }
+
+export default Chat;

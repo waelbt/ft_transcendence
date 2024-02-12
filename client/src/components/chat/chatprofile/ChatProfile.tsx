@@ -8,7 +8,6 @@ import { useChatSocketStore } from '../../../stores/ChatSocketStore';
 import useAxiosPrivate from '../../../hooks/axiosPrivateHook';
 
 interface ChatProfileProps {
-  onContactClick: (contact: Contact) => void;
   selectedContact: Contact | null; 
 }
 
@@ -19,40 +18,8 @@ interface Contact {
   time: string;
 }
 
-const ChatProfile: React.FC<ChatProfileProps> = ({ onContactClick, selectedContact }) => {
+const ChatProfile: React.FC<ChatProfileProps> = ({ selectedContact }) => {
 
-  // const [contacts, setContacts] = useState<Contact[]>([]);
-  // const axiosPrivate = useAxiosPrivate();
-  // useEffect(() => {
-  //   // Fetch backend endpoint when the component mounts
-  //   fetchUserData();
-  // }, []);
-
-  // const fetchUserData = async () => {
-  //   try {
-      
-  //     const response = await axiosPrivate.get('/chat/mydms');
-  //     console.log('response', response.data)
-  //     const newContacts: Contact[] = [];
-  //     response.data.forEach((room: any) => {
-  //       const users = room.users;
-  //       users.forEach((user: any) => {
-  //         const contact: Contact = {
-  //           avatar: user.avatar,
-  //           id: user.id,
-  //           nickName: user.nickName,
-  //           time: user.time 
-  //         };
-  //         console.log('contact.nickName= ', contact.nickName)
-  //         newContacts.push(contact);
-  //       });
-  //     });
-  //     setContacts(newContacts);
-  //   } catch (error) {
-  //     console.error('Error fetching contacts:', error);
-      
-  //   }
-  // };
 
   return (
     <div className="chat-profile"><center>

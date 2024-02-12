@@ -99,13 +99,13 @@
   }
   
   .my-msg {
+    display: flex;
     align-self: flex-end;
     background-color: #007bff;
     color: white;
     border-radius: 8px;
     /* padding: 8px; */
     max-width: 70%;
-    display: flex;
   }
   
   .others-msg {

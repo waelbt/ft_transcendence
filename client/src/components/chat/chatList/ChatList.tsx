@@ -8,7 +8,7 @@ import useAxiosPrivate from '../../../hooks/axiosPrivateHook';
 interface ChatListProps {
   onSearch: (searchText: string) => void;
   onContactClick: (contact: Contact) => void;
-  selectedContact: Contact | null; 
+  contacts: Contact[];
 }
 
 interface Contact {
@@ -18,50 +18,16 @@ interface Contact {
   time: string;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ onSearch, onContactClick, selectedContact }) => {
+const ChatList: React.FC<ChatListProps> = ({ contacts, onSearch, onContactClick}) => {
   const [searchText, setSearchText] = useState<string>("");
-  const [contacts, setContacts] = useState<Contact[]>([]);
   // const {socket, pushMessage } = useChatSocketStore();    
   const axiosPrivate = useAxiosPrivate();
-  useEffect(() => {
-    // Fetch backend endpoint when the component mounts
-    fetchBackendEndpoint();
-  }, []);
 
-  
-  const fetchBackendEndpoint = async () => {
-    try {
-      
-      const response = await axiosPrivate.get('/chat/mydms');
-      console.log('response', response.data)
-      const newContacts: Contact[] = [];
-      response.data.forEach((room: any) => {
-        const users = room.users;
-        users.forEach((user: any) => {
-          const contact: Contact = {
-            avatar: user.avatar,
-            id: user.id,
-            nickName: user.nickName,
-            time: user.time 
-          };
-          console.log('contact.nickName= ', contact.nickName)
-          newContacts.push(contact);
-        });
-      });
-      setContacts(newContacts);
-    } catch (error) {
-      console.error('Error fetching contacts:', error);
-      
-    }
-  };
-
+  console.log('contacts chatlist == ', contacts)
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
     onSearch(e.target.value);
   };
-
-
-  //   
 
   return (
     <div className="main__chatlist">
@@ -113,22 +79,25 @@ const ChatList: React.FC<ChatListProps> = ({ onSearch, onContactClick, selectedC
         {/* <hr/>     */}
       </div>
       <div className="conversation">
-      {contacts.map((contact) => (
-        <div key={contact.id}
-        
-        className={`conversation-item ${selectedContact && selectedContact.id === contact.id ? 'selected' : ''}`}
-        onClick={() => onContactClick(contact)}  >
-          
-          <img src={contact.avatar} alt={contact.nickName} />
-          <div>
-            <p>{contact.nickName}</p>
-            <p> {contact.time}</p>
-          </div>
-        </div>
-      ))}
+        {contacts.map((contact) => (
+            <div
+              key={contact.id}
+              className="conversation-item"
+              onClick={() => onContactClick(contact)}
+            >
+              <img src={contact.avatar} alt={contact.nickName} />
+              <div>
+                <p>{contact.nickName}</p>
+                <p>{contact.time}</p>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
 };
 
 export default ChatList;
+
+
+

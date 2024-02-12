@@ -5,6 +5,13 @@
     overflow-y: auto;
     max-height: 100%;
   }
+
+  .message-item {
+    clear: both;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
   
   .my-message {
     align-self: flex-end;
@@ -16,11 +23,18 @@
     word-wrap: break-word;
     width: fit-content;
     max-width: 60%;
+    float: right;
+    font-family: Acme;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
   }
-
+  
   .other-message {
+    float: left;
     align-self: flex-start;
-    background-color: #F1F1F1;
+    background-color: #dad6d6;
     color: #000;
     padding: 8px;
     margin-bottom: 8px;
@@ -28,4 +42,9 @@
     word-wrap: break-word;
     width: fit-content;
     max-width: 60%; 
+    font-family: Acme;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
   }
