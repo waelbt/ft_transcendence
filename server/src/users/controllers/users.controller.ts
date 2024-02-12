@@ -20,6 +20,7 @@ import { match_history } from '../dto/matchHistory.dto';
 import { mydata } from '../dto/mydata.dto';
 import { user, userData } from '../dto/userData.dto';
 import { smallData } from '../dto/smallData.dto';
+import { rank } from '../dto/rank.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -127,11 +128,14 @@ export class UsersController {
     	return this.usersService.findAllUser();
 	}
 
-	@Get('historyMatchs')
+	// @Get('achievements')
+	// async userAchievements
+
+	@Get('historyMatchs/:id')
 	@ApiOperation({ summary: 'Get match history'})
 	@ApiResponse({ status: 200, description: 'Returns the match history of the user', type: match_history,})
-  	async match_history(@Req() req): Promise<match_history[]>{
-    	return await this.usersService.matchHistory(req.user.sub);
+  	async match_history(@Req() req, @Param('id') id: string): Promise<match_history[]>{
+    	return await this.usersService.matchHistory(id);
   	}
 
 	@Get(':id/user')
@@ -190,7 +194,9 @@ export class UsersController {
   	}
 
     @Get('rank')
-    async allUsersRank(){
+	@ApiOperation({ summary: 'get rank of all users'})
+	@ApiResponse({ status: 200, description: 'Returns rank of all users', type: rank})
+    async allUsersRank() : Promise<rank[]>{
       return await this.usersService.getAllUsersRank();
     }
 
