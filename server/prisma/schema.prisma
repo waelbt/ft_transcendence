@@ -19,7 +19,7 @@ model User {
 	avatar       		String?
 	nickName     		String       	@unique
 	fullName     		String
-	status       		Boolean      	@default(true)
+	status       		Boolean      	@default(false)
 	f2A          		Boolean      	@default(false)
 	f2A_Secret   		String?
 	inGame       		Boolean      	@default(false)

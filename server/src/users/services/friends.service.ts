@@ -211,6 +211,7 @@ export class friendsService {
             include: { friends: true }
         });
 
+        console.log('user howa : ', user);
         const userFriends = user.friends || [];
 
         var friendListWithAction = await Promise.all(
@@ -221,6 +222,9 @@ export class friendsService {
                     //     console.log('im in');
                     //     return ;
                     // }
+                    console.log('check: ', friendship);
+                    console.log('viewerId: ', viewerId);
+                    console.log('userId: ', userId);
                     const friendId =
                         friendship.userId1 === userId
                             ? friendship.userId2
@@ -230,22 +234,27 @@ export class friendsService {
                         viewerId,
                         friendId
                     );
-
-                    const user = await this.prisma.user.findUnique({
-                        where: { id: friendId }
-                    });
-                    const id = user.id;
-                    const nickName = user.nickName;
-                    const avatar = user.avatar;
-                    return {
-                        id,
-                        nickName,
-                        avatar,
-                        action: isFriend ? 'Send Message' : 'Add Friend'
-                    };
+                    console.log('before');
+                    // if (isFriend)
+                    // {
+                        console.log('hello');
+                        const user = await this.prisma.user.findUnique({
+                            where: { id: friendId }
+                        });
+                        const id = user.id;
+                        const nickName = user.nickName;
+                        const avatar = user.avatar;
+                        return {
+                            id,
+                            nickName,
+                            avatar,
+                            action: isFriend ? 'Send Message' : 'Add Friend'
+                        };
+                    // }
                 })
                 .filter(Boolean)
         );
+        console.log('hna action friend : ', friendListWithAction);
         return friendListWithAction;
     }
 
@@ -253,6 +262,8 @@ export class friendsService {
         userId1: string,
         userId2: string
     ): Promise<boolean> {
+        console.log('id1: ', userId1);
+        console.log('id2: ', userId2);
         const friendship = await this.prisma.friendship.findFirst({
             where: {
                 OR: [
@@ -262,6 +273,7 @@ export class friendsService {
             }
         });
 
+        console.log('3alam : ', friendship);
         return !!friendship;
     }
 

@@ -9,11 +9,13 @@ import { friendsController } from './controllers/friends.controller';
 import { friendsService } from './services/friends.service';
 import { BlockService } from './services/blocked.service';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
+import { notificationGateway } from './notification/notification.gateway';
+import { notificationService } from './services/notification.service';
 
 
 @Module({
   controllers: [UsersController, friendsController],
-  providers: [PrismaOrmService, UsersService, friendsService, BlockService, JwtService],
+  providers: [PrismaOrmService, UsersService, friendsService, BlockService, JwtService, notificationGateway, notificationService],
   imports: [PrismaOrmModule, MulterModule.register(multerOptions)],
   exports: [UsersService]
 })

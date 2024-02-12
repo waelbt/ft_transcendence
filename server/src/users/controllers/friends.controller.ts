@@ -224,10 +224,14 @@ export class friendsController {
             throw new NotFoundException('this user does not exist');
 
         try {
+<<<<<<< HEAD
             const friends = await this.friendsService.userListFriends(
                 req.user.sub,
                 viewerId
             );
+=======
+            const friends = await this.friendsService.userListFriends(viewerId, req.user.sub);
+>>>>>>> origin/back-end
             return friends;
         } catch (error) {
             if (error instanceof NotFoundException) {
