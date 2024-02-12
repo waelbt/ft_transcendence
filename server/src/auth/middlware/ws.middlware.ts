@@ -7,10 +7,12 @@ type SocketIOMIDDELWARE = {
 
 export const SocketIOMIDDELWARE = () : SocketIOMIDDELWARE => {
     return (client, next) => {
+        console.log('client : ', client);
         try {
             WebSocketAuthGuard.validate(client);
-            next(); 
+            next();
         } catch (error){
+            console.log('error is : ', error);
             next (error);
         }
     }

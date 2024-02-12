@@ -96,10 +96,10 @@ export class UsersController {
 	@ApiOperation({ summary: 'get small data for a user'})
 	@ApiResponse({ status: 200, description: 'Returns small data of a user', type: smallData})
 	async userData(@Req() req, @Param('id') id: string): Promise<smallData>{
-		const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, id);
-		if (isItBlocked){
-			throw new NotFoundException('this user does not exist');
-		}
+		// const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, id);
+		// if (isItBlocked){
+		// 	throw new NotFoundException('this user does not exist');
+		// }
 
 		return (await this.usersService.userData(id));
 	}
@@ -175,7 +175,6 @@ export class UsersController {
 
     @Get('rank')
     async allUsersRank(){
-      console.log('hana');
       return await this.usersService.getAllUsersRank();
     }
 

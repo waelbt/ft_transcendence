@@ -23,10 +23,12 @@ implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
     @WebSocketServer() server: Server;
 
     afterInit(client : Socket) {
+        console.log('in init');
         client.use(SocketIOMIDDELWARE() as any);
     }
 
     async handleConnection(client: any, ...args: any[]) {
+        console.log('in handle connection');
         //update stat in database from false to true
         await this.prisma.user.update({
             where : { id : client.data.payload.id },
@@ -37,7 +39,8 @@ implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
     }
 
     async handleDisconnect(client: any) {
-        
+        console.log('in handle disconnection');
+        //update stat in database from true to false
         const user = await this.prisma.user.findFirst({
 			where : {
 				id : client.data.playload.id,
