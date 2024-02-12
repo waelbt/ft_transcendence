@@ -334,6 +334,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
     }
 
+    @SubscribeMessage('gameended')
+    handleEndgame(client: Socket, payload: { room: string }): void {
+        for (const room in this.rooms) {
+            client.broadcast
+                .to(room)
+                .emit('PlayerDisconnected', this.rooms[room].plysIds); // khasaktsifat data mli ki ydecconecti chi had
+            clearInterval(Number(this.rooms[room].intervalId));
+            delete this.rooms[room];
+        }
+    }
     // @SubscribeMessage('gameended')
     // handleEndgame(client: Socket, payload: { room: string }): void {}
 }

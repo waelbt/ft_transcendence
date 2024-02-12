@@ -217,8 +217,8 @@ export class friendsController {
         @Param('viewerId') viewerId: string
     ): Promise<friendsData[]> {
         const isItBlocked = await this.blockService.isUserBlocked(
-            req.user.sub,
-            viewerId
+            viewerId,
+            req.user.sub
         );
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');

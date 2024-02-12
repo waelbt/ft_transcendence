@@ -192,56 +192,54 @@ export class UsersService {
         return data;
     }
 
-    async userAchievements(userId: string){
+    async userAchievements(userId: string) {}
 
-    }
-
-    async matchHistory(userId: string): Promise<match_history[]>{
+    async matchHistory(userId: string): Promise<match_history[]> {
         const matchs = await this.prisma.game.findMany({
             where: {
                 OR: [{ winnerId: userId }, { loserId: userId }]
             }
         });
 
-        const match = await Promise.all( matchs.map( async (matche) =>{
-
-            var user;
-            var awarded : string;
-            const result : string[] = matche.result.split('-');
-            if (matche.winnerId == userId)
-            {
-                user = await this.getOneUser(matche.loserId);
-                awarded = "400";
-                var score1 : number = +result[0];
-                var score2 : number = +result[1];
-            }else{
-                user = await this.getOneUser(matche.winnerId);
-                awarded = "100";
-                score1  = +result[1];
-                score2  = +result[0];
-            }
-            const id : number = matche.id;
-            const date : Date = matche.createdAt;
-            const rating : number = user.level;
-            const name : string = user.fullName;
-            const avatar : string  = user.avatar;
-            const opponent : Player = {
-                avatar,
-                name,
-                rating,
-            };
-            const score : score= {
-                score1,
-                score2,
-            };
-            return {
-                id,
-                opponent,
-                score,
-                awarded,
-                date,
-            }
-        }));
+        const match = await Promise.all(
+            matchs.map(async (matche) => {
+                var user;
+                var awarded: string;
+                const result: string[] = matche.result.split('-');
+                if (matche.winnerId == userId) {
+                    user = await this.getOneUser(matche.loserId);
+                    awarded = '400';
+                    var score1: number = +result[0];
+                    var score2: number = +result[1];
+                } else {
+                    user = await this.getOneUser(matche.winnerId);
+                    awarded = '100';
+                    score1 = +result[1];
+                    score2 = +result[0];
+                }
+                const id: number = matche.id;
+                const date: Date = matche.createdAt;
+                const rating: number = user.level;
+                const name: string = user.fullName;
+                const avatar: string = user.avatar;
+                const opponent: Player = {
+                    avatar,
+                    name,
+                    rating
+                };
+                const score: score = {
+                    score1,
+                    score2
+                };
+                return {
+                    id,
+                    opponent,
+                    score,
+                    awarded,
+                    date
+                };
+            })
+        );
         // exampleFunction().finally(() => {
         //     prisma.$disconnect(); // Disconnect Prisma client
         //   });
@@ -301,7 +299,7 @@ export class UsersService {
             req.user.sub,
             userId
         );
-
+        console.log('wael   ', friends);
         if (friends) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
@@ -311,9 +309,9 @@ export class UsersService {
         }
 
         const user = await this.getOneUser(userId);
-        if (!user){
-			throw new NotFoundException('this user does not exist');
-		}
+        if (!user) {
+            throw new NotFoundException('this user does not exist');
+        }
         delete user.HashPassword;
         console.log(user);
         //add the type of profile string
@@ -328,9 +326,9 @@ export class UsersService {
 
     async myInfos(@Req() req): Promise<mydata> {
         const user = await this.getOneUser(req.user.sub);
-        if (!user){
-			throw new NotFoundException('this user does not exist');
-		}
+        if (!user) {
+            throw new NotFoundException('this user does not exist');
+        }
 
         delete user.HashPassword;
         console.log(user);
@@ -400,9 +398,9 @@ export class UsersService {
                 nickName,
                 avatar,
                 level,
-                xp,
-            }
-        })
+                xp
+            };
+        });
         return allRank;
     }
 }

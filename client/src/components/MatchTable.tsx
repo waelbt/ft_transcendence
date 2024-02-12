@@ -59,6 +59,8 @@ const MatchTable = () => {
                                 />
                             </div>
                             <div className="text-black">
+                                {/* // ! types  */}
+                                {/* {value?.name} ({value?.rating}.{Math.floor((value?.exp / 1200) * 10)) */}
                                 {value?.name} ({value?.rating})
                             </div>
                         </div>

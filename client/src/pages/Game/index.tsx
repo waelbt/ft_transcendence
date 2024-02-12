@@ -152,6 +152,7 @@ export function Game() {
 
     const [gameOver, setGameOver] = React.useState(false);
     const { avatar } = useUserStore();
+    const axiosPrivate = useAxiosPrivate();
     const {
         socket,
         isGameReady,
@@ -160,8 +161,7 @@ export function Game() {
         isSecondPlayer,
         roomId
     } = useGameStore();
-    // const { id } = useUserStore();
-    // const axiosPrivate = useAxiosPrivate();
+    const { id } = useUserStore();
     const { isLoading, friend } = useFriendPrevious({
         id: opponentId
     });
@@ -171,29 +171,23 @@ export function Game() {
     }, [isGameReady]);
 
     React.useEffect(() => {
-        socket?.on('leftscored', async (playerIds: string[]) => {
+        socket?.on('leftscored', async () => {
             setLeftScore((prevScore: number) => {
                 const newScore = prevScore + 1;
                 setRightScore((prvRightscore: number) => {
                     if (removeDecimalPart(newScore) === 5) {
-                        console.log(
-                            'player won',
-                            playerIds,
-                            ' and left score is ',
-                            newScore,
-                            'right score is ',
-                            prvRightscore
-                        );
-                        //9alab 3la data lighay htaj khona o siftha lih
                         setGameOver(true);
-                        // const response = await axiosPrivate.post('/game/create', {
-                        //     winnerId: id,
-                        //     loserId: opponentId,
-                        //     result: `${leftscore}-${rightscore}`,
-                        //     mode: gameMode
-                        // });
+                        axiosPrivate
+                            .post('/game/create', {
+                                winnerId: id,
+                                loserId: opponentId,
+                                result: `${newScore}-${prvRightscore}`,
+                                mode: gameMode
+                            })
+                            .then((res) => res)
+                            .catch((error) => console.log(error));
                         socket?.emit('gameended');
-                        window.location.reload();
+                        navigate('/');
                     }
                     return prvRightscore;
                 });
@@ -211,7 +205,7 @@ export function Game() {
                 const newScore = prevScore + 1;
                 if (removeDecimalPart(newScore) === 5) {
                     setGameOver(true);
-                    window.location.reload();
+                    navigate('/');
                     socket?.emit('gameended');
                 }
                 return newScore;
@@ -293,7 +287,7 @@ export function Game() {
             //   },
             //   body: JSON.stringify({room: 'dzdzed'}),
             // }).then((res) => console.log('data 1 ',res.json()));
-            // window.location.reload();
+            // navigate('/')
             navigate('/');
         });
         return () => {
