@@ -7,15 +7,21 @@ import Table from './Table';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { AxiosResponse } from 'axios';
 import { formatDateTime } from '../tools/date_parsing';
+import { useOutletContext } from 'react-router-dom';
+import { ProfileOutletContextType } from '../types/global';
+import { useUserStore } from '../stores/userStore';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
     const axiosPrivate = useAxiosPrivate();
+    const { isCurrentUser, paramId } =
+        useOutletContext<ProfileOutletContextType>();
+    const { id } = useUserStore();
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const matches: AxiosResponse = await axiosPrivate.get(
-                    '/users/historyMatchs'
+                    `/users/historyMatchs/${isCurrentUser ? id : paramId}`
                 );
                 setData(matches?.data);
             } catch (error) {

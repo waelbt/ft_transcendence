@@ -3,10 +3,11 @@ import { Column } from 'react-table';
 import { LeaderboardEntry } from '../../../shared/types';
 import { NewTabIcon } from '../assets/custom-icons';
 import { Table } from '.';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function LeaderBoard() {
-    // const axiosPrivate = useAxiosPrivate();
+    const axiosPrivate = useAxiosPrivate();
     const rankColors = ['', 'red-600', 'orange-800', 'amber-500'];
     const [data, setData] = useState<LeaderboardEntry[]>([]);
     const columns = useMemo<Column<LeaderboardEntry>[]>(
@@ -57,11 +58,21 @@ function LeaderBoard() {
             },
             {
                 Header: 'Level',
-                accessor: 'level',
-                Cell: ({ value }) => (
+                accessor: (data) => ({
+                    level: data.level,
+                    exp: data.xp
+                }),
+                Cell: ({
+                    value
+                }: {
+                    value: {
+                        level: number;
+                        exp: number;
+                    };
+                }) => (
                     <div className="grow shrink basis-0 self-stretch px-3 py-[15px] bg-white flex-col justify-center items-center inline-flex">
                         <div className="text-black text-base font-normal font-['Acme'] leading-tight">
-                            {value}
+                            {value.level}.{Math.floor((value.exp / 1200) * 10)}
                         </div>
                     </div>
                 )
@@ -119,12 +130,9 @@ function LeaderBoard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(
-                    'http://localhost:3000/leaderboard'
-                );
-                const LeaderBoard = await response.json();
-                // console.log(LeaderBoard);
-                setData(LeaderBoard);
+                const response = await axiosPrivate.get('/users/rank');
+                console.log(response.data);
+                setData(response.data);
             } catch (error) {
                 console.error('Error:', error);
             }

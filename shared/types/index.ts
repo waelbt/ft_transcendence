@@ -47,5 +47,6 @@ export interface LeaderboardEntry {
     rank: number;
     nickName: string;
     avatar: string;
-    level: string;
+    level: number;
+    xp: number;
 }
