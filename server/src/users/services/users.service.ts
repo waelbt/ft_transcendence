@@ -220,7 +220,7 @@ export class UsersService {
                 user = await this.getOneUser(matche.winnerId);
                 awarded = "100";
                 score1  = +result[1];
-                score2  = +result[2];
+                score2  = +result[0];
             }
             const id : number = matche.id;
             const date : Date = matche.createdAt;
