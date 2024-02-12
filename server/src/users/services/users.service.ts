@@ -191,6 +191,10 @@ export class UsersService {
         return data;
     }
 
+    async userAchievements(userId: string){
+
+    }
+
     async matchHistory(userId: string): Promise<match_history[]>{
         const matchs = await this.prisma.game.findMany({
             where:{
@@ -205,17 +209,19 @@ export class UsersService {
 
             var user;
             var awarded : string;
+            const result : string[] = matche.result.split('-');
             if (matche.winnerId == userId)
             {
                 user = await this.getOneUser(matche.loserId);
                 awarded = "400";
+                var score1 : number = +result[0];
+                var score2 : number = +result[1];
             }else{
                 user = await this.getOneUser(matche.winnerId);
                 awarded = "100";
+                score1  = +result[1];
+                score2  = +result[2];
             }
-            const result : string[] = matche.result.split('-');
-            const score1 : number = +result[0];
-            const score2 : number = +result[1];
             const id : number = matche.id;
             const date : Date = matche.createdAt;
             const rating : number = user.level;
