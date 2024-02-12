@@ -116,9 +116,38 @@ export class UsersService {
         });
     }
 
-    removeUser(id: string) {
-        return this.prisma.user.delete({
-            where: { id }
+    async removeUser(id: string) {
+        const ana = await this.prisma.user.findUnique({
+            where : { id },
+        });
+    
+        console.log('user data : ', ana);
+        console.log('id : ', id);
+    
+        await this.prisma.achievement.delete({
+            where : { UserId: id },
+        });
+
+        await this.prisma.block.deleteMany({
+            where: {
+              OR: [
+                { userId: id },
+                { blockedUserId: id },
+              ],
+            },
+        });
+      
+        await this.prisma.game.deleteMany({
+            where: {
+              OR: [
+                { player1Id: id },
+                { player2Id: id },
+              ],
+            },
+        });
+
+        await this.prisma.user.delete({
+            where: { id },
         });
     }
 
@@ -319,19 +348,19 @@ export class UsersService {
 
     async userInfos(@Req() req, userId: string) {
         const friends = await this.friendService.userListFriends(
-            req.user.sub,
-            userId
+            userId,
+            req.user.sub
         );
 
         console.log('FFF: ', friends);
-        if (friends) {
+        // if (!friends) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
             })
-        } else {
-            console.log('hi');
-            friendsIds = [];
-        }
+        // } else {
+        //     console.log('hi');
+        //     friendsIds = [];
+        // }
 
         const user = await this.getOneUser(userId);
         if (!user){

@@ -155,8 +155,10 @@ export class UsersController {
 	@Delete(':id')
 	@ApiBearerAuth()
 	@ApiOkResponse()
-  	removeUser(@Param('id') id: string) {
-    	return (this.usersService.removeUser(String(id)));
+  	async removeUser(@Param('id') id: string) {
+		console.log('id is : ', id);
+    	await this.usersService.removeUser(id);
+		return('true');
   	}
 
   	@Post('UpdateAvatar/')

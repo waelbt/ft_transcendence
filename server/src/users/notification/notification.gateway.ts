@@ -5,6 +5,13 @@ import { notificationService } from "../services/notification.service";
 import { SocketIOMIDDELWARE } from "src/auth/middlware/ws.middlware";
 
 
+// @WebSocketGateway({
+//     cors: {
+//         origin: '*'
+//     },
+//     namespace: '/notification'
+// })
+
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -13,7 +20,7 @@ import { SocketIOMIDDELWARE } from "src/auth/middlware/ws.middlware";
 })
 
 export class notificationGateway 
-implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+    implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
     constructor(
         private readonly prisma: PrismaOrmService,
@@ -31,11 +38,11 @@ implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
         console.log('in handle connection');
         //update stat in database from false to true
         await this.prisma.user.update({
-            where : { id : client.data.payload.id },
+            where : { id : client.data.playload.sub },
             data : { status : true},
         })
         //store this socket in map of sockets
-        this.notificationService.addSocket(client.data.payload.id, client);
+        this.notificationService.addSocket(client.data.playload.sub, client);
     }
 
     async handleDisconnect(client: any) {
@@ -43,7 +50,7 @@ implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
         //update stat in database from true to false
         const user = await this.prisma.user.findFirst({
 			where : {
-				id : client.data.playload.id,
+				id : client.data.playload.sub,
 			}
 		})
 
@@ -52,17 +59,18 @@ implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 
         //update stat in database from true to false
         await this.prisma.user.update({
-            where : { id : client.data.playload.id },
+            where : { id : client.data.playload.sub },
             data : { status : false},
         })
         //remove this socket in map of sockets
-        this.notificationService.removeSocket(client.data.playload.userId, client);
+        this.notificationService.removeSocket(client.data.playload.sub, client);
     }
 
-    @SubscribeMessage('notification')
-	handleNotification(clientId, data)
-	{
-		this.notificationService.emitToClient(clientId, 'notification', data);
-	}
+    // @SubscribeMessage('notification')
+	// handleNotification(clientId, data)
+	// {
+	// 	this.notificationService.emitToClient(clientId, 'notification', data);
+	// }
 
+    //add
 }

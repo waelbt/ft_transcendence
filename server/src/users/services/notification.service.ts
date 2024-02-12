@@ -27,15 +27,15 @@ export class notificationService {
 		return false;
     }
 
-    emitToClient(clientId: string, event: string, data: any): boolean {
+    // emitToClient(clientId: string, event: string, data: any): boolean {
 
-		const sockets = this.socketsMap.get(clientId);
-		if (sockets) {
-			sockets.forEach(socket => {
-				socket.emit(event, data);
-		});
-			return true;
-		}
-		return false;
-    }
+	// 	const sockets = this.socketsMap.get(clientId);
+	// 	if (sockets) {
+	// 		sockets.forEach(socket => {
+	// 			socket.emit(event, data);
+	// 	});
+	// 		return true;
+	// 	}
+	// 	return false;
+    // }
 }

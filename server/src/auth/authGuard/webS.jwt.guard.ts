@@ -10,8 +10,10 @@ export class WebSocketAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const client : Socket = context.switchToWs().getClient();
     console.log('client is canActivate : ', client);
+    console.log('salit---------------------------------------------------');
     const token = client.handshake.auth.token;
     console.log('token is : ', token);
+    console.log('salit---------------------------------------------------');
     WebSocketAuthGuard.validate(client);
     return true;
   }
@@ -24,7 +26,7 @@ export class WebSocketAuthGuard implements CanActivate {
       console.log('token of auth : ', token);
       client.data.playload = verify(token, process.env.JWT_secret);
       console.log('client.data : ', client.data);
-      console.log('client.data.payload : ', client.data.payload);
+      console.log('client.data.payload : ', client.data.playload);
       return client;
   }
 }
