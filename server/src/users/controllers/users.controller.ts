@@ -51,193 +51,167 @@ export class UsersController {
             throw new NotFoundException('this user does not exist');
         }
 
-        return await this.usersService.userInfos(req, userId);
+		return (await this.usersService.userInfos(req, userId));
+	}
+
+	@Get('me')
+	@ApiOperation({ summary: 'Get my data'})
+	@ApiResponse({ status: 200, description: 'Returns my data', type: mydata,})
+	async myInfos(@Req() req): Promise<mydata> {
+		return (await this.usersService.myInfos(req));
+	}
+
+	@Post('upload')
+	@UseInterceptors(FileInterceptor('file'))
+	async uploadAvatar(
+		@UploadedFile()
+		file: Express.Multer.File,
+		@Req() req,
+	){
+		try {
+		if (!file) {
+			throw new InvalidFileException('No file provided.');
+		}
+		return await this.usersService.uploadAvatar(file, req);
+		}catch (error) {
+		if (error instanceof InvalidFileException) {
+			throw new HttpException({ statusCode: HttpStatus.BAD_REQUEST, message: error.message }, HttpStatus.BAD_REQUEST);
+		}
+
+		throw new HttpException({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Internal Server Error' }, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Delete('/delete/:image')
+	@ApiBody({ 
+		schema: {
+		type: 'object',
+		properties: {
+			path: {
+					type: 'string',
+				},
+			},
+		},
+	})
+	async deleteImage(@Body("path") path){
+		return await this.usersService.deleteImage(path);
+	}
+
+
+	@Post('/info')
+	@ApiBody({type: dto})
+	@ApiOperation({ summary: 'update user nickName and avatar'})
+	@ApiResponse({ status: 200, description: 'Returns my data', type: user})
+	async UserInfo(@Req() req, @Body() dto: dto): Promise<User>{
+		console.log('hi');
+		console.log('avatar: ', dto.avatar, 'nick: ', dto.nickName);
+		return await this.usersService.userInfo(req, dto.avatar, dto.nickName);
+	}
+
+	@Get('/previo/:id')
+	@ApiOperation({ summary: 'get small data for a user'})
+	@ApiResponse({ status: 200, description: 'Returns small data of a user', type: smallData})
+	async userData(@Req() req, @Param('id') id: string): Promise<smallData>{
+		// const isItBlocked = await this.blockService.isUserBlocked(req.user.sub, id);
+		// if (isItBlocked){
+		// 	throw new NotFoundException('this user does not exist');
+		// }
+
+		return (await this.usersService.userData(id));
+	}
+
+	@Get('all')
+	@ApiBearerAuth()
+	@ApiOkResponse()
+	findAllUser() {
+    	return this.usersService.findAllUser();
+	}
+
+	@Get('historyMatchs')
+	@ApiOperation({ summary: 'Get match history'})
+	@ApiResponse({ status: 200, description: 'Returns the match history of the user', type: match_history,})
+  	async match_history(@Req() req): Promise<match_history[]>{
+    	return await this.usersService.matchHistory(req.user.sub);
+  	}
+
+	@Get(':id/user')
+	@ApiBearerAuth()
+	@ApiOkResponse()
+  	async findOneUser(@Param('id') id: string) {
+    	console.log('hi im here');
+    	const findUser = await this.usersService.getOneUser(id);
+    	if (!findUser)
+      		throw new NotFoundException(`User with the  id ${id} does not exist`);
+    	return (findUser);
+  	}
+
+  	@Get('search/:keyword')
+	@ApiOperation({ summary: 'get small data for a user'})
+	@ApiResponse({ status: 200, description: 'Returns small data of search bar', type: smallData})
+  	async searchBar(@Param('keyword') keyword: string): Promise<smallData[]> {
+    	return (this.usersService.searchBar(keyword));
+  	}
+
+	@Patch(':id')
+	@ApiBearerAuth()
+	@ApiCreatedResponse()
+  	updateUser(@Param('id') id: string, @Body() user: User) {
+    	return (this.usersService.updateUser(String(id), user));
+  	}
+
+	@Delete(':id')
+	@ApiBearerAuth()
+	@ApiOkResponse()
+  	removeUser(@Param('id') id: string) {
+    	return (this.usersService.removeUser(String(id)));
+  	}
+
+  	@Post('UpdateAvatar/')
+  	async updateAvatar(@Req() req, @Res() res, @Body() dto: avatarDTO){
+    	await this.usersService.deleteImage(dto.oldAvatar);
+	  	await this.usersService.updateAvatar(req.user.sub, dto.newAvatar);
+		res.send('seccess');
+  	}
+
+	@Post('UpdateNickName/')
+	@ApiBody({ 
+		schema: {
+		type: 'object',
+		properties: {
+			nickName: {
+			type: 'string',
+			},
+		},
+		},
+	})
+  	async updateNickname(@Req() req, @Res() res, @Body('nickName') name){
+    	await this.usersService.updateNickName(req.user.sub ,name);
+    	res.send('seccess');
+  	}
+
+    @Get('rank')
+    async allUsersRank(){
+      return await this.usersService.getAllUsersRank();
     }
 
-    @Get('me')
-    @ApiOperation({ summary: 'Get my data' })
-    @ApiResponse({ status: 200, description: 'Returns my data', type: mydata })
-    async myInfos(@Req() req): Promise<mydata> {
-        return await this.usersService.myInfos(req);
+  	@Post('/blockUser/:blockedUserId')
+	async blockUser(
+	@Req() req,
+	@Param('blockedUserId') blockedUserId: string){
+		const isBlocked = await this.blockService.isUserBlocked(req.user.sub, blockedUserId);
+		if (isBlocked)
+			throw new NotFoundException('this user does not exist');
+
+      	this.blockService.blockUser(req.user.sub, blockedUserId);
+  	}
+
+  	@Post('/unblockUser/:unblockedUserId')
+  	async unblockUser(
+    @Req() req,
+    @Param('unblockedUserId') unblockedUserId: string){
+    	this.blockService.unblockUser(req.user.sub, unblockedUserId);
     }
 
-    @Post('upload')
-    @UseInterceptors(FileInterceptor('file'))
-    async uploadAvatar(
-        @UploadedFile()
-        file: Express.Multer.File,
-        @Req() req
-    ) {
-        try {
-            if (!file) {
-                throw new InvalidFileException('No file provided.');
-            }
-            return await this.usersService.uploadAvatar(file, req);
-        } catch (error) {
-            if (error instanceof InvalidFileException) {
-                throw new HttpException(
-                    {
-                        statusCode: HttpStatus.BAD_REQUEST,
-                        message: error.message
-                    },
-                    HttpStatus.BAD_REQUEST
-                );
-            }
-
-            throw new HttpException(
-                {
-                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                    message: 'Internal Server Error'
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    @Delete('/delete')
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                path: {
-                    type: 'string'
-                }
-            }
-        }
-    })
-    async deleteImage(@Body('path') path) {
-        console.log('.............................................');
-        console.log('path :', path);
-        console.log('.............................................');
-        return await this.usersService.deleteImage(path);
-    }
-
-    @Post('/info')
-    @ApiBody({ type: dto })
-    @ApiOperation({ summary: 'update user nickName and avatar' })
-    @ApiResponse({ status: 200, description: 'Returns my data', type: user })
-    async UserInfo(@Req() req, @Body() dto: dto): Promise<User> {
-        console.log('hi');
-        console.log('avatar: ', dto.avatar, 'nick: ', dto.nickName);
-        return await this.usersService.userInfo(req, dto.avatar, dto.nickName);
-    }
-
-    @Get('/previo/:id')
-    @ApiOperation({ summary: 'get small data for a user' })
-    @ApiResponse({
-        status: 200,
-        description: 'Returns small data of a user',
-        type: smallData
-    })
-    async userData(@Req() req, @Param('id') id: string): Promise<smallData> {
-        const isItBlocked = await this.blockService.isUserBlocked(
-            req.user.sub,
-            id
-        );
-        if (isItBlocked) {
-            throw new NotFoundException('this user does not exist');
-        }
-
-        return await this.usersService.userData(id);
-    }
-
-    @Get('all')
-    @ApiBearerAuth()
-    @ApiOkResponse()
-    findAllUser() {
-        return this.usersService.findAllUser();
-    }
-
-    @Get('historyMatchs')
-    @ApiOperation({ summary: 'Get match history' })
-    @ApiResponse({
-        status: 200,
-        description: 'Returns the match history of the user',
-        type: match_history
-    })
-    async match_history(@Req() req): Promise<match_history[]> {
-        return await this.usersService.matchHistory(req.user.sub);
-    }
-
-    @Get(':id/user')
-    @ApiBearerAuth()
-    @ApiOkResponse()
-    async findOneUser(@Param('id') id: string) {
-        console.log('hi im here');
-        const findUser = await this.usersService.getOneUser(id);
-        if (!findUser)
-            throw new NotFoundException(
-                `User with the  id ${id} does not exist`
-            );
-        return findUser;
-    }
-
-    @Get('search/:keyword')
-    @ApiOperation({ summary: 'get small data for a user' })
-    @ApiResponse({
-        status: 200,
-        description: 'Returns small data of search bar',
-        type: smallData
-    })
-    async searchBar(@Param('keyword') keyword: string): Promise<smallData[]> {
-        return this.usersService.searchBar(keyword);
-    }
-
-    @Patch(':id')
-    @ApiBearerAuth()
-    @ApiCreatedResponse()
-    updateUser(@Param('id') id: string, @Body() user: User) {
-        return this.usersService.updateUser(String(id), user);
-    }
-
-    @Delete(':id')
-    @ApiBearerAuth()
-    @ApiOkResponse()
-    removeUser(@Param('id') id: string) {
-        return this.usersService.removeUser(String(id));
-    }
-
-    @Post('UpdateAvatar/')
-    async updateAvatar(@Req() req, @Res() res, @Body() dto: avatarDTO) {
-        await this.usersService.deleteImage(dto.oldAvatar);
-        await this.usersService.updateAvatar(req.user.sub, dto.newAvatar);
-        res.send('seccess');
-    }
-
-    @Post('UpdateNickName/')
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                nickName: {
-                    type: 'string'
-                }
-            }
-        }
-    })
-    async updateNickname(@Req() req, @Res() res, @Body('nickName') name) {
-        await this.usersService.updateNickName(req.user.sub, name);
-        res.send('seccess');
-    }
-
-    @Post('/blockUser/:blockedUserId')
-    async blockUser(@Req() req, @Param('blockedUserId') blockedUserId: string) {
-        const isBlocked = await this.blockService.isUserBlocked(
-            req.user.sub,
-            blockedUserId
-        );
-        if (isBlocked) throw new NotFoundException('this user does not exist');
-
-        this.blockService.blockUser(req.user.sub, blockedUserId);
-    }
-
-    @Post('/unblockUser/:unblockedUserId')
-    async unblockUser(
-        @Req() req,
-        @Param('unblockedUserId') unblockedUserId: string
-    ) {
-        this.blockService.unblockUser(req.user.sub, unblockedUserId);
-    }
 
     @Get('/canInteractWith/:otherUserId')
     async canInteractWith(

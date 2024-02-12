@@ -372,12 +372,31 @@ export class UsersService {
 
         const sortedUsers = users.sort((user1, user2) => {
             if (user1.level !== user2.level) {
-                return user2.level - user1.level; // Sort user2y level in descending order
+                console.log('By level : ', user2.level - user1.level);
+                return user2.level - user1.level;
             } else {
+                console.log('By XP : ', user2.exp - user1.exp);
                 return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
             }
         });
         console.log(sortedUsers);
-        return sortedUsers;
+        var index = 1;
+        const allRank = sortedUsers.map((sortedUsers) => {
+            const id = +sortedUsers.id;
+            const rank = index++;
+            const nickName = sortedUsers.nickName;
+            const avatar = sortedUsers.avatar;
+            const level = sortedUsers.level;
+            const xp = sortedUsers.exp;
+            return {
+                id,
+                rank,
+                nickName,
+                avatar,
+                level,
+                xp,
+            }
+        })
+        return allRank;
     }
 }
