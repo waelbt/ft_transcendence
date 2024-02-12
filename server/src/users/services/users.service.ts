@@ -192,7 +192,33 @@ export class UsersService {
     }
 
     async userAchievements(userId: string){
+        const findAchievement = await this.prisma.achievement.findUnique({
+            where: { UserId: userId },
+        });
+    
+        console.log('achievements : ', findAchievement);
+        const { 
+            UserId,
+            welcome,
+            harban,
+            khari,
+            brown,
+            silver,
+            goldon,
+            hacker,
+        } = findAchievement;
 
+        const achievement = { 
+            userId,
+            welcome,
+            harban,
+            khari,
+            brown,
+            silver,
+            goldon,
+            hacker,
+        }
+        return achievement;
     }
 
     async matchHistory(userId: string): Promise<match_history[]>{

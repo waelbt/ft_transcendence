@@ -13,6 +13,7 @@ import { mydata } from '../dto/mydata.dto';
 import { user, userData } from '../dto/userData.dto';
 import { smallData } from '../dto/smallData.dto';
 import { rank } from '../dto/rank.dto';
+import { achievement } from '../dto/achievements.dto';
 
 
 @ApiTags('users')
@@ -113,7 +114,9 @@ export class UsersController {
 	}
 
 	@Get('achievements/:id')
-	async userAchievements(@Req() req, @Param('id') id: string){
+	@ApiOperation({ summary: 'Get achievements of a user'})
+	@ApiResponse({ status: 200, description: 'Returns achivements of a user', type: achievement,})
+	async userAchievements(@Req() req, @Param('id') id: string) : Promise<achievement>{
 		return await this.usersService.userAchievements(id);
 	}
 
