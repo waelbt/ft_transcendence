@@ -64,21 +64,19 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
         if (action === 'Send Message') {
             //! hena 
             // clearMessage();
-            socket?.emit('checkDm', { friendId: target });
-            console.log('target= ', target);
-            const handleCheckDM = (room: any) => {
-                console.log('check', room);
-                room.messages.forEach((message: any) => {
-                    pushMessage(message.message);
-                  });
-                console.log('to navigate')
-                navigate(`/chat/${target}`); 
-                };
+            // socket?.emit('checkDm', { friendId: target });
+            // console.log('target= ', target);
+            // const handleCheckDM = (room: any) => {
+            //     console.log('check', room);
+            //     room.messages.forEach((message: any) => {
+            //         pushMessage(message.message);
+            //       });
+            //     console.log('to navigate')
+            //     };
+                navigate(`/chat/content/${target}`); 
 
-            socket?.on('checkDM', handleCheckDM);
-            return () => {
-                socket?.off('checkDM', handleCheckDM);
-            };
+            // socket?.on('checkDM', handleCheckDM);
+            
             // ! 7bssi hna 
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];

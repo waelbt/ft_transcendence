@@ -4,6 +4,7 @@ import MessageList from './MessageList';
 import './ChatContent.css';
 import { useChatSocketStore } from '../../../stores/ChatSocketStore';
 import { useUserStore } from '../../../stores/userStore';
+import { useParams } from 'react-router-dom';
 
 interface Contact {
   image: string;
@@ -35,42 +36,67 @@ interface ChatContentProps {
   response: Room[];
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ response, userId, selectedContact }) => {
-  const { id } = useUserStore();
-  const { socket, pushMessage, clearMessage, addRoom } = useChatSocketStore();
-  const [conversationMessages, setConversationMessages] = useState<Message[]>([]);
-  // const {messages} = useChatSocketStore();
-  useEffect(() => {
-    if (selectedContact && response) {
-      const room = response.find(room => room.roomTitle === id + selectedContact.id || room.roomTitle === selectedContact.id + id);
-      if (room) {
-        setConversationMessages(room.messages);
-      }
-    }
-
-  }, [selectedContact, response, userId]);
+export const ChatContent: React.FC = () => {
+  const {id} = useParams();
+  const { id : userId } = useUserStore();
+  const { socket, pushMessage, messages,clearMessage, addRoom } = useChatSocketStore();
+  
 
   useEffect(() => {
-    const handleNewMessage = (messages: Message[]) => {
-      setConversationMessages(prevMessages => [...prevMessages, ...messages]);
-      // console.log('conversationsMessages:', conversationMessages);
-    };
+    socket?.emit('checkDm', { friendId: id });
+    const handleCheckDM = (room: any) => {
+      console.log('check', room);
+      room.messages.forEach((message: any) => {
+          pushMessage(message.message);
+        });
+      console.log('to navigate'); 
+      };
 
-    socket?.on('dmMessage', handleNewMessage);
+  socket?.on('checkDM', handleCheckDM);
 
-    return () => {
-      socket?.off('dmMessage', handleNewMessage);
-    };
-  }, [socket, conversationMessages]);
+    // return socket?.off('checkDM')
+  }, [id,socket])
+
+  // // const {messages} = useChatSocketStore();
+  // useEffect(() => {
+  //   if (selectedContact && response) {
+  //     const room = response.find(room => room.roomTitle === id + selectedContact.id || room.roomTitle === selectedContact.id + id);
+  //     if (room) {
+  //       setConversationMessages(room.messages);
+  //     }
+  //   }
+
+  // }, [id]);
+
+  // useEffect(() => {
+  //   const handleNewMessage = (messages: Message[]) => {
+  //     setConversationMessages(prevMessages => [...prevMessages, ...messages]);
+  //     // console.log('conversationsMessages:', conversationMessages);
+  //   };
+
+  //   socket?.on('dmMessage', handleNewMessage);
+
+  //   return () => {
+  //     socket?.off('dmMessage', handleNewMessage);
+  //   };
+  // }, [socket, conversationMessages]);
 
   const handleSendClick = (message: string) => {
     socket?.emit('dm', { message: message, receiverId: userId });
-    // pushMessage(message);
+    pushMessage(message);
   };
 
   return (
     <div className="main__chatcontent">
-      <MessageList messages={conversationMessages} />
+      {/* <MessageList  /> */}
+      <div className="message-list">
+      {messages && messages.map((message, index) => (
+         
+        <div className={`message-item ${message.senderId === id ? 'my-message' : 'other-message'}`} >
+          <p>{message.message}</p>
+        </div>
+      ))}
+    </div>
       <div className="content__footer">
         <MessageInput onSendClick={handleSendClick} maxLength={500} />
       </div>
@@ -78,4 +104,4 @@ const ChatContent: React.FC<ChatContentProps> = ({ response, userId, selectedCon
   );
 };
 
-export default ChatContent;
+// export default ChatContent;

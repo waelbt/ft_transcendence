@@ -3,7 +3,7 @@ import "./chatBody.css";
 import ChatList from "../../components/chat/chatList/ChatList";
 import ChatProfile from "../../components/chat/chatprofile/ChatProfile";
 import ChatContent from '../../components/chat/chatcontent/ChatContent';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { useChatSocketStore } from '../../stores/ChatSocketStore';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 
@@ -33,8 +33,8 @@ export function Chat()  {
   };
   
   const handleContactClick = (contact: Contact) => {
-    setSelectedContact(contact); 
-    navigate(`/chat/${contact.id}`);
+    // setSelectedContact(contact); 
+    navigate(`content/${contact.id}`);
   };
 
   const fetchdms = async () => {
@@ -66,8 +66,9 @@ export function Chat()  {
   return (
     <div className="main__chatbody">
       <ChatList contacts={contacts} onSearch={handleSearch} onContactClick={handleContactClick} />
-      <ChatContent response={response} userId={userId} selectedContact={selectedContact}/>
-      <ChatProfile selectedContact={selectedContact} /> 
+      <Outlet/> 
+      {/* <ChatContent response={response} userId={userId} selectedContact={selectedContact}/>
+      <ChatProfile selectedContact={selectedContact} />  */}
     </div>
   );
 }
