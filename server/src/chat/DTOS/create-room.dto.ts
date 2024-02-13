@@ -5,14 +5,13 @@ import {
     IsNotEmpty,
     IsNumber,
     IsOptional,
-    IsString,
+    IsString
 } from 'class-validator';
 
 import { RoomPrivacy } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRoomDto {
-
     @ApiProperty()
     @IsString()
     roomTitle: string;
@@ -23,12 +22,14 @@ export class CreateRoomDto {
 
     @ApiProperty()
     @IsEnum(RoomPrivacy)
-    privacy:    RoomPrivacy;
+    privacy: RoomPrivacy;
 
     @ApiProperty({
-        required: false,
+        required: false
     })
     @IsString()
     @IsOptional()
-    password?:  string;
+    password?: string;
+
+    avatar: string;
 }

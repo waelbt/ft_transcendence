@@ -212,7 +212,6 @@ export class friendsService {
         const otherFriends = await this.getFriends(userId, viewerId);
         console.log('hna other friend : ', otherFriends);
 
-        const friends = await this.filterFriends(myFriends, otherFriends);
         return myFriends;
     }
 
@@ -225,57 +224,48 @@ export class friendsService {
         const userFriends = user.friends || [];
 
         console.log('user: ', user);
-        return userFriends;
-    }
 
-    async filterFriends(myFriends: any, otherFriends: any) {
-        const friends = await Promise.all(
-            otherFriends.map(async (friendship) => {}).filter(Boolean)
+        var Friends = await Promise.all(
+            userFriends
+                .map(async (friendship) => {
+                    // console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
+                    // if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
+                    //     console.log('im in');
+                    //     return ;
+                    // }
+                    console.log('check: ', friendship);
+                    console.log('viewerId: ', viewerId);
+                    console.log('userId: ', userId);
+                    var friendId;
+                    if (userId === friendship.userId1)
+                        friendId = friendship.userId2;
+                    if (userId === friendship.userId2)
+                        friendId = friendship.userId1;
+                    console.log('friendId : ', friendId);
+                    const isFriend = await this.areUsersFriends(
+                        viewerId,
+                        friendId
+                    );
+                    console.log('before');
+                    if (isFriend) {
+                        console.log('hello');
+                        const user = await this.prisma.user.findUnique({
+                            where: { id: friendId }
+                        });
+                        const id = user.id;
+                        const nickName = user.nickName;
+                        const avatar = user.avatar;
+                        return {
+                            id,
+                            nickName,
+                            avatar,
+                            action: isFriend ? 'Send Message' : 'Add Friend'
+                        };
+                    }
+                })
+                .filter(Boolean)
         );
-
-        return friends;
-
-        // var Friends = await Promise.all(
-        //     userFriends
-        //         .map(async (friendship) => {
-        //             // console.log('wahd: ', friendship.userId1, '\njoj: ', viewerId);
-        //             // if (friendship.userId1 == viewerId || friendship.userId2 == viewerId) {
-        //             //     console.log('im in');
-        //             //     return ;
-        //             // }
-        //             console.log('check: ', friendship);
-        //             console.log('viewerId: ', viewerId);
-        //             console.log('userId: ', userId);
-        //             var friendId;
-        //             if (userId === friendship.userId1)
-        //                 friendId = friendship.userId2;
-        //             if (userId === friendship.userId2)
-        //                 friendId = friendship.userId1;
-        //             console.log('friendId : ', friendId);
-        //             const isFriend = await this.areUsersFriends(
-        //                 viewerId,
-        //                 friendId
-        //             );
-        //             console.log('before');
-        //             if (isFriend) {
-        //                 console.log('hello');
-        //                 const user = await this.prisma.user.findUnique({
-        //                     where: { id: friendId }
-        //                 });
-        //                 const id = user.id;
-        //                 const nickName = user.nickName;
-        //                 const avatar = user.avatar;
-        //                 return {
-        //                     id,
-        //                     nickName,
-        //                     avatar,
-        //                     action: isFriend ? 'Send Message' : 'Add Friend'
-        //                 };
-        //             }
-        //         })
-        //         .filter(Boolean)
-        // );
-        // return Friends;
+        return Friends;
     }
 
     async areUsersFriends(userId1: string, userId2: string): Promise<boolean> {

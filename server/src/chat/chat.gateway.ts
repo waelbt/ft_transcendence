@@ -122,20 +122,20 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('globalChat')
-    async globalChat(client: Socket, payload: CreateMessageDto) {
-        const userCheck = await this.wsService.getUserFromAccessToken(
-            client.handshake.auth.token
-        );
-        if (userCheck.state == true) {
-            await this.wsService.createGlobalRoom();
-            console.log(payload);
-            await this.wsService.createMessage(payload, userCheck.userData.sub);
-            this.server
-                .to(payload.roomTitle)
-                .emit('globalMessage', payload.message);
-        }
-    }
+    // @SubscribeMessage('globalChat')
+    // async globalChat(client: Socket, payload: CreateMessageDto) {
+    //     const userCheck = await this.wsService.getUserFromAccessToken(
+    //         client.handshake.auth.token
+    //     );
+    //     if (userCheck.state == true) {
+    //         // await this.wsService.createGlobalRoom();
+    //         console.log(payload);
+    //         await this.wsService.createMessage(payload, userCheck.userData.sub);
+    //         this.server
+    //             .to(payload.roomTitle)
+    //             .emit('globalMessage', payload.message);
+    //     }
+    // }
 
     @SubscribeMessage('leaveRoom')
     async leaveRoom(client: Socket, leaveRoomDto: LeaveRoomDto) {

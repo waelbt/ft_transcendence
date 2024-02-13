@@ -2,92 +2,92 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  	provider      = "prisma-client-js"
-	previewFeatures = ["fullTextSearch"]
-  	binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  	provider = "postgresql"
-  	url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-	id           		String       	@id @unique
-	email        		String       	@unique
-	HashPassword 		String?
-	avatar       		String?
-	nickName     		String       	@unique
-	fullName     		String
-	status       		Boolean      	@default(false)
-	f2A          		Boolean      	@default(false)
-	f2A_Secret   		String?
-	inGame       		Boolean      	@default(false)
-	completeProfile 	Boolean   		@default(false)
-	createdAt    		DateTime     	@default(now())
-	exp					Int?			@default(0)
-	level				Int?			@default(0)
+  id              String   @id @unique
+  email           String   @unique
+  HashPassword    String?
+  avatar          String?
+  nickName        String   @unique
+  fullName        String
+  status          Boolean  @default(false)
+  f2A             Boolean  @default(false)
+  f2A_Secret      String?
+  inGame          Boolean  @default(false)
+  completeProfile Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  exp             Int?     @default(0)
+  level           Int?     @default(0)
 
-	achievement      	Achievement?
-	friends      		Friendship[]
-		// Define the blocks initiated by this user
-	blockedUsers  		Block[] 		@relation("BlockedUsers")
-	games1       		Game[] 			@relation("User1Games")
-	games2       		Game[] 			@relation("User2Games")
-	winner       		Game[] 			@relation("Winner")
-	loser        		Game[] 			@relation("Loser")
-	rooms        		Room[]
-	messages     		Message[]
-	dm					DMRooms[]
-	dmMessages			dmMessage[]	
+  achievement  Achievement?
+  friends      Friendship[]
+  // Define the blocks initiated by this user
+  blockedUsers Block[]      @relation("BlockedUsers")
+  games1       Game[]       @relation("User1Games")
+  games2       Game[]       @relation("User2Games")
+  winner       Game[]       @relation("Winner")
+  loser        Game[]       @relation("Loser")
+  rooms        Room[]
+  messages     Message[]
+  dm           DMRooms[]
+  dmMessages   dmMessage[]
 }
 
 model Friendship {
-	id      	String @id
-	userId1 	String
-	userId2 	String
-	status  	String
-	user    	User[]
+  id      String @id
+  userId1 String
+  userId2 String
+  status  String
+  user    User[]
 
-	@@unique([userId1, userId2])
+  @@unique([userId1, userId2])
 }
 
 model Block {
-	id            	Int     @id @default(autoincrement())
-	userId        String
-	blockedUserId String
+  id            Int    @id @default(autoincrement())
+  userId        String
+  blockedUserId String
 
-	// Define the user who initiated the block
-	user          User     @relation("BlockedUsers", fields: [userId], references: [id])
+  // Define the user who initiated the block
+  user User @relation("BlockedUsers", fields: [userId], references: [id])
 }
 
-model Achievement{
-	id            	Int     @id @default(autoincrement())
-  	user       		User?   @relation(fields: [UserId], references: [id])
-  	UserId     		String  @unique
-	welcome			Boolean @default(false) // if u win ur first game
-	harban			Boolean @default(false) // if u win by 3-0
-	khari			Boolean @default(false) // if u lose by 3-0
-	brown			Boolean @default(false)	// if u win 3 games in row
-	silver			Boolean @default(false) // if u win 5 games in row
-	goldon			Boolean @default(false) // if u win 10 games in row 
-	hacker			Boolean @default(false) // if u win agains boot
-	consecutiveWins	Int 	@default(0)
+model Achievement {
+  id              Int     @id @default(autoincrement())
+  user            User?   @relation(fields: [UserId], references: [id])
+  UserId          String  @unique
+  welcome         Boolean @default(false) // if u win ur first game
+  harban          Boolean @default(false) // if u win by 3-0
+  khari           Boolean @default(false) // if u lose by 3-0
+  brown           Boolean @default(false) // if u win 3 games in row
+  silver          Boolean @default(false) // if u win 5 games in row
+  goldon          Boolean @default(false) // if u win 10 games in row 
+  hacker          Boolean @default(false) // if u win agains boot
+  consecutiveWins Int     @default(0)
 }
 
 model Game {
-	id           Int     @id @default(autoincrement())
-	user1        User    @relation("User1Games", fields: [player1Id], references: [id])
-	player1Id    String
-	user2        User    @relation("User2Games", fields: [player2Id], references: [id])
-	player2Id    String
-	winner       User?   @relation("Winner", fields: [winnerId], references: [id])
-	winnerId     String?
-	loser        User?   @relation("Loser", fields: [loserId], references: [id])
-	loserId      String?
-	result       String
-	Mode         String   @default("classic")
-	createdAt    DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  user1     User     @relation("User1Games", fields: [player1Id], references: [id])
+  player1Id String
+  user2     User     @relation("User2Games", fields: [player2Id], references: [id])
+  player2Id String
+  winner    User?    @relation("Winner", fields: [winnerId], references: [id])
+  winnerId  String?
+  loser     User?    @relation("Loser", fields: [loserId], references: [id])
+  loserId   String?
+  result    String
+  Mode      String   @default("classic")
+  createdAt DateTime @default(now())
 }
 
 model Room {
@@ -104,14 +104,15 @@ model Room {
   admins         String[]
   banned         String[]
   muted          String[]
+  avatar         String
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
   message   String
   createdAt DateTime @default(now())
-  sender      User     @relation(fields: [senderId], references: [id])
-  senderId    String
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  String
   room      Room     @relation(fields: [roomId], references: [id])
   roomId    Int
 }
@@ -123,21 +124,21 @@ enum RoomPrivacy {
 }
 
 model DMRooms {
-  id             Int         @id @default(autoincrement())
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  roomTitle      String      @unique
-  users          User[]
-  messages       dmMessage[]
-  friendId		 String
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  roomTitle String      @unique
+  users     User[]
+  messages  dmMessage[]
+  friendId  String
 }
 
 model dmMessage {
   id        Int      @id @default(autoincrement())
   message   String
   createdAt DateTime @default(now())
-  sender      User     @relation(fields: [senderId], references: [id])
-  senderId    String
-  dmroom      DMRooms     @relation(fields: [dmId], references: [id])
-  dmId    Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  String
+  dmroom    DMRooms  @relation(fields: [dmId], references: [id])
+  dmId      Int
 }

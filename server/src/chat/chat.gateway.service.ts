@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { RoomService } from './rooms/room.service';
 import { Server } from 'socket.io';
@@ -22,7 +22,11 @@ export class WebSocketService {
     //     userId: string,
     //     server: Server
     // ) {
-    async joinUserSocketToItsRooms( userSocket: string, userId: string, server: Server) {
+    async joinUserSocketToItsRooms(
+        userSocket: string,
+        userId: string,
+        server: Server
+    ) {
         let joinedRooms;
         try {
             joinedRooms = await this.roomService.getMyRooms(userId);
@@ -90,30 +94,31 @@ export class WebSocketService {
         }
     }
 
-    async createGlobalRoom() {
-        const title = 'GlobalChat';
-        const room = await this.prisma.room.findUnique({
-            where: {
-                roomTitle: title
-            }
-        });
+    // async createGlobalRoom() {
+    //     const title = 'GlobalChat';
+    //     const room = await this.prisma.room.findUnique({
+    //         where: {
+    //             roomTitle: title
+    //         }
+    //     });
 
-        if (room) return room;
+    //     if (room) return room;
 
-        const globalRoom = await this.prisma.room.create({
-            data: {
-                roomTitle: title,
-                isConversation: false,
-                privacy: RoomPrivacy.PUBLIC
-            },
-            include: {
-                users: true,
-                messages: true
-            }
-        });
+    //     const globalRoom = await this.prisma.room.create({
+    //         data: {
+    //             avatar: '',
+    //             roomTitle: title,
+    //             isConversation: false,
+    //             privacy: RoomPrivacy.PUBLIC
+    //         },
+    //         include: {
+    //             users: true,
+    //             messages: true
+    //         }
+    //     });
+    //     return globalRoom;
+    // }
 
-        return globalRoom;
-    }
     async joinUserToGlobalChat(userId: string) {
         const title = 'GlobalChat';
         const room = await this.prisma.room.update({
@@ -144,61 +149,57 @@ export class WebSocketService {
     }
 
     async createDm(user1id: string, user2id: string) {
-        const title : string = user1id + user2id;
+        const title: string = user1id + user2id;
         const newDm = await this.prisma.dMRooms.create({
             data: {
                 roomTitle: title,
                 friendId: user2id,
                 users: {
-                    connect: [
-                        { id: user1id },
-                        { id: user2id },
-                    ]
-                },
+                    connect: [{ id: user1id }, { id: user2id }]
+                }
             },
-            include : {
+            include: {
                 users: true,
-                messages: true,
-            },
+                messages: true
+            }
         });
-        return (newDm);
+        return newDm;
     }
 
     async CheckForExistingDmRoom(user1id: string, user2id: string) {
         const dm = await this.prisma.dMRooms.findFirst({
-            where : {
+            where: {
                 AND: [
                     { users: { some: { id: user1id } } },
-                    { users: { some: { id: user2id } } },
+                    { users: { some: { id: user2id } } }
                 ]
             },
-            include : {
+            include: {
                 users: true,
-                messages: true,
+                messages: true
             }
         });
 
         let newDm;
-        if (!dm)
-        {
+        if (!dm) {
             newDm = await this.createDm(user1id, user2id);
             console.log(newDm, 'first time talking');
-            return (newDm);
+            return newDm;
         }
-        return (dm);
+        return dm;
     }
-    
+
     async sendDM(user1id: string, user2id: string, message: string) {
         const dm = await this.prisma.dMRooms.findFirst({
-            where : {
+            where: {
                 AND: [
                     { users: { some: { id: user1id } } },
-                    { users: { some: { id: user2id } } },
+                    { users: { some: { id: user2id } } }
                 ]
             },
-            include : {
+            include: {
                 users: true,
-                messages: true,
+                messages: true
             }
         });
         console.log('test for id', dm);
@@ -207,18 +208,18 @@ export class WebSocketService {
                 message: message,
                 sender: {
                     connect: {
-                        id: user1id,
-                    },
+                        id: user1id
+                    }
                 },
                 dmroom: {
                     connect: {
-                        id: dm.id,
+                        id: dm.id
                     }
-                },
+                }
             },
-            include : {
+            include: {
                 sender: true,
-                dmroom: true,
+                dmroom: true
             }
         });
         const roomWithMessages = await this.prisma.dMRooms.findFirst({
@@ -227,24 +228,31 @@ export class WebSocketService {
             },
             include: {
                 messages: true,
-                users: true,
+                users: true
             }
-        })
-        console.log('check message creation', roomWithMessages.messages, 'dm id', dm.id);
-        return (roomWithMessages);
+        });
+        console.log(
+            'check message creation',
+            roomWithMessages.messages,
+            'dm id',
+            dm.id
+        );
+        return roomWithMessages;
     }
 
     async getAllDms(userId: string) {
         const user = await this.prisma.user.findUnique({
             where: {
-                id: userId,
+                id: userId
             },
             include: {
-                dm: true,
+                dm: true
             }
         });
+        if (!user)
+            throw new NotFoundException('this user does not exist');
 
-        console.log('dms are', user.dm);
-        return (user.dm);
+        // console.log('dms are', user.dm);
+        return user.dm;
     }
 }
