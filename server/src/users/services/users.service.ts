@@ -117,36 +117,30 @@ export class UsersService {
 
     async removeUser(id: string) {
         const ana = await this.prisma.user.findUnique({
-            where : { id },
+            where: { id }
         });
-    
+
         console.log('user data : ', ana);
         console.log('id : ', id);
-    
+
         await this.prisma.achievement.delete({
-            where : { UserId: id },
+            where: { UserId: id }
         });
 
         await this.prisma.block.deleteMany({
             where: {
-              OR: [
-                { userId: id },
-                { blockedUserId: id },
-              ],
-            },
+                OR: [{ userId: id }, { blockedUserId: id }]
+            }
         });
-      
+
         await this.prisma.game.deleteMany({
             where: {
-              OR: [
-                { player1Id: id },
-                { player2Id: id },
-              ],
-            },
+                OR: [{ player1Id: id }, { player2Id: id }]
+            }
         });
 
         await this.prisma.user.delete({
-            where: { id },
+            where: { id }
         });
     }
 
@@ -221,18 +215,13 @@ export class UsersService {
         return data;
     }
 
-<<<<<<< HEAD
-    async userAchievements(userId: string) {}
-
-    async matchHistory(userId: string): Promise<match_history[]> {
-=======
-    async userAchievements(userId: string){
+    async userAchievements(userId: string) {
         const findAchievement = await this.prisma.achievement.findUnique({
-            where: { UserId: userId },
+            where: { UserId: userId }
         });
-    
+
         console.log('achievements : ', findAchievement);
-        const { 
+        const {
             UserId,
             welcome,
             harban,
@@ -240,10 +229,10 @@ export class UsersService {
             brown,
             silver,
             goldon,
-            hacker,
+            hacker
         } = findAchievement;
 
-        const achievement = { 
+        const achievement = {
             userId,
             welcome,
             harban,
@@ -251,13 +240,12 @@ export class UsersService {
             brown,
             silver,
             goldon,
-            hacker,
-        }
+            hacker
+        };
         return achievement;
     }
 
-    async matchHistory(userId: string): Promise<match_history[]>{
->>>>>>> origin/back-end
+    async matchHistory(userId: string): Promise<match_history[]> {
         const matchs = await this.prisma.game.findMany({
             where: {
                 OR: [{ winnerId: userId }, { loserId: userId }]
@@ -362,27 +350,17 @@ export class UsersService {
             userId,
             req.user.sub
         );
-<<<<<<< HEAD
-        console.log('wael   ', friends);
-        if (friends) {
+
+        console.log('FFF: ', friends);
+        if (friends[0] !== undefined) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
             });
-        } else {
-            friendsIds = [];
         }
-=======
-
-        console.log('FFF: ', friends);
-        // if (!friends) {
-            var friendsIds = friends.map((friends) => {
-                return friends.id;
-            })
-        // } else {
+        //  else {
         //     console.log('hi');
         //     friendsIds = [];
         // }
->>>>>>> origin/back-end
 
         const user = await this.getOneUser(userId);
         if (!user) {
