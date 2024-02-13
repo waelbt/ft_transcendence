@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ChatContent } from './components/chat/chatcontent/ChatContent';
 
 const router = createBrowserRouter([
     {
@@ -22,13 +23,29 @@ const router = createBrowserRouter([
                     return { Component: Lobby };
                 }
             },
+            // {
+            //     path: '/chat/:userId',
+            //     lazy: async () => {
+            //         let { Chat } = await import('./pages/Chat');
+            //         return { Component: Chat };
+            //     }
+            // },
             {
+        
                 path: '/chat',
-                // path: '/chat/:userId',
                 lazy: async () => {
                     let { Chat } = await import('./pages/Chat');
                     return { Component: Chat };
-                }
+                } ,
+                children: [
+                    {
+                        path: 'content/:id',
+                        lazy: async () => {
+                            let { ChatContent } = await import('./components/chat/chatcontent/ChatContent');
+                            return { Component: ChatContent };
+                        }
+                    },
+                ]
             },
             {
                 path: '/game/:roomId',

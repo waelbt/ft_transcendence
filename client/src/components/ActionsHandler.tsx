@@ -16,7 +16,7 @@ type ActionsHandlerProps = {
 
 const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const navigate = useNavigate();
-    const { socket } = useChatSocketStore();
+    const { socket, pushMessage, updateState, clearMessage} = useChatSocketStore();
     const axiosPrivate = useAxiosPrivate();
     const [actions, setActions] = useState<string[]>(['Block user']);
     const [relation, setRelation] = useState<string>(relationship);
@@ -63,8 +63,20 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const handleAction = async (action: string) => {
         if (action === 'Send Message') {
             //! hena 
-            socket?.emit('sendMessage', { userId: target });
-            navigate('/chat');
+            // clearMessage();
+            // socket?.emit('checkDm', { friendId: target });
+            // console.log('target= ', target);
+            // const handleCheckDM = (room: any) => {
+            //     console.log('check', room);
+            //     room.messages.forEach((message: any) => {
+            //         pushMessage(message.message);
+            //       });
+            //     console.log('to navigate')
+            //     };
+                navigate(`/chat/content/${target}`); 
+
+            // socket?.on('checkDM', handleCheckDM);
+            
             // ! 7bssi hna 
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];

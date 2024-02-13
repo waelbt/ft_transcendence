@@ -1,21 +1,33 @@
 import './ChatProfile.css';
-// import ChallengeIcon from './ChallengeIcon.tsx';
+import  { useState,  useEffect } from 'react';
+
 import contre from '../images/contre.png';
 import sortie from '../images/sortie.png';
 import interdit from '../images/interdit.png';
+import { useChatSocketStore } from '../../../stores/ChatSocketStore';
+import useAxiosPrivate from '../../../hooks/axiosPrivateHook';
+
 interface ChatProfileProps {
-  userProfileImage: string;
-  userName: string;
+  selectedContact: Contact | null; 
 }
 
-const ChatProfile: React.FC<ChatProfileProps> = ({ userProfileImage, userName }) => {
+interface Contact {
+  avatar: string;
+  id: string;
+  nickName: string;
+  time: string;
+}
+
+const ChatProfile: React.FC<ChatProfileProps> = ({ selectedContact }) => {
+
+
   return (
     <div className="chat-profile"><center>
       <div className="profile-image">
-        <img  src="https://cdn.intra.42.fr/users/440a1a4a4ffbd36581c07bc5a146e82e/mbouhaba.jpg" alt={`Profile of ${userName}`} />
+        <img  src={selectedContact?.avatar} alt={`Profile of ${selectedContact?.nickName}`} />
       </div>
       <div className="user-details">
-        <p className="user-name">Dos os</p>
+        <p className="user-name">{selectedContact?.nickName}</p>
       </div>
       <div className="action-buttons">
         

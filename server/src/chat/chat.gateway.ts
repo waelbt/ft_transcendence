@@ -57,7 +57,7 @@ export class ChatGateway
         //     client.handshake.auth.token
         // console.log(client.handshake);
         const userCheck = await this.wsService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
@@ -174,26 +174,31 @@ export class ChatGateway
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        console.log("messages b888888888888888888888888888888888 == ", sendMessage);
+
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.token);
         if (userCheck.state === false)
             await this.handleDisconnect(client);
         else
         {
+            console.log("messages");
             // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(userCheck.userData.sub, sendMessage.receiverId, sendMessage.message);
             this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages);
+            // console.log("messages backend77777777777777777 == ", dmroom.messages);
         }
     }
 
     @SubscribeMessage('checkDm')
     async checkDM(client: any, createDmDto: CreateDmDto) {
-        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.headers.token);
+        console.log('hello world')
+        const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.token);
         if (userCheck.state === false)
             await this.handleDisconnect(client);
         else
         {
             const dm = await this.wsService.CheckForExistingDmRoom(userCheck.userData.sub, createDmDto.friendId);
-            console.log('room that should be sent', dm);
+            // console.log('room that should be sent', dm);
             this.server.emit('checkDM', dm);
         }
     }

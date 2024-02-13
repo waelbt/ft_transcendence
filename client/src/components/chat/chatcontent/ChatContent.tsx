@@ -1,71 +1,107 @@
-// Inside ChatContent.tsx
 import React, { useState, useEffect } from 'react';
-// import { io } from 'socket.io-client';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 import './ChatContent.css';
 import { useChatSocketStore } from '../../../stores/ChatSocketStore';
-
-// const socket = io('http://localhost:4000/chat');
-
-interface Message {
-    isMyMessage: boolean;
-    message: string;
-}
+import { useUserStore } from '../../../stores/userStore';
+import { useParams } from 'react-router-dom';
 
 interface Contact {
-    image: string;
-    id: number;
-    name: string;
-    time: string;
+  image: string;
+  id: string;
+  name: string;
+  time: string;
+}
+
+interface Message {
+  message: string;
+  senderId: string;
+  receiverId: string;
+  timestamp: string;
+}
+
+interface Room {
+  createdAt: string;
+  friendId: string;
+  id: number;
+  messages: Message[];
+  roomTitle: string;
+  updatedAt: string;
+  users: any[];
 }
 
 interface ChatContentProps {
-    selectedContact: Contact | null;
+  selectedContact: Contact | null;
+  userId: string;
+  response: Room[];
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ selectedContact }) => {
-    const [selectedContactMessages, setSelectedContactMessages] = useState<
-        Message[]
-    >([]);
-    const { socket, pushMessage } = useChatSocketStore();
-    useEffect(() => {
-        if (selectedContact) {
-            const contactMessages = getMessagesForContact(selectedContact.id);
-            setSelectedContactMessages(contactMessages);
-        }
+export const ChatContent: React.FC = () => {
+  const {id} = useParams();
+  const { id : userId } = useUserStore();
+  const { socket, pushMessage, messages,clearMessage, addRoom } = useChatSocketStore();
+  
 
-        socket?.on('receive_message', (message: string) => {
-            pushMessage(message);
-            // setSelectedContactMessages((prevMessages) => [...prevMessages, message]);
+  useEffect(() => {
+    socket?.emit('checkDm', { friendId: id });
+    const handleCheckDM = (room: any) => {
+      console.log('check', room);
+      room.messages.forEach((message: any) => {
+          pushMessage(message.message);
         });
+      console.log('to navigate'); 
+      };
 
-        return () => {
-            socket?.off('receive_message');
-        };
-    }, [selectedContact]);
+  socket?.on('checkDM', handleCheckDM);
 
-    const handleSendClick = (message: string) => {
-        const messageData = { isMyMessage: true, message };
-        socket?.emit('message', messageData);
-        console.log(message);
-    };
+    // return socket?.off('checkDM')
+  }, [id,socket])
 
-    const getMessagesForContact = (contactId: number): Message[] => {
-        return [
-            { isMyMessage: true, message: 'Hello!' },
-            { isMyMessage: false, message: 'How are you?' }
-        ];
-    };
+  // // const {messages} = useChatSocketStore();
+  // useEffect(() => {
+  //   if (selectedContact && response) {
+  //     const room = response.find(room => room.roomTitle === id + selectedContact.id || room.roomTitle === selectedContact.id + id);
+  //     if (room) {
+  //       setConversationMessages(room.messages);
+  //     }
+  //   }
 
-    return (
-        <div className="main__chatcontent">
-            <MessageList messages={selectedContactMessages} />
-            <div className="content__footer">
-                <MessageInput onSendClick={handleSendClick} maxLength={500} />
-            </div>
+  // }, [id]);
+
+  // useEffect(() => {
+  //   const handleNewMessage = (messages: Message[]) => {
+  //     setConversationMessages(prevMessages => [...prevMessages, ...messages]);
+  //     // console.log('conversationsMessages:', conversationMessages);
+  //   };
+
+  //   socket?.on('dmMessage', handleNewMessage);
+
+  //   return () => {
+  //     socket?.off('dmMessage', handleNewMessage);
+  //   };
+  // }, [socket, conversationMessages]);
+
+  const handleSendClick = (message: string) => {
+    socket?.emit('dm', { message: message, receiverId: userId });
+    pushMessage(message);
+  };
+
+  return (
+    <div className="main__chatcontent">
+      {/* <MessageList  /> */}
+      <div className="message-list">
+      {messages && messages.map((message, index) => (
+         
+        <div className={`message-item ${message.senderId === id ? 'my-message' : 'other-message'}`} >
+          <p>{message.message}</p>
         </div>
-    );
+      ))}
+    </div>
+      <div className="content__footer">
+        <MessageInput onSendClick={handleSendClick} maxLength={500} />
+      </div>
+    </div>
+  );
 };
 
-export default ChatContent;
+// export default ChatContent;

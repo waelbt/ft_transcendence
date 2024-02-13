@@ -86,19 +86,21 @@ border: 1px solid ;
 }
 
 .create_room{
-  background-color: aqua;
-}
-
-.main__roomlist .create_room .addplus{
-
+  /* background-color: aqua; */
   border-radius: 50%;
   bottom: 10px;
   position: fixed;
   right: 77%;
 }
 
+/* .main__roomlist .create_room .addplus{
 
-Copy code
+  border-radius: 50%;
+  bottom: 10px;
+  position: fixed;
+  right: 77%;
+} */
+
 .room-types {
   display: flex;
   justify-content: space-between;

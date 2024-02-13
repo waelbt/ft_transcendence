@@ -1,96 +1,33 @@
-import  { useState, ChangeEvent } from 'react';
+import  { useState, ChangeEvent, useEffect } from 'react';
 import "./ChatList.css";
 import { CiSearch } from "react-icons/ci";
+// import { useChatSocketStore } from '../../../stores/ChatSocketStore';
+import useAxiosPrivate from '../../../hooks/axiosPrivateHook';
 
 
 interface ChatListProps {
   onSearch: (searchText: string) => void;
   onContactClick: (contact: Contact) => void;
-  selectedContact: Contact | null; 
+  contacts: Contact[];
 }
 
 interface Contact {
-  image: string;
-  id: number;
-  name: string;
+  avatar: string;
+  id: string;
+  nickName: string;
   time: string;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ onSearch, onContactClick, selectedContact }) => {
+const ChatList: React.FC<ChatListProps> = ({ contacts, onSearch, onContactClick}) => {
   const [searchText, setSearchText] = useState<string>("");
+  // const {socket, pushMessage } = useChatSocketStore();    
+  const axiosPrivate = useAxiosPrivate();
 
+  console.log('contacts chatlist == ', contacts)
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    // You can also perform the search in real-time here if needed
     onSearch(e.target.value);
   };
-
-
-    const contacts: Contact[] = [
-    {
-      image:
-      "https://cdn.intra.42.fr/users/9ebdebc297c3247c80f670eb54451f8b/sel-ouaf.jpg",
-      id: 1,
-      name: "mehdi sla dz",
-      time: '09:45',
-    },
-    {
-      image:
-        "https://cdn.intra.42.fr/users/440a1a4a4ffbd36581c07bc5a146e82e/mbouhaba.jpg",
-      id: 2,
-      name: "simo",
-      time: '09:45',
-    },
-    {
-      image:
-        "https://cdn.intra.42.fr/users/ea4d0a8aa80f54aaf6e2904e00258a09/mannahri.jpg",
-      id: 3,
-      name: "wae",
-      time: '09:45',
-    },
-    {
-      image:
-      "https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg",
-      id: 4,
-      name: "soufiane",
-      time: '09:45',
-    },
-    {
-      image:
-       "https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG",
-      id: 5,
-      name: "yyy",
-      time: '09:45',
-    },
-    {
-      image:
-      "https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg",
-      id: 6,
-      name: "soufiane",
-      time: '09:45',
-    },
-    {
-      image:
-       "https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG",
-      id: 7,
-      name: "yyy",
-      time: '09:45',
-    },
-    {
-      image:
-      "https://cdn.intra.42.fr/users/a940f4bad2520efbf56a12ef2190d7b5/waboutzo.jpg",
-      id: 8,
-      name: "soufiane",
-      time: '09:45',
-    },
-    {
-      image:
-        "https://cdn.intra.42.fr/users/ea4d0a8aa80f54aaf6e2904e00258a09/mannahri.jpg",
-      id: 9,
-      name: "wae",
-      time: '09:45',
-    },
-  ];
 
   return (
     <div className="main__chatlist">
@@ -142,21 +79,25 @@ const ChatList: React.FC<ChatListProps> = ({ onSearch, onContactClick, selectedC
         {/* <hr/>     */}
       </div>
       <div className="conversation">
-      {contacts.map((contact) => (
-        <div key={contact.id}
-        className={`conversation-item ${selectedContact && selectedContact.id === contact.id ? 'selected' : ''}`}
-        onClick={() => onContactClick(contact)}  >
-           
-          <img src={contact.image} alt={contact.name} />
-          <div>
-            <p>{contact.name}</p>
-            <p> {contact.time}</p>
-          </div>
-        </div>
-      ))}
+        {contacts.map((contact) => (
+            <div
+              key={contact.id}
+              className="conversation-item"
+              onClick={() => onContactClick(contact)}
+            >
+              <img src={contact.avatar} alt={contact.nickName} />
+              <div>
+                <p>{contact.nickName}</p>
+                <p>{contact.time}</p>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
 };
 
 export default ChatList;
+
+
+
