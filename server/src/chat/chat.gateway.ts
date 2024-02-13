@@ -181,7 +181,7 @@ export class ChatGateway
             await this.handleDisconnect(client);
         else
         {
-            console.log("messages");
+            // console.log("messages");
             // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(userCheck.userData.sub, sendMessage.receiverId, sendMessage.message);
             this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages);
@@ -191,7 +191,7 @@ export class ChatGateway
 
     @SubscribeMessage('checkDm')
     async checkDM(client: any, createDmDto: CreateDmDto) {
-        console.log('hello world')
+        console.log(createDmDto, 'hello world')
         const userCheck = await this.wsService.getUserFromAccessToken(client.handshake.auth.token);
         if (userCheck.state === false)
             await this.handleDisconnect(client);

@@ -47,6 +47,12 @@ export class ChatController {
 
     }
 
+    @Get('roomMsgs')
+    async getMyMsgs(@Req() req, @Param('id', ParseIntPipe) id: number) {
+
+        return (this.roomService.getRoomMsgs(id));
+    }
+
     @Get('mydms')
     async getMyDms(@Req() req) {
         console.log('helooooooooooooo', req.user.sub);

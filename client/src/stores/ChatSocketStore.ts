@@ -3,7 +3,14 @@ import io, { Socket } from 'socket.io-client';
 
 type Room = {
     id: number;
-    // Add any other properties you need for a room
+};
+
+type Message = {
+    id: number;
+    message: string;
+    createdAt: string;
+    senderId: string;
+    receiverId: string;
 };
 
 type SocketState = {
@@ -13,7 +20,7 @@ type SocketState = {
 };
 
 type MethodState = {
-    pushMessage: (msg: string) => void;
+    pushMessage: (msg: Message) => void;
     clearMessage: () => void;
     initializeSocket: (token: string | null) => void;
     updateState: (newState: Partial<SocketState>) => void;
@@ -22,13 +29,12 @@ type MethodState = {
 
 export const useChatSocketStore = create<SocketState & MethodState>((set, get) => ({
     socket: null,
-    messages: [],
+        messages: [],
     rooms: [],
     pushMessage: (msg) => {
         const { messages } = get();
-        const newMessage = { message: msg }; // Wrap the msg into an object
-        const newMessages = [...messages, newMessage]; // Add the new message object to the existing messages array
-        set({ messages: newMessages }); // Update the messages state with the new array
+        const newMessages = [...messages, msg]; // Use the entire message object
+        set({ messages: newMessages });
     },
 
     clearMessage: () => {

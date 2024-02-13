@@ -764,4 +764,17 @@ export class RoomService {
         // console.log('dms', user.dm);
         return (user.dm);
     }
+    
+    async getRoomMsgs(roomId: number) {
+        const roomMessages = await this.prisma.dMRooms.findUnique({
+            where: {
+                id: roomId
+            },
+            include: {
+                messages: true,
+            },
+        });
+        console.log('messagat li fe room', roomMessages.messages);
+        return (roomMessages.messages);
+    }
 }

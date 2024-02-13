@@ -27,23 +27,23 @@ export class WebSocketService {
         try {
             joinedRooms = await this.roomService.getMyRooms(userId);
         } catch (err) {
-            console.log(err);
+            // console.log(err);
         }
-        console.log(joinedRooms);
+        // console.log(joinedRooms);
         const dms = await this.getAllDms(userId);
         for (let j = 0; j < dms.length; j++) {
             server.in(userSocket).socketsJoin(dms[j].roomTitle);
-            console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
+            // console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
         }
         if (!joinedRooms) {
-            console.log('No rooms found for user:', userId);
+            // console.log('No rooms found for user:', userId);
             return;
         }
         for (let i = 0; i < joinedRooms.length; i++) {
             server.in(userSocket).socketsJoin(joinedRooms[i].roomTitle);
-            console.log(
-                `${userId} joined this room ${joinedRooms[i].roomTitle}`
-            );
+            // console.log(
+                // `${userId} joined this room ${joinedRooms[i].roomTitle}`
+            // );
         }
     }
 
@@ -145,6 +145,7 @@ export class WebSocketService {
 
     async createDm(user1id: string, user2id: string) {
         const title : string = user1id + user2id;
+        console.log('hey')
         const newDm = await this.prisma.dMRooms.create({
             data: {
                 roomTitle: title,
@@ -182,7 +183,7 @@ export class WebSocketService {
         if (!dm)
         {
             newDm = await this.createDm(user1id, user2id);
-            console.log(newDm, 'first time talking');
+            // console.log(newDm, 'first time talking');
             return (newDm);
         }
         return (dm);
@@ -201,7 +202,7 @@ export class WebSocketService {
                 messages: true,
             }
         });
-        console.log('test for id', dm);
+        // console.log('test for id', dm);
         const newMessage = await this.prisma.dmMessage.create({
             data: {
                 message: message,
@@ -230,7 +231,7 @@ export class WebSocketService {
                 users: true,
             }
         })
-        console.log('check message creation', roomWithMessages.messages, 'dm id', dm.id);
+        // console.log('check message creation', roomWithMessages.messages, 'dm id', dm.id);
         return (roomWithMessages);
     }
 
@@ -244,7 +245,7 @@ export class WebSocketService {
             }
         });
 
-        console.log('dms are', user.dm);
+        // console.log('dms are', user.dm);
         return (user.dm);
     }
 }
