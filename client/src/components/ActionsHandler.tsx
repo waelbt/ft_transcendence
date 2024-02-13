@@ -63,23 +63,19 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const handleAction = async (action: string) => {
         if (action === 'Send Message') {
             //! hena 
-            clearMessage();
+            // clearMessage();
             socket?.emit('checkDm', { friendId: target });
             console.log('target= ', target);
-
             const handleCheckDM = (room: any) => {
                 console.log('check', room);
-                // addRoom(room);
                 room.messages.forEach((message: any) => {
-                    // console.log('sendmessage = ',message);
-                      pushMessage(message.message);
+                    pushMessage(message.message);
                   });
                 console.log('to navigate')
                 navigate(`/chat/${target}`); 
                 };
 
             socket?.on('checkDM', handleCheckDM);
-
             return () => {
                 socket?.off('checkDM', handleCheckDM);
             };

@@ -18,7 +18,7 @@ interface Contact {
   time: string;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ contacts, onSearch, onContactClick}) => {
+export const ChatList: React.FC<ChatListProps> = ({ contacts, onSearch, onContactClick}) => {
   const [searchText, setSearchText] = useState<string>("");
   // const {socket, pushMessage } = useChatSocketStore();    
   const axiosPrivate = useAxiosPrivate();

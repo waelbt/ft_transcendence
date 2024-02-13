@@ -33,7 +33,7 @@ export function Chat()  {
   };
   
   const handleContactClick = (contact: Contact) => {
-    setSelectedContact(contact); // Update the selected contact when clicked
+    setSelectedContact(contact); 
     navigate(`/chat/${contact.id}`);
   };
 
@@ -41,7 +41,7 @@ export function Chat()  {
     try {
       
       const response = await axiosPrivate.get('/chat/mydms');
-      console.log('response', response.data)
+      console.log("reeeesssss = ", response)
       setResponse(response.data); 
       const newContacts: Contact[] = [];
       response.data.forEach((room: any) => {
@@ -53,7 +53,7 @@ export function Chat()  {
             nickName: user.nickName,
             time: user.time 
           };
-          console.log('contact.nickName= ', contact.nickName)
+          console.log('contact.nickName= ', contact.id)
           newContacts.push(contact);
         });
       });

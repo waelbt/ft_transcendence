@@ -221,8 +221,17 @@ export class WebSocketService {
                 dmroom: true,
             }
         });
-        console.log('check message creation', newMessage);
-        return (dm);
+        const roomWithMessages = await this.prisma.dMRooms.findFirst({
+            where: {
+                id: dm.id
+            },
+            include: {
+                messages: true,
+                users: true,
+            }
+        })
+        console.log('check message creation', roomWithMessages.messages, 'dm id', dm.id);
+        return (roomWithMessages);
     }
 
     async getAllDms(userId: string) {

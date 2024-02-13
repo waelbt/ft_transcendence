@@ -1,26 +1,29 @@
-
+// import React from 'react';
+// import "./MessageList.css";
+// import { useUserStore } from '../../../stores/userStore';
+// import { useChatSocketStore } from '../../../stores/ChatSocketStore';
 // import "./MessageList.css";
 
 // interface Message {
-  //   message: string;
-  // }
+//     message: string;
+//   }
   
-  // const MessageList = () => {
-    //   const { messages } = useChatSocketStore()
-    //   console.log('messagelist')
-    //   return (
-      //     <div id="chat-message-list">
-      //       {messages.map((message, index) => (
-        //         <div key={index} >
-        //           {message.message} 
-        //         </div>
-        //       ))}
-        //     </div>
+//   const MessageList = () => {
+//       const { messages } = useChatSocketStore()
+//       console.log('messagelist')
+//       return (
+//           <div id="chat-message-list">
+//             {messages.map((message, index) => (
+//                 <div key={index} >
+//                   {message.message} 
+//                 </div>
+//               ))}
+//             </div>
         
-        //   );
-        // };
+//           );
+//         };
         
-        // export default MessageList;
+// export default MessageList;
         
         
         
@@ -44,11 +47,7 @@ interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   const { id } = useUserStore();
   console.log('messages in messageslist = ', messages);
-  if(!messages){
-    const messages = useChatSocketStore().messages;
-      console.log('khawiiii');
 
-  }
 
   return (
     <div className="message-list">
@@ -62,10 +61,4 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
 };
 
 export default MessageList;
-
-
-
-
-
-
 

@@ -51,12 +51,12 @@ function Layout() {
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <>
-            <div className="relative flex flex-col h-screen bg-primary-white">
+            {/* <div className="relative flex flex-col h-screen bg-primary-white"> */}
                 <NavigationMenu />
                 <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
                     <Outlet />
                 </div>
-            </div>
+            {/* </div> */}
         </>
     );
 }
