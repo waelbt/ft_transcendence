@@ -19,7 +19,7 @@ const Avatar: FC<AvatarProps> = ({
     return (
         <>
             <div
-                className={` items-start gap-2 relative inline-block border-2 border-dashed border-gray-400 rounded-full hover:border-pink uploader cursor-pointer avatar  rela
+                className={` items-start gap-2 relative inline-block border-2 border-dashed border-gray-400 rounded-full hover:border-pink uploader cursor-pointer avatar
                 ${state ? state : ''} ${
                     imageUrl ? 'border-none' : ''
                 } ${style}  `}

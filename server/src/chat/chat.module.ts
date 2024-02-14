@@ -8,6 +8,6 @@ import { WebSocketService } from './chat.gateway.service';
 @Module({
   controllers: [ChatController],
   providers: [ChatGateway, RoomService, JwtService, WebSocketService],
-  exports: [RoomService],
+  exports: [RoomService, WebSocketService],
 })
 export class ChatModule {}

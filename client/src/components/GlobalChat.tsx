@@ -9,7 +9,7 @@ import { io, Socket } from 'socket.io-client';
 import { useChatSocketStore } from '../../deprecated/ChatSocketStore';
 
 // Create a socket instance
-const socket: Socket = io('http://localhost:4000/chat');
+// const socket: Socket = io('http://localhost:4000/chat');
 
 function GlobalChat() {
     const params = useParams();

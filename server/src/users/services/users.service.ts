@@ -416,8 +416,7 @@ export class UsersService {
         const user = await this.prisma.user.findUnique({
             where: { id: userId }
         });
-        if (!user)
-            throw new NotFoundException(`User does not exist`);
+        if (!user) throw new NotFoundException(`User does not exist`);
 
         const id = user.id;
         const avatar = user.avatar;
@@ -429,19 +428,20 @@ export class UsersService {
         };
     }
 
-    async onlineUsers(userId: string){
+    async onlineUsers(userId: string) {
         const isUser = await this.getOneUser(userId);
         if (!isUser) {
             throw new NotFoundException('this user does not exist');
         }
         const users = await this.friendService.listFriends(userId);
+        console.log('waellllllllllllll', users);
 
         const onlineUsers = users
-        .filter(user => user.status)
-        .map(user => ({
-            id: user.id,
-            avatar: user.avatar,
-        }));
+            .filter((user) => user.status)
+            .map((user) => ({
+                id: user.id,
+                avatar: user.avatar
+            }));
         return onlineUsers;
     }
 

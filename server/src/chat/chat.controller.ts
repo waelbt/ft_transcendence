@@ -22,13 +22,19 @@ import { RemoveBanDto } from './DTOS/remove-ban-dto';
 import { changeRoomPasswordDto } from './DTOS/change-room-password';
 import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateMessageDto } from './DTOS/create-message-dto';
+import { WebSocketService } from './chat.gateway.service';
+import { CreateDmDto } from './DTOS/create-dm.dto';
 
 @ApiBearerAuth()
 @ApiTags('Chat')
 @Controller('chat')
 @UseGuards(AuthGuard('jwt'))
 export class ChatController {
-    constructor(private readonly roomService: RoomService) {}
+    constructor(
+        private readonly roomService: RoomService,
+        private readonly wsService: WebSocketService
+    ) {}
 
     @Post('createRoom')
     async createRoom(@Req() req, @Body() createRoomDto: CreateRoomDto) {
@@ -67,7 +73,7 @@ export class ChatController {
 
     @Get('allChannels')
     async getAllChannels(@Req() req) {
-        return await (this.roomService.getAllChannels(req.user.sub));
+        return await this.roomService.getAllChannels(req.user.sub);
     }
 
     @Get(':id')
@@ -78,6 +84,14 @@ export class ChatController {
     @Post('setAdmin')
     async setUserToAdminRoom(@Req() req, @Body() setAdminDto: SetAdminDto) {
         return this.roomService.setUserToAdminRoom(setAdminDto, req.user.sub);
+    }
+
+    @Post('createDm')
+    async createDm(@Req() req, @Body() createDmDto: CreateDmDto) {
+        return this.wsService.CheckForExistingDmRoom(
+            req.user.sub,
+            createDmDto.friendId
+        );
     }
 
     @Post('kickMember')

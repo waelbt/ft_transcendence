@@ -328,7 +328,7 @@ export class friendsService {
             ) {
                 console.log('=====================================');
 
-                if (userId === friendId) return;
+                // if (userId === friendId) return;
                 const promise = this.prisma.user
                     .findUnique({
                         where: { id: friendId }

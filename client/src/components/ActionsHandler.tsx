@@ -7,7 +7,6 @@ import { FC, useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { ACTIONS_ENDPOINTS, ACTION_TO_KNOW_RELATION } from '../constants';
-import { useChatSocketStore } from '../../deprecated/ChatSocketStore';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -62,22 +61,10 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
 
     const handleAction = async (action: string) => {
         if (action === 'Send Message') {
-            //! hena
-            // clearMessage();
-            // socket?.emit('checkDm', { friendId: target });
-            // console.log('target= ', target);
-            // const handleCheckDM = (room: any) => {
-            //     console.log('check', room);
-            //     room.messages.forEach((message: any) => {
-            //         pushMessage(message.message);
-            //       });
-            //     console.log('to navigate')
-            //     };
-            navigate(`/chat/content/${target}`);
-
-            // socket?.on('checkDM', handleCheckDM);
-
-            // ! 7bssi hna
+            const res = await axiosPrivate.post('/chat/createDm', {
+                friendId: target
+            });
+            navigate(`/chat/dms/${res.data.id}`);
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];
             if (!endpoint) {

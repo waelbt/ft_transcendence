@@ -19,3 +19,4 @@ export { default as MatchResultModal } from './MatchResultModal';
 export { default as NavigationMenu } from './NavigationMenu';
 export { default as GlobalChat } from './GlobalChat';
 export { default as ChatLayouts } from './ChatLayouts';
+export { default as LandingChat } from './LandingChat';

@@ -11,7 +11,7 @@ function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket } = useChatStore();
+    const { initializeSocket, socket } = useChatStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
@@ -45,6 +45,8 @@ function Layout() {
         initializeGameSocket();
         console.log('id  ', id);
         return () => {
+            socket?.disconnect();
+
             gameSocket?.disconnect();
         };
     }, []);

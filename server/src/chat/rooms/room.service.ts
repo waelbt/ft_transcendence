@@ -50,6 +50,7 @@ export class RoomService {
                         id: userId
                     }
                 },
+                avatar: createRoomDto.avatar,
                 owner: [userId],
                 admins: [userId]
             },
@@ -181,7 +182,7 @@ export class RoomService {
             }
         });
 
-        // here i should check if the room has no  users
+        // here i should check if the room has no more users
         // if yes
         // i should delete all the messages that belongs to it
         // and delete the room it self
@@ -773,10 +774,84 @@ export class RoomService {
                 (user) => user.id != userId
             );
         }
-        for (let i = 0; i < user.dm.length; i++) {
-            console.log('dm', user.dm[i]);
-        }
+        // for (let i = 0; i < user.dm.length; i++)
+        // {
+        //     console.log('dm', user.dm[i]);
+        // }
         // console.log('dms', user.dm);
         return user.dm;
+    }
+
+    async getAllChannels(userId: string) {
+        const allChannels: GetRoomsDto[] = [];
+
+        const userWithRooms = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            include: {
+                rooms: {
+                    include: {
+                        messages: true
+                    }
+                },
+                dm: {
+                    include: {
+                        messages: true,
+                        users: true
+                    }
+                }
+            }
+        });
+
+        const rooms = userWithRooms.rooms;
+        const dms = userWithRooms.dm;
+
+        rooms.forEach((item) => {
+            let lastMessage = '';
+            let createdAt = new Date();
+
+            if (item.messages.length > 0) {
+                lastMessage = item.messages[item.messages.length - 1].message;
+                createdAt = item.messages[item.messages.length - 1].createdAt;
+            }
+
+            const singleRoom: GetRoomsDto = {
+                roomId: item.id,
+                avatar: item.avatar,
+                roomTitle: item.roomTitle,
+                lastMessage: lastMessage,
+                nickName: userWithRooms.nickName,
+                lastMessageTime: createdAt,
+                isRoom: true
+            };
+            allChannels.push(singleRoom);
+        });
+
+        for (let i = 0; i < dms.length; i++)
+            dms[i].users = dms[i].users.filter((user) => user.id != userId);
+
+        dms.forEach((item) => {
+            let lastMessage = '';
+            let createdAt = new Date();
+
+            if (item.messages.length > 0) {
+                lastMessage = item.messages[item.messages.length - 1].message;
+                createdAt = item.messages[item.messages.length - 1].createdAt;
+            }
+
+            const singleDm: GetRoomsDto = {
+                roomId: item.id,
+                avatar: item.users[0].avatar,
+                roomTitle: item.users[0].nickName,
+                lastMessage: lastMessage,
+                nickName: item.users[0].nickName,
+                lastMessageTime: createdAt,
+                isRoom: false
+            };
+            allChannels.push(singleDm);
+        });
+
+        return allChannels;
     }
 }

@@ -30,7 +30,14 @@ const router = createBrowserRouter([
                 },
                 children: [
                     {
-                        path: 'dm/:roomId',
+                        index: true,
+                        lazy: async () => {
+                            let { LandingChat } = await import('./components');
+                            return { Component: LandingChat };
+                        }
+                    },
+                    {
+                        path: 'dms/:roomId',
                         lazy: async () => {
                             let { Chat } = await import('./pages/Chat');
                             return { Component: Chat };

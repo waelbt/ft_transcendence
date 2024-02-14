@@ -68,3 +68,8 @@ export interface Room {
 
     isRoom: boolean;
 }
+
+export interface OnlineUser {
+    id: string;
+    avatar: string;
+}

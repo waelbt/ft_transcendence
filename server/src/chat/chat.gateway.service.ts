@@ -106,10 +106,6 @@ export class WebSocketService {
 
     //     const globalRoom = await this.prisma.room.create({
     //         data: {
-<<<<<<< HEAD
-    //             avatar: '',
-=======
->>>>>>> origin/newChat
     //             roomTitle: title,
     //             isConversation: false,
     //             privacy: RoomPrivacy.PUBLIC
@@ -119,15 +115,9 @@ export class WebSocketService {
     //             messages: true
     //         }
     //     });
-<<<<<<< HEAD
-    //     return globalRoom;
-    // }
-
-=======
 
     //     return globalRoom;
     // }
->>>>>>> origin/newChat
     async joinUserToGlobalChat(userId: string) {
         const title = 'GlobalChat';
         const room = await this.prisma.room.update({
@@ -195,7 +185,7 @@ export class WebSocketService {
             console.log(newDm, 'first time talking');
             return newDm;
         }
-        return dm;
+        return dm.id;
     }
 
     async sendDM(user1id: string, user2id: string, message: string) {
@@ -231,27 +221,13 @@ export class WebSocketService {
                 dmroom: true
             }
         });
-<<<<<<< HEAD
-        const roomWithMessages = await this.prisma.dMRooms.findFirst({
-            where: {
-                id: dm.id
-            },
-            include: {
-                messages: true,
-                users: true
-            }
-        });
         console.log(
             'check message creation',
-            roomWithMessages.messages,
-            'dm id',
-            dm.id
+            newMessage,
+            'id of the room',
+            newMessage.dmId
         );
-        return roomWithMessages;
-=======
-        console.log('check message creation', newMessage, 'id of the room' ,newMessage.dmId);
-        return (dm);
->>>>>>> origin/newChat
+        return dm;
     }
 
     async getAllDms(userId: string) {
@@ -263,8 +239,7 @@ export class WebSocketService {
                 dm: true
             }
         });
-        if (!user)
-            throw new NotFoundException('this user does not exist');
+        if (!user) throw new NotFoundException('this user does not exist');
 
         // console.log('dms are', user.dm);
         return user.dm;

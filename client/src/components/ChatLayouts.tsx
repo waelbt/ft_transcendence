@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import { Avatar } from '.';
-import { Room } from '../../../shared/types';
-import { NavLink } from 'react-router-dom';
+import { OnlineUser, Room } from '../../../shared/types';
+import { NavLink, Outlet } from 'react-router-dom';
 import { DateFormatter } from '../tools/date_parsing';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 function ChatLayouts() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [rooms, SetRooms] = useState<Room[]>([]);
+    const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
+        // !
         const fetchDns = async () => {
-            const res = await fetch('http://localhost:3000/dms');
-            const data = await res.json();
-            SetRooms(data);
+            try {
+                const res = await axiosPrivate.get('/chat/allChannels');
+                console.log(res);
+                SetRooms(res.data);
+            } catch (error) {
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
+            }
         };
 
         fetchDns();
@@ -23,8 +32,13 @@ function ChatLayouts() {
 
     useEffect(() => {
         const fetchOnlineUsers = async () => {
-            const res = axiosPrivate.get('');
-            console.log(res);
+            try {
+                const res = await axiosPrivate.get('/users/onlineUsers');
+                setOnlineUser(res.data);
+            } catch (error) {
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
+            }
         };
 
         fetchOnlineUsers();
@@ -35,10 +49,10 @@ function ChatLayouts() {
     );
 
     return (
-        <div className="flex-col flex-grow h-full w-full justify-center items-start inline-flex ">
+        <div className=" flex-grow h-full w-full justify-start items-start inline-flex">
             <div className="bg-white w-[17%] h-full py-2 border-r flex  flex-col justify-start items-center gap-2 ">
                 {/* <div> */}
-                <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5    inline-flex ">
+                <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5    inline-flex">
                     <CiSearch size={24} />
                     <input
                         type="text"
@@ -48,14 +62,27 @@ function ChatLayouts() {
                         className="bg-transparent text-neutral-500 text-sm font-normal font-['Poppins'] outline-none w-full"
                     />
                 </div>
-                <div className="w-full border-y flex flex-col items-start justify-center px-4 py-5">
-                    <div>online users here...</div>
-                </div>
-                <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex">
+                {onlineUser.length ? (
+                    <div className="w-full border-y gap-5 flex items-center justify-start px-4 py-2 overflow-x-auto whitespace-nowrap">
+                        {onlineUser.map((user, index) => (
+                            <div className="relative inline-block">
+                                <Avatar
+                                    key={index}
+                                    imageUrl={user.avatar}
+                                    style="w-9 h-9 bg-black rounded-[150px]  mr-2 flex-shrink-0"
+                                />
+                                <span className="w-4 h-4 rounded-full bg-green-500 border-2 border-white absolute bottom-0.5 right-0.5"></span>
+                            </div>
+                        ))}
+                    </div>
+                ) : null}
+                <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex border-y">
                     {filteredRooms.map((room, index) => (
                         <NavLink
                             key={index}
-                            to={`dm/${room.roomId}`} // ! conditoon of the type
+                            to={`${room.isRoom ? 'group' : 'dms'}/${
+                                room.roomId
+                            }`} // ! conditoon of the type
                             className={({ isActive }) =>
                                 `w-full p-2.5 border-b border-neutral-200 justify-start items-center gap-2.5 flex cursor-pointer ${
                                     isActive ? 'bg-neutral-200' : 'bg-white'
@@ -83,6 +110,7 @@ function ChatLayouts() {
                     ))}
                 </div>
             </div>
+            <Outlet />
         </div>
     );
 }
