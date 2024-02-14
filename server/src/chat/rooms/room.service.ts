@@ -23,6 +23,7 @@ import {
 } from '../DTOS/mute-user-dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateMessageDto } from '../DTOS/create-message-dto';
+import { GetRoomsDto } from '../DTOS/get-rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -41,7 +42,6 @@ export class RoomService {
         // {
         const newRoom = await this.prisma.room.create({
             data: {
-                avatar: createRoomDto.avatar,
                 roomTitle: createRoomDto.roomTitle,
                 isConversation: createRoomDto.isConversation,
                 privacy: createRoomDto.privacy,

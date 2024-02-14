@@ -65,6 +65,11 @@ export class ChatController {
         return await this.roomService.getMyRooms(req.user.sub);
     }
 
+    @Get('allChannels')
+    async getAllChannels(@Req() req) {
+        return await (this.roomService.getAllChannels(req.user.sub));
+    }
+
     @Get(':id')
     async getRoomUsers(@Req() req, @Param('id', ParseIntPipe) id: number) {
         return await this.roomService.getOneRoom(id, req.user.sub);
