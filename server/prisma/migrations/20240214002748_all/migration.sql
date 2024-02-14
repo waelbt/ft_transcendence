@@ -75,6 +75,7 @@ CREATE TABLE "Room" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "roomTitle" TEXT NOT NULL,
+    "avatar" TEXT NOT NULL,
     "isConversation" BOOLEAN NOT NULL,
     "privacy" "RoomPrivacy" NOT NULL DEFAULT 'PUBLIC',
     "password" TEXT,

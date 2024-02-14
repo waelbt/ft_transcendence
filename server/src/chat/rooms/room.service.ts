@@ -14,6 +14,7 @@ import { changeRoomPasswordDto } from '../DTOS/change-room-password';
 import { MuteUserDto, UnmuteUserDto, UnmuteUserDetails } from '../DTOS/mute-user-dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateMessageDto } from '../DTOS/create-message-dto';
+import { GetRoomsDto } from '../DTOS/get-rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -38,6 +39,7 @@ export class RoomService {
                             id : userId
                         },
                     },
+                    avatar: createRoomDto.avatar,
                     owner: [userId],
                     admins: [userId],
                 },
@@ -757,11 +759,69 @@ export class RoomService {
         {
             user.dm[i].users = user.dm[i].users.filter(user => user.id != userId);
         }
-        for (let i = 0; i < user.dm.length; i++)
-        {
-            console.log('dm', user.dm[i]);
-        }
+        // for (let i = 0; i < user.dm.length; i++)
+        // {
+        //     console.log('dm', user.dm[i]);
+        // }
         // console.log('dms', user.dm);
         return (user.dm);
+    }
+
+    async getAllChannels(userId: string) {
+
+        const allChannels : GetRoomsDto[] = [];
+
+        const userWithRooms = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                rooms: {
+                    include: {
+                        messages: true,
+                    }
+                },
+                dm: {
+                    include: {
+                        messages: true,
+                        users: true,
+                    },
+                },
+            },
+        });
+
+        const rooms = userWithRooms.rooms;
+        const dms = userWithRooms.dm;
+
+        rooms.forEach((item) => {
+            const singleRoom: GetRoomsDto = {
+                roomId: item.id,
+                avatar: item.avatar,
+                roomTitle: item.roomTitle,
+                lastMessage: item.messages[item.messages.length - 1].message,
+                nickName: userWithRooms.nickName,
+                lastMessageTime: item.messages[item.messages.length - 1].createdAt,
+                isRoom: true,
+            };
+            allChannels.push(singleRoom);
+        });
+
+        for (let i = 0; i < dms.length; i++)
+            dms[i].users = dms[i].users.filter(user => user.id != userId)
+        
+        dms.forEach((item) => {
+            const singleDm: GetRoomsDto = {
+                roomId: item.id,
+                avatar: item.users[0].avatar,
+                roomTitle: item.users[0].nickName,
+                lastMessage: item.messages[item.messages.length - 1].message,
+                nickName: item.users[0].nickName,
+                lastMessageTime: item.messages[item.messages.length - 1].createdAt,
+                isRoom: false,
+            };
+            allChannels.push(singleDm);
+        });
+
+        return (allChannels);
     }
 }

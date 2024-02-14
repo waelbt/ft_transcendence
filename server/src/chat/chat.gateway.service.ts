@@ -83,30 +83,30 @@ export class WebSocketService {
         }
     }
 
-    async createGlobalRoom() {
-        const title = 'GlobalChat';
-        const room = await this.prisma.room.findUnique({
-            where: {
-                roomTitle: title
-            }
-        });
+    // async createGlobalRoom() {
+    //     const title = 'GlobalChat';
+    //     const room = await this.prisma.room.findUnique({
+    //         where: {
+    //             roomTitle: title
+    //         }
+    //     });
 
-        if (room) return room;
+    //     if (room) return room;
 
-        const globalRoom = await this.prisma.room.create({
-            data: {
-                roomTitle: title,
-                isConversation: false,
-                privacy: RoomPrivacy.PUBLIC
-            },
-            include: {
-                users: true,
-                messages: true
-            }
-        });
+    //     const globalRoom = await this.prisma.room.create({
+    //         data: {
+    //             roomTitle: title,
+    //             isConversation: false,
+    //             privacy: RoomPrivacy.PUBLIC
+    //         },
+    //         include: {
+    //             users: true,
+    //             messages: true
+    //         }
+    //     });
 
-        return globalRoom;
-    }
+    //     return globalRoom;
+    // }
     async joinUserToGlobalChat(userId: string) {
         const title = 'GlobalChat';
         const room = await this.prisma.room.update({
@@ -214,7 +214,7 @@ export class WebSocketService {
                 dmroom: true,
             }
         });
-        console.log('check message creation', newMessage);
+        console.log('check message creation', newMessage, 'id of the room' ,newMessage.dmId);
         return (dm);
     }
 

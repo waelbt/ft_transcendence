@@ -31,4 +31,7 @@ export class CreateRoomDto {
     @IsString()
     @IsOptional()
     password?:  string;
+
+    @IsString()
+    avatar: string;
 }
