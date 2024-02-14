@@ -61,6 +61,10 @@ export class ChatGateway
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
+            await this.prisma.user.update({
+                where : { id : userCheck.userData.sub },
+                data : { status : true},
+            });
             console.log(
                 `This user ${userCheck.userData.email} is now connected`
             );
@@ -214,6 +218,25 @@ export class ChatGateway
     }
 
     async handleDisconnect(client: any) {
+        console.log("kn disconnect");
+        const userCheck = await this.wsService.getUserFromAccessToken(
+            client.handshake.headers.token
+        );
+        console.log('user: ', userCheck);
+        const user = await this.prisma.user.findFirst({
+			where : {
+				id : userCheck.userData.sub,
+			}
+		})
+
+		if (!user)
+			return ;
+
+        //update stat in database from true to false
+        await this.prisma.user.update({
+            where : { id : userCheck.userData.sub },
+            data : { status : false },
+        })
         client.disconnect(true);
         // this.logger.log(`This client ${client.id} disconnected`);
     }
