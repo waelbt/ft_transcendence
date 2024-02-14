@@ -4,7 +4,7 @@ import { IsString } from "class-validator";
 export class rank {
     @ApiProperty()
     @IsString()
-    id: number;
+    id: String;
 
     @ApiProperty()
     @IsString()
