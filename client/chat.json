@@ -1,0 +1,31 @@
+{
+    "leaderboard": [
+        {
+            "roomId": 1,
+            "avatar": "avatar_phoenix_services.png",
+            "roomTitle": "Phoenix services",
+            "lastMessage": "Demand 😓Hello , does an...",
+            "senderId": "phoenix_services",
+            "lastMessageTime": "2024-02-13T00:00:00Z",
+            "isRoom": true
+        },
+        {
+            "roomId": 2,
+            "avatar": "avatar_simonab.png",
+            "roomTitle": "Simonab",
+            "lastMessage": "Draft: C",
+            "senderId": "simonab",
+            "lastMessageTime": "2024-02-13T00:00:00Z",
+            "isRoom": false
+        },
+        {
+            "roomId": 3,
+            "avatar": "avatar_mama.png",
+            "roomTitle": "Mama",
+            "lastMessage": "Sticker",
+            "senderId": "mama",
+            "lastMessageTime": "2024-02-13T00:00:00Z",
+            "isRoom": false
+        }
+    ]
+}

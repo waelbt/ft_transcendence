@@ -1,6 +1,6 @@
-import RoomContent from "../../components/room/roomcontent/RoomContent"
-import RoomInfo from "../../components/room/roominfo/RoomInfo"
-import RoomList from "../../components/room/roomlist/RoomList";
+import RoomContent from "../../components/room_componenets/roomcontent/RoomContent"
+import RoomInfo from "../../components/room_componenets/roominfo/RoomInfo"
+import RoomList from "../../components/room_componenets/roomlist/RoomList";
 
 import "./Room_Body.css";
 

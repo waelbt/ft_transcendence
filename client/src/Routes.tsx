@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ChatContent } from './components/chat/chatcontent/ChatContent';
 
 const router = createBrowserRouter([
     {
@@ -23,28 +22,27 @@ const router = createBrowserRouter([
                     return { Component: Lobby };
                 }
             },
-            // {
-            //     path: '/chat/:userId',
-            //     lazy: async () => {
-            //         let { Chat } = await import('./pages/Chat');
-            //         return { Component: Chat };
-            //     }
-            // },
             {
-        
                 path: '/chat',
                 lazy: async () => {
-                    let { Chat } = await import('./pages/Chat');
-                    return { Component: Chat };
-                } ,
+                    let { ChatLayouts } = await import('./components');
+                    return { Component: ChatLayouts };
+                },
                 children: [
                     {
-                        path: 'content/:id',
+                        path: 'dm/:roomId',
                         lazy: async () => {
-                            let { ChatContent } = await import('./components/chat/chatcontent/ChatContent');
-                            return { Component: ChatContent };
+                            let { Chat } = await import('./pages/Chat');
+                            return { Component: Chat };
                         }
                     },
+                    {
+                        path: 'group/:roomId',
+                        lazy: async () => {
+                            let { Room } = await import('./pages/Room');
+                            return { Component: Room };
+                        }
+                    }
                 ]
             },
             {
@@ -52,13 +50,6 @@ const router = createBrowserRouter([
                 lazy: async () => {
                     let { Game } = await import('./pages/Game');
                     return { Component: Game };
-                }
-            },
-            {
-                path: '/rooms',
-                lazy: async () => {
-                    let { Rooms } = await import('./pages/Rooms');
-                    return { Component: Rooms };
                 }
             },
             {

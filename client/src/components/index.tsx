@@ -18,4 +18,4 @@ export { default as Modal } from './Modal';
 export { default as MatchResultModal } from './MatchResultModal';
 export { default as NavigationMenu } from './NavigationMenu';
 export { default as GlobalChat } from './GlobalChat';
-export { default as ChatList } from './chat/chatList/ChatList';
+export { default as ChatLayouts } from './ChatLayouts';

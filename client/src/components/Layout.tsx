@@ -50,15 +50,12 @@ function Layout() {
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
-        <>
-            {/* <div className="relative flex flex-col h-screen bg-primary-white"> */}
-                <NavigationMenu />
-                <div className="flex-grow inline-flex justify-center items-center w-full gap-20">
-                    <Outlet />
-                    {/* <GlobalChat /> */}
-                </div>
-            {/* </div> */}
-        </>
+        <div className="flex flex-col h-screen w-screen ">
+            <NavigationMenu />
+            <div className="flex-grow flex justify-center items-center overflow-hidden">
+                <Outlet />
+            </div>
+        </div>
     );
 }
 
