@@ -67,8 +67,8 @@ export function Chat()  {
     <div className="main__chatbody">
       <ChatList contacts={contacts} onSearch={handleSearch} onContactClick={handleContactClick} />
       <Outlet/> 
-      {/* <ChatContent response={response} userId={userId} selectedContact={selectedContact}/>
-      <ChatProfile selectedContact={selectedContact} />  */}
+      {/* <ChatContent response={response} userId={userId} selectedContact={selectedContact}/> */}
+      {/* <ChatProfile selectedContact={selectedContact} />  */}
     </div>
   );
 }

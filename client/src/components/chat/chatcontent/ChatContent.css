@@ -2,52 +2,55 @@
     display: flex;
     padding: 0px 0px;
     flex-direction: column;
-    justify-content: flex-end;
-    /* align-items: flex-start; */
-    flex: 1 0 0;
-    /* align-self: stretch; */
-    /* max-width: 800px; */
-    /* width: clamp(60px, 40%, 800px); */
-    width: 55%;
-    height: 800px;
+    justify-content: flex-end; 
+    align-items: flex-start; 
+     /* flex: 1 0 0;  */
+     align-self: stretch; 
+     /* max-width: 800px;  */
+     /* width: clamp(60px, 40%, 800px);  */
+     width: 100%;
+    height: 850px;
     border: .1px solid #E0E0E0;
-    box-sizing: border-box;
-    /* overflow: scroll; */
+    box-sizing: border-box; 
+    overflow: scroll;
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px;
+    /* background-color: #4b4545; */
   }
   
   .content__footer {
-    display: flex;
+    /* display: flex; */
+    /* flex: 2; */
     padding: 10px;
-    /* justify-content: center; */
-    /* align-items: center;  */ 
+    justify-content: center;
+     align-items: center;  
     gap: 10px;
     align-self: stretch;
-    border-top: 1px solid #E0E0E0;
-    background: transparent;
-    width: clamp(60px, 100%, 800px);
+    border-top : .1px solid #E0E0E0;
+    width: 900px;
 
   }
   
   .sendNewMessage {
     display: flex;
     align-items: center;
-    /* gap: 5px; */
-    width: clamp(60px, 100%, 800px);
-  }
+    gap: 5px;
+     width: 100%;
+  } 
   
   .sendNewMessage input {
     
     width: 100%;
-    margin-right: 0px;
     padding: 10px 10px;
     border-radius: 10px 0px 0px 10px;
     border: #E0E0E0 solid 1px;
     color: var(--Grey-01, #93989A);
     font-family: Outfit;
-    font-size: 14px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
-    line-height: 130%; /* 18.2px */
+    line-height: 130%;
     letter-spacing: 0.14px;
   }
     
@@ -66,17 +69,20 @@
     border-radius: 0px 10px 10px 0px;
   }
 
-  .sendNewMessage .emoji:hover {
+   .sendNewMessage .emoji:hover {
     color: #0584FE;
   }
 
-  #chat-message-list {
-    display: flex;
+   #message-list {
+    /* display: flex; */
+    /* flex: 2; */
     flex-direction: column;
     padding: 10px;
-    overflow: scroll;
-    /* max-height: 100%; */
-    height: 100%;
+    overflow: scroll; 
+    /* max-height: 100%; 
+     height: 100%; */
+     /* width: 900px; */
+
   }
 
   .message-item {
@@ -100,7 +106,7 @@
     max-width: 60%;
     float: right;
     font-family: Acme;
-    font-size: 15px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -118,8 +124,128 @@
     width: fit-content;
     max-width: 60%; 
     font-family: Acme;
-    font-size: 15px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+  } 
+
+
+  /* .message-list, .content__footer, .chat-profile{
+
+    flex: 1;
+  } */
+
+  .chat-profile{
+    /* flex: 1; */
+     display: grid;
+    align-items: center;
+    border: 1px solid #E0E0E0;
+    /* width: 100%; */
+    height: 900px;
+  }
+  
+  .profile-image img {
+
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: black solid 2px;
+  }
+  
+.user-name {
+  padding: 10px;
+  color: #000000;
+  font-family: Acme;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+  
+  .action-buttons {
+    display: grid;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    /* height: 100%; */
+  }
+  
+  .action-buttons button {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+  }
+  
+  .challengcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100%; */
+
+    /* background-color: #0c1318; */
+
+  
+  }
+
+  .challenge-button  {
+    /* background-color: #3498db; */
+    /* display: grid; */
+    align-items: center;
+    justify-content: center;
+    color: #0584FE;
+    font-family: Acme;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%; /* 16px */
+  }
+  
+  .challenge-button:hover  {
+    text-shadow : 0 0 20px #0584FE ,0 0 10px #0584FE;
+    scale: 1.2;
+  }
+
+  .seeprofilecontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100%; */
+
+  }
+
+  .see-profile-button {
+    color: #4F4F4F;
+    font-family: Acme;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%; 
+  }
+  
+  .see-profile-button:hover {
+    text-shadow : 0 0 20px #4F4F4F ,0 0 10px #4F4F4F;
+    scale: 1.2;
+  }
+
+  .blockcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100%; */
+  }
+  
+  .block-button {
+    color: #F00;
+    font-family: Acme;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 100%;
+  }
+  .block-button:hover {
+    text-shadow : 0 0 20px #fe0505 ,0 0 10px #ff0000;
+    scale: 1.2;
   }
