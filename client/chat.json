@@ -1,8 +1,8 @@
 {
-    "leaderboard": [
+    "dms": [
         {
             "roomId": 1,
-            "avatar": "avatar_phoenix_services.png",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-2919-15-59-1707792495521-139948256.png",
             "roomTitle": "Phoenix services",
             "lastMessage": "Demand 😓Hello , does an...",
             "senderId": "phoenix_services",
@@ -11,7 +11,7 @@
         },
         {
             "roomId": 2,
-            "avatar": "avatar_simonab.png",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-3004-36-30-1707797241976-670480343.png",
             "roomTitle": "Simonab",
             "lastMessage": "Draft: C",
             "senderId": "simonab",
@@ -20,10 +20,28 @@
         },
         {
             "roomId": 3,
-            "avatar": "avatar_mama.png",
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707797451329-418765875.png",
             "roomTitle": "Mama",
             "lastMessage": "Sticker",
             "senderId": "mama",
+            "lastMessageTime": "2024-02-13T00:00:00Z",
+            "isRoom": false
+        },
+        {
+            "roomId": 4,
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-2919-15-59-1707792495521-139948256.png",
+            "roomTitle": "hajar",
+            "lastMessage": "Sticker",
+            "senderId": "hajar",
+            "lastMessageTime": "2024-02-13T00:00:00Z",
+            "isRoom": true
+        },
+        {
+            "roomId": 5,
+            "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-3004-36-30-1707797241976-670480343.png",
+            "roomTitle": "simo",
+            "lastMessage": "Sticker",
+            "senderId": "simo",
             "lastMessageTime": "2024-02-13T00:00:00Z",
             "isRoom": false
         }

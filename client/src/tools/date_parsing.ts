@@ -22,3 +22,17 @@ export const formatDateTime = (dateString: string) => {
         .format(date)
         .replace(',', '');
 };
+
+export const DateFormatter = (isoString: string) => {
+    const date = new Date(isoString);
+
+    // Extract hours and minutes
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+
+    // Format the time in 12-hour format
+
+    return `${hours % 12 || 12}:${minutes < 10 ? `0${minutes}` : minutes} ${
+        hours >= 12 ? 'PM' : 'AM'
+    }`;
+};

@@ -28,7 +28,7 @@ function NavigationMenu() {
                             <NavLink
                                 key={link}
                                 to={`/${link}`}
-                                className={({ isA   ctive }) =>
+                                className={({ isActive }) =>
                                     `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
                                         isActive
                                             ? 'text-black border-b-4 border-black '

@@ -20,6 +20,11 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/**/*", "types/**/*", "deprecated/Rooms"],
+    "include": [
+        "src/**/*",
+        "types/**/*",
+        "deprecated/Rooms",
+        "deprecated/ChatSocketStore.ts"
+    ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

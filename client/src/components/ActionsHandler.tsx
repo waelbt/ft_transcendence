@@ -7,7 +7,7 @@ import { FC, useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { ACTIONS_ENDPOINTS, ACTION_TO_KNOW_RELATION } from '../constants';
-import { useChatSocketStore } from '../stores/ChatSocketStore';
+import { useChatSocketStore } from '../../deprecated/ChatSocketStore';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -16,7 +16,7 @@ type ActionsHandlerProps = {
 
 const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const navigate = useNavigate();
-    const { socket, pushMessage, updateState, clearMessage} = useChatSocketStore();
+
     const axiosPrivate = useAxiosPrivate();
     const [actions, setActions] = useState<string[]>(['Block user']);
     const [relation, setRelation] = useState<string>(relationship);
@@ -62,7 +62,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
 
     const handleAction = async (action: string) => {
         if (action === 'Send Message') {
-            //! hena 
+            //! hena
             // clearMessage();
             // socket?.emit('checkDm', { friendId: target });
             // console.log('target= ', target);
@@ -73,11 +73,11 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
             //       });
             //     console.log('to navigate')
             //     };
-                navigate(`/chat/content/${target}`); 
+            navigate(`/chat/content/${target}`);
 
             // socket?.on('checkDM', handleCheckDM);
-            
-            // ! 7bssi hna 
+
+            // ! 7bssi hna
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];
             if (!endpoint) {

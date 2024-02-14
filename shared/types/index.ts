@@ -50,3 +50,21 @@ export interface LeaderboardEntry {
     level: number;
     xp: number;
 }
+
+export interface Room {
+    roomId: number;
+
+    avatar: string;
+
+    roomTitle: string;
+
+    lastMessage: string;
+
+    senderId: string;
+
+    // ! NAME
+
+    lastMessageTime: string;
+
+    isRoom: boolean;
+}

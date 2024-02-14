@@ -4,13 +4,14 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
-import { useChatSocketStore } from '../stores/ChatSocketStore';
+
+import { useChatStore } from '../stores/chatStore';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket } = useChatSocketStore();
+    const { initializeSocket } = useChatStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
@@ -52,7 +53,7 @@ function Layout() {
     return (
         <div className="flex flex-col h-screen w-screen ">
             <NavigationMenu />
-            <div className="flex-grow flex justify-center items-center overflow-hidden">
+            <div className="flex-grow flex justify-center items-center overflow-hidden bg-gray-50">
                 <Outlet />
             </div>
         </div>
