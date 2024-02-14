@@ -161,6 +161,7 @@ export class UsersController {
         return this.usersService.findAllUser();
     }
 
+<<<<<<< HEAD
     @Get('achievements/:id')
     @ApiOperation({ summary: 'Get achievements of a user' })
     @ApiResponse({
@@ -174,6 +175,19 @@ export class UsersController {
     ): Promise<achievement> {
         return await this.usersService.userAchievements(id);
     }
+=======
+	@Get('onlineUsers')
+	async onlineUsers(@Req() req){
+		return (await this.usersService.onlineUsers(req.user.sub));
+	}
+
+	@Get('all')
+	@ApiBearerAuth()
+	@ApiOkResponse()
+	findAllUser() {
+    	return this.usersService.findAllUser();
+	}
+>>>>>>> origin/back-end
 
     @Get('historyMatchs/:id')
     @ApiOperation({ summary: 'Get match history' })

@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { verify } from 'jsonwebtoken';
 import { Socket } from 'socket.io';
@@ -22,7 +22,10 @@ export class WebSocketAuthGuard implements CanActivate {
   {
       const { authorization } = client.handshake.headers;
       console.log('auth header : ', authorization);
-      const token : string = authorization.split(' ')[1];
+      if (authorization && authorization.startsWith('Bearer '))
+        var token : string = authorization.split(' ')[1];
+      if (!token)
+        throw new UnauthorizedException();
       console.log('token of auth : ', token);
       client.data.playload = verify(token, process.env.JWT_secret);
       console.log('client.data : ', client.data);
