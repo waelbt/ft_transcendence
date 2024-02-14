@@ -4,14 +4,12 @@ import { Avatar } from '.';
 import { Room } from '../../../shared/types';
 import { NavLink } from 'react-router-dom';
 import { DateFormatter } from '../tools/date_parsing';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function ChatLayouts() {
-    const [searchTerm, setSearchTerm] = useState<string>();
+    const [searchTerm, setSearchTerm] = useState<string>('');
     const [rooms, SetRooms] = useState<Room[]>([]);
-    // const axiosPrivate = useAxiosPrivate();
-
-    // const HandleClick = () => {};
+    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
         const fetchDns = async () => {
@@ -22,6 +20,19 @@ function ChatLayouts() {
 
         fetchDns();
     }, []);
+
+    useEffect(() => {
+        const fetchOnlineUsers = async () => {
+            const res = axiosPrivate.get('');
+            console.log(res);
+        };
+
+        fetchOnlineUsers();
+    }, []);
+
+    const filteredRooms = rooms.filter((room) =>
+        room.roomTitle.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="flex-col flex-grow h-full w-full justify-center items-start inline-flex ">
@@ -41,7 +52,7 @@ function ChatLayouts() {
                     <div>online users here...</div>
                 </div>
                 <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex">
-                    {rooms.map((room, index) => (
+                    {filteredRooms.map((room, index) => (
                         <NavLink
                             key={index}
                             to={`dm/${room.roomId}`} // ! conditoon of the type
