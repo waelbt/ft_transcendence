@@ -34,6 +34,7 @@ function ChatLayouts() {
         const fetchOnlineUsers = async () => {
             try {
                 const res = await axiosPrivate.get('/users/onlineUsers');
+                console.log('obk=', res);
                 setOnlineUser(res.data);
             } catch (error) {
                 if (isAxiosError(error))
@@ -52,7 +53,7 @@ function ChatLayouts() {
         <div className=" flex-grow h-full w-full justify-start items-start inline-flex">
             <div className="bg-white w-[17%] h-full py-2 border-r flex  flex-col justify-start items-center gap-2 ">
                 {/* <div> */}
-                <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5    inline-flex">
+                <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5  border-y     inline-flex">
                     <CiSearch size={24} />
                     <input
                         type="text"
@@ -63,9 +64,9 @@ function ChatLayouts() {
                     />
                 </div>
                 {onlineUser.length ? (
-                    <div className="w-full border-y gap-5 flex items-center justify-start px-4 py-2 overflow-x-auto whitespace-nowrap">
+                    <div className="w-full  border-y gap-5 flex items-center justify-start px-4 py-2 overflow-x-auto whitespace-nowrap">
                         {onlineUser.map((user, index) => (
-                            <div className="relative inline-block">
+                            <div key={index} className="relative inline-block">
                                 <Avatar
                                     key={index}
                                     imageUrl={user.avatar}
@@ -76,7 +77,7 @@ function ChatLayouts() {
                         ))}
                     </div>
                 ) : null}
-                <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex border-y">
+                <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex ">
                     {filteredRooms.map((room, index) => (
                         <NavLink
                             key={index}

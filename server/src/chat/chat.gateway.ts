@@ -220,7 +220,7 @@ export class ChatGateway
     async handleDisconnect(client: any) {
         console.log("kn disconnect");
         const userCheck = await this.wsService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         console.log('user: ', userCheck);
         const user = await this.prisma.user.findFirst({

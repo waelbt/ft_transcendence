@@ -434,7 +434,6 @@ export class UsersService {
             throw new NotFoundException('this user does not exist');
         }
         const users = await this.friendService.listFriends(userId);
-        console.log('waellllllllllllll', users);
 
         const onlineUsers = users
             .filter((user) => user.status)

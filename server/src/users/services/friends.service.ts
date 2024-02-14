@@ -170,40 +170,40 @@ export class friendsService {
         });
 
         // Extract and format friend details
-        const friends = friendships
-            .map((friendship) => {
-                const friendUser =
-                    friendship.userId1 === userId
-                        ? friendship.user[1]
-                        : friendship.user[0];
-                const frienduser2 =
-                    friendship.userId2 === userId
-                        ? friendship.user[1]
-                        : friendship.user[0];
+        const friends = friendships.map((friendship) => {
+            const friendUser =
+                friendship.userId1 === userId
+                    ? friendship.user[1]
+                    : friendship.user[0];
+            const frienduser2 =
+                friendship.userId2 === userId
+                    ? friendship.user[1]
+                    : friendship.user[0];
 
-                if (friendUser.id !== userId) {
-                    const id = friendUser.id;
-                    const avatar = friendUser.avatar;
-                    const nickName = friendUser.nickName;
-                    const status = friendUser.status;
-                    return {
-                        id,
-                        avatar,
-                        nickName,
-                        status
-                    };
-                }
-                const id = frienduser2.id;
-                const avatar = frienduser2.avatar;
-                const nickName = frienduser2.nickName;
+            if (friendUser.id !== userId) {
+                const id = friendUser.id;
+                const avatar = friendUser.avatar;
+                const nickName = friendUser.nickName;
+                const status = friendUser.status;
                 return {
                     id,
                     avatar,
-                    nickName
+                    nickName,
+                    status
                 };
-            })
-            .filter((friend) => friend.id !== userId);
-
+            }
+            const id = frienduser2.id;
+            const avatar = frienduser2.avatar;
+            const nickName = frienduser2.nickName;
+            const status = frienduser2.status;
+            return {
+                id,
+                avatar,
+                nickName,
+                status
+            };
+        });
+        console.log('friends: ', friends);
         return friends;
     }
 
