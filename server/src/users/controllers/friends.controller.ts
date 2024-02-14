@@ -206,17 +206,12 @@ export class friendsController {
 
     //endPoint to list friends for another user
     @Get('friends/:viewerId')
-    // @ApiOperation({ summary: 'get list of another user friends' })
-    // @ApiResponse({
-    //     status: 200,
-    //     description: 'Returns list of my friends',
-    //     type: friendsData
-    // : Promise<friendsData[]> 
-    // })
+    @ApiOperation({ summary: 'get list of another user friends' })
+    @ApiResponse({ status: 200, description: 'Returns list of my friends', type: friendsData })
     async userListFriends(
         @Req() req,
         @Param('viewerId') viewerId: string
-    ){
+    ): Promise<friendsData[]>{
         const isItBlocked = await this.blockService.isUserBlocked(
             viewerId,
             req.user.sub

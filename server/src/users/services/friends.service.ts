@@ -185,10 +185,12 @@ export class friendsService {
                     const id = friendUser.id;
                     const avatar = friendUser.avatar;
                     const nickName = friendUser.nickName;
+                    const status = friendUser.status;
                     return {
                         id,
                         avatar,
-                        nickName
+                        nickName,
+                        status
                     };
                 }
                 const id = frienduser2.id;

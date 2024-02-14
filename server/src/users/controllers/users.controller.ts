@@ -122,6 +122,11 @@ export class UsersController {
 		return (await this.usersService.userData(id));
 	}
 
+	@Get('onlineUsers')
+	async onlineUsers(@Req() req){
+		return (await this.usersService.onlineUsers(req.user.sub));
+	}
+
 	@Get('all')
 	@ApiBearerAuth()
 	@ApiOkResponse()

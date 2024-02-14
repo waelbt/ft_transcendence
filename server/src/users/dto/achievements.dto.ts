@@ -4,7 +4,7 @@ import { IsString } from "class-validator";
 export class achievement {
     @ApiProperty()
     @IsString()
-    userId: string;
+    UserId: string;
 
     @ApiProperty()
     @IsString()

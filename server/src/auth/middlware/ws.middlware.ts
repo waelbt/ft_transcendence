@@ -13,7 +13,7 @@ export const SocketIOMIDDELWARE = () : SocketIOMIDDELWARE => {
             WebSocketAuthGuard.validate(client);
             next();
         } catch (error){
-            console.log('error is : ', error);
+            // console.log('error is : ', error);
             next (error);
         }
     }
