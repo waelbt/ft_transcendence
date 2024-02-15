@@ -19,7 +19,7 @@ function ChatLayouts() {
         const fetchDns = async () => {
             try {
                 const res = await axiosPrivate.get('/chat/allChannels');
-                console.log(res);
+                console.log('channels ', res);
                 SetRooms(res.data);
             } catch (error) {
                 if (isAxiosError(error))

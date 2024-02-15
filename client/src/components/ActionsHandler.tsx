@@ -61,10 +61,15 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
 
     const handleAction = async (action: string) => {
         if (action === 'Send Message') {
-            const res = await axiosPrivate.post('/chat/createDm', {
-                friendId: target
-            });
-            navigate(`/chat/dms/${res.data.id}`);
+            try {
+                const res = await axiosPrivate.post('/chat/createDm', {
+                    friendId: target
+                });
+                console.log(res.data);
+                navigate(`/chat/dms/${res.data}`);
+            } catch (error) {
+                console.log(error);
+            }
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];
             if (!endpoint) {

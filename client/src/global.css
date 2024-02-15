@@ -134,14 +134,15 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
 .speech-bubble-right::before {
     content: '';
     width: 0px;
     height: 0px;
     position: absolute;
-    border-left: 5px solid #9ae6b4;
+    border-left: 5px solid #1e40af;
     border-right: 5px solid transparent;
-    border-top: 5px solid #9ae6b4;
+    border-top: 5px solid #1e40af;
     border-bottom: 5px solid transparent;
     right: -10px;
     top: 0;
@@ -153,8 +154,8 @@ body {
     height: 0px;
     position: absolute;
     border-left: 5px solid transparent;
-    border-right: 5px solid white;
-    border-top: 5px solid white;
+    border-right: 5px solid #374151;
+    border-top: 5px solid #374151;
     border-bottom: 5px solid transparent;
     left: -10px;
     top: 0;
