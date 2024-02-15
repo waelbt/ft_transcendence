@@ -112,7 +112,7 @@ export function Chat() {
                         onChange={handleInputChange}
                         onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                         placeholder="send message"
-                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex bg-transparent text-neutral-700 text-sm font-semibold font-['Poppins'] outline-none"
+                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700 text-sm font-semibold font-['Poppins'] outline-none"
                     />
                     <RiSendPlaneFill
                         size={38}
