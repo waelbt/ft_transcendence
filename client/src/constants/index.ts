@@ -18,6 +18,8 @@ export const MENU_FIELDS = [
     }
 ];
 
+export const VISIBILTYOPTIONS = ['private', 'public', 'protected'];
+
 export const NICKNAME_FIELD = [
     {
         label: '',

@@ -1,15 +1,16 @@
 import { MdClose } from 'react-icons/md';
 import { useModelStore } from '../stores/ModelStore';
-import { Avatar, FormComponent, ProgressRingLoader } from '.';
+import { Avatar, FormComponent, InputField, ProgressRingLoader } from '.';
 // import { useUserStore } from '../stores/userStore';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
-import { GROUP_NAME_FIELD } from '../constants';
+import { GROUP_NAME_FIELD, VISIBILTYOPTIONS } from '../constants';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import { FieldValues } from 'react-hook-form';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useState } from 'react';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
@@ -25,6 +26,7 @@ function CreateGroup() {
         // success,
         // setProgress
     } = useImageUpload();
+    const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const handleSubmit = async (data: FieldValues) => {
         try {
@@ -120,6 +122,39 @@ function CreateGroup() {
                     onSubmit={handleSubmit}
                 />
             </div>
+            <div className="flex gap-5">
+                {VISIBILTYOPTIONS.map((visibility, index) => (
+                    <div className="flex items-center mb-4" key={index}>
+                        <input
+                            id={`default-checkbox-${visibility}`}
+                            type="checkbox"
+                            checked={selectedVisibility === visibility}
+                            onChange={() => setSelectedVisibility(visibility)}
+                            className="w-4 h-4 text-black bg-gray-100 border-gray-300 rounded focus:ring-black focus:ring-2"
+                        />
+                        <label
+                            htmlFor={`default-checkbox-${visibility}`}
+                            className="ms-2 text-lg font-['Acme'] font-medium text-zinc-600"
+                        >
+                            {visibility}
+                        </label>
+                    </div>
+                ))}
+            </div>
+            {selectedVisibility === 'protected' && (
+                <InputField
+                    key={idx}
+                    label={field.label}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    register={register(field.name, field.validation)}
+                    secure={field.secure}
+                />
+                // <input className="border boreder-black" />
+            )}
+            <button className="border border-gray-400 text-slate-700 text-lg font-['Acme'] p-2 px-4">
+                Create group
+            </button>
         </div>
     );
 }

@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
-import { Avatar } from '.';
+import { Avatar, Modal } from '.';
 import { OnlineUser, Room } from '../../../shared/types';
 import { NavLink, Outlet } from 'react-router-dom';
 import { DateFormatter } from '../tools/date_parsing';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { MdGroupAdd } from 'react-icons/md';
+import { useModelStore } from '../stores/ModelStore';
+import CreateGroup from './CreateGroup';
 
 function ChatLayouts() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [rooms, SetRooms] = useState<Room[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
+    const { isEventOpen, openEvent } = useModelStore();
 
     useEffect(() => {
         // !
@@ -52,14 +56,21 @@ function ChatLayouts() {
         <div className=" flex-grow h-full w-full justify-start items-start inline-flex border border-stone-300 ">
             <div className="bg-white w-[17%] h-full py-2 border-r flex  flex-col justify-start items-center gap-2 ">
                 {/* <div> */}
-                <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5  border-y     inline-flex">
-                    <CiSearch size={24} />
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search..."
-                        className="bg-transparent text-neutral-500 text-sm font-normal font-['Poppins'] outline-none w-full"
+                <div className="flex gap-2 items-center justify-center">
+                    <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5  border-y     inline-flex">
+                        <CiSearch size={24} />
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Search..."
+                            className="bg-transparent text-neutral-500 text-sm font-normal font-['Poppins'] outline-none w-full"
+                        />
+                    </div>
+                    <MdGroupAdd
+                        size={24}
+                        className="cursor-pointer text-gray-600"
+                        onClick={() => openEvent()}
                     />
                 </div>
                 {onlineUser.length ? (
@@ -109,6 +120,11 @@ function ChatLayouts() {
                         </NavLink>
                     ))}
                 </div>
+                {isEventOpen && (
+                    <Modal removable={true}>
+                        <CreateGroup />
+                    </Modal>
+                )}
             </div>
             <Outlet />
         </div>
