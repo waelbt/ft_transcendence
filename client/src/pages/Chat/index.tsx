@@ -81,32 +81,22 @@ export function Chat() {
                             <>
                                 <div
                                     key={index}
-                                    className="flex flex-row items-end z-[10] mx-5 gap-2 "
+                                    className={`flex z-[10] mx-5 gap-2 ${
+                                        false ? 'flex-row' : 'flex-row-reverse'
+                                    } items-end`}
                                 >
                                     <div
                                         key={index}
-                                        className="rounded-lg rounded-tl-none my-1 p-2 text-sm  flex flex-col relative speech-bubble-left text-white max-w-[320px]  bg-gray-700"
+                                        className={`rounded-lg my-1 p-2 text-sm flex flex-col relative ${
+                                            false
+                                                ? 'rounded-tl-none speech-bubble-left bg-gray-700'
+                                                : 'rounded-tr-none speech-bubble-right bg-blue-800'
+                                        } max-w-[320px] text-white`}
                                         style={{ wordWrap: 'break-word' }}
                                     >
                                         {msg}
                                     </div>
-                                    <div className="text-gray-600 text-xs leading-none  bottom-0">
-                                        8:45 AM
-                                    </div>
-                                </div>
-                                <div
-                                    key={index}
-                                    className="flex flex-row-reverse items-end z-[10] mx-5 gap-2 "
-                                >
-                                    <div
-                                        key={index}
-                                        className="pl-4 rounded-tl-none max-w-[320px] bg-blue-800 text-white  rounded-lg rounded-tr-none my-1 p-2 text-sm  flex flex-col relative speech-bubble-right"
-                                        style={{ wordWrap: 'break-word' }}
-                                    >
-                                        {msg}
-                                    </div>
-
-                                    <div className="text-gray-600 text-xs  leading-none  bottom-0  ">
+                                    <div className="text-gray-600 text-xs leading-none bottom-0">
                                         8:45 AM
                                     </div>
                                 </div>
