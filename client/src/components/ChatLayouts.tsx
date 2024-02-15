@@ -34,7 +34,6 @@ function ChatLayouts() {
         const fetchOnlineUsers = async () => {
             try {
                 const res = await axiosPrivate.get('/users/onlineUsers');
-                console.log('obk=', res);
                 setOnlineUser(res.data);
             } catch (error) {
                 if (isAxiosError(error))
@@ -50,7 +49,7 @@ function ChatLayouts() {
     );
 
     return (
-        <div className=" flex-grow h-full w-full justify-start items-start inline-flex">
+        <div className=" flex-grow h-full w-full justify-start items-start inline-flex border border-stone-300 ">
             <div className="bg-white w-[17%] h-full py-2 border-r flex  flex-col justify-start items-center gap-2 ">
                 {/* <div> */}
                 <div className="px-[15px] py-2 mx-2 bg-gray-50 rounded-[30px] border border-neutral-200 justify-center items-center gap-2.5  border-y     inline-flex">
@@ -83,7 +82,7 @@ function ChatLayouts() {
                             key={index}
                             to={`${room.isRoom ? 'group' : 'dms'}/${
                                 room.roomId
-                            }`} // ! conditoon of the type
+                            }`}
                             className={({ isActive }) =>
                                 `w-full p-2.5 border-b border-neutral-200 justify-start items-center gap-2.5 flex cursor-pointer ${
                                     isActive ? 'bg-neutral-200' : 'bg-white'

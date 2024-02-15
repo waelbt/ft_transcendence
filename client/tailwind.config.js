@@ -7,7 +7,8 @@ module.exports = {
             backgroundImage: {
                 'auth-sidebar-image': "url('../auth-sidebar-image.jpg')",
                 'footer-image': "url('../footer-image.jpg')",
-                'pong-table-image': "url('../PongTable.png')"
+                'pong-table-image': "url('../PongTable.png')",
+                'chat-image': "url('../chat-bg.png')"
             },
             boxShadow: {
                 custom: '0 0 80px rgba(0, 0, 0, 1)' // Custom shadow with blur 80

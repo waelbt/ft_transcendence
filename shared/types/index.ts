@@ -73,3 +73,11 @@ export interface OnlineUser {
     id: string;
     avatar: string;
 }
+
+export interface Message {
+    id: number;
+    message: string;
+    createdAt: string;
+    senderId: string;
+    dmId: number;
+}

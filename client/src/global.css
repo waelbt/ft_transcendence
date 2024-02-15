@@ -134,3 +134,28 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+.speech-bubble-right::before {
+    content: '';
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 5px solid #9ae6b4;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #9ae6b4;
+    border-bottom: 5px solid transparent;
+    right: -10px;
+    top: 0;
+}
+
+.speech-bubble-left::before {
+    content: '';
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid white;
+    border-top: 5px solid white;
+    border-bottom: 5px solid transparent;
+    left: -10px;
+    top: 0;
+}

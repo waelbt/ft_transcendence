@@ -62,8 +62,8 @@ export class ChatGateway
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
             await this.prisma.user.update({
-                where : { id : userCheck.userData.sub },
-                data : { status : true},
+                where: { id: userCheck.userData.sub },
+                data: { status: true }
             });
             console.log(
                 `This user ${userCheck.userData.email} is now connected`
@@ -195,10 +195,35 @@ export class ChatGateway
                 sendMessage.receiverId,
                 sendMessage.message
             );
-            this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages);
-            // console.log("messages backend77777777777777777 == ", dmroom.messages);
+            this.server
+                .to(dmroom.roomTitle)
+                .emit('dmMessage', dmroom.messages);
         }
     }
+
+    // @SubscribeMessage('dm')
+    // async sendDM(client: any, sendMessage: SendMessageDto) {
+    //     console.log(
+    //         'messages b888888888888888888888888888888888 == ',
+    //         sendMessage
+    //     );
+
+    //     const userCheck = await this.wsService.getUserFromAccessToken(
+    //         client.handshake.auth.token
+    //     );
+    //     if (userCheck.state === false) await this.handleDisconnect(client);
+    //     else {
+    //         console.log('messages');
+    //         // function to check if they have already talked
+    //         const dmroom = await this.wsService.sendDM(
+    //             userCheck.userData.sub,
+    //             sendMessage.receiverId,
+    //             sendMessage.message
+    //         );
+    //         this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages);
+    //         // console.log("messages backend77777777777777777 == ", dmroom.messages);
+    //     }
+    // }
 
     @SubscribeMessage('checkDm')
     async checkDM(client: any, createDmDto: CreateDmDto) {
@@ -218,25 +243,24 @@ export class ChatGateway
     }
 
     async handleDisconnect(client: any) {
-        console.log("kn disconnect");
+        console.log('kn disconnect');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
         console.log('user: ', userCheck);
         const user = await this.prisma.user.findFirst({
-			where : {
-				id : userCheck.userData.sub,
-			}
-		})
+            where: {
+                id: userCheck.userData.sub
+            }
+        });
 
-		if (!user)
-			return ;
+        if (!user) return;
 
         //update stat in database from true to false
         await this.prisma.user.update({
-            where : { id : userCheck.userData.sub },
-            data : { status : false },
-        })
+            where: { id: userCheck.userData.sub },
+            data: { status: false }
+        });
         client.disconnect(true);
         // this.logger.log(`This client ${client.id} disconnected`);
     }

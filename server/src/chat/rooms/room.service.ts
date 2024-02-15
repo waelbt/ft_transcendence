@@ -250,6 +250,48 @@ export class RoomService {
         return room;
     }
 
+    async getDmRoom(dmId: number, userId: string) {
+        const tmpDm = await this.prisma.room.findUnique({
+            where: {
+                id: dmId
+            }
+        });
+
+        if (!tmpDm)
+            throw new NotFoundException('No Exsiting Room With This Id');
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            include: {
+                rooms: {
+                    where: {
+                        id: dmId
+                    }
+                }
+            }
+        });
+
+        if (!user) throw new NotFoundException('this user does not exist');
+
+        const dm = await this.prisma.dMRooms.findUnique({
+            where: {
+                id: dmId
+            },
+            include: {
+                users: true,
+                messages: {
+                    include: {
+                        sender: true
+                    }
+                }
+            }
+        });
+        console.log('dm: ', dm);
+        return dm;
+    }
+
     async setUserToAdminRoom(setAdminDto: SetAdminDto, userId: string) {
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
