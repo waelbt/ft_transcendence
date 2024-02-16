@@ -10,7 +10,7 @@ export interface User {
     f2A_Secret: string;
     inGame: boolean;
     completeProfile: boolean;
-    createdAt: Date; // Converted from TIMESTAMP
+    createdAt: string;
     exp: number;
     level: number;
 }
@@ -51,7 +51,7 @@ export interface LeaderboardEntry {
     xp: number;
 }
 
-export interface Room {
+export interface RoomsList {
     roomId: number;
 
     avatar: string;
@@ -61,8 +61,6 @@ export interface Room {
     lastMessage: string;
 
     senderId: string;
-
-    // ! NAME
 
     lastMessageTime: string;
 
@@ -80,4 +78,14 @@ export interface Message {
     createdAt: string;
     senderId: string;
     dmId: number;
+}
+
+export interface DMRooms {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    roomTitle: string;
+    users: User[];
+    messages: Message[];
+    friendId: string;
 }

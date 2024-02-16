@@ -7,5 +7,5 @@ export class SendMessageDto {
     message: string;
 
     @IsString()
-    receiverId: string;
+    roomId: string;
 }

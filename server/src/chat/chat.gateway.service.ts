@@ -188,20 +188,20 @@ export class WebSocketService {
         return dm.id;
     }
 
-    async sendDM(user1id: string, user2id: string, message: string) {
-        const dm = await this.prisma.dMRooms.findFirst({
-            where: {
-                AND: [
-                    { users: { some: { id: user1id } } },
-                    { users: { some: { id: user2id } } }
-                ]
-            },
-            include: {
-                users: true,
-                messages: true
-            }
-        });
-        console.log('test for id', dm);
+    async sendDM(user1id: string, roomId: string, message: string) {
+        // const dm = await this.prisma.dMRooms.findFirst({
+        //     where: {
+        //         AND: [
+        //             { users: { some: { id: user1id } } },
+        //             { users: { some: { id: user2id } } }
+        //         ]
+        //     },
+        //     include: {
+        //         users: true,
+        //         messages: true
+        //     }
+        // });
+        // console.log('test for id', dm);
         const newMessage = await this.prisma.dmMessage.create({
             data: {
                 message: message,
@@ -212,7 +212,7 @@ export class WebSocketService {
                 },
                 dmroom: {
                     connect: {
-                        id: dm.id
+                        id: +roomId,
                     }
                 }
             },
@@ -221,6 +221,16 @@ export class WebSocketService {
                 dmroom: true
             }
         });
+        const dm = await this.prisma.dMRooms.findFirst({
+            where: {
+                id: +roomId,
+            },
+            include: {
+                users: true,
+                messages: true,
+            },
+        });
+        
         console.log(
             'check message creation',
             newMessage,

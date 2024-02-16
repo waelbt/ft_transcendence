@@ -1,6 +1,6 @@
 // import { useState, ChangeEvent } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
-import './RoomList.css';
+import './RoomsList.css';
 import { useModelStore } from '../../../stores/ModelStore';
 import { Modal } from '../..';
 import CreateGroup from '../../CreateGroup';
@@ -11,7 +11,7 @@ import CreateGroup from '../../CreateGroup';
 //     // onSearch: (searchText: string) => void;
 // }
 
-const RoomList: React.FC = () => {
+const RoomsList: React.FC = () => {
     const { isEventOpen, openEvent } = useModelStore();
 
     const handleClick = () => {
@@ -31,7 +31,7 @@ const RoomList: React.FC = () => {
     );
 };
 
-export default RoomList;
+export default RoomsList;
 
 // const { isEventOpen, closeEvent } = useModelStore();
 
@@ -63,7 +63,7 @@ export default RoomList;
 //     // },
 // ];
 
-// <div className="main__roomlist">
+// <div className="main__RoomsList">
 //     <div className="conversation-room">
 //         {contacts.map((contactr) => (
 //             <div key={contactr.id} className="conversation-room-item">

@@ -192,12 +192,16 @@ export class ChatGateway
             // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(
                 userCheck.userData.sub,
-                sendMessage.receiverId,
+                sendMessage.roomId,
                 sendMessage.message
+            );
+            console.log(
+                'last message',
+                dmroom.messages[dmroom.messages.length - 1]
             );
             this.server
                 .to(dmroom.roomTitle)
-                .emit('dmMessage', dmroom.messages);
+                .emit('dmMessage', dmroom.messages[dmroom.messages.length - 1]);
         }
     }
 

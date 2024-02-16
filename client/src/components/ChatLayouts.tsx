@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import { Avatar, Modal } from '.';
-import { OnlineUser, Room } from '../../../shared/types';
+import { OnlineUser, RoomsList } from '../../../shared/types';
 import { NavLink, Outlet } from 'react-router-dom';
 import { DateFormatter } from '../tools/date_parsing';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
@@ -10,10 +10,12 @@ import toast from 'react-hot-toast';
 import { MdGroupAdd } from 'react-icons/md';
 import { useModelStore } from '../stores/ModelStore';
 import CreateGroup from './CreateGroup';
+import { useChatStore } from '../stores/chatStore';
 
 function ChatLayouts() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [rooms, SetRooms] = useState<Room[]>([]);
+    const { Layout_Rooms, updateState } = useChatStore();
+    // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
     const { isEventOpen, openEvent } = useModelStore();
@@ -24,7 +26,7 @@ function ChatLayouts() {
             try {
                 const res = await axiosPrivate.get('/chat/allChannels');
                 console.log('channels ', res);
-                SetRooms(res.data);
+                updateState({ Layout_Rooms: res.data });
             } catch (error) {
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
@@ -48,7 +50,7 @@ function ChatLayouts() {
         fetchOnlineUsers();
     }, []);
 
-    const filteredRooms = rooms.filter((room) =>
+    const filteredRooms = Layout_Rooms.filter((room) =>
         room.roomTitle.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
 
@@ -78,7 +80,7 @@ function ChatLayouts() {
                         {onlineUser.map((user, index) => (
                             <div key={index} className="relative inline-block">
                                 <Avatar
-                                    key={index}
+                                    key={`onlineUser${index}`}
                                     imageUrl={user.avatar}
                                     style="w-9 h-9 bg-black rounded-[150px]  mr-2 flex-shrink-0"
                                 />
@@ -90,7 +92,7 @@ function ChatLayouts() {
                 <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex ">
                     {filteredRooms.map((room, index) => (
                         <NavLink
-                            key={index}
+                            key={`rooms${index}`}
                             to={`${room.isRoom ? 'group' : 'dms'}/${
                                 room.roomId
                             }`}

@@ -252,7 +252,6 @@ export class RoomService {
     }
 
     async getDmRoom(dmId: number, userId: string) {
-        console.log(dmId, userId, 'hello')
         const tmpDm = await this.prisma.dMRooms.findUnique({
             where: {
                 id: dmId
@@ -291,6 +290,7 @@ export class RoomService {
             }
         });
         console.log('dm: ', dm);
+        dm.users = dm.users.filter((user) => userId != user.id);
         return dm;
     }
 
