@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { useChatStore } from '../../stores/chatStore';
 import { Message } from '../../../../shared/types';
 import { Avatar } from '../../components';
@@ -9,36 +9,7 @@ import { useUserStore } from '../../stores/userStore';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
-// import { useChatStore } from '../../stores/chatStore';
 
-// this
-// {id: 1, createdAt: '2024-02-15T23:33:50.970Z', updatedAt: '2024-02-15T23:33:50.970Z', roomTitle: '106142904355685824862115883736715025890615', friendId: '115883736715025890615', …}
-// createdAt
-// :
-// "2024-02-15T23:33:50.970Z"
-// friendId
-// :
-// "115883736715025890615"
-// id
-// :
-// 1
-// messages
-// :
-// []
-// roomTitle
-// :
-// "106142904355685824862115883736715025890615"
-// updatedAt
-// :
-// "2024-02-15T23:33:50.970Z"
-// users
-// :
-// [{…}]
-// [[Prototype]]
-// :
-// Object
-
-// let id = 'db iji ';
 export function Chat() {
     const { roomId } = useParams();
     const [message, setMessage] = useState<string>('');
@@ -50,7 +21,8 @@ export function Chat() {
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value);
     };
-    const navigate = useNavigate();
+    const [isblocked, setIsblocked] = useState<boolean>(false);
+    // const navigate = useNavigate();
 
     const sendMessage = () => {
         if (message.trim()) {
@@ -81,8 +53,11 @@ export function Chat() {
         socket?.on('dmMessage', (message: Message) => {
             pushMessage(message);
         });
-
+        socket?.on('forbidden', () => {
+            setIsblocked(true);
+        });
         return () => {
+            socket?.off('forbidden');
             socket?.off('dmMessage');
         };
     }, []);
@@ -93,7 +68,7 @@ export function Chat() {
         try {
             await axiosPrivate.post(`/users/blockUser/${currentUser?.id}`);
             addUserBlockId(currentUser ? currentUser.id : '');
-            navigate('/chat/');
+            // navigate('/chat/');
         } catch (error) {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
@@ -142,7 +117,11 @@ export function Chat() {
                     </div>
                 </div>
                 {/* 8:45 AM */}
-                <div className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center ">
+                <div
+                    className={`flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center ${
+                        isblocked ? 'hidden' : ''
+                    } `}
+                >
                     <input
                         type="text"
                         value={message}

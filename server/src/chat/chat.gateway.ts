@@ -23,7 +23,7 @@ import { CreateDmDto } from './DTOS/create-dm.dto';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { SendMessageDto } from './DTOS/send-message-dto';
 import { send } from 'process';
-
+import { BlockService } from 'src/users/services/blocked.service';
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -36,7 +36,8 @@ export class ChatGateway
     constructor(
         private readonly prisma: PrismaOrmService,
         private readonly roomService: RoomService,
-        private readonly wsService: WebSocketService
+        private readonly wsService: WebSocketService,
+        private readonly blockService: BlockService
     ) {}
 
     private usersSockets: Map<string, string> = new Map<string, string>();
@@ -195,13 +196,11 @@ export class ChatGateway
                 sendMessage.roomId,
                 sendMessage.message
             );
-            console.log(
-                'last message',
-                dmroom.messages[dmroom.messages.length - 1]
-            );
-            this.server
-                .to(dmroom.roomTitle)
-                .emit('dmMessage', dmroom.messages[dmroom.messages.length - 1]);
+            
+            if (await this.blockService.isUserBlocked(userCheck.userData.sub, dmroom.users[0].id))
+                this.server.to(client.id).emit('forbidden');
+            else
+                this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages[dmroom.messages.length - 1]);
         }
     }
 

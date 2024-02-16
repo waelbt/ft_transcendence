@@ -11,7 +11,7 @@ type ChatState = {
 };
 
 type ChatMethod = {
-    initializeSocket: (token: string | null) => void;
+    initializeSocket: (token: string | null, id: string) => void;
     updateState: (newState: Partial<ChatState>) => void;
     pushMessage: (msg: Message) => void;
 };
@@ -31,14 +31,15 @@ export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
         const newMessages = [...messages, msg];
         set({ messages: newMessages });
     },
-    initializeSocket: (token) => {
+    initializeSocket: (token, id) => {
         const { socket } = get();
         if (token && !socket) {
             const newSocket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
                 path: '/socket.io',
                 transports: ['websocket'],
                 secure: true,
-                auth: { token: token }
+                auth: { token: token },
+                query: { userId: id }
             });
             set({ socket: newSocket });
         }

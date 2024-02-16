@@ -41,7 +41,7 @@ function Layout() {
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
         });
-        initializeSocket(accessToken);
+        initializeSocket(accessToken, id);
         initializeGameSocket();
         console.log('id  ', id);
         return () => {

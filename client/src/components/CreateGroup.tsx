@@ -84,12 +84,7 @@ function CreateGroup() {
                 />
                 {/* uploader section */}
                 <div className="relative flex items-center justify-center">
-                    <Avatar
-                        imageUrl={imagePath}
-                        style="w-40 h-40"
-                        // isloading={!!(progress && progress < 100)}
-                        // errror={isFailed}
-                    />
+                    <Avatar imageUrl={imagePath} style="w-40 h-40" />
                     <label htmlFor="groupsAvatar">
                         <ProgressRingLoader
                             style={
@@ -141,7 +136,7 @@ function CreateGroup() {
                     </div>
                 ))}
             </div>
-            {selectedVisibility === 'protected' && (
+            {/* {selectedVisibility === 'protected' && (
                 <InputField
                     key={idx}
                     label={field.label}
@@ -151,7 +146,7 @@ function CreateGroup() {
                     secure={field.secure}
                 />
                 // <input className="border boreder-black" />
-            )}
+            )} */}
             <button className="border border-gray-400 text-slate-700 text-lg font-['Acme'] p-2 px-4">
                 Create group
             </button>

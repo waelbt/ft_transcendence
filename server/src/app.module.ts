@@ -14,6 +14,7 @@ import { RoomService } from './chat/rooms/room.service';
 import { ChatController } from './chat/chat.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_GUARD } from '@nestjs/core';
+import {BlockService} from './users/services/blocked.service'
 import { accessTokenGuard } from './common/guards';
 const uploadsDestination = process.env.UPLOADS_DESTINATION;
 
@@ -35,7 +36,8 @@ const uploadsDestination = process.env.UPLOADS_DESTINATION;
             provide: APP_GUARD,
             useClass: accessTokenGuard
         },
-        RoomService
+        RoomService,
+        BlockService
     ]
 })
 
