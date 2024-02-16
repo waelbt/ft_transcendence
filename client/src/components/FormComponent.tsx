@@ -37,7 +37,7 @@ function FormComponent({
     return (
         <form
             className="flex flex-col items-center space-y-3 w-full"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)} //! fix this later
         >
             {fields.map((field, idx) => {
                 return (

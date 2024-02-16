@@ -62,17 +62,16 @@ export class RoomService {
         });
         if (createRoomDto.privacy === 'PROTECTED') {
             const password = hashPassword(createRoomDto.password);
-            const roomid = newRoom.id;
             const room = await this.prisma.room.update({
                 where: {
-                    id: roomid
+                    id: newRoom.id
                 },
                 data: {
                     password: password
                 }
             });
+            return room;
         }
-        // }
         return newRoom;
     }
 

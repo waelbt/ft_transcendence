@@ -21,7 +21,7 @@ export function Chat() {
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value);
     };
-    const [isblocked, setIsblocked] = useState<boolean>(false);
+    // const [isblocked, setIsblocked] = useState<boolean>(false);
     // const navigate = useNavigate();
 
     const sendMessage = () => {
@@ -53,11 +53,11 @@ export function Chat() {
         socket?.on('dmMessage', (message: Message) => {
             pushMessage(message);
         });
-        socket?.on('forbidden', () => {
-            setIsblocked(true);
-        });
+        // socket?.on('forbidden', () => {
+        //     setIsblocked(true);
+        // });
         return () => {
-            socket?.off('forbidden');
+            // socket?.off('forbidden');
             socket?.off('dmMessage');
         };
     }, []);
@@ -118,9 +118,8 @@ export function Chat() {
                 </div>
                 {/* 8:45 AM */}
                 <div
-                    className={`flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center ${
-                        isblocked ? 'hidden' : ''
-                    } `}
+                    //  ${isblocked ? 'hidden' : ''}
+                    className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center"
                 >
                     <input
                         type="text"

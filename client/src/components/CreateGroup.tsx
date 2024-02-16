@@ -1,21 +1,29 @@
 import { MdClose } from 'react-icons/md';
 import { useModelStore } from '../stores/ModelStore';
-import { Avatar, FormComponent, InputField, ProgressRingLoader } from '.';
+import { Avatar, InputField, ProgressRingLoader } from '.';
 // import { useUserStore } from '../stores/userStore';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
-import { GROUP_NAME_FIELD, VISIBILTYOPTIONS } from '../constants';
+import { VISIBILTYOPTIONS } from '../constants';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
-    // const { updateState, logout } = useUserStore();
-    const axiosPrivate = useAxiosPrivate();
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        getValues,
+        watch,
+        formState: { errors, isSubmitting }
+    } = useForm({});
+
+    // const axiosPrivate = useAxiosPrivate();
     const {
         progress,
         uploadData,
@@ -28,31 +36,56 @@ function CreateGroup() {
     } = useImageUpload();
     const [selectedVisibility, setSelectedVisibility] = useState('');
 
-    const handleSubmit = async (data: FieldValues) => {
-        try {
-            await axiosPrivate.post(
-                '/chat/createRoom',
-                JSON.stringify({
-                    roomTitle: data['title'],
-                    isConversation: false,
-                    privacy: 'PUBLIC',
-                    password: ''
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
+    const visibilityOptions = watch('visibilityOption');
 
-            toast.success('Profile created successfully');
-        } catch (error) {
-            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+    useEffect(() => {
+        if (visibilityOptions && visibilityOptions.length === 0) {
+            setValue('visibilityOption', [], { shouldValidate: true });
         }
-    };
+    }, [visibilityOptions, setValue]);
 
+    useEffect(() => {
+        if (isSubmitting) {
+            const firstErrorKey = Object.keys(errors)[0];
+            if (firstErrorKey) {
+                const errorMessage = errors[firstErrorKey]?.message;
+                if (typeof errorMessage === 'string') {
+                    toast.error(errorMessage);
+                }
+            }
+        }
+    }, [errors, isSubmitting]);
+
+    // const handleSubmit_a = async (data: FieldValues) => {
+    //     try {
+    //         await axiosPrivate.post(
+    //             '/chat/createRoom',
+    //             JSON.stringify({
+    //                 roomTitle: data['title'],
+    //                 isConversation: false,
+    //                 privacy: 'PUBLIC',
+    //                 password: ''
+    //             }),
+    //             {
+    //                 headers: {
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             }
+    //         );
+
+    //         toast.success('Profile created successfully');
+    //     } catch (error) {
+    //         if (isAxiosError(error)) toast.error(error.response?.data?.message);
+    //     }
+    // };
+    const onSubmit = async (data: FieldValues) => {
+        console.log('form data', data);
+    };
     return (
-        <div className="px-4 pt-4 pb-4 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-[15px] inline-flex relative">
+        <form
+            className="px-4 pt-4 pb-4 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-[15px] inline-flex relative"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             <div
                 className="w-full cursor-pointer	"
                 onClick={() => {
@@ -111,24 +144,45 @@ function CreateGroup() {
                     </span>
                 </div>
             </div>
-            <div className="w-[70%]">
-                <FormComponent
-                    fields={GROUP_NAME_FIELD}
-                    onSubmit={handleSubmit}
+            <div className="w-[60%]">
+                <InputField
+                    label=""
+                    type="text"
+                    placeholder="Choose name for your group"
+                    register={register('title', {
+                        required: 'group name is required!',
+                        maxLength: {
+                            value: 10,
+                            message:
+                                'group name must be less than 10 characters'
+                        },
+                        minLength: {
+                            value: 3,
+                            message: 'group name must be at least 3 characters'
+                        }
+                    })}
+                    disabled={isSubmitting}
                 />
             </div>
+
             <div className="flex gap-5">
                 {VISIBILTYOPTIONS.map((visibility, index) => (
                     <div className="flex items-center mb-4" key={index}>
                         <input
-                            id={`default-checkbox-${visibility}`}
-                            type="checkbox"
+                            id={`default-radio-${visibility}`}
+                            type="radio"
+                            {...register('visibilityOption', {
+                                required: 'A visibility option is required!'
+                            })}
+                            value={visibility}
                             checked={selectedVisibility === visibility}
-                            onChange={() => setSelectedVisibility(visibility)}
-                            className="w-4 h-4 text-black bg-gray-100 border-gray-300 rounded focus:ring-black focus:ring-2"
+                            onChange={(e) =>
+                                setSelectedVisibility(e.target.value)
+                            }
+                            className="w-4 h-4  bg-gray-100 border-gray-300 rounded focus:ring-blue focus:ring-1"
                         />
                         <label
-                            htmlFor={`default-checkbox-${visibility}`}
+                            htmlFor={`default-radio-${visibility}`}
                             className="ms-2 text-lg font-['Acme'] font-medium text-zinc-600"
                         >
                             {visibility}
@@ -136,21 +190,30 @@ function CreateGroup() {
                     </div>
                 ))}
             </div>
-            {/* {selectedVisibility === 'protected' && (
-                <InputField
-                    key={idx}
-                    label={field.label}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    register={register(field.name, field.validation)}
-                    secure={field.secure}
-                />
-                // <input className="border boreder-black" />
-            )} */}
-            <button className="border border-gray-400 text-slate-700 text-lg font-['Acme'] p-2 px-4">
-                Create group
-            </button>
-        </div>
+            {selectedVisibility === 'protected' && (
+                <div className="w-[60%]">
+                    <InputField
+                        label=""
+                        type="password"
+                        placeholder="password"
+                        register={register('password', {
+                            required: 'password is required!',
+                            maxLength: {
+                                value: 10,
+                                message:
+                                    'group name must be less than 10 characters'
+                            },
+                            minLength: {
+                                value: 3,
+                                message:
+                                    'group name must be at least 3 characters'
+                            }
+                        })}
+                        disabled={isSubmitting}
+                    />
+                </div>
+            )}
+        </form>
     );
 }
 

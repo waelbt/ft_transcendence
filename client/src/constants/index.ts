@@ -41,25 +41,7 @@ export const NICKNAME_FIELD = [
     }
 ];
 
-export const GROUP_NAME_FIELD = [
-    {
-        label: '',
-        type: 'text',
-        name: 'title',
-        placeholder: 'Choose name for your group',
-        validation: {
-            required: 'group name is required!',
-            maxLength: {
-                value: 10,
-                message: 'group name must be less than 10 characters'
-            },
-            minLength: {
-                value: 3,
-                message: 'group name must be at least 3 characters'
-            }
-        }
-    }
-];
+
 
 export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
     'Remove Friend': `/friends/removeFriend/`,

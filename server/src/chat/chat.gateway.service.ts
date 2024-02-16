@@ -41,10 +41,10 @@ export class WebSocketService {
             server.in(userSocket).socketsJoin(dms[j].roomTitle);
             // console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
         }
-        // if (!joinedRooms) {
-        //     console.log('No rooms found for user:', userId);
-        //     return;
-        // }
+        if (!joinedRooms) {
+            // console.log('No rooms found for user:', userId);
+            return;
+        }
         for (let i = 0; i < joinedRooms.length; i++) {
             server.in(userSocket).socketsJoin(joinedRooms[i].roomTitle);
             console.log(
