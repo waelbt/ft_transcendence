@@ -135,6 +135,15 @@ const router = createBrowserRouter([
                 }
             },
             {
+                path: '/error/400',
+                lazy: async () => {
+                    let { BadRequest } = await import(
+                        './components/errorPages/BadRequest'
+                    );
+                    return { Component: BadRequest };
+                }
+            },
+            {
                 path: '*',
                 lazy: async () => {
                     let { NotFound } = await import(

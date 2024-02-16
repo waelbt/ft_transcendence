@@ -24,6 +24,7 @@ import {
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateMessageDto } from '../DTOS/create-message-dto';
 import { GetRoomsDto } from '../DTOS/get-rooms.dto';
+import { dirxml } from 'console';
 
 @Injectable()
 export class RoomService {
@@ -251,7 +252,8 @@ export class RoomService {
     }
 
     async getDmRoom(dmId: number, userId: string) {
-        const tmpDm = await this.prisma.room.findUnique({
+        console.log(dmId, userId, 'hello')
+        const tmpDm = await this.prisma.dMRooms.findUnique({
             where: {
                 id: dmId
             }

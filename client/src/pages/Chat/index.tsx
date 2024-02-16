@@ -35,14 +35,14 @@ export function Chat() {
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/dm/${roomId}`);
-                console.log(res.data);
+                console.log('this', res.data);
                 setMessages([res.data.messages[0].message]);
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
             }
         };
 
-        // fetchMessages();
+        fetchMessages();
         // socket?.on('dmMessage', (message: Message) => {
         //     setMessages((prevMessages) => [message.message, ...prevMessages]);
         // });
