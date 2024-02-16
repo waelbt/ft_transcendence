@@ -87,7 +87,7 @@ export function Chat() {
                     />
 
                     {/* Messages */}
-                    <div className="overflow-y-auto h-full flex flex-col justify-start">
+                    <div className="overflow-y-auto h-full flex flex-col justify-end">
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
