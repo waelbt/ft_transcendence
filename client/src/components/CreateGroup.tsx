@@ -1,17 +1,17 @@
 import { MdClose } from 'react-icons/md';
 import { useModelStore } from '../stores/ModelStore';
 import { Avatar, InputField, ProgressRingLoader } from '.';
-// import { useUserStore } from '../stores/userStore';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
-import { VISIBILTYOPTIONS } from '../constants';
 import toast from 'react-hot-toast';
-import { isAxiosError } from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
-import useAxiosPrivate from '../hooks/axiosPrivateHook';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
+// import { useUserStore } from '../stores/userStore';
+// import useAxiosPrivate from '../hooks/axiosPrivateHook';
+// import { isAxiosError } from 'axios';
+// import { VISIBILTYOPTIONS } from '../constants';
+// import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
@@ -19,7 +19,7 @@ function CreateGroup() {
         register,
         handleSubmit,
         setValue,
-        getValues,
+        // getValues,
         watch,
         formState: { errors, isSubmitting }
     } = useForm({});
@@ -35,7 +35,7 @@ function CreateGroup() {
         // success,
         // setProgress
     } = useImageUpload();
-    const [selectedVisibility, setSelectedVisibility] = useState('');
+    // const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const visibilityOptions = watch('visibilityOption');
 
@@ -167,8 +167,7 @@ function CreateGroup() {
                 <Popup
                     trigger={
                         <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                            test{' '}
-                            {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
+                            test
                         </div>
                     }
                     position="bottom right"
@@ -203,8 +202,8 @@ function CreateGroup() {
                         </label>
                     </div>
                 ))}
-            </div> */}
-            {/* {selectedVisibility === 'protected' && (
+            </div>
+            {selectedVisibility === 'protected' && (
                 <div className="w-[60%]">
                     <InputField
                         label=""
