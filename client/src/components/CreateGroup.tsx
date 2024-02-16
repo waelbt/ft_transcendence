@@ -11,6 +11,7 @@ import { isAxiosError } from 'axios';
 import { FieldValues, useForm } from 'react-hook-form';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useEffect, useState } from 'react';
+import Popup from 'reactjs-popup';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
@@ -56,30 +57,27 @@ function CreateGroup() {
         }
     }, [errors, isSubmitting]);
 
-    // const handleSubmit_a = async (data: FieldValues) => {
-    //     try {
-    //         await axiosPrivate.post(
-    //             '/chat/createRoom',
-    //             JSON.stringify({
-    //                 roomTitle: data['title'],
-    //                 isConversation: false,
-    //                 privacy: 'PUBLIC',
-    //                 password: ''
-    //             }),
-    //             {
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-
-    //         toast.success('Profile created successfully');
-    //     } catch (error) {
-    //         if (isAxiosError(error)) toast.error(error.response?.data?.message);
-    //     }
-    // };
     const onSubmit = async (data: FieldValues) => {
-        console.log('form data', data);
+        console.log('www', data);
+        //     try {
+        //         await axiosPrivate.post(
+        //             '/chat/createRoom',
+        //             JSON.stringify({
+        //                 roomTitle: data['title'],
+        //                 isConversation: false,
+        //                 privacy: 'PUBLIC',
+        //                 password: ''
+        //             }),
+        //             {
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 }
+        //             }
+        //         );
+        //         toast.success('Profile created successfully');
+        //     } catch (error) {
+        //         if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        //     }
     };
     return (
         <form
@@ -164,8 +162,24 @@ function CreateGroup() {
                     disabled={isSubmitting}
                 />
             </div>
-
-            <div className="flex gap-5">
+            <div className="w-full px-10 bg-">
+                {/* <div>test</div> */}
+                <Popup
+                    trigger={
+                        <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
+                            test{' '}
+                            {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
+                        </div>
+                    }
+                    position="bottom right"
+                    nested
+                >
+                    <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
+                        not implemneted yet
+                    </div>
+                </Popup>
+            </div>
+            {/* <div className="flex gap-5">
                 {VISIBILTYOPTIONS.map((visibility, index) => (
                     <div className="flex items-center mb-4" key={index}>
                         <input
@@ -189,8 +203,8 @@ function CreateGroup() {
                         </label>
                     </div>
                 ))}
-            </div>
-            {selectedVisibility === 'protected' && (
+            </div> */}
+            {/* {selectedVisibility === 'protected' && (
                 <div className="w-[60%]">
                     <InputField
                         label=""
@@ -201,18 +215,18 @@ function CreateGroup() {
                             maxLength: {
                                 value: 10,
                                 message:
-                                    'group name must be less than 10 characters'
+                                    'password name must be less than 10 characters'
                             },
                             minLength: {
                                 value: 3,
                                 message:
-                                    'group name must be at least 3 characters'
+                                    'password name must be at least 3 characters'
                             }
                         })}
                         disabled={isSubmitting}
                     />
                 </div>
-            )}
+            )} */}
         </form>
     );
 }
