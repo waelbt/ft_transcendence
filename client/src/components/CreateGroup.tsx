@@ -5,13 +5,13 @@ import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Popup from 'reactjs-popup';
 // import { useUserStore } from '../stores/userStore';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 // import { isAxiosError } from 'axios';
-// import { VISIBILTYOPTIONS } from '../constants';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { VISIBILTYOPTIONS } from '../constants';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
@@ -35,7 +35,7 @@ function CreateGroup() {
         // success,
         // setProgress
     } = useImageUpload();
-    // const [selectedVisibility, setSelectedVisibility] = useState('');
+    const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const visibilityOptions = watch('visibilityOption');
 
@@ -162,19 +162,27 @@ function CreateGroup() {
                     disabled={isSubmitting}
                 />
             </div>
-            <div className="w-full px-10 bg-">
-                {/* <div>test</div> */}
+            <div className="w-full px-10 ">
                 <Popup
                     trigger={
                         <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
                             test
                         </div>
                     }
-                    position="bottom right"
+                    position="bottom center"
                     nested
                 >
-                    <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
-                        not implemneted yet
+                    <div className="p-2.5 w-max pb-0.5 bg-white rounded-[5px] shadow flex-col justify-start items-center inline-flex">
+                        {VISIBILTYOPTIONS.map((visibility, index) => (
+                            <div
+                                key={index}
+                                className="w-[89px] px-[15px] py-2.5 border-b border-black border-opacity-20 justify-center items-center gap-2.5 inline-flex"
+                            >
+                                <div className="text-zinc-600 text-lg font-normal font-['Acme']">
+                                    {visibility.toLowerCase()}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </Popup>
             </div>
@@ -202,7 +210,7 @@ function CreateGroup() {
                         </label>
                     </div>
                 ))}
-            </div>
+            </div> */}
             {selectedVisibility === 'protected' && (
                 <div className="w-[60%]">
                     <InputField
@@ -225,7 +233,7 @@ function CreateGroup() {
                         disabled={isSubmitting}
                     />
                 </div>
-            )} */}
+            )}
         </form>
     );
 }

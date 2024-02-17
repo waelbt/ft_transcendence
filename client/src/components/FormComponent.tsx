@@ -29,11 +29,13 @@ function FormComponent({
             if (firstErrorKey) {
                 const errorMessage = errors[firstErrorKey]?.message;
                 if (typeof errorMessage === 'string') {
+                    toast.dismiss();
                     toast.error(errorMessage);
                 }
             }
         }
     }, [errors, isSubmitting]);
+
     return (
         <form
             className="flex flex-col items-center space-y-3 w-full"

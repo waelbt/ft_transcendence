@@ -55,7 +55,7 @@ export class twoFAService {
     async validateTwoFAToken(token: string, secret: string): Promise<boolean> {
         const isValidToken = speakeasy.totp.verify({
             secret,
-            token,
+            token
         });
         return isValidToken;
     }
@@ -66,8 +66,7 @@ export class twoFAService {
             where: { id: req.user.sub }
         });
 
-        if (!user) 
-            throw new NotFoundException(`User does not exist`);
+        if (!user) throw new NotFoundException(`User does not exist`);
 
         console.log('secret: ', user.f2A_Secret);
         const isValidToken = await this.validateTwoFAToken(
@@ -85,7 +84,7 @@ export class twoFAService {
                 .status(200)
                 .json({ message: '2FA validation successful', user });
         } else {
-            return res.status(403).json({ message: 'Invalid 2FA token' });
+            return res.status(403).json({ message: 'Invalid 2FA code' });
         }
     }
 

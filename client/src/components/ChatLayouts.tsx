@@ -123,7 +123,7 @@ function ChatLayouts() {
                     ))}
                 </div>
                 {isEventOpen && (
-                    <Modal removable={true}>
+                    <Modal removable={false}>
                         <CreateGroup />
                     </Modal>
                 )}
