@@ -53,7 +53,9 @@ export function Chat() {
 
         fetchMessages();
         socket?.on('dmMessage', (message: Message) => {
-            pushMessage(message);
+            if (roomId) {
+                if (message.dmId === +roomId) pushMessage(message);
+            }
         });
         // socket?.on('forbidden', () => {
         //     setIsblocked(true);
@@ -62,7 +64,7 @@ export function Chat() {
             // socket?.off('forbidden');
             socket?.off('dmMessage');
         };
-    }, []);
+    }, [roomId]);
 
     const InvitePlayer = () => {};
 
