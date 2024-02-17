@@ -9,6 +9,7 @@ import { useUserStore } from '../../stores/userStore';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
+import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 export function Chat() {
     const { roomId } = useParams();
@@ -19,7 +20,8 @@ export function Chat() {
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setMessage(e.target.value);
+        if (e.target.value.length <= MAX_MESSAGE_LENGTH)
+            setMessage(e.target.value);
     };
     // const [isblocked, setIsblocked] = useState<boolean>(false);
     // const navigate = useNavigate();
@@ -78,7 +80,7 @@ export function Chat() {
         <div className=" flex-grow h-full flex gap-0 ">
             <div className="flex flex-col w-[70%] items-center justify-end ">
                 {/* content */}
-                <div className="flex-grow w-full bg-gray-100 z-[0] pb-5 overflow-y-auto flex flex-col relative justify-end">
+                <div className="flex-grow w-full bg-gray-200 z-[0] pb-5 overflow-y-auto flex flex-col relative justify-end">
                     {/* Background div */}
                     <img
                         className="absolute top-0 left-0 z-[-1] w-full h-full object-cover"
@@ -87,11 +89,11 @@ export function Chat() {
                     />
 
                     {/* Messages */}
-                    <div className="overflow-y-auto h-full flex flex-col justify-end">
+                    <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`flex z-[10] mx-5 gap-2 ${
+                                className={`flex z-[10] mx-5  gap-2 ${
                                     msg.senderId !== userId
                                         ? 'flex-row'
                                         : 'flex-row-reverse'
@@ -129,6 +131,12 @@ export function Chat() {
                         placeholder="send message"
                         className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700 text-sm font-semibold font-['Poppins'] outline-none"
                     />
+                    <div className=" text-stone-500  w-10 text-xs flex flex-col">
+                        <div className="inline-flex justify-between">
+                            <div>{message.length}</div>/
+                        </div>
+                        <div>{MAX_MESSAGE_LENGTH}</div>
+                    </div>
                     <RiSendPlaneFill
                         size={38}
                         className="text-blue-800 mr-5 cursor-pointer"

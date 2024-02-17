@@ -18,6 +18,8 @@ export const MENU_FIELDS = [
     }
 ];
 
+export const MAX_MESSAGE_LENGTH = 280;
+
 export const VISIBILTYOPTIONS = ['private', 'public', 'protected'];
 
 export const NICKNAME_FIELD = [
@@ -40,8 +42,6 @@ export const NICKNAME_FIELD = [
         }
     }
 ];
-
-
 
 export const ACTIONS_ENDPOINTS: { [key: string]: string } = {
     'Remove Friend': `/friends/removeFriend/`,

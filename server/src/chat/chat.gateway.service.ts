@@ -185,7 +185,7 @@ export class WebSocketService {
         if (!dm) {
             newDm = await this.createDm(user1id, user2id);
             console.log(newDm, 'first time talking');
-            return newDm;
+            return newDm.id;
         }
         return dm.id;
     }

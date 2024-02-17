@@ -41,12 +41,11 @@ function Layout() {
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
         });
-        initializeSocket(accessToken, id);
+        initializeSocket(accessToken);
         initializeGameSocket();
         console.log('id  ', id);
         return () => {
             socket?.disconnect();
-
             gameSocket?.disconnect();
         };
     }, []);

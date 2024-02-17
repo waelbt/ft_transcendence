@@ -62,10 +62,10 @@ export class ChatGateway
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
-            await this.prisma.user.update({
-                where: { id: userCheck.userData.sub },
-                data: { status: true }
-            });
+            // await this.prisma.user.update({
+            //     where: { id: userCheck.userData.sub },
+            //     data: { status: true }
+            // });
             console.log(
                 `This user ${userCheck.userData.email} is now connected`
             );
@@ -196,11 +196,23 @@ export class ChatGateway
                 sendMessage.roomId,
                 sendMessage.message
             );
-            
-            if (await this.blockService.isUserBlocked(userCheck.userData.sub, dmroom.users[0].id))
+
+            if (
+                await this.blockService.isUserBlocked(
+                    userCheck.userData.sub,
+                    dmroom.users[0].id
+                )
+            )
                 this.server.to(client.id).emit('forbidden');
-            else
-                this.server.to(dmroom.roomTitle).emit('dmMessage', dmroom.messages[dmroom.messages.length - 1]);
+            else {
+                console.log('event dmMessage');
+                this.server
+                    .to(dmroom.roomTitle)
+                    .emit(
+                        'dmMessage',
+                        dmroom.messages[dmroom.messages.length - 1]
+                    );
+            }
         }
     }
 
