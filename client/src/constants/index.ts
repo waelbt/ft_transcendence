@@ -20,7 +20,7 @@ export const MENU_FIELDS = [
 
 export const MAX_MESSAGE_LENGTH = 280;
 
-export const VISIBILTYOPTIONS = ['PRIVATE', 'PUBLIC', 'PROTECTED'];
+export const VISIBILTYOPTIONS = ['PUBLIC', 'PROTECTED', 'PRIVATE'];
 
 export const NICKNAME_FIELD = [
     {

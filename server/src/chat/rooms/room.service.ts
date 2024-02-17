@@ -72,7 +72,17 @@ export class RoomService {
             });
             return room;
         }
-        return newRoom;
+
+        const roomCreated: GetRoomsDto = {
+            roomId: newRoom.id,
+            avatar: newRoom.avatar,
+            roomTitle: newRoom.roomTitle,
+            lastMessage: '',
+            nickName: newRoom.roomTitle,
+            lastMessageTime: null,
+            isRoom: true
+        };
+        return roomCreated;
     }
 
     async findRoomByTitle(roomTitle: string) {
@@ -189,20 +199,32 @@ export class RoomService {
         return { joinedRoom: room, state: true };
     }
 
-    async getAllRooms() {
+    async getAllRooms(userId: string) {
         const rooms = await this.prisma.room.findMany({
             where: {
                 isConversation: false,
                 privacy: {
                     not: RoomPrivacy.PRIVATE
+                },
+                users: {
+                    none: {
+                        id: userId,
+                    },
+                },
+            },
+            select: {
+                id: true,
+                roomTitle: true,
+                avatar: true,
+                privacy: true,
+                users: {
+                    select : {
+                        id: true,
+                    }
                 }
             },
-            include: {
-                users: true,
-                messages: true
-            }
         });
-
+        console.log('rooms', rooms);
         return rooms;
     }
 

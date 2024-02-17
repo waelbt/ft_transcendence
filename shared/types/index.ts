@@ -65,6 +65,8 @@ export interface RoomsList {
     lastMessageTime: string;
 
     isRoom: boolean;
+
+    privacy?: string;
 }
 
 export interface OnlineUser {

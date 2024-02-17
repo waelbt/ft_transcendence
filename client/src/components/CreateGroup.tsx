@@ -6,12 +6,12 @@ import { IoTrashOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import Popup from 'reactjs-popup';
+// import Popup from 'reactjs-popup';
 // import { useUserStore } from '../stores/userStore';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
-// import { isAxiosError } from 'axios';
-import { VISIBILTYOPTIONS } from '../constants';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { isAxiosError } from 'axios';
+import { VISIBILTYOPTIONS } from '../constants';
+import { useChatStore } from '../stores/chatStore';
 
 function CreateGroup() {
     const { closeEvent } = useModelStore();
@@ -23,8 +23,8 @@ function CreateGroup() {
         watch,
         formState: { errors, isSubmitting }
     } = useForm({});
-
-    // const axiosPrivate = useAxiosPrivate();
+    const { pushRoom, socket } = useChatStore();
+    const axiosPrivate = useAxiosPrivate();
     const {
         progress,
         uploadData,
@@ -46,11 +46,13 @@ function CreateGroup() {
     }, [visibilityOptions, setValue]);
 
     useEffect(() => {
+        console.log(errors);
         if (isSubmitting) {
             const firstErrorKey = Object.keys(errors)[0];
             if (firstErrorKey) {
                 const errorMessage = errors[firstErrorKey]?.message;
                 if (typeof errorMessage === 'string') {
+                    toast.dismiss();
                     toast.error(errorMessage);
                 }
             }
@@ -58,26 +60,34 @@ function CreateGroup() {
     }, [errors, isSubmitting]);
 
     const onSubmit = async (data: FieldValues) => {
-        console.log('www', data);
-        //     try {
-        //         await axiosPrivate.post(
-        //             '/chat/createRoom',
-        //             JSON.stringify({
-        //                 roomTitle: data['title'],
-        //                 isConversation: false,
-        //                 privacy: 'PUBLIC',
-        //                 password: ''
-        //             }),
-        //             {
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 }
-        //             }
-        //         );
-        //         toast.success('Profile created successfully');
-        //     } catch (error) {
-        //         if (isAxiosError(error)) toast.error(error.response?.data?.message);
-        //     }
+        try {
+            const res = await axiosPrivate.post(
+                '/chat/createRoom',
+                JSON.stringify({
+                    avatar: imagePath
+                        ? imagePath
+                        : `${import.meta.env.VITE_DEFAULT_AVATAR}2.png`,
+                    roomTitle: data['title'],
+                    isConversation: false,
+                    privacy: data['visibilityOption'],
+                    password: data['password']
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            pushRoom(res.data);
+            socket?.emit('joinRoom', {
+                ...res.data,
+                password: data['password']
+            });
+            toast.success('group created successfully');
+            closeEvent();
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        }
     };
     return (
         <form
@@ -162,78 +172,66 @@ function CreateGroup() {
                     disabled={isSubmitting}
                 />
             </div>
-            <div className="w-full px-10 ">
-                <Popup
-                    trigger={
-                        <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                            test
-                        </div>
-                    }
-                    position="bottom center"
-                    nested
-                >
-                    <div className="p-2.5 w-max pb-0.5 bg-white rounded-[5px] shadow flex-col justify-start items-center inline-flex">
-                        {VISIBILTYOPTIONS.map((visibility, index) => (
-                            <div
-                                key={index}
-                                className="w-[89px] px-[15px] py-2.5 border-b border-black border-opacity-20 justify-center items-center gap-2.5 inline-flex"
-                            >
-                                <div className="text-zinc-600 text-lg font-normal font-['Acme']">
-                                    {visibility.toLowerCase()}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </Popup>
-            </div>
-            {/* <div className="flex gap-5">
-                {VISIBILTYOPTIONS.map((visibility, index) => (
-                    <div className="flex items-center mb-4" key={index}>
-                        <input
-                            id={`default-radio-${visibility}`}
-                            type="radio"
-                            {...register('visibilityOption', {
-                                required: 'A visibility option is required!'
-                            })}
-                            value={visibility}
-                            checked={selectedVisibility === visibility}
-                            onChange={(e) =>
-                                setSelectedVisibility(e.target.value)
-                            }
-                            className="w-4 h-4  bg-gray-100 border-gray-300 rounded focus:ring-blue focus:ring-1"
-                        />
-                        <label
-                            htmlFor={`default-radio-${visibility}`}
-                            className="ms-2 text-lg font-['Acme'] font-medium text-zinc-600"
+
+            <div className="flex  w-full items-center justify-between relative">
+                <div className="flex flex-col w-full pl-5 items-start">
+                    {VISIBILTYOPTIONS.map((visibility, index) => (
+                        <div
+                            className="flex items-center mb-4 justify-between"
+                            key={index}
                         >
-                            {visibility}
-                        </label>
-                    </div>
-                ))}
-            </div> */}
-            {selectedVisibility === 'protected' && (
-                <div className="w-[60%]">
-                    <InputField
-                        label=""
-                        type="password"
-                        placeholder="password"
-                        register={register('password', {
-                            required: 'password is required!',
-                            maxLength: {
-                                value: 10,
-                                message:
-                                    'password name must be less than 10 characters'
-                            },
-                            minLength: {
-                                value: 3,
-                                message:
-                                    'password name must be at least 3 characters'
-                            }
-                        })}
-                        disabled={isSubmitting}
-                    />
+                            <div className="flex items-center justify-center">
+                                <input
+                                    id={`default-radio-${visibility}`}
+                                    type="radio"
+                                    {...register('visibilityOption', {
+                                        required:
+                                            'A visibility option is required!'
+                                    })}
+                                    value={visibility}
+                                    checked={selectedVisibility === visibility}
+                                    onChange={(e) =>
+                                        setSelectedVisibility(e.target.value)
+                                    }
+                                    className="w-4 h-4  bg-gray-100 border-gray-300 rounded focus:ring-blue focus:ring-1"
+                                />
+                                <label
+                                    htmlFor={`default-radio-${visibility}`}
+                                    className="ms-2 text-lg  font-['Acme'] font-medium text-zinc-600"
+                                >
+                                    {visibility.toLowerCase()}
+                                </label>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            )}
+                {selectedVisibility === 'PROTECTED' && (
+                    <div className="absolute right-14 top-1/2 transition -translate-y-10">
+                        <InputField
+                            label=""
+                            type="password"
+                            placeholder="password"
+                            register={register('password', {
+                                required: 'password is required!',
+                                maxLength: {
+                                    value: 10,
+                                    message:
+                                        'password name must be less than 10 characters'
+                                },
+                                minLength: {
+                                    value: 3,
+                                    message:
+                                        'password name must be at least 3 characters'
+                                }
+                            })}
+                            disabled={isSubmitting}
+                        />
+                    </div>
+                )}
+            </div>
+            <button className="px-5 py-3 bg-black rounded-md flex-col justify-center items-center gap-2.5 flex text-center text-white text-lg font-normal font-['Acme'] cursor-pointer hover:bg-stone-800">
+                submit
+            </button>
         </form>
     );
 }

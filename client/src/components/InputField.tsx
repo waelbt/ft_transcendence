@@ -30,7 +30,7 @@ function InputField({
                               }
                             : {}
                     }
-                    className={`w-full h-[47px] pl-5 pr-2.5 py-2.5 bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
+                    className={`w-full bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
                     type={type}
                     placeholder={placeholder}
                     {...register}

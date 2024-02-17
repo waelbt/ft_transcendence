@@ -1,7 +1,7 @@
 // ! duplicated type
 export type ProfileOutletContextType = {
     isCurrentUser?: boolean;
-    friends?: string[];
-    block?: string[];
+    friendsIds?: string[];
+    blocksIds?: string[];
     paramId?: string;
 };

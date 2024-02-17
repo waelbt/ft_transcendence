@@ -1,43 +1,136 @@
-export function Room() {
-    return <div>Room</div>;
-}
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { RiSendPlaneFill } from 'react-icons/ri';
+import useAxiosPrivate from '../../hooks/axiosPrivateHook';
+import { NavLink, useParams } from 'react-router-dom';
+import { useChatStore } from '../../stores/chatStore';
+import { Message } from '../../../../shared/types';
+import { Avatar } from '../../components';
+import { useUserStore } from '../../stores/userStore';
+import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
+import { DateFormatter } from '../../tools/date_parsing';
+import { MAX_MESSAGE_LENGTH } from '../../constants';
 
-{
-    /* <div class="flex items-start gap-2.5">
-   <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image">
-   <div class="flex flex-col gap-1 w-full max-w-[320px]">
-      <div class="flex items-center space-x-2 rtl:space-x-reverse">
-         <span class="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-         <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
-      </div>
-      <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-         <p class="text-sm font-normal text-gray-900 dark:text-white"> That's awesome. I think our users will really appreciate the improvements.</p>
-      </div>
-      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
-   </div>
-   <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" class="inline-flex self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600" type="button">
-      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-         <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-      </svg>
-   </button>
-   <div id="dropdownDots" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700 dark:divide-gray-600">
-      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reply</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Forward</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Copy</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-         </li>
-      </ul>
-   </div>
-</div> */
+export function Room() {
+    const { roomId } = useParams();
+    const [message, setMessage] = useState<string>('');
+    const axiosPrivate = useAxiosPrivate();
+    const { socket, updateState, messages, pushMessage } = useChatStore();
+    const { id: userId } = useUserStore();
+    const contentRef = useRef<HTMLDivElement>(null);
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value.length <= MAX_MESSAGE_LENGTH)
+            setMessage(e.target.value);
+    };
+    // const [isblocked, setIsblocked] = useState<boolean>(false);
+    // const navigate = useNavigate();
+
+    const sendMessage = () => {
+        if (message.trim()) {
+            // setMessages((prevMessages) => [message, ...prevMessages]);
+            socket?.emit('message', { message: message, roomId: roomId });
+            setMessage('');
+        }
+    };
+
+    useEffect(() => {
+        contentRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            try {
+                const res = await axiosPrivate.get(`/chat/room/${roomId}`);
+                console.log('www', res);
+                updateState({
+                    messages: res.data.messages
+                });
+            } catch (error) {
+                console.error('There was a problem fetching messages:', error);
+            }
+        };
+
+        fetchMessages();
+        socket?.on('message', (message: Message) => {
+            if (roomId) {
+                if (message.dmId === +roomId) pushMessage(message);
+            }
+        });
+
+        return () => {
+            socket?.off('message');
+        };
+    }, [roomId]);
+
+    return (
+        <div className=" flex-grow h-full flex gap-0 ">
+            <div className="flex flex-col w-[70%] items-center justify-end ">
+                {/* content */}
+                <div className="flex-grow w-full bg-gray-200 z-[0] pb-5 overflow-y-auto flex flex-col relative justify-end">
+                    {/* Background div */}
+                    <img
+                        className="absolute top-0 left-0 z-[-1] w-full h-full object-cover"
+                        src="../../..//chat-bg.png" // Ensure this path is correct
+                        alt="Chat Background"
+                    />
+
+                    {/* Messages */}
+                    <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
+                        {messages.map((msg, index) => (
+                            <div
+                                key={index}
+                                className={`flex z-[10] mx-5  gap-2 ${
+                                    msg.senderId !== userId
+                                        ? 'flex-row'
+                                        : 'flex-row-reverse'
+                                } items-end`}
+                            >
+                                <div
+                                    key={index}
+                                    className={`rounded-lg my-1 p-2 text-sm flex flex-col relative ${
+                                        msg.senderId !== userId
+                                            ? 'rounded-tl-none speech-bubble-left bg-gray-700'
+                                            : 'rounded-tr-none speech-bubble-right bg-blue-800'
+                                    } max-w-[320px] text-white`}
+                                    style={{ wordWrap: 'break-word' }}
+                                >
+                                    {msg.message}
+                                </div>
+                                <div className="text-gray-600 text-xs leading-none bottom-0">
+                                    {DateFormatter(msg.createdAt)}
+                                </div>
+                            </div>
+                        ))}
+                        <div ref={contentRef}></div>
+                    </div>
+                </div>
+                {/* 8:45 AM */}
+                <div
+                    //  ${isblocked ? 'hidden' : ''}
+                    className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center"
+                >
+                    <input
+                        type="text"
+                        value={message}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                        placeholder="send message"
+                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700 text-sm font-semibold font-['Poppins'] outline-none"
+                    />
+                    <div className=" text-stone-500  w-10 text-xs flex flex-col">
+                        <div className="inline-flex justify-between">
+                            <div>{message.length}</div>/
+                        </div>
+                        <div>{MAX_MESSAGE_LENGTH}</div>
+                    </div>
+                    <RiSendPlaneFill
+                        size={38}
+                        className="text-blue-800 mr-5 cursor-pointer"
+                        onClick={sendMessage}
+                    />
+                </div>
+            </div>
+            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-center justify-center gap-10"></div>
+        </div>
+    );
 }

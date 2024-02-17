@@ -54,8 +54,8 @@ export class ChatController {
     }
 
     @Get('AllRooms')
-    async getAllRooms() {
-        return await this.roomService.getAllRooms();
+    async getAllRooms(@Req() req) {
+        return await this.roomService.getAllRooms(req.user.sub);
     }
 
     @Get('mydms')

@@ -14,6 +14,7 @@ type ChatMethod = {
     initializeSocket: (token: string | null) => void;
     updateState: (newState: Partial<ChatState>) => void;
     pushMessage: (msg: Message) => void;
+    pushRoom: (room: RoomsList) => void;
 };
 
 export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
@@ -30,6 +31,12 @@ export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
 
         const newMessages = [...messages, msg];
         set({ messages: newMessages });
+    },
+    pushRoom: (room) => {
+        const { Layout_Rooms } = get();
+
+        const newMessages = [...Layout_Rooms, room];
+        set({ Layout_Rooms: newMessages });
     },
     initializeSocket: (token) => {
         const { socket } = get();
