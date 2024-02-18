@@ -5,8 +5,10 @@ import { Message, RoomsList, User } from '../../../shared/types';
 type ChatState = {
     socket: Socket | null;
     // currentRoomId: string;
-    currentUser: User | null;
-    messages: Message[];
+    currentDm: User | null;
+    // currentGroup: room | null;
+    // currentGroupMessgaes: Messages[];
+    dmMessages: Message[];
     Layout_Rooms: RoomsList[];
 };
 
@@ -19,18 +21,17 @@ type ChatMethod = {
 
 export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
     socket: null,
-    // currentRoomId: '',
-    currentUser: null,
+    currentDm: null,
     Layout_Rooms: [],
-    messages: [],
+    dmMessages: [],
     updateState: (newState) => {
         set((state) => ({ ...state, ...newState }));
     },
     pushMessage: (msg) => {
-        const { messages } = get();
+        const { dmMessages } = get();
 
-        const newMessages = [...messages, msg];
-        set({ messages: newMessages });
+        const newMessages = [...dmMessages, msg];
+        set({ dmMessages: newMessages });
     },
     pushRoom: (room) => {
         const { Layout_Rooms } = get();
@@ -51,53 +52,3 @@ export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
         }
     }
 }));
-
-// import { create } from 'zustand';
-// import io, { Socket } from 'socket.io-client';
-
-// type Room = {
-//     id: number;
-// };
-
-// type SocketState = {
-//     socket: Socket | null;
-//     messages: { message: string }[];
-//     rooms: Room[];
-// };
-
-// type MethodState = {
-//     initializeSocket: (token: string | null) => void;
-//     updateState: (newState: Partial<SocketState>) => void;
-//     // clearMessage: () => void;
-//     // pushMessage: (msg: string) => void;
-//     // addRoom: (room: Room) => void;
-// };
-
-// export const useChatStore = create<SocketState & MethodState>((set, get) => ({
-//     socket: null,
-//     messages: [],
-//     rooms: [],
-
-//     updateState: (newState) => {
-//         set((state) => ({ ...state, ...newState }));
-//     },
-//     initializeSocket: (token) => {
-//         const { socket } = get();
-//         if (token && !socket) {
-//             const newSocket = io(`${import.meta.env.VITE_BASE_URL}/chat`, {
-//                 path: '/socket.io',
-//                 transports: ['websocket'],
-//                 secure: true,
-//                 auth: { token: token }
-//             });
-//             set({ socket: newSocket });
-//         }
-//     }
-
-//     // clearMessage: () => {
-//     //     set({ messages: [] });
-//     // },
-//     // addRoom: (room) => {
-//     //     set((state) => ({ rooms: [...state.rooms, room] }));
-//     // }
-// }));

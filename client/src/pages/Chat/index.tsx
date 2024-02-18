@@ -15,7 +15,7 @@ export function Chat() {
     const { roomId } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, messages, pushMessage, currentUser } =
+    const { socket, updateState, dmMessages, pushMessage, currentDm } =
         useChatStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -36,15 +36,15 @@ export function Chat() {
 
     useEffect(() => {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [dmMessages]);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/dm/${roomId}`);
                 updateState({
-                    currentUser: res.data.users[0],
-                    messages: res.data.messages
+                    currentDm: res.data.users[0],
+                    dmMessages: res.data.messages
                 });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
@@ -70,8 +70,8 @@ export function Chat() {
 
     const blockUser = async () => {
         try {
-            await axiosPrivate.post(`/users/blockUser/${currentUser?.id}`);
-            addUserBlockId(currentUser ? currentUser.id : '');
+            await axiosPrivate.post(`/users/blockUser/${currentDm?.id}`);
+            addUserBlockId(currentDm ? currentDm.id : '');
             // navigate('/chat/');
         } catch (error) {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
@@ -92,7 +92,7 @@ export function Chat() {
 
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
-                        {messages.map((msg, index) => (
+                        {dmMessages.map((msg, index) => (
                             <div
                                 key={index}
                                 className={`flex z-[10] mx-5  gap-2 ${
@@ -103,7 +103,7 @@ export function Chat() {
                             >
                                 <div
                                     key={index}
-                                    className={`rounded-lg my-1 p-2 text-sm flex flex-col relative ${
+                                    className={`rounded-lg my-1 p-2  flex flex-col relative text-sm font-normal font-['Acme']      ${
                                         msg.senderId !== userId
                                             ? 'rounded-tl-none speech-bubble-left bg-gray-700'
                                             : 'rounded-tr-none speech-bubble-right bg-blue-800'
@@ -112,7 +112,7 @@ export function Chat() {
                                 >
                                     {msg.message}
                                 </div>
-                                <div className="text-gray-600 text-xs leading-none bottom-0">
+                                <div className="text-gray-600  leading-none bottom-0 text-xs font-normal font-['Acme']">
                                     {DateFormatter(msg.createdAt)}
                                 </div>
                             </div>
@@ -131,11 +131,11 @@ export function Chat() {
                         onChange={handleInputChange}
                         onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                         placeholder="send message"
-                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700 text-sm font-semibold font-['Poppins'] outline-none"
+                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700  outline-none py-5 text-base font-normal font-['Acme']"
                     />
                     <div className=" text-stone-500  w-10 text-xs flex flex-col">
                         <div className="inline-flex justify-between">
-                            <div>{message.length}</div>/
+                            <div>{message.length}</div>
                         </div>
                         <div>{MAX_MESSAGE_LENGTH}</div>
                     </div>
@@ -149,17 +149,17 @@ export function Chat() {
             <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-center justify-center gap-10">
                 <div className="flex flex-col items-center justify-center gap-2">
                     <Avatar
-                        imageUrl={currentUser?.avatar}
+                        imageUrl={currentDm?.avatar}
                         style="w-32 h-32 bg-black rounded-[150px]  mr-2 flex-shrink-0 ring ring-stone-700"
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
-                        {currentUser?.nickName}
+                        {currentDm?.nickName}
                     </div>
                 </div>
                 <div className="flex-col justify-start items-center gap-5 flex">
                     <NavLink
                         className="justify-start items-center gap-0.5 inline-flex"
-                        to={`/profile/${currentUser?.id}`}
+                        to={`/profile/${currentDm?.id}`}
                     >
                         <div className="text-neutral-600 text-2xl font-normal font-['Acme'] leading-none cursor-pointer">
                             See Profile
