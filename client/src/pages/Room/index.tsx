@@ -29,7 +29,7 @@ export function Room() {
     const { roomId } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, messages, pushMessage } = useChatStore();
+    const { socket, updateState, dmMessages, pushMessage } = useChatStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +69,7 @@ export function Room() {
     const handleExit = () => {};
     useEffect(() => {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [dmMessages]);
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -77,7 +77,7 @@ export function Room() {
                 const res = await axiosPrivate.get(`/chat/room/${roomId}`);
                 console.log('www', res);
                 updateState({
-                    messages: res.data.messages
+                    dmMessages: res.data.messages
                 });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
@@ -110,7 +110,7 @@ export function Room() {
 
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
-                        {messages.map((msg, index) => {
+                        {dmMessages.map((msg, index) => {
                             if (userId !== msg.senderId) {
                                 return (
                                     <div

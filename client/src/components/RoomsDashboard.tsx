@@ -8,7 +8,7 @@ import { RoomsList } from '../../../shared/types';
 import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
-import { Avatar } from '.';
+import { Avatar, FormComponent } from '.';
 import { useChatStore } from '../stores/chatStore';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 // import { isAxiosError } from 'axios';
@@ -21,7 +21,6 @@ const RoomsDashboard: React.FC = () => {
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
     const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatStore();
-    const [showInput, setShowInput] = useState<boolean>(false);
     const HandleJoin = (room: RoomsList) => {
         // ? socket?.emit('joinRoom', { ...room. password });
         socket?.emit('joinRoom', { ...room });
@@ -92,19 +91,43 @@ const RoomsDashboard: React.FC = () => {
                                 {room.roomTitle}
                             </div>
                         </div>
-                        {!showInput ? (
+                        {filter !== 'PROTECTED' ? (
                             <div
                                 className="flex items-center rounded-md justify-center gap-2 p-1.5 hover:p-2 cursor-pointer font-['Acme'] bg-black text-white"
                                 onClick={() => {
-                                    filter === 'PROTECTED'
-                                        ? setShowInput(true)
-                                        : HandleJoin(room);
+                                    HandleJoin(room);
                                 }}
                             >
                                 join Rooms
                             </div>
                         ) : (
-                            <div></div>
+                            <div className="w-[30%] flex items-center justify-center gap-2">
+                                <FormComponent
+                                    fields={[
+                                        {
+                                            label: '',
+                                            type: 'password',
+                                            name: 'password',
+                                            placeholder: 'password',
+                                            validation: {
+                                                required:
+                                                    'password is required!',
+                                                maxLength: {
+                                                    value: 10,
+                                                    message:
+                                                        'password name must be less than 10 characters'
+                                                },
+                                                minLength: {
+                                                    value: 3,
+                                                    message:
+                                                        'password name must be at least 3 characters'
+                                                }
+                                            }
+                                        }
+                                    ]}
+                                    onSubmit={() => {}} // ! join room
+                                />
+                            </div>
                         )}
                     </div>
                 ))}
