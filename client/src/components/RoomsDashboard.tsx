@@ -21,7 +21,7 @@ const RoomsDashboard: React.FC = () => {
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
     const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatStore();
-
+    const [showInput, setShowInput] = useState<boolean>(false);
     const HandleJoin = (room: RoomsList) => {
         // ? socket?.emit('joinRoom', { ...room. password });
         socket?.emit('joinRoom', { ...room });
@@ -92,12 +92,20 @@ const RoomsDashboard: React.FC = () => {
                                 {room.roomTitle}
                             </div>
                         </div>
-                        <div
-                            className="flex items-center rounded-md justify-center gap-2 p-1.5 hover:p-2 cursor-pointer font-['Acme'] bg-black text-white"
-                            onClick={() => HandleJoin(room)}
-                        >
-                            join Rooms
-                        </div>
+                        {!showInput ? (
+                            <div
+                                className="flex items-center rounded-md justify-center gap-2 p-1.5 hover:p-2 cursor-pointer font-['Acme'] bg-black text-white"
+                                onClick={() => {
+                                    filter === 'PROTECTED'
+                                        ? setShowInput(true)
+                                        : HandleJoin(room);
+                                }}
+                            >
+                                join Rooms
+                            </div>
+                        ) : (
+                            <div></div>
+                        )}
                     </div>
                 ))}
             </div>
