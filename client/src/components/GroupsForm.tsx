@@ -13,7 +13,7 @@ import { isAxiosError } from 'axios';
 import { VISIBILTYOPTIONS } from '../constants';
 import { useChatStore } from '../stores/chatStore';
 
-function CreateGroup() {
+function GroupsForm() {
     const { closeEvent } = useModelStore();
     const {
         register,
@@ -153,24 +153,36 @@ function CreateGroup() {
                 </div>
             </div>
             <div className="w-[60%]">
-                <InputField
-                    label=""
-                    type="text"
-                    placeholder="Choose name for your group"
-                    register={register('title', {
-                        required: 'group name is required!',
-                        maxLength: {
-                            value: 10,
-                            message:
-                                'group name must be less than 10 characters'
-                        },
-                        minLength: {
-                            value: 3,
-                            message: 'group name must be at least 3 characters'
+                <div className="flex flex-col justify-start items-start gap-[7px] w-full">
+                    <input
+                        style={
+                            isSubmitting
+                                ? {
+                                      opacity: '0.8',
+                                      pointerEvents: 'none',
+                                      color: 'grey'
+                                  }
+                                : {}
                         }
-                    })}
-                    disabled={isSubmitting}
-                />
+                        className={`w-full bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
+                        type="text"
+                        placeholder="Choose name for your group"
+                        {...register('title', {
+                            required: 'group name is required!',
+                            maxLength: {
+                                value: 10,
+                                message:
+                                    'group name must be less than 10 characters'
+                            },
+                            minLength: {
+                                value: 3,
+                                message:
+                                    'group name must be at least 3 characters'
+                            }
+                        })}
+                        disabled={isSubmitting}
+                    />
+                </div>
             </div>
 
             <div className="flex  w-full items-center justify-between relative">
@@ -207,11 +219,20 @@ function CreateGroup() {
                 </div>
                 {selectedVisibility === 'PROTECTED' && (
                     <div className="absolute right-14 top-1/2 transition -translate-y-10">
-                        <InputField
-                            label=""
+                        <input
+                            style={
+                                isSubmitting
+                                    ? {
+                                          opacity: '0.8',
+                                          pointerEvents: 'none',
+                                          color: 'grey'
+                                      }
+                                    : {}
+                            }
+                            className={`w-full bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
                             type="password"
-                            placeholder="password"
-                            register={register('password', {
+                            placeholder="set password"
+                            {...register('password', {
                                 required: 'password is required!',
                                 maxLength: {
                                     value: 10,
@@ -236,4 +257,4 @@ function CreateGroup() {
     );
 }
 
-export default CreateGroup;
+export default GroupsForm;

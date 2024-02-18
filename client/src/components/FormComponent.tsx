@@ -1,22 +1,17 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import InputField from './InputField';
+import InputField from '../../deprecated/InputField';
 import toast from 'react-hot-toast';
 
 type FormProps = {
     fields: any[];
     // btn?: any;
-    onSubmit?: (data: any) => void;
+    onSubmit: (data: any) => void;
     defaultValues?: any;
     errors?: any;
 };
 
-function FormComponent({
-    fields,
-    // btn,
-    onSubmit,
-    defaultValues = {}
-}: FormProps) {
+function FormComponent({ fields, onSubmit, defaultValues = {} }: FormProps) {
     const {
         register,
         handleSubmit,
@@ -43,32 +38,32 @@ function FormComponent({
         >
             {fields.map((field, idx) => {
                 return (
-                    <InputField
+                    <div
                         key={idx}
-                        label={field.label}
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        register={register(field.name, field.validation)}
-                        disabled={isSubmitting || field.disabled}
-                        // secure={field.secure}
-                    />
+                        className="flex flex-col justify-start items-start gap-[7px] w-full"
+                    >
+                        <label className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+                            {field.label}
+                        </label>
+                        <input
+                            style={
+                                field.disabled
+                                    ? {
+                                          opacity: '0.8',
+                                          pointerEvents: 'none',
+                                          color: 'grey'
+                                      }
+                                    : {}
+                            }
+                            className={`w-full bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            {...register(field.name, field.validation)}
+                            disabled={field.disabled}
+                        />
+                    </div>
                 );
             })}
-            {/* {true ? (
-                <div className="w-full flex-col justify-center items-center gap-3 inline-flex">
-                    <button
-                        // ${
-                        // isSubmitting ? 'cursor-not-allowed bg-dark-pink' : ''
-                        // }`
-                        // ? style the disabled state
-                        // className={btn.style}
-                        // type={btn.type}
-                        disabled={isSubmitting}
-                    >
-                        test
-                    </button>
-                </div>
-            ) : null} */}
         </form>
     );
 }

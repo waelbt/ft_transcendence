@@ -24,7 +24,10 @@
         "src/**/*",
         "types/**/*",
         "deprecated/Rooms",
-        "deprecated/ChatSocketStore.ts"
+        "deprecated/ChatSocketStore.ts",
+        "deprecated/FriendsTable.tsx",
+        "deprecated/FriendCard.tsx",
+        "deprecated/InputField.tsx"
     ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

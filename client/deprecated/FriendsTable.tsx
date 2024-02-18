@@ -4,7 +4,7 @@ type FriendsTableProps = {
     friendsIdList: string[];
 };
 
-// ! not used 
+// ! not used
 function FriendsTable({ friendsIdList }: FriendsTableProps) {
     return (
         <div className="flex flex-col w-full">

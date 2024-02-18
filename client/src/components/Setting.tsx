@@ -123,7 +123,7 @@ function Setting() {
                                 label: '',
                                 type: 'text',
                                 name: 'nickName',
-                                placeholder: nickName,
+                                placeholder: 'set a new nickName',
                                 validation: {
                                     required: 'Nickname is required!',
                                     maxLength: {
@@ -140,6 +140,7 @@ function Setting() {
                             }
                         ]}
                         onSubmit={updateNickname}
+                        defaultValues={{ nickName: nickName }}
                     />
                 </div>
             </div>

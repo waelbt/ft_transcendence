@@ -1,4 +1,4 @@
-import { Avatar } from '.';
+import { Avatar } from '../src/components';
 // import { Popover, Transition } from '@headlessui/react';
 // import { Fragment } from 'react';
 // import { BsThreeDotsVertical } from 'react-icons/bs';
@@ -18,7 +18,7 @@ function FriendCard({ friendId }: FriendsTableProps) {
     const UnblockUser = (friendId: string) => {
         console.log('clicked by ', friendId);
         // todo: call the endpoint unblock
-        // todo: unpush id from blacked list 
+        // todo: unpush id from blacked list
         // todo: and push it to friend list
         // todo: check if every work fine
     };

@@ -42,11 +42,3 @@ function InputField({
 }
 
 export default InputField;
-
-{
-    /* <div className="w-[387px] h-[47px] pl-5 pr-2.5 py-2.5 bg-white border-b-2 border-gray-200 justify-start items-center gap-2.5 inline-flex">
-    <div className="text-center text-neutral-400 text-base font-normal font-['Poppins']">
-        Dos404
-    </div>
-</div>; */
-}

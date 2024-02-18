@@ -7,11 +7,11 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { useModelStore } from '../stores/ModelStore';
-import CreateGroup from './CreateGroup';
 import { useChatStore } from '../stores/chatStore';
 import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import RoomsDashboard from './RoomsDashboard';
+import GroupsForm from './GroupsForm';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');
@@ -137,7 +137,7 @@ function ChatLayouts() {
                 </div>
                 {isEventOpen && (
                     <Modal removable={false}>
-                        {state ? <CreateGroup /> : <RoomsDashboard />}
+                        {state ? <GroupsForm /> : <RoomsDashboard />}
                     </Modal>
                 )}
             </div>
