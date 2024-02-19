@@ -34,7 +34,7 @@ export class WebSocketService {
         try {
             joinedRooms = await this.roomService.getMyRooms(userId);
         } catch (err) {
-            console.log(err);
+            // console.log(err);
         }
         // console.log(joinedRooms);
         const dms = await this.getAllDms(userId);

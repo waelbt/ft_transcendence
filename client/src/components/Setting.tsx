@@ -23,6 +23,7 @@ function Setting() {
     const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
     const { uploadData, imagePath, setImagePath } = useImageUpload();
+    
 
     useEffect(() => {
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page

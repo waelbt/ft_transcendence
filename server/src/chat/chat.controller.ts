@@ -43,34 +43,6 @@ export class ChatController {
     }
 
     @Post('joinRoom')
-    async joinRoom(@Req() req, @Body() joinRoomDto: JoinRoomDto) {
-        // console.log(`controller: userid is ${req.user.sub}`)
-        return await this.roomService.joinRoom(joinRoomDto, req.user.sub);
-    }
-
-    @Post('leaveRoom')
-    async leaveRoom(@Req() req, @Body() leaveRoomDto: LeaveRoomDto) {
-        return await this.roomService.leaveRoom(leaveRoomDto, req.user.sub);
-    }
-
-    @Get('AllRooms')
-    async getAllRooms(@Req() req) {
-        return await this.roomService.getAllRooms(req.user.sub);
-    }
-
-    @Get('mydms')
-    async getMyDms(@Req() req) {
-        console.log('helooooooooooooo', req.user.sub);
-        return this.roomService.getAllMyDms(req.user.sub);
-    }
-
-    @Get('myRooms')
-    async getMyRooms(@Req() req, res: Response) {
-        console.log('hellooooooooooo', req.user.sub);
-
-        return await this.roomService.getMyRooms(req.user.sub);
-    }
-
     @Get('allChannels')
     async getAllChannels(@Req() req) {
         return await this.roomService.getAllChannels(req.user.sub);

@@ -234,6 +234,9 @@ export class ChatGateway
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
                 console.log(dmroom.roomTitle);
+                await this.server
+                    .in(client.id)
+                    .socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }
         }
