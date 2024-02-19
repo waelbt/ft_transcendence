@@ -20,7 +20,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     private waitingFriend: Socket | null = null;
 
-    private waitibgRoomIds: Record<string, string | null> = {
+    private waitibgids: Record<string, string | null> = {
         classic: null,
         crazy: null,
         IA: null
@@ -154,7 +154,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     { id: client.id, pos: 0 },
                     { id: null, pos: 0 }
                 ],
-                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userId]
+                plysIds: [this.waitibgids[payload.gameMode], payload.userId]
             };
 
             this.server.to(client.id).emit('startgame', {
@@ -168,7 +168,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] &&
             this.waitingRooms[payload.gameMode] !== client
         ) {
-            const room = `${this.waitibgRoomIds[payload.gameMode]}${
+            const room = `${this.waitibgids[payload.gameMode]}${
                 payload.userId
             }`;
             client.join(room);
@@ -197,7 +197,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     { id: this.waitingRooms[payload.gameMode].id, pos: 0 },
                     { id: client.id, pos: 0 }
                 ],
-                plysIds: [this.waitibgRoomIds[payload.gameMode], payload.userId]
+                plysIds: [this.waitibgids[payload.gameMode], payload.userId]
             };
             this.server
                 .to(this.waitingRooms[payload.gameMode].id)
@@ -210,7 +210,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.server.to(client.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 2,
-                opponentId: this.waitibgRoomIds[payload.gameMode]
+                opponentId: this.waitibgids[payload.gameMode]
                 // chosen: payload.gameMode,
             });
 
@@ -223,7 +223,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] = null;
         } else if (this.waitingRooms[payload.gameMode] === null) {
             this.waitingRooms[payload.gameMode] = client;
-            this.waitibgRoomIds[payload.gameMode] = payload.userId;
+            this.waitibgids[payload.gameMode] = payload.userId;
         }
     }
 

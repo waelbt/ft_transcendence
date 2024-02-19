@@ -52,7 +52,7 @@ export interface LeaderboardEntry {
 }
 
 export interface RoomsList {
-    roomId: number;
+    id: number;
 
     avatar: string;
 
@@ -76,10 +76,11 @@ export interface OnlineUser {
 
 export interface Message {
     id: number;
+    avatar?: string;
+    nickName?: string;
     message: string;
     createdAt: string;
     senderId: string;
-    dmId: number;
 }
 
 export interface DMRooms {

@@ -27,7 +27,6 @@ function ChatLayouts() {
         const fetchDns = async () => {
             try {
                 const res = await axiosPrivate.get('/chat/allChannels');
-                console.log('channels ', res);
                 updateState({ Layout_Rooms: res.data });
             } catch (error) {
                 if (isAxiosError(error))
@@ -100,9 +99,7 @@ function ChatLayouts() {
                     {Layout_Rooms.map((room, index) => (
                         <NavLink
                             key={`rooms${index}`}
-                            to={`${room.isRoom ? 'group' : 'dms'}/${
-                                room.roomId
-                            }`}
+                            to={`${room.isRoom ? 'group' : 'dms'}/${room.id}`}
                             className={({ isActive }) =>
                                 `w-full p-2.5 border-b border-neutral-200 justify-start items-center gap-2.5 flex cursor-pointer ${
                                     isActive ? 'bg-neutral-200' : 'bg-white'

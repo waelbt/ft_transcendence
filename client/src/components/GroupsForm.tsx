@@ -91,7 +91,7 @@ function GroupsForm() {
     };
     return (
         <form
-            className="px-4 pt-4 pb-4 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-[15px] inline-flex relative"
+            className="px-4 pt-4 pb-4  bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-5  inline-flex relative"
             onSubmit={handleSubmit(onSubmit)}
         >
             <div
@@ -186,7 +186,7 @@ function GroupsForm() {
             </div>
 
             <div className="flex  w-full items-center justify-between relative">
-                <div className="flex flex-col w-full pl-5 items-start">
+                <div className="flex flex-col w-full pl-5 items-start  justify-start">
                     {VISIBILTYOPTIONS.map((visibility, index) => (
                         <div
                             className="flex items-center mb-4 justify-between"
@@ -234,13 +234,8 @@ function GroupsForm() {
                             placeholder="set password"
                             {...register('password', {
                                 required: 'password is required!',
-                                maxLength: {
-                                    value: 10,
-                                    message:
-                                        'password name must be less than 10 characters'
-                                },
                                 minLength: {
-                                    value: 3,
+                                    value: 5,
                                     message:
                                         'password name must be at least 3 characters'
                                 }

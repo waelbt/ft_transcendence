@@ -25,6 +25,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateMessageDto } from '../DTOS/create-message-dto';
 import { GetRoomsDto } from '../DTOS/get-rooms.dto';
 import { dirxml, log } from 'console';
+import { SendMessageDto } from '../DTOS/send-message-dto';
 
 @Injectable()
 export class RoomService {
@@ -74,7 +75,7 @@ export class RoomService {
         }
 
         const roomCreated: GetRoomsDto = {
-            roomId: newRoom.id,
+            id: newRoom.id,
             avatar: newRoom.avatar,
             roomTitle: newRoom.roomTitle,
             lastMessage: '',
@@ -200,6 +201,8 @@ export class RoomService {
     }
 
     async getAllRooms(userId: string) {
+        const allRooms: GetRoomsDto[] = [];
+    
         const rooms = await this.prisma.room.findMany({
             where: {
                 isConversation: false,
@@ -221,11 +224,34 @@ export class RoomService {
                     select : {
                         id: true,
                     }
-                }
+                },
+                messages: true,
             },
         });
-        console.log('rooms', rooms);
-        return rooms;
+    
+        rooms.forEach((item) => {
+            let lastMessage = '';
+            let createdAt = new Date();
+
+            if (item.messages.length > 0) {
+                lastMessage = item.messages[item.messages.length - 1].message;
+                createdAt = item.messages[item.messages.length - 1].createdAt;
+            }
+
+            const singleRoom: GetRoomsDto = {
+                id: item.id,
+                avatar: item.avatar,
+                roomTitle: item.roomTitle,
+                lastMessage: lastMessage,
+                nickName: item.roomTitle,
+                lastMessageTime: createdAt,
+                isRoom: true,
+                privacy: item.privacy,
+            };
+            allRooms.push(singleRoom);
+        });
+    
+        return allRooms;
     }
 
     async getOneRoom(roomId: number, userId: string) {
@@ -776,16 +802,20 @@ export class RoomService {
     }
 
     // createMessage
-    async createMessage(createMessageDto: CreateMessageDto, senderId: string) {
-        const room = await this.prisma.room.findFirst({
+    async createMessage(sendMessageDto: SendMessageDto, senderId: string) {
+        let room = await this.prisma.room.findFirst({
             where: {
-                roomTitle: createMessageDto.roomTitle
-            }
+                id: +sendMessageDto.id
+            },
+            include : {
+                messages: true,
+            },
         });
+    
         if (await this.isUserMuted(room.id, senderId)) {
             const newMessage = await this.prisma.message.create({
                 data: {
-                    message: createMessageDto.message,
+                    message: sendMessageDto.message,
                     sender: {
                         connect: {
                             id: senderId
@@ -803,8 +833,16 @@ export class RoomService {
                 }
             });
 
-            console.log(newMessage);
-            return newMessage;
+            room = await this.prisma.room.findFirst({
+                where: {
+                    id: +sendMessageDto.id
+                },
+                include : {
+                    messages: true,
+                },
+            });
+    
+            return (room);
         } else throw Error('You Are Muted');
     }
 
@@ -884,7 +922,7 @@ export class RoomService {
             }
 
             const singleRoom: GetRoomsDto = {
-                roomId: item.id,
+                id: item.id,
                 avatar: item.avatar,
                 roomTitle: item.roomTitle,
                 lastMessage: lastMessage,
@@ -908,7 +946,7 @@ export class RoomService {
             }
 
             const singleDm: GetRoomsDto = {
-                roomId: item.id,
+                id: item.id,
                 avatar: item.users[0].avatar,
                 roomTitle: item.users[0].nickName,
                 lastMessage: lastMessage,

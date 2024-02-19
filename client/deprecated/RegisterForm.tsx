@@ -50,10 +50,6 @@ export const RegisterForm = (props: RegisterFormProps) => {
             name: 'password',
             validation: {
                 required: 'Password is required!',
-                maxLength: {
-                    value: 40,
-                    message: 'Password must be less than 40 characters'
-                },
                 minLength: {
                     value: 5,
                     message: 'Password must be at least 5 characters'

@@ -27,9 +27,9 @@ function Layout() {
                     blocksIds,
                     ...user
                 });
-                console.log(user);
             } catch (error) {
-                console.log(error);
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
             } finally {
                 setIsLoading(false);
             }

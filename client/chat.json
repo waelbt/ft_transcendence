@@ -76,7 +76,7 @@
             "nickName": "ww",
             "role": "owner",
             "actions": ["ban", "mute"]
-        }   
+        }
     ],
     "onlineUsers": [
         {
@@ -90,7 +90,7 @@
     ],
     "dms": [
         {
-            "roomId": 1,
+            "id": 1,
             "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-2919-15-59-1707792495521-139948256.png",
             "roomTitle": "Phoenix services",
             "lastMessage": "Demand 😓Hello , does an...",
@@ -99,7 +99,7 @@
             "isRoom": true
         },
         {
-            "roomId": 2,
+            "id": 2,
             "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-3004-36-30-1707797241976-670480343.png",
             "roomTitle": "Simonab",
             "lastMessage": "Draft: C",
@@ -108,7 +108,7 @@
             "isRoom": false
         },
         {
-            "roomId": 3,
+            "id": 3,
             "avatar": "http://localhost:4000/upload/Screenshotfrom2024-02-1100-04-04-1707797451329-418765875.png",
             "roomTitle": "Mama",
             "lastMessage": "Sticker",
@@ -117,7 +117,7 @@
             "isRoom": false
         },
         {
-            "roomId": 4,
+            "id": 4,
             "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-2919-15-59-1707792495521-139948256.png",
             "roomTitle": "hajar",
             "lastMessage": "Sticker",
@@ -126,7 +126,7 @@
             "isRoom": true
         },
         {
-            "roomId": 5,
+            "id": 5,
             "avatar": "http://localhost:4000/upload/Screenshotfrom2024-01-3004-36-30-1707797241976-670480343.png",
             "roomTitle": "simo",
             "lastMessage": "Sticker",

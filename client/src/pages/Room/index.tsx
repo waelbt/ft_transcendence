@@ -26,10 +26,10 @@ interface MembersProbs {
 }
 
 export function Room() {
-    const { roomId } = useParams();
+    const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, dmMessages, pushMessage } = useChatStore();
+    const { socket, updateState, messages, pushMessage } = useChatStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,41 +43,33 @@ export function Room() {
     // const navigate = useNavigate();
     const sendMessage = () => {
         if (message.trim()) {
-            // setMessages((prevMessages) => [message, ...prevMessages]);
-            pushMessage({
-                id: 2,
-                message: message,
-                createdAt: '2024-02-13T00:00:00Z',
-                senderId: 'dos',
-                dmId: 2
-            });
-            // socket?.emit('message', { message: message, roomId: roomId });
+            socket?.emit('message', { message, id });
             setMessage('');
         }
     };
 
-    useEffect(() => {
-        const fetchMembes = async () => {
-            const res = await fetch('http://localhost:3000/members');
-            const data = await res.json();
-            setMembers(data);
-            // console.log(members);
-        };
+    // useEffect(() => {
+    //     const fetchMembes = async () => {
+    //         const res = await fetch('http://localhost:3000/members');
+    //         const data = await res.json();
+    //         setMembers(data);
+    //     };
 
-        fetchMembes();
-    }, []);
+    //     fetchMembes();
+    // }, []);
+
     const handleExit = () => {};
+
     useEffect(() => {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [dmMessages]);
+    }, [messages]);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const res = await axiosPrivate.get(`/chat/room/${roomId}`);
-                console.log('www', res);
+                const res = await axiosPrivate.get(`/chat/room/${id}`);
                 updateState({
-                    dmMessages: res.data.messages
+                    messages: res.data.messages
                 });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
@@ -86,15 +78,17 @@ export function Room() {
 
         fetchMessages();
         socket?.on('message', (message: Message) => {
-            if (roomId) {
-                if (message.dmId === +roomId) pushMessage(message);
+            console.log('hello ', message);
+
+            if (id) {
+                if (message.id === +id) pushMessage(message);
             }
         });
 
         return () => {
             socket?.off('message');
         };
-    }, [roomId]);
+    }, [id]);
 
     return (
         <div className=" flex-grow h-full flex gap-0 ">
@@ -110,7 +104,7 @@ export function Room() {
 
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
-                        {dmMessages.map((msg, index) => {
+                        {messages.map((msg, index) => {
                             if (userId !== msg.senderId) {
                                 return (
                                     <div
@@ -119,15 +113,14 @@ export function Room() {
                                     >
                                         <div className="relative inline-block">
                                             <Avatar
-                                                imageUrl="http://localhost:4000/upload/Screenshotfrom2024-01-3004-39-05-1708143657844-107260818.png"
+                                                imageUrl={msg.avatar}
                                                 style="w-11 h-11 bg-black rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
                                             />
-                                            {/* <span className="w-4 h-4 rounded-full bg-green-500 absolute bottom-0.5 right-0.5"></span> */}
                                         </div>
                                         <div className="flex-col justify-start items-start gap-0.5 inline-flex">
                                             <div className="text-lime-400 text-xl  font-normal font-['Acme']">
                                                 {/* {msg.senderId} */}
-                                                dos
+                                                {msg.nickName}
                                             </div>
                                             <div
                                                 className="h-9 p-2.5 bg-gray-700 rounded-[10px] justify-start items-center gap-2.5 inline-flex text-white text-sm font-normal font-['Acme'] rounded-tl-none max-w-[320px] "
@@ -137,6 +130,9 @@ export function Room() {
                                             >
                                                 {msg.message}
                                             </div>
+                                            {/* <div className="text-gray-600 text-xs leading-none bottom-0">
+                                                {DateFormatter(msg.createdAt)}
+                                            </div> */}
                                         </div>
                                     </div>
                                 );
@@ -266,7 +262,7 @@ export function Room() {
                                             label: '',
                                             type: 'text',
                                             name: 'nickName',
-                                            placeholder: 'namegroup',
+                                            placeholder: 'group name',
                                             validation: {
                                                 required:
                                                     'Nickname is required!',
@@ -284,6 +280,7 @@ export function Room() {
                                         }
                                     ]}
                                     onSubmit={() => {}}
+                                    defaultValues={{ nickName: 'dadwa' }}
                                 />
                                 <ImCross
                                     size={22}

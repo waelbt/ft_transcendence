@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
 import { NICKNAME_FIELD } from '../constants';
@@ -7,6 +7,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import useImageUpload from '../hooks/uploadImageHook';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function ProfileCompletion() {
     const { updateState, logout } = useUserStore();

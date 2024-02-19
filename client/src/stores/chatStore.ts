@@ -8,7 +8,7 @@ type ChatState = {
     currentDm: User | null;
     // currentGroup: room | null;
     // currentGroupMessgaes: Messages[];
-    dmMessages: Message[];
+    messages: Message[];
     Layout_Rooms: RoomsList[];
 };
 
@@ -23,15 +23,15 @@ export const useChatStore = create<ChatState & ChatMethod>((set, get) => ({
     socket: null,
     currentDm: null,
     Layout_Rooms: [],
-    dmMessages: [],
+    messages: [],
     updateState: (newState) => {
         set((state) => ({ ...state, ...newState }));
     },
     pushMessage: (msg) => {
-        const { dmMessages } = get();
+        const { messages } = get();
 
-        const newMessages = [...dmMessages, msg];
-        set({ dmMessages: newMessages });
+        const newMessages = [...messages, msg];
+        set({ messages: newMessages });
     },
     pushRoom: (room) => {
         const { Layout_Rooms } = get();

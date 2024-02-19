@@ -24,6 +24,7 @@ import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { SendMessageDto } from './DTOS/send-message-dto';
 import { send } from 'process';
 import { BlockService } from 'src/users/services/blocked.service';
+import { EmitMessageDto } from './DTOS/emit-message-dto';
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -81,20 +82,34 @@ export class ChatGateway
     }
 
     @SubscribeMessage('message')
-    async handleMessage(client: any, payload: CreateMessageDto) {
+    async handleMessage(client: any, payload: SendMessageDto) {
         // this.logger.log(`Message received from client with id: ${client.id}`);
         // this.logger.debug(`Payload: ${payload}`);
         // this.server.emit('onMessage', payload);
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log(
-            `this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`
-        );
-        console.log(`the message is : ${payload.message}`);
+        // console.log(
+        //     `this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`
+        // );
+        // console.log(`the message is : ${payload.message}`);
         try {
-            await this.wsService.createMessage(payload, userCheck.userData.sub);
-            this.server.to(payload.roomTitle).emit('message', payload.message);
+            const room = await this.wsService.createMessage(payload, userCheck.userData.sub);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub,
+                },
+            });
+
+            const message: EmitMessageDto = {
+                id: room.messages[room.messages.length - 1].roomId,
+                avatar: user.avatar,
+                nickName: user.nickName,
+                message: room.messages[room.messages.length - 1].message,
+                createdAt: room.messages[room.messages.length - 1].createdAt,
+                senderId: room.messages[room.messages.length - 1].senderId,
+            }
+            this.server.to(room.roomTitle).emit('message', message);
         } catch (err) {
             return err;
         }
@@ -193,7 +208,7 @@ export class ChatGateway
             // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(
                 userCheck.userData.sub,
-                sendMessage.roomId,
+                sendMessage.id,
                 sendMessage.message
             );
 
@@ -206,11 +221,17 @@ export class ChatGateway
                 this.server.to(client.id).emit('forbidden');
             else {
                 console.log('event dmMessage');
+                const message: EmitMessageDto = {
+                    id: dmroom.messages[dmroom.messages.length - 1].dmId,
+                    message: dmroom.messages[dmroom.messages.length - 1].message,
+                    createdAt: dmroom.messages[dmroom.messages.length - 1].createdAt,
+                    senderId: dmroom.messages[dmroom.messages.length - 1].senderId,
+                }
                 this.server
                     .to(dmroom.roomTitle)
                     .emit(
                         'dmMessage',
-                        dmroom.messages[dmroom.messages.length - 1]
+                        message
                     );
             }
         }

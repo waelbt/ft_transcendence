@@ -9,6 +9,7 @@ import { RoomPrivacy } from '@prisma/client';
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { CreateDmDto } from './DTOS/create-dm.dto';
 import { BlockService } from 'src/users/services/blocked.service';
+import { SendMessageDto } from './DTOS/send-message-dto';
 
 @Injectable()
 export class WebSocketService {
@@ -87,9 +88,10 @@ export class WebSocketService {
         } catch (err) {}
     }
 
-    async createMessage(payload: CreateMessageDto, userId: string) {
+    async createMessage(payload: SendMessageDto, userId: string) {
         try {
-            await this.roomService.createMessage(payload, userId);
+           const room =  await this.roomService.createMessage(payload, userId);
+           return (room)
         } catch (err) {
             const message = err;
             throw Error(message);
@@ -181,9 +183,8 @@ export class WebSocketService {
             }
         });
 
-        let newDm;
         if (!dm) {
-            newDm = await this.createDm(user1id, user2id);
+            const newDm = await this.createDm(user1id, user2id);
             console.log(newDm, 'first time talking');
             return newDm.id;
         }

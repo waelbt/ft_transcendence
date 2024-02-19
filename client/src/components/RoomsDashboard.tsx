@@ -22,7 +22,6 @@ const RoomsDashboard: React.FC = () => {
     const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatStore();
     const HandleJoin = (room: RoomsList) => {
-        // ? socket?.emit('joinRoom', { ...room. password });
         socket?.emit('joinRoom', { ...room });
         pushRoom(room);
         closeEvent();
@@ -33,7 +32,7 @@ const RoomsDashboard: React.FC = () => {
             try {
                 const res = await axiosPrivate.get('/chat/AllRooms/');
                 //! setter list roomList
-                console.log('rooms list', res);
+                console.log('www', res);
                 SetRoomsList(res.data);
             } catch (error) {
                 if (isAxiosError(error))

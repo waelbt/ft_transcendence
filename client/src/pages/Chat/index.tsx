@@ -12,10 +12,10 @@ import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 export function Chat() {
-    const { roomId } = useParams();
+    const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, dmMessages, pushMessage, currentDm } =
+    const { socket, updateState, messages, pushMessage, currentDm } =
         useChatStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -29,22 +29,23 @@ export function Chat() {
     const sendMessage = () => {
         if (message.trim()) {
             // setMessages((prevMessages) => [message, ...prevMessages]);
-            socket?.emit('dm', { message: message, roomId: roomId });
+            console.log('emit', message, id);
+            socket?.emit('dm', { message, id });
             setMessage('');
         }
     };
 
     useEffect(() => {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [dmMessages]);
+    }, [messages]);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const res = await axiosPrivate.get(`/chat/dm/${roomId}`);
+                const res = await axiosPrivate.get(`/chat/dm/${id}`);
                 updateState({
                     currentDm: res.data.users[0],
-                    dmMessages: res.data.messages
+                    messages: res.data.messages
                 });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
@@ -52,19 +53,17 @@ export function Chat() {
         };
 
         fetchMessages();
+
         socket?.on('dmMessage', (message: Message) => {
-            if (roomId) {
-                if (message.dmId === +roomId) pushMessage(message);
+            if (id) {
+                if (message.id === +id) pushMessage(message);
             }
         });
-        // socket?.on('forbidden', () => {
-        //     setIsblocked(true);
-        // });
+
         return () => {
-            // socket?.off('forbidden');
             socket?.off('dmMessage');
         };
-    }, [roomId]);
+    }, [socket, id]);
 
     const InvitePlayer = () => {};
 
@@ -92,7 +91,7 @@ export function Chat() {
 
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
-                        {dmMessages.map((msg, index) => (
+                        {messages.map((msg, index) => (
                             <div
                                 key={index}
                                 className={`flex z-[10] mx-5  gap-2 ${

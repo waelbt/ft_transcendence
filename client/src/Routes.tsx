@@ -37,14 +37,14 @@ const router = createBrowserRouter([
                         }
                     },
                     {
-                        path: 'dms/:roomId',
+                        path: 'dms/:id',
                         lazy: async () => {
                             let { Chat } = await import('./pages/Chat');
                             return { Component: Chat };
                         }
                     },
                     {
-                        path: 'group/:roomId',
+                        path: 'group/:id',
                         lazy: async () => {
                             let { Room } = await import('./pages/Room');
                             return { Component: Room };
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: '/game/:roomId',
+                path: '/game/:id',
                 lazy: async () => {
                     let { Game } = await import('./pages/Game');
                     return { Component: Game };

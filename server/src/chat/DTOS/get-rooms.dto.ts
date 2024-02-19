@@ -1,7 +1,8 @@
+import { RoomPrivacy } from "@prisma/client";
 
 export class GetRoomsDto {
 
-    roomId: number;
+    id: number;
 
     avatar: string;
 
@@ -12,6 +13,8 @@ export class GetRoomsDto {
     nickName: string;
 
     lastMessageTime: Date;
+
+    privacy?: RoomPrivacy;
 
     isRoom: boolean;
 }
