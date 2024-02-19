@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
     UnauthorizedException
@@ -26,6 +27,9 @@ import { CreateMessageDto } from '../DTOS/create-message-dto';
 import { GetRoomsDto } from '../DTOS/get-rooms.dto';
 import { dirxml, log } from 'console';
 import { SendMessageDto } from '../DTOS/send-message-dto';
+import { ChangeRoomPrivacy } from '../DTOS/change-roomPrivacy-dto';
+import { ChangeRoomAvatar } from '../DTOS/change-roomAvatar-dto';
+import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 
 @Injectable()
 export class RoomService {
@@ -429,6 +433,72 @@ export class RoomService {
         }
 
         throw new BadRequestException('Only Admins Can Kick Other Users');
+    }
+
+    async changeRoomTitle(changeRoomTitle: ChangeRoomTitle, userId: string) {
+
+        if (await this.isUserAdmin(userId, +changeRoomTitle.id)) {
+            const id = +changeRoomTitle.id;
+            await this.prisma.room.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    roomTitle: changeRoomTitle.newTitle,
+                },
+            });
+        }
+        else 
+            throw new ForbiddenException('Only Owner And Admins Can Change Room Title');
+    }
+
+    async changeRoomAvatar(changeRoomAvatar: ChangeRoomAvatar, userId: string) {
+
+        if (await this.isUserAdmin(userId, +changeRoomAvatar.id)) {
+            const id = +changeRoomAvatar.id;
+            await this.prisma.room.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    avatar: changeRoomAvatar.newAvatar,
+                },
+            });
+        }
+        else 
+            throw new ForbiddenException('Only Owner And Admins Can Change Room Avatar');
+    }
+
+    async changeRoomPrivacy(changeRoomPrivacy: ChangeRoomPrivacy, userId: string) {
+
+        if (await this.isUserAdmin(userId, +changeRoomPrivacy.id)) {
+            const id = +changeRoomPrivacy.id;
+            if (changeRoomPrivacy.newPrivacy === 'PROTECTED') {
+                const password = hashPassword(changeRoomPrivacy.password);
+                const room = await this.prisma.room.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        password: password,
+                        privacy: "PROTECTED",
+                    },
+                });
+            }
+            else {
+                await this.prisma.room.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        privacy: changeRoomPrivacy.newPrivacy,
+                    },
+                });
+            }
+
+        }
+        else 
+            throw new ForbiddenException('Only Owner And Admins Can Change Room Privacy');
     }
 
     async unsetUserFromAdmins(roomId: number, userId: string) {

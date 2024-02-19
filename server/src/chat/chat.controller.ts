@@ -25,6 +25,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { WebSocketService } from './chat.gateway.service';
 import { CreateDmDto } from './DTOS/create-dm.dto';
+import { ChangeRoomPrivacy } from './DTOS/change-roomPrivacy-dto';
+import { ChangeRoomTitle } from './DTOS/change-roomTitle-dto';
+import { ChangeRoomAvatar } from './DTOS/change-roomAvatar-dto';
 
 @ApiBearerAuth()
 @ApiTags('Chat')
@@ -43,6 +46,53 @@ export class ChatController {
     }
 
     @Post('joinRoom')
+    async joinRoom(@Req() req, @Body() joinRoomDto: JoinRoomDto) {
+        // console.log(`controller: userid is ${req.user.sub}`)
+        return await this.roomService.joinRoom(joinRoomDto, req.user.sub);
+    }
+
+    @Post('leaveRoom')
+    async leaveRoom(@Req() req, @Body() leaveRoomDto: LeaveRoomDto) {
+        return await this.roomService.leaveRoom(leaveRoomDto, req.user.sub);
+    }
+
+    @Post('changeRoomPrivacy')
+    async changeRoomPrivacy(@Req() req, @Body() changeRoomPrivacy: ChangeRoomPrivacy) {
+    
+        return await (this.roomService.changeRoomPrivacy(changeRoomPrivacy, req.user.sub));
+    }
+
+    @Post('changeRoomTitle')
+    async changeRoomTitle(@Req() req, @Body() changeRoomTitle: ChangeRoomTitle) {
+
+        console.log('wa zabi', req.user.sub );
+        return await (this.roomService.changeRoomTitle(changeRoomTitle, req.user.sub));
+    }
+
+    @Post('changeRoomAvatar')
+    async changeRoomAvatar(@Req() req, @Body() changeRoomAvatar: ChangeRoomAvatar) {
+
+        return await (this.roomService.changeRoomAvatar(changeRoomAvatar, req.user.sub));
+    }
+
+    @Get('AllRooms')
+    async getAllRooms(@Req() req) {
+        return await this.roomService.getAllRooms(req.user.sub);
+    }
+
+    @Get('mydms')
+    async getMyDms(@Req() req) {
+        console.log('helooooooooooooo', req.user.sub);
+        return this.roomService.getAllMyDms(req.user.sub);
+    }
+
+    @Get('myRooms')
+    async getMyRooms(@Req() req, res: Response) {
+        console.log('hellooooooooooo', req.user.sub);
+
+        return await this.roomService.getMyRooms(req.user.sub);
+    }
+
     @Get('allChannels')
     async getAllChannels(@Req() req) {
         return await this.roomService.getAllChannels(req.user.sub);
