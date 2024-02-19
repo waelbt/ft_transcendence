@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSocketStore } from '../stores/socketStore';
+import { useSocketStore } from '../../deprecated/socketStore';
 import { useUserStore } from '../stores/userStore';
 
 export function useScores() {

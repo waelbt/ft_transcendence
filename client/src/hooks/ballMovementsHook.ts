@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../stores/gameStore';
-import { useSocketStore } from '../stores/socketStore';
+import { useSocketStore } from '../../deprecated/socketStore';
 
 export const useBallMovement = () => {
     const [ballPos, setBallPos] = useState({ x: 0, y: 0 });

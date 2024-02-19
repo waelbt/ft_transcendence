@@ -27,7 +27,8 @@
         "deprecated/ChatSocketStore.ts",
         "deprecated/FriendsTable.tsx",
         "deprecated/FriendCard.tsx",
-        "deprecated/InputField.tsx"
+        "deprecated/InputField.tsx",
+        "deprecated/socketStore.ts"
     ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

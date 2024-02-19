@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSocketStore } from '../../stores/socketStore';
+import { useSocketStore } from '../../../deprecated/socketStore';
 import { useGameStore } from '../../stores/gameStore';
 
- const Ball = ({ gameSt }: { gameSt: string }) => {
+const Ball = ({ gameSt }: { gameSt: string }) => {
     const { isSecondPlayer } = useGameStore();
     const [ballPos, setBallPos] = React.useState({ x: 0, y: 0 });
     const [ballColor, setBallColor] = React.useState('white');

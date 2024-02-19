@@ -90,8 +90,8 @@ export class WebSocketService {
 
     async createMessage(payload: SendMessageDto, userId: string) {
         try {
-           const room =  await this.roomService.createMessage(payload, userId);
-           return (room)
+           const {room, newMessage} =  await this.roomService.createMessage(payload, userId);
+           return ({room, newMessage})
         } catch (err) {
             const message = err;
             throw Error(message);

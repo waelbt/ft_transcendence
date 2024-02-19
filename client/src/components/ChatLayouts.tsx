@@ -12,6 +12,7 @@ import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import RoomsDashboard from './RoomsDashboard';
 import GroupsForm from './GroupsForm';
+import { useUserStore } from '../stores/userStore';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');

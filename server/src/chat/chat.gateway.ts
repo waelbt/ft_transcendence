@@ -94,11 +94,14 @@ export class ChatGateway
         // );
         // console.log(`the message is : ${payload.message}`);
         try {
-            const room = await this.wsService.createMessage(payload, userCheck.userData.sub);
+            const { room, newMessage } = await this.wsService.createMessage(
+                payload,
+                userCheck.userData.sub
+            );
             const user = await this.prisma.user.findUnique({
                 where: {
-                    id: userCheck.userData.sub,
-                },
+                    id: userCheck.userData.sub
+                }
             });
 
             const message: EmitMessageDto = {
@@ -107,8 +110,8 @@ export class ChatGateway
                 nickName: user.nickName,
                 message: room.messages[room.messages.length - 1].message,
                 createdAt: room.messages[room.messages.length - 1].createdAt,
-                senderId: room.messages[room.messages.length - 1].senderId,
-            }
+                senderId: room.messages[room.messages.length - 1].senderId
+            };
             this.server.to(room.roomTitle).emit('message', message);
         } catch (err) {
             return err;
@@ -223,16 +226,15 @@ export class ChatGateway
                 console.log('event dmMessage');
                 const message: EmitMessageDto = {
                     id: dmroom.messages[dmroom.messages.length - 1].dmId,
-                    message: dmroom.messages[dmroom.messages.length - 1].message,
-                    createdAt: dmroom.messages[dmroom.messages.length - 1].createdAt,
-                    senderId: dmroom.messages[dmroom.messages.length - 1].senderId,
-                }
-                this.server
-                    .to(dmroom.roomTitle)
-                    .emit(
-                        'dmMessage',
-                        message
-                    );
+                    message:
+                        dmroom.messages[dmroom.messages.length - 1].message,
+                    createdAt:
+                        dmroom.messages[dmroom.messages.length - 1].createdAt,
+                    senderId:
+                        dmroom.messages[dmroom.messages.length - 1].senderId
+                };
+                console.log(dmroom.roomTitle);
+                this.server.to(dmroom.roomTitle).emit('dm', message);
             }
         }
     }

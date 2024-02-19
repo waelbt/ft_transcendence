@@ -6,12 +6,14 @@ import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
 
 import { useChatStore } from '../stores/chatStore';
+import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket, socket } = useChatStore();
+    const { initializeSocket, socket: chatSocket } = useChatStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
@@ -34,18 +36,18 @@ function Layout() {
                 setIsLoading(false);
             }
         };
-        console.log(accessToken);
 
         fetchData();
+
         updateState({
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
-        });
+       });
         initializeSocket(accessToken);
         initializeGameSocket();
-        console.log('id  ', id);
+
         return () => {
-            socket?.disconnect();
+            chatSocket?.disconnect();
             gameSocket?.disconnect();
         };
     }, []);

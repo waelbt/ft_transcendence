@@ -53,17 +53,18 @@ export function Chat() {
         };
 
         fetchMessages();
+        socket?.on('dm', (message: Message) => {
+            console.log('hello ', message);
 
-        socket?.on('dmMessage', (message: Message) => {
             if (id) {
                 if (message.id === +id) pushMessage(message);
             }
         });
 
         return () => {
-            socket?.off('dmMessage');
+            socket?.off('dm');
         };
-    }, [socket, id]);
+    }, [id]);
 
     const InvitePlayer = () => {};
 

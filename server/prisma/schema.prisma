@@ -115,6 +115,8 @@ model Message {
   senderId  String
   room      Room     @relation(fields: [roomId], references: [id])
   roomId    Int
+  nickName  String
+  avatar    String
 }
 
 enum RoomPrivacy {

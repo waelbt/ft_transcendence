@@ -15,6 +15,23 @@ export interface User {
     level: number;
 }
 
+export interface Room {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    roomTitle: string;
+    avatar: string;
+    users: User[];
+    messages: Message[];
+    isConversation: boolean;
+    privacy: string;
+    password?: string;
+    owner: string[];
+    admins: string[];
+    banned: string[];
+    muted: string[];
+}
+
 interface score {
     score1: number;
     score2: number;

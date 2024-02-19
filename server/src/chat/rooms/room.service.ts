@@ -812,10 +812,19 @@ export class RoomService {
             },
         });
     
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: senderId,
+            },
+        });
+        
         if (await this.isUserMuted(room.id, senderId)) {
             const newMessage = await this.prisma.message.create({
                 data: {
                     message: sendMessageDto.message,
+                    avatar: user.avatar,
+                    nickName: user.nickName,
                     sender: {
                         connect: {
                             id: senderId
@@ -841,8 +850,8 @@ export class RoomService {
                     messages: true,
                 },
             });
-    
-            return (room);
+
+            return ({room, newMessage});
         } else throw Error('You Are Muted');
     }
 

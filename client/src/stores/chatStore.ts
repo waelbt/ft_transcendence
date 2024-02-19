@@ -6,7 +6,7 @@ type ChatState = {
     socket: Socket | null;
     // currentRoomId: string;
     currentDm: User | null;
-    // currentGroup: room | null;
+    // currentGroup: Room | null;
     // currentGroupMessgaes: Messages[];
     messages: Message[];
     Layout_Rooms: RoomsList[];

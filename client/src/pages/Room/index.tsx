@@ -68,6 +68,7 @@ export function Room() {
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/room/${id}`);
+                console.log(res);
                 updateState({
                     messages: res.data.messages
                 });
