@@ -26,7 +26,7 @@ import { send } from 'process';
 import { BlockService } from 'src/users/services/blocked.service';
 import { EmitMessageDto } from './DTOS/emit-message-dto';
 import { KickMemberDto } from './DTOS/kick-member.dto';
-import { SetAdminDto } from './DTOS/set-admin-room.dto';
+import { SetAdminDto, UnSetAdminDto } from './DTOS/set-admin-room.dto';
 import { BanMemberDto } from './DTOS/ban-member-dto';
 @WebSocketGateway({
     cors: {
@@ -224,10 +224,10 @@ export class ChatGateway
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-        console.log(
-            'messages b888888888888888888888888888888888 == ',
-            sendMessage
-        );
+        // console.log(
+        //     'messages b888888888888888888888888888888888 == ',
+        //     sendMessage
+        // );
 
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -385,7 +385,7 @@ export class ChatGateway
         else {
             const memberBanned = await this.prisma.user.findUnique({
                 where: {
-                    id: userCheck.userData.sub,
+                    id: banMemberDto.memberToBanId,
                 },
                 select: {
                     nickName: true,
@@ -405,6 +405,33 @@ export class ChatGateway
                 nickname: memberBanned.nickName,
             }
             this.server.to(banMemberDto.roomTitle).emit('banMember', message);
+        }
+    }
+
+    @SubscribeMessage('unsetAdmin')
+    async unsetAdmin(client: any, unsetAdminDto: UnSetAdminDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else {
+            const admineRemoved = await this.prisma.user.findUnique({
+                where: {
+                    id: unsetAdminDto.userId,
+                },
+                select: {
+                    nickName: true,
+                    id: true,
+                },
+            });
+            const message = {
+                id: admineRemoved.id,
+                nickname: admineRemoved.nickName,
+            };
+
+            this.roomService.removeFromAdmins(unsetAdminDto, userCheck.userData.sub);
+            this.server.to(unsetAdminDto.roomTitle).emit('unsetAdmin', message);
         }
     }
 
