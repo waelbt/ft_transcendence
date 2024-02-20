@@ -29,13 +29,15 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
             addUserBlockId(id);
             navigate(-1);
         },
-        'Accept Request': (id) => addUserFriendId(id)
+        'Accept Request': (id) => {
+            addUserFriendId(id);
+        }
     };
 
     useEffect(() => {
         console.log(relation);
         if (relation) {
-            let updatedActions = ['Send Message', 'Block User'];
+            let updatedActions = ['Block User'];
 
             switch (relation) {
                 case 'friend':
@@ -65,7 +67,6 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
                 const res = await axiosPrivate.post('/chat/createDm', {
                     friendId: target
                 });
-                console.log('www', res.data);
                 navigate(`/chat/dms/${res.data}`);
             } catch (error) {
                 console.log(error);

@@ -19,62 +19,64 @@ export function Chat() {
         useChatStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
+
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value.length <= MAX_MESSAGE_LENGTH)
             setMessage(e.target.value);
     };
-    // const [isblocked, setIsblocked] = useState<boolean>(false);
-    // const navigate = useNavigate();
 
     const sendMessage = () => {
-        if (message.trim()) {
-            // setMessages((prevMessages) => [message, ...prevMessages]);
-            console.log('emit', message, id);
-            socket?.emit('dm', { message, id });
+        if (message.trim() && socket) {
+            socket.emit('dm', { message, id });
             setMessage('');
         }
     };
+    useEffect(() => {
+        const fetchMessages = async () => {
+            if (id) {
+                try {
+                    const res = await axiosPrivate.get(`/chat/dm/${id}`);
+                    updateState({
+                        currentDm: res.data.users[0],
+                        messages: res.data.messages
+                    });
+                } catch (error) {
+                    toast.error('There was a problem fetching messages.');
+                }
+            }
+        };
+
+        const messageListener = (message: Message) => {
+            if (id && message.id === +id) {
+                pushMessage(message);
+            }
+        };
+
+        if (socket) {
+            socket.on('dm', messageListener);
+        }
+
+        fetchMessages();
+
+        return () => {
+            if (socket) {
+                socket.off('dm', messageListener);
+            }
+        };
+    }, [socket, id, pushMessage, axiosPrivate, updateState]);
 
     useEffect(() => {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await axiosPrivate.get(`/chat/dm/${id}`);
-                updateState({
-                    currentDm: res.data.users[0],
-                    messages: res.data.messages
-                });
-            } catch (error) {
-                console.error('There was a problem fetching messages:', error);
-            }
-        };
-
-        fetchMessages();
-        socket?.on('dm', (message: Message) => {
-            console.log('hello ', message);
-
-            if (id) {
-                if (message.id === +id) pushMessage(message);
-            }
-        });
-
-        return () => {
-            socket?.off('dm');
-        };
-    }, [id]);
-
-    const InvitePlayer = () => {};
-
     const blockUser = async () => {
-        try {
-            await axiosPrivate.post(`/users/blockUser/${currentDm?.id}`);
-            addUserBlockId(currentDm ? currentDm.id : '');
-            // navigate('/chat/');
-        } catch (error) {
-            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        if (currentDm?.id) {
+            try {
+                await axiosPrivate.post(`/users/blockUser/${currentDm.id}`);
+                addUserBlockId(currentDm.id);
+            } catch (error) {
+                toast.error('Error blocking user.');
+            }
         }
     };
 
@@ -167,7 +169,7 @@ export function Chat() {
                     </NavLink>
                     <div
                         className="justify-start items-center gap-0.5 inline-flex"
-                        onClick={InvitePlayer}
+                        onClick={() => {}}
                     >
                         <div className="text-sky-500 text-2xl font-normal font-['Acme'] leading-none cursor-pointer">
                             Challenge

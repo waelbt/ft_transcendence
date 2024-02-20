@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { useOutletContext } from 'react-router-dom';
-// import { ProfileOutletContextType } from '../types/global';
-import { MdCancel, MdClose } from 'react-icons/md';
-import FriendDataPreviou from './FriendDataPreviou';
+import { MdClose } from 'react-icons/md';
 import { useModelStore } from '../stores/ModelStore';
 import { RoomsList } from '../../../shared/types';
 import { axiosPrivate } from '../api';
@@ -10,12 +7,8 @@ import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { Avatar, FormComponent } from '.';
 import { useChatStore } from '../stores/chatStore';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
-// import { isAxiosError } from 'axios';
-// import toast from 'react-hot-toast';
-// import { useUserStore } from '../stores/userStore';
 
-const RoomsDashboard: React.FC = () => {
+const RoomsFinder: React.FC = () => {
     const fields = ['PUBLIC', 'PROTECTED'];
     const [filter, setFilter] = useState('PUBLIC');
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
@@ -31,8 +24,6 @@ const RoomsDashboard: React.FC = () => {
         const fetchRoomsList = async () => {
             try {
                 const res = await axiosPrivate.get('/chat/AllRooms/');
-                //! setter list roomList
-                console.log('www', res);
                 SetRoomsList(res.data);
             } catch (error) {
                 if (isAxiosError(error))
@@ -135,4 +126,4 @@ const RoomsDashboard: React.FC = () => {
     );
 };
 
-export default RoomsDashboard;
+export default RoomsFinder;

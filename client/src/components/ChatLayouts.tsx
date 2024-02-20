@@ -10,7 +10,7 @@ import { useModelStore } from '../stores/ModelStore';
 import { useChatStore } from '../stores/chatStore';
 import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
-import RoomsDashboard from './RoomsDashboard';
+import RoomsFinder from './RoomsFinder';
 import GroupsForm from './GroupsForm';
 import { useUserStore } from '../stores/userStore';
 
@@ -30,6 +30,7 @@ function ChatLayouts() {
                 const res = await axiosPrivate.get('/chat/allChannels');
                 updateState({ Layout_Rooms: res.data });
             } catch (error) {
+                console.log(error);
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
             }
@@ -135,7 +136,7 @@ function ChatLayouts() {
                 </div>
                 {isEventOpen && (
                     <Modal removable={false}>
-                        {state ? <GroupsForm /> : <RoomsDashboard />}
+                        {state ? <GroupsForm /> : <RoomsFinder />}
                     </Modal>
                 )}
             </div>
