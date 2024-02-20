@@ -23,8 +23,9 @@ export function Room() {
         messages,
         updateState,
         messageListener,
-        userJoinListener,
-        userLeftListener
+        userJoinedListener,
+        userLeftListener,
+        userkickedListener
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -64,11 +65,13 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
-        socket.on('joinRoom', userJoinListener);
+        socket.on('kickMember', userkickedListener);
+        socket.on('joinRoom', userJoinedListener);
         socket.on('message', messageListener);
         socket.on('leaveRoom', userLeftListener);
         return () => {
-            socket.on('joinRoom', userJoinListener);
+            socket.on('kickMember', userkickedListener);
+            socket.on('joinRoom', userJoinedListener);
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
         };

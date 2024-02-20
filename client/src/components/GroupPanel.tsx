@@ -16,6 +16,7 @@ import { isAxiosError } from 'axios';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
+import { User } from '../../../shared/types';
 
 function GroupPanel() {
     const {
@@ -46,6 +47,16 @@ function GroupPanel() {
         useImageUpload();
     // Update form values when room store data changes
     const navigate = useNavigate();
+    const actions = [
+        'kick',
+        'ban',
+        'mute',
+        'unmute',
+        'unban',
+        'set admin',
+        'unset admin'
+    ];
+
     useEffect(() => {
         setImagePath(avatar);
         setValue('roomTitle', roomTitle, { shouldDirty: true });
@@ -97,6 +108,10 @@ function GroupPanel() {
         } catch (error) {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
+    };
+
+    const kickUser = (user : User) => {
+        socket?.emit('kickMember', {userId: user.id, id});
     };
 
     const handleExit = () => {
@@ -329,10 +344,18 @@ function GroupPanel() {
                                     />
                                 </div>
                             }
-                            position="bottom center"
+                            position="left center"
                         >
-                            <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100">
-                                {/* Render Popup content here */}
+                            <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
+                                {actions.map((action) => (
+                                    <div
+                                        key={action}
+                                        className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
+                                        onClick={() => kickUser(users)}
+                                    >
+                                        {action}
+                                    </div>
+                                ))}
                             </div>
                         </Popup>
                     </div>

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Message, User } from '../../../shared/types';
 
 type RoomState = {
+    // ! state 
     isModifiable: boolean;
     id: string;
     roomTitle: string;
@@ -30,7 +31,16 @@ type RoomMethod = {
         id: string;
         nickname: string;
     }) => void;
-    userJoinListener: (user: User) => void;
+    userkickedListener: ({
+        adminName,
+        id,
+        nickname
+    }: {
+        adminName: string;
+        id: string;
+        nickname: string;
+    }) => void;
+    userJoinedListener: (user: User) => void;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -93,6 +103,28 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
             });
         }
     },
+    userkickedListener: ({
+        adminName,
+        id,
+        nickname
+    }: {
+        adminName: string;
+        id: string;
+        nickname: string;
+    }) => {
+        const { users, messages } = get();
+        const filteredRooms = users.filter((user) => user.id !== id);
+        const leaveMessage: Message = {
+            id: 0,
+            senderId: '',
+            avatar: '',
+            nickName: 'System',
+            message: `${adminName} has kicked ${nickname} from the room.`,
+            createdAt: 'no need'
+        };
+        const newMessages = [...messages, leaveMessage];
+        set({ users: filteredRooms, messages: newMessages });
+    },
     userLeftListener: ({ id, nickname }) => {
         const { users, messages } = get();
         const filteredRooms = users.filter((user) => user.id !== id);
@@ -107,7 +139,7 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         const newMessages = [...messages, leaveMessage];
         set({ users: filteredRooms, messages: newMessages });
     },
-    userJoinListener: (user: User) => {
+    userJoinedListener: (user: User) => {
         set((state) => {
             // Check if the user is not already in the array
             if (
