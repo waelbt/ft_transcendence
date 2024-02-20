@@ -7,16 +7,15 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { useModelStore } from '../stores/ModelStore';
-import { useChatStore } from '../stores/chatStore';
 import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import RoomsFinder from './RoomsFinder';
 import GroupsForm from './GroupsForm';
-import { useUserStore } from '../stores/userStore';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');
-    const { Layout_Rooms, updateState } = useChatStore();
+    const { Layout_Rooms, updateState } = useChatLayoutStore();
     // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();

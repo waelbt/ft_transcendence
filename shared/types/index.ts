@@ -1,4 +1,5 @@
 export interface User {
+    actions: any;
     id: string;
     email: string;
     HashPassword: string;

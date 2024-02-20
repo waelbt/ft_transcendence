@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
-import { useChatStore } from '../../stores/chatStore';
+import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Message } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
@@ -12,12 +12,14 @@ import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 import GroupPanel from '../../components/GroupPanel';
+import { useRoomStore } from '../../stores/roomStore';
 
 export function Room() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, messages, pushMessage } = useChatStore();
+    const { socket } = useChatLayoutStore();
+    const { messages, pushMessage, updateState } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,10 +44,7 @@ export function Room() {
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/room/${id}`);
-                console.log(res);
-                updateState({
-                    messages: res.data.messages
-                });
+                updateState({ ...res.data });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
             }

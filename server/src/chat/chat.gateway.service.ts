@@ -122,29 +122,29 @@ export class WebSocketService {
 
     //     return globalRoom;
     // }
-    async joinUserToGlobalChat(userId: string) {
-        const title = 'GlobalChat';
-        const room = await this.prisma.room.update({
-            where: {
-                roomTitle: title
-            },
-            data: {
-                users: {
-                    connect: {
-                        id: userId
-                    }
-                }
-            },
-            include: {
-                users: true,
-                messages: {
-                    include: {
-                        sender: true
-                    }
-                }
-            }
-        });
-    }
+    // async joinUserToGlobalChat(userId: string) {
+    //     const title = 'GlobalChat';
+    //     const room = await this.prisma.room.update({
+    //         where: {
+    //             roomTitle: title
+    //         },
+    //         data: {
+    //             users: {
+    //                 connect: {
+    //                     id: userId
+    //                 }
+    //             }
+    //         },
+    //         include: {
+    //             users: true,
+    //             messages: {
+    //                 include: {
+    //                     sender: true
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 
     async joinUserSocketToGlobalChat(userSocket: string, server: Server) {
         const title = 'GlobalChat';

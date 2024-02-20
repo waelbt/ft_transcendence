@@ -2,21 +2,21 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { NavLink, useParams } from 'react-router-dom';
-import { useChatStore } from '../../stores/chatStore';
+import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Message } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
-import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
+import { useDmStore } from '../../stores/dmStore';
 
 export function Chat() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, messages, pushMessage, currentDm } =
-        useChatStore();
+    const { socket } = useChatLayoutStore();
+    const { messages, currentDm, pushMessage, updateState } = useDmStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
 

@@ -37,7 +37,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     useEffect(() => {
         console.log(relation);
         if (relation) {
-            let updatedActions = ['Block User'];
+            let updatedActions = ['Send Message', 'Block User'];
 
             switch (relation) {
                 case 'friend':

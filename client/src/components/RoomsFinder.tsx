@@ -6,14 +6,14 @@ import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { Avatar, FormComponent } from '.';
-import { useChatStore } from '../stores/chatStore';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 const RoomsFinder: React.FC = () => {
     const fields = ['PUBLIC', 'PROTECTED'];
     const [filter, setFilter] = useState('PUBLIC');
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
     const { closeEvent } = useModelStore();
-    const { socket, pushRoom } = useChatStore();
+    const { socket, pushRoom } = useChatLayoutStore();
     const HandleJoin = (room: RoomsList) => {
         socket?.emit('joinRoom', { ...room });
         pushRoom(room);
