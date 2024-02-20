@@ -193,6 +193,11 @@ export class RoomService {
                 users: true
             }
         });
+    
+        await this.unsetUserFromAdmins(
+            +leaveRoomDto.id,
+            userId
+        );
 
         if (room.users.length === 0) {
             await this.prisma.message.deleteMany({
@@ -357,6 +362,7 @@ export class RoomService {
     }
 
     async setUserToAdminRoom(setAdminDto: SetAdminDto, userId: string) {
+        console.log('=====================', setAdminDto);
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
                 id: +setAdminDto.roomId
@@ -406,11 +412,10 @@ export class RoomService {
                 }
             });
 
-            if (room.users.length === 0)
-                return ;
-                // throw new BadRequestException(
-                //     'User Is Not A Member In This Room'
-                // );
+            if (room.users.length === 0) return;
+            // throw new BadRequestException(
+            //     'User Is Not A Member In This Room'
+            // );
 
             await this.isUserOwner(
                 +kickMemberDto.id,
@@ -440,7 +445,7 @@ export class RoomService {
 
             return tmpRoom;
         }
-        return ;
+        return;
         // throw new BadRequestException('Only Admins Can Kick Other Users');
     }
 
@@ -650,11 +655,10 @@ export class RoomService {
             }
         });
 
-        if (roomOwner.owner.includes(userId))
-            return ;
-            // throw new BadRequestException(
-            //     `You Cannot ${message} The Room Owner`
-            // );
+        if (roomOwner.owner.includes(userId)) return;
+        // throw new BadRequestException(
+        //     `You Cannot ${message} The Room Owner`
+        // );
     }
 
     async isUserMember(roomId: number, userId: string) {
@@ -789,7 +793,7 @@ export class RoomService {
             );
             this.mutedUsers.set(muteUserDto.userToMute, userDetails);
             return this.mutedUsers;
-        } 
+        }
         // else throw new Error('Only Admins And Owners Can Mute Other Users');
     }
 

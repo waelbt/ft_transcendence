@@ -26,7 +26,8 @@ export function Room() {
         userJoinedListener,
         userLeftListener,
         userkickedListener,
-        canSendMessage
+        canSendMessage,
+        pushModerator
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -77,14 +78,16 @@ export function Room() {
             if (kickedUser === userId) unpushRoom(+id);
         };
 
+        socket.on('setAdmin', pushModerator);
         socket.on('kickMember', handlekick);
         socket.on('joinRoom', userJoinedListener);
         socket.on('message', messageListener);
         socket.on('leaveRoom', userLeftListener);
 
         return () => {
-            socket.on('kickMember', handlekick);
-            socket.on('joinRoom', userJoinedListener);
+            socket.off('setAdmin', pushModerator);
+            socket.off('kickMember', handlekick);
+            socket.off('joinRoom', userJoinedListener);
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
         };

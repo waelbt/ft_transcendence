@@ -350,24 +350,27 @@ export class ChatGateway
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false)
-            await this.handleDisconnect(client);
+        if (userCheck.state === false) await this.handleDisconnect(client);
         else {
-            this.roomService.setUserToAdminRoom(setAdminDto, userCheck.userData.sub);
+            this.roomService.setUserToAdminRoom(
+                setAdminDto,
+                userCheck.userData.sub
+            );
             const newAdmin = await this.prisma.user.findUnique({
                 where: {
-                    id: setAdminDto.userId,
+                    id: setAdminDto.userId
                 },
                 select: {
                     id: true,
-                    nickName: true,
+                    nickName: true
                 }
             });
             const message = {
                 id: newAdmin.id,
-                nickname: newAdmin.nickName,
-            }
-            this.server.to(setAdminDto.roomTitle).emit('kickMember', message);
+                nickname: newAdmin.nickName
+            };
+            console.log(message);
+            this.server.to(setAdminDto.roomTitle).emit('setAdmin', message);
         }
     }
 

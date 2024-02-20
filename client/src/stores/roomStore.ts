@@ -40,6 +40,7 @@ type RoomMethod = {
     userJoinedListener: (user: User) => void;
     isAdmin: (userId: string) => boolean;
     canSendMessage: (userId: string) => boolean;
+    pushModerator: ({ id, nickname }: { id: string; nickname: string }) => void;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -77,6 +78,27 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
 
         const newMessages = [...messages, msg];
         set({ messages: newMessages });
+    },
+    pushModerator: ({ id, nickname }: { id: string; nickname: string }) => {
+        const { admins, messages } = get();
+
+        // Check if the user is not already in the admins array
+        if (!admins.includes(id)) {
+            const newAdmins = [...admins, id];
+            set({ admins: newAdmins });
+
+            // Print a message
+            const adminMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `an admin made ${nickname} an admin.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, adminMessage];
+            set({ messages: newMessages });
+        }
     },
     alertMessage: (message) => {
         const { messages } = get();
