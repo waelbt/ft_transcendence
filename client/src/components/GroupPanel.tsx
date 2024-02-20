@@ -115,7 +115,7 @@ function GroupPanel() {
         socket?.emit('kickMember', { userId: user.id, roomId: id, roomTitle });
     };
 
-    const setAsAdmin = (user: User) => {
+    const setAsModerater = (user: User) => {
         socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
     };
 
@@ -126,6 +126,15 @@ function GroupPanel() {
         });
         unpushRoom(+id);
         navigate('/chat');
+    };
+
+    const userBan = (user: User) => {
+        console.log({ memberToBanId: user.id, roomId: id, roomTitle });
+        socket?.emit('banMember', {
+            memberToBanId: user.id,
+            roomId: id,
+            roomTitle
+        });
     };
 
     return (
@@ -359,9 +368,7 @@ function GroupPanel() {
                                             <div
                                                 key={action}
                                                 className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                                onClick={() =>
-                                                    setAsAdmin(member)
-                                                }
+                                                onClick={() => userBan(member)}
                                             >
                                                 {action}
                                             </div>

@@ -377,11 +377,11 @@ export class ChatGateway
 
     @SubscribeMessage('banMember')
     async banMember(client: any, banMemberDto: BanMemberDto) {
+        console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false)
-            await this.handleDisconnect(client);
+        if (userCheck.state === false) await this.handleDisconnect(client);
         else {
             const memberBanned = await this.prisma.user.findUnique({
                 where: {
@@ -390,21 +390,24 @@ export class ChatGateway
                 select: {
                     nickName: true,
                     id: true,
-                    email: true,
+                    email: true
                 }
             });
 
-            this.roomService.banMember(banMemberDto, userCheck.userData.sub);
-            const userSocket = await this.usersSockets.get(
-                memberBanned.email
+            await this.roomService.banMember(
+                banMemberDto,
+                userCheck.userData.sub
             );
-            if (userSocket)
-                await this.server.in(userSocket).socketsLeave(banMemberDto.roomTitle);
+            const userSocket = await this.usersSockets.get(memberBanned.email);
             const message = {
                 id: memberBanned.id,
-                nickname: memberBanned.nickName,
-            }
+                nickname: memberBanned.nickName
+            };
             this.server.to(banMemberDto.roomTitle).emit('banMember', message);
+            if (userSocket)
+                await this.server
+                    .in(userSocket)
+                    .socketsLeave(banMemberDto.roomTitle);
         }
     }
 

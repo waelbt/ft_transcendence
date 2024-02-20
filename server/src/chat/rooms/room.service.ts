@@ -136,6 +136,8 @@ export class RoomService {
         // return { message: 'No Existing Room With This Id', state: false };
         if (user.rooms.includes(room))
             throw new ForbiddenException('Alread Joined');
+        if (room.banned.includes(userId))
+            throw new ForbiddenException('You Are Banned');
         // return {
         //     message: 'Already Joined',
         //     state: false,
@@ -193,11 +195,8 @@ export class RoomService {
                 users: true
             }
         });
-    
-        await this.unsetUserFromAdmins(
-            +leaveRoomDto.id,
-            userId
-        );
+
+        await this.unsetUserFromAdmins(+leaveRoomDto.id, userId);
 
         if (room.users.length === 0) {
             await this.prisma.message.deleteMany({
@@ -565,23 +564,27 @@ export class RoomService {
     }
 
     async banMember(banMemberDto: BanMemberDto, userId: string) {
-        if (await this.isUserAdmin(userId, banMemberDto.roomId)) {
+        console.log(
+            '--------------------------------------------------------------'
+        );
+        if (await this.isUserAdmin(userId, +banMemberDto.roomId)) {
+            console.log('dkhel');
             await this.isUserMember(
-                banMemberDto.roomId,
+                +banMemberDto.roomId,
                 banMemberDto.memberToBanId
             );
             await this.isUserOwner(
-                banMemberDto.roomId,
+                +banMemberDto.roomId,
                 banMemberDto.memberToBanId,
                 'Ban'
             );
             await this.userAlreadyBanned(
-                banMemberDto.roomId,
+                +banMemberDto.roomId,
                 banMemberDto.memberToBanId
             );
             const roomWithBanned = await this.prisma.room.findUnique({
                 where: {
-                    id: banMemberDto.roomId
+                    id: +banMemberDto.roomId
                 },
                 select: {
                     banned: true
@@ -589,7 +592,7 @@ export class RoomService {
             });
             const updatedRoom = await this.prisma.room.updateMany({
                 where: {
-                    id: banMemberDto.roomId
+                    id: +banMemberDto.roomId
                 },
                 data: {
                     banned: {
@@ -603,7 +606,7 @@ export class RoomService {
 
             const tmpRoom = await this.prisma.room.update({
                 where: {
-                    id: banMemberDto.roomId
+                    id: +banMemberDto.roomId
                 },
                 data: {
                     users: {
@@ -615,12 +618,21 @@ export class RoomService {
             });
 
             this.unsetUserFromAdmins(
-                banMemberDto.roomId,
+                +banMemberDto.roomId,
                 banMemberDto.memberToBanId
             );
-            return roomWithBanned.banned;
-        } 
-            // else throw new BadRequestException('Only Admins Can Ban Other Users');
+            const banned = await this.prisma.room.findUnique({
+                where: {
+                    id: +banMemberDto.roomId
+                },
+                select: {
+                    banned: true
+                }
+            });
+            console.log('banned users =======================', banned.banned);
+            // return roomWithBanned.banned;
+        }
+        // else throw new BadRequestException('Only Admins Can Ban Other Users');
     }
 
     async userAlreadyBanned(roomId: number, userId: string) {
@@ -633,9 +645,8 @@ export class RoomService {
             }
         });
 
-        if (bannedUsers.banned.includes(userId))
-            return ;
-            // throw new BadRequestException('This Member Is Already Banned');
+        if (bannedUsers.banned.includes(userId)) return;
+        // throw new BadRequestException('This Member Is Already Banned');
     }
 
     async isUserAdmin(userId: string, roomId: number) {
@@ -647,7 +658,7 @@ export class RoomService {
                 admins: true
             }
         });
-
+        console.log(roomWithAdmins, '   ', userId);
         if (roomWithAdmins.admins.includes(userId)) return true;
         return false;
     }
@@ -684,9 +695,8 @@ export class RoomService {
 
         console.log(room.users);
 
-        if (room.users.length === 0)
-            return ;
-            // throw new BadRequestException('User Is Not A Member In This Room');
+        if (room.users.length === 0) return;
+        // throw new BadRequestException('User Is Not A Member In This Room');
     }
 
     async removeBan(removeBan: RemoveBanDto, userId: string) {

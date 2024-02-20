@@ -4,7 +4,7 @@ import { IsNumber, IsString } from 'class-validator';
 export class BanMemberDto {
     @ApiProperty()
     @IsNumber()
-    roomId: number;
+    roomId: string;
 
     @ApiProperty()
     @IsString()
