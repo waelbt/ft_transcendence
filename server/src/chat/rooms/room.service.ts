@@ -773,10 +773,10 @@ export class RoomService {
     async muteUser(muteUserDto: MuteUserDto, userId: string) {
         // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userToMute);
         // you cannot mute the room owner is working succefully
-        if (await this.isUserAdmin(userId, muteUserDto.roomId)) {
+        if (await this.isUserAdmin(userId, +muteUserDto.roomId)) {
             console.log(`user ${userId}`);
             await this.isUserOwner(
-                muteUserDto.roomId,
+                +muteUserDto.roomId,
                 muteUserDto.userToMute,
                 'Mute'
             );
@@ -786,7 +786,7 @@ export class RoomService {
             );
             const roomWithMutedUsers = await this.prisma.room.findUnique({
                 where: {
-                    id: muteUserDto.roomId
+                    id: +muteUserDto.roomId
                 },
                 select: {
                     muted: true
@@ -795,7 +795,7 @@ export class RoomService {
 
             const room = await this.prisma.room.updateMany({
                 where: {
-                    id: muteUserDto.roomId
+                    id: +muteUserDto.roomId
                 },
                 data: {
                     muted: {
@@ -807,8 +807,18 @@ export class RoomService {
                 }
             });
 
+            const MutedUsers = await this.prisma.room.findUnique({
+                where: {
+                    id: +muteUserDto.roomId
+                },
+                select: {
+                    muted: true
+                }
+            });
+            console.log('----------------muted', MutedUsers);
+
             const userDetails = new UnmuteUserDetails(
-                muteUserDto.roomId,
+                +muteUserDto.roomId,
                 muteUserDto.userToMute,
                 unmuteTime
             );
@@ -906,6 +916,8 @@ export class RoomService {
         });
 
         this.mutedUsers.delete(unmuteUser.userID);
+
+
     }
 
     // createMessage

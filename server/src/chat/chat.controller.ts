@@ -58,22 +58,37 @@ export class ChatController {
     }
 
     @Post('changeRoomPrivacy')
-    async changeRoomPrivacy(@Req() req, @Body() changeRoomPrivacy: ChangeRoomPrivacy) {
-    
-        return await (this.roomService.changeRoomPrivacy(changeRoomPrivacy, req.user.sub));
+    async changeRoomPrivacy(
+        @Req() req,
+        @Body() changeRoomPrivacy: ChangeRoomPrivacy
+    ) {
+        return await this.roomService.changeRoomPrivacy(
+            changeRoomPrivacy,
+            req.user.sub
+        );
     }
 
     @Post('changeRoomTitle')
-    async changeRoomTitle(@Req() req, @Body() changeRoomTitle: ChangeRoomTitle) {
-
-        console.log('wa zabi', req.user.sub );
-        return await (this.roomService.changeRoomTitle(changeRoomTitle, req.user.sub));
+    async changeRoomTitle(
+        @Req() req,
+        @Body() changeRoomTitle: ChangeRoomTitle
+    ) {
+        console.log('wa zabi', req.user.sub);
+        return await this.roomService.changeRoomTitle(
+            changeRoomTitle,
+            req.user.sub
+        );
     }
 
     @Post('changeRoomAvatar')
-    async changeRoomAvatar(@Req() req, @Body() changeRoomAvatar: ChangeRoomAvatar) {
-
-        return await (this.roomService.changeRoomAvatar(changeRoomAvatar, req.user.sub));
+    async changeRoomAvatar(
+        @Req() req,
+        @Body() changeRoomAvatar: ChangeRoomAvatar
+    ) {
+        return await this.roomService.changeRoomAvatar(
+            changeRoomAvatar,
+            req.user.sub
+        );
     }
 
     @Get('AllRooms')
@@ -160,7 +175,10 @@ export class ChatController {
     }
 
     @Post('changeRoomInfo')
-    async changeRoomInfo(@Req() req, @Body() ChangeRoomInfoDto: ChangeRoomInfoDto) {
-        return (this.roomService.ChangeRoomInfo(ChangeRoomInfoDto, req.user.sub))
+    async changeRoomInfo(
+        @Req() req,
+        @Body() ChangeRoomInfoDto: ChangeRoomInfoDto
+    ) {
+        return this.roomService.ChangeRoomInfo(ChangeRoomInfoDto, req.user.sub);
     }
 }

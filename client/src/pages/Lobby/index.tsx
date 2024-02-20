@@ -3,12 +3,13 @@ import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
 import { useModelStore } from '../../stores/ModelStore';
 import useTimer from '../../hooks/timer';
-import { Modal } from '../../components';
+import { Modal, MuterForm } from '../../components';
 import { useEffect } from 'react';
 import LeaderBoard from '../../components/LeaderBoard';
 
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
+
     const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
     const { id } = useUserStore();
@@ -82,7 +83,8 @@ export function Lobby() {
                     ))}
                     {isEventOpen && (
                         <Modal removable={false}>
-                            <div
+                            <MuterForm />
+                            {/* <div
                                 className="flex flex-col gap-4 text-white"
                                 style={{
                                     animation: 'fade 1.5s infinite'
@@ -100,7 +102,7 @@ export function Lobby() {
                                         Waiting time: {formatTime(elapsedTime)}
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
                         </Modal>
                     )}
                 </div>
