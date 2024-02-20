@@ -46,7 +46,6 @@ function GroupsForm() {
     }, [visibilityOptions, setValue]);
 
     useEffect(() => {
-        console.log(errors);
         if (isSubmitting) {
             const firstErrorKey = Object.keys(errors)[0];
             if (firstErrorKey) {

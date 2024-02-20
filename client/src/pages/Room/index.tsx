@@ -21,11 +21,10 @@ export function Room() {
     const { socket } = useChatLayoutStore();
     const {
         messages,
-        pushMessage,
         updateState,
-        pushMember,
-        unpushMember,
-        alertMessage
+        messageListener,
+        userJoinListener,
+        userLeftListener
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -65,33 +64,6 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
-        // ! 7at had actions fe store waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        const messageListener = (message: Message) => {
-            console.log('Received message:', message);
-
-            if (id && message.id === +id) {
-                pushMessage(message);
-            }
-        };
-
-        const userLeftListener = ({
-            id,
-            nickname
-        }: {
-            id: string;
-            nickname: string;
-        }) => {
-            unpushMember(id);
-            alertMessage(`${nickname} has left the room.`);
-        };
-
-        const userJoinListener = (user: User) => {
-            pushMember(user);
-            alertMessage(`${user.nickName} has join the room.`);
-        };
-
-        // ! unpushi men members
-        // ! render a message
         socket.on('joinRoom', userJoinListener);
         socket.on('message', messageListener);
         socket.on('leaveRoom', userLeftListener);
@@ -100,7 +72,7 @@ export function Room() {
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
         };
-    }, [socket, id]);
+    }, [socket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0 ">

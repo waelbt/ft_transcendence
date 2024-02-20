@@ -60,7 +60,6 @@ function GroupPanel() {
     }, [visibilityOptions, setValue]);
 
     useEffect(() => {
-        console.log(errors);
         if (isSubmitting) {
             const firstErrorKey = Object.keys(errors)[0];
             if (firstErrorKey) {
@@ -350,40 +349,3 @@ function GroupPanel() {
     );
 }
 export default GroupPanel;
-
-{
-    /* ) : (
-                        <div className="flex items-center justify-center gap-4">
-                            <FormComponent
-                                fields={[
-                                    {
-                                        label: '',
-                                        type: 'text',
-                                        name: 'nickName',
-                                        placeholder: 'group name',
-                                        validation: {
-                                            required: 'Nickname is required!',
-                                            maxLength: {
-                                                value: 10,
-                                                message:
-                                                    'Nickname must be less than 15 characters'
-                                            },
-                                            minLength: {
-                                                value: 4,
-                                                message:
-                                                    'Nickname must be at least 5 characters'
-                                            }
-                                        }
-                                    }
-                                ]}
-                                onSubmit={() => {}}
-                                defaultValues={{ nickName: 'dadwa' }}
-                            />
-                            <ImCross
-                                size={22}
-                                className="cursor-pointer"
-                                onClick={() => setIsModifiable(false)}
-                            />
-                        </div>
-                    )} */
-}
