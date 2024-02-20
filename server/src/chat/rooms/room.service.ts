@@ -30,6 +30,7 @@ import { SendMessageDto } from '../DTOS/send-message-dto';
 import { ChangeRoomPrivacy } from '../DTOS/change-roomPrivacy-dto';
 import { ChangeRoomAvatar } from '../DTOS/change-roomAvatar-dto';
 import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
+import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 
 @Injectable()
 export class RoomService {
@@ -1035,5 +1036,38 @@ export class RoomService {
         });
 
         return allChannels;
+    }
+
+    async ChangeRoomInfo(changeRoomInfoDto: ChangeRoomInfoDto, userId: string) {
+
+        if (await this.isUserAdmin(userId, +changeRoomInfoDto.id)) {
+            const id = +changeRoomInfoDto.id;
+            if (changeRoomInfoDto.newPrivacy === 'PROTECTED') {
+                const password = hashPassword(changeRoomInfoDto.password);
+                const room = await this.prisma.room.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        password: password,
+                        privacy: "PROTECTED",
+                    },
+                });
+            }
+            else {
+                await this.prisma.room.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        privacy: changeRoomInfoDto.newPrivacy,
+                        avatar: changeRoomInfoDto.newAvatar,
+                        roomTitle: changeRoomInfoDto.newTitle,
+                    },
+                });
+            }
+        }
+        else 
+            throw new ForbiddenException('Only Owner And Admins Can Change Room Informations');
     }
 }

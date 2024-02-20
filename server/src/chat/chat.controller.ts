@@ -157,4 +157,9 @@ export class ChatController {
     async unmuteUser(@Req() req, @Body() unmuteUserDto: UnmuteUserDto) {
         return this.roomService.unmuteUser(unmuteUserDto, req.user.sub);
     }
+
+    @Post('changeRoomInfo')
+    async changeRoomInfo(@Req() req, @Body() ChangeRoomInfoDto) {
+
+    }
 }
