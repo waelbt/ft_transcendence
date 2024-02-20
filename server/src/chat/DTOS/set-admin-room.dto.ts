@@ -10,5 +10,9 @@ export class SetAdminDto {
 
     @ApiProperty()
     @IsNumber()
-    roomId: number;
+    roomId: string;
+
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
 }
