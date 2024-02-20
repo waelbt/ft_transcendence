@@ -122,28 +122,35 @@ export class ChatGateway
 
     @SubscribeMessage('joinRoom')
     async joinRoom(client: Socket, joinRoomDto: JoinRoomDto) {
-        console.log('here');
+        // console.log('here');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
-        this.logger.log(
-            `the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`
-        );
-        const userRoom = await this.roomService.joinRoom(
-            joinRoomDto,
-            userCheck.userData.sub
-        );
-        if (userRoom.state === false) {
-            console.log(userRoom.message);
-            throw new WsException(userRoom.message);
-        } else {
+        else {
             const userSocket = await this.usersSockets.get(
                 userCheck.userData.email
             );
             await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
-            return userRoom.joinedRoom;
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub
+                }
+            });
+            console.log(user, 'joinded');
+            await this.server.to(joinRoomDto.roomTitle).emit('joinRoom', user);
+            // return userRoom.joinedRoom;
         }
+        // this.logger.log(
+        //     `the user  ${userCheck.userData.email} is trying to join the room "${joinRoomDto.roomId}"`
+        // );
+        // const userRoom = await this.roomService.joinRoom(
+        //     joinRoomDto,
+        //     userCheck.userData.sub
+        // );
+        // if (userRoom.state === false) {
+        //     console.log(userRoom.message);
+        //     throw new WsException(userRoom.message);
     }
 
     // @SubscribeMessage('globalChat')
@@ -175,6 +182,23 @@ export class ChatGateway
             userCheck.userData.email
         );
         await this.server.in(userSocket).socketsLeave(leaveRoomDto.roomTitle);
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userCheck.userData.sub
+            },
+            select: {
+                id: true,
+                nickName: true
+            }
+        });
+
+        const message = {
+            id: user.id,
+            nickname: user.nickName
+        };
+
+        await this.server.to(leaveRoomDto.roomTitle).emit('leaveRoom', message);
     }
 
     @SubscribeMessage('muteUser')
@@ -235,9 +259,7 @@ export class ChatGateway
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
                 console.log(dmroom.roomTitle);
-                await this.server
-                    .in(client.id)
-                    .socketsJoin(dmroom.roomTitle);
+                await this.server.in(client.id).socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }
         }

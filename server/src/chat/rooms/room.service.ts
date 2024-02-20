@@ -91,26 +91,25 @@ export class RoomService {
         return roomCreated;
     }
 
-    async findRoomByTitle(roomTitle: string) {
-        const existingRoom = await this.prisma.room.findUnique({
-            where: {
-                roomTitle: roomTitle
-            },
-            include: {
-                users: true,
-                messages: {
-                    include: {
-                        sender: true
-                    }
-                }
-            }
-        });
+    // async findRoomByTitle(roomTitle: string) {
+    //     const existingRoom = await this.prisma.room.findUnique({
+    //         where: {
+    //             roomTitle: roomTitle
+    //         },
+    //         include: {
+    //             users: true,
+    //             messages: {
+    //                 include: {
+    //                     sender: true
+    //                 }
+    //             }
+    //         }
+    //     });
 
-        return existingRoom;
-    }
+    //     return existingRoom;
+    // }
 
     async joinRoom(joinRoomDto: JoinRoomDto, userId: string) {
-        console.log('zbiiiii');
         // check if the room existed and if the user is already joined
         const user = await this.prisma.user.findUnique({
             where: {
@@ -125,7 +124,7 @@ export class RoomService {
 
         let room = await this.prisma.room.findUnique({
             where: {
-                roomTitle: joinRoomDto.roomTitle
+                id: joinRoomDto.roomId
             }
             // select: {
             //     privacy: true,
@@ -133,26 +132,29 @@ export class RoomService {
             // }
         });
         if (!room)
-            return { message: 'No Existing Room With This Id', state: false };
+            throw new ForbiddenException('No Existing Room With This Id');
+        // return { message: 'No Existing Room With This Id', state: false };
         if (user.rooms.includes(room))
-            return {
-                message: 'Already Joined',
-                state: false,
-                joinedRoom: room
-            };
+            throw new ForbiddenException('Alread Joined');
+        // return {
+        //     message: 'Already Joined',
+        //     state: false,
+        //     joinedRoom: room
+        // };
         // if (!room)
         //     throw new NotFoundException('No Exsiting Room With This Id');
         else if (room.privacy == 'PRIVATE')
-            return { message: 'This Room Is Private', state: false };
+            throw new ForbiddenException('This Room Is PRIVATE');
+        // return { message: 'This Room Is Private', state: false };
         else if (room.privacy == 'PROTECTED') {
             const matched = verifyPassowrd(joinRoomDto.password, room.password);
-            if (!matched)
-                return { message: 'Password Does Not Match', state: false };
+            if (!matched) throw new ForbiddenException('Pssword Does No Match');
+            // return { message: 'Password Does Not Match', state: false };
         }
 
         room = await this.prisma.room.update({
             where: {
-                roomTitle: joinRoomDto.roomTitle
+                id: joinRoomDto.roomId
             },
             data: {
                 users: {
@@ -175,11 +177,10 @@ export class RoomService {
     }
 
     async leaveRoom(leaveRoomDto: LeaveRoomDto, userId: string) {
-        let room = await this.findRoomByTitle(leaveRoomDto.roomTitle);
-
-        room = await this.prisma.room.update({
+        const id = +leaveRoomDto.id;
+        const room = await this.prisma.room.update({
             where: {
-                roomTitle: leaveRoomDto.roomTitle
+                id: id
             },
             data: {
                 users: {
@@ -189,25 +190,32 @@ export class RoomService {
                 }
             },
             include: {
-                users: true,
-                messages: {
-                    include: {
-                        sender: true
-                    }
-                }
+                users: true
             }
         });
 
-        // here i should check if the room has no more users
-        // if yes
-        // i should delete all the messages that belongs to it
-        // and delete the room it self
-        return { joinedRoom: room, state: true };
+        if (room.users.length === 0) {
+            await this.prisma.message.deleteMany({
+                where: {
+                    roomId: id
+                }
+            });
+
+            await this.prisma.room.delete({
+                where: {
+                    id: id
+                }
+            });
+        }
+        // // here i should check if the room has no more users
+        // // if yes
+        // // i should delete all the messages that belongs to it
+        // // and delete the room it self
     }
 
     async getAllRooms(userId: string) {
         const allRooms: GetRoomsDto[] = [];
-    
+
         const rooms = await this.prisma.room.findMany({
             where: {
                 isConversation: false,
@@ -216,9 +224,9 @@ export class RoomService {
                 },
                 users: {
                     none: {
-                        id: userId,
-                    },
-                },
+                        id: userId
+                    }
+                }
             },
             select: {
                 id: true,
@@ -226,14 +234,14 @@ export class RoomService {
                 avatar: true,
                 privacy: true,
                 users: {
-                    select : {
-                        id: true,
+                    select: {
+                        id: true
                     }
                 },
-                messages: true,
-            },
+                messages: true
+            }
         });
-    
+
         rooms.forEach((item) => {
             let lastMessage = '';
             let createdAt = new Date();
@@ -251,11 +259,11 @@ export class RoomService {
                 nickName: item.roomTitle,
                 lastMessageTime: createdAt,
                 isRoom: true,
-                privacy: item.privacy,
+                privacy: item.privacy
             };
             allRooms.push(singleRoom);
         });
-    
+
         return allRooms;
     }
 
@@ -438,7 +446,6 @@ export class RoomService {
     }
 
     async changeRoomTitle(changeRoomTitle: ChangeRoomTitle, userId: string) {
-
         if (await this.isUserAdmin(userId, +changeRoomTitle.id)) {
             const id = +changeRoomTitle.id;
             await this.prisma.room.update({
@@ -446,16 +453,16 @@ export class RoomService {
                     id: id
                 },
                 data: {
-                    roomTitle: changeRoomTitle.newTitle,
-                },
+                    roomTitle: changeRoomTitle.newTitle
+                }
             });
-        }
-        else 
-            throw new ForbiddenException('Only Owner And Admins Can Change Room Title');
+        } else
+            throw new ForbiddenException(
+                'Only Owner And Admins Can Change Room Title'
+            );
     }
 
     async changeRoomAvatar(changeRoomAvatar: ChangeRoomAvatar, userId: string) {
-
         if (await this.isUserAdmin(userId, +changeRoomAvatar.id)) {
             const id = +changeRoomAvatar.id;
             await this.prisma.room.update({
@@ -463,16 +470,19 @@ export class RoomService {
                     id: id
                 },
                 data: {
-                    avatar: changeRoomAvatar.newAvatar,
-                },
+                    avatar: changeRoomAvatar.newAvatar
+                }
             });
-        }
-        else 
-            throw new ForbiddenException('Only Owner And Admins Can Change Room Avatar');
+        } else
+            throw new ForbiddenException(
+                'Only Owner And Admins Can Change Room Avatar'
+            );
     }
 
-    async changeRoomPrivacy(changeRoomPrivacy: ChangeRoomPrivacy, userId: string) {
-
+    async changeRoomPrivacy(
+        changeRoomPrivacy: ChangeRoomPrivacy,
+        userId: string
+    ) {
         if (await this.isUserAdmin(userId, +changeRoomPrivacy.id)) {
             const id = +changeRoomPrivacy.id;
             if (changeRoomPrivacy.newPrivacy === 'PROTECTED') {
@@ -483,24 +493,23 @@ export class RoomService {
                     },
                     data: {
                         password: password,
-                        privacy: "PROTECTED",
-                    },
+                        privacy: 'PROTECTED'
+                    }
                 });
-            }
-            else {
+            } else {
                 await this.prisma.room.update({
                     where: {
                         id: id
                     },
                     data: {
-                        privacy: changeRoomPrivacy.newPrivacy,
-                    },
+                        privacy: changeRoomPrivacy.newPrivacy
+                    }
                 });
             }
-
-        }
-        else 
-            throw new ForbiddenException('Only Owner And Admins Can Change Room Privacy');
+        } else
+            throw new ForbiddenException(
+                'Only Owner And Admins Can Change Room Privacy'
+            );
     }
 
     async unsetUserFromAdmins(roomId: number, userId: string) {
@@ -880,18 +889,17 @@ export class RoomService {
             where: {
                 id: +sendMessageDto.id
             },
-            include : {
-                messages: true,
-            },
+            include: {
+                messages: true
+            }
         });
-    
 
         const user = await this.prisma.user.findUnique({
             where: {
-                id: senderId,
-            },
+                id: senderId
+            }
         });
-        
+
         if (await this.isUserMuted(room.id, senderId)) {
             const newMessage = await this.prisma.message.create({
                 data: {
@@ -919,12 +927,12 @@ export class RoomService {
                 where: {
                     id: +sendMessageDto.id
                 },
-                include : {
-                    messages: true,
-                },
+                include: {
+                    messages: true
+                }
             });
 
-            return ({room, newMessage});
+            return { room, newMessage };
         } else throw Error('You Are Muted');
     }
 
@@ -1043,7 +1051,6 @@ export class RoomService {
     }
 
     async ChangeRoomInfo(changeRoomInfoDto: ChangeRoomInfoDto, userId: string) {
-
         if (await this.isUserAdmin(userId, +changeRoomInfoDto.id)) {
             const id = +changeRoomInfoDto.id;
             if (changeRoomInfoDto.newPrivacy === 'PROTECTED') {
@@ -1054,11 +1061,10 @@ export class RoomService {
                     },
                     data: {
                         password: password,
-                        privacy: "PROTECTED",
-                    },
+                        privacy: 'PROTECTED'
+                    }
                 });
-            }
-            else {
+            } else {
                 await this.prisma.room.update({
                     where: {
                         id: id
@@ -1066,12 +1072,13 @@ export class RoomService {
                     data: {
                         privacy: changeRoomInfoDto.newPrivacy,
                         avatar: changeRoomInfoDto.newAvatar,
-                        roomTitle: changeRoomInfoDto.newTitle,
-                    },
+                        roomTitle: changeRoomInfoDto.newTitle
+                    }
                 });
             }
-        }
-        else 
-            throw new ForbiddenException('Only Owner And Admins Can Change Room Informations');
+        } else
+            throw new ForbiddenException(
+                'Only Owner And Admins Can Change Room Informations'
+            );
     }
 }

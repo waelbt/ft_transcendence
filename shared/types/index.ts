@@ -1,4 +1,5 @@
 export interface User {
+    actions: any;
     id: string;
     email: string;
     HashPassword: string;
@@ -84,6 +85,8 @@ export interface RoomsList {
     isRoom: boolean;
 
     privacy?: string;
+
+    password?: string;
 }
 
 export interface OnlineUser {

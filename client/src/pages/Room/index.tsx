@@ -2,8 +2,8 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
-import { useChatStore } from '../../stores/chatStore';
-import { Message } from '../../../../shared/types';
+import { useChatLayoutStore } from '../../stores/chatLayoutStore';
+import { Message, User } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
 // import { isAxiosError } from 'axios';
@@ -12,12 +12,21 @@ import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 import GroupPanel from '../../components/GroupPanel';
+import { useRoomStore } from '../../stores/roomStore';
 
 export function Room() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, updateState, messages, pushMessage } = useChatStore();
+    const { socket } = useChatLayoutStore();
+    const {
+        messages,
+        updateState,
+        messageListener,
+        userJoinedListener,
+        userLeftListener,
+        userkickedListener
+    } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,13 +48,12 @@ export function Room() {
     }, [messages]);
 
     useEffect(() => {
+        updateState({ isModifiable: false });
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/room/${id}`);
-                console.log(res);
-                updateState({
-                    messages: res.data.messages
-                });
+                updateState({ ...res.data });
+                updateState({ id: id });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
             }
@@ -57,20 +65,17 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
-        const messageListener = (message: Message) => {
-            console.log('Received message:', message);
-
-            if (id && message.id === +id) {
-                pushMessage(message);
-            }
-        };
-
+        socket.on('kickMember', userkickedListener);
+        socket.on('joinRoom', userJoinedListener);
         socket.on('message', messageListener);
-
+        socket.on('leaveRoom', userLeftListener);
         return () => {
+            socket.on('kickMember', userkickedListener);
+            socket.on('joinRoom', userJoinedListener);
             socket.off('message', messageListener);
+            socket.off('leaveRoom', userLeftListener);
         };
-    }, [socket, id, pushMessage]);
+    }, [socket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0 ">
@@ -87,6 +92,16 @@ export function Room() {
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
                         {messages.map((msg, index) => {
+                            if (msg.id === 0) {
+                                return (
+                                    <div
+                                        key={index}
+                                        className="flex justify-center items-center text-gray-500 font-normal font-['Acme'] text-base mt-5"
+                                    >
+                                        {`---------------- ${msg.message} ----------------`}
+                                    </div>
+                                );
+                            }
                             if (userId !== msg.senderId) {
                                 return (
                                     <div
@@ -137,6 +152,7 @@ export function Room() {
                                 </div>
                             );
                         })}
+
                         <div ref={contentRef}></div>
                     </div>
                 </div>

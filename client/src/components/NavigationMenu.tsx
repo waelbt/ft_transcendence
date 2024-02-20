@@ -56,7 +56,7 @@ function NavigationMenu() {
                             position="bottom right"
                             nested
                         >
-                            <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
+                            <div className="p-2.5 bg-white rounded-[10px]    shadow flex-col justify-start items-center inline-flex w-max">
                                 not implemneted yet
                             </div>
                         </Popup>

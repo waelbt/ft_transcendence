@@ -5,7 +5,7 @@ import { useUserStore } from '../stores/userStore';
 import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
 
-import { useChatStore } from '../stores/chatStore';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
@@ -13,7 +13,7 @@ function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken, id } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket, socket: chatSocket } = useChatStore();
+    const { initializeSocket, socket: chatSocket } = useChatLayoutStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
 
     useEffect(() => {
@@ -42,7 +42,7 @@ function Layout() {
         updateState({
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
-       });
+        });
         initializeSocket(accessToken);
         initializeGameSocket();
 
