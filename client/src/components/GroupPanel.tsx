@@ -129,7 +129,12 @@ function GroupPanel() {
     };
 
     const userBan = (user: User) => {
-        socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
+        console.log({ memberToBanId: user.id, roomId: id, roomTitle });
+        socket?.emit('banMember', {
+            memberToBanId: user.id,
+            roomId: id,
+            roomTitle
+        });
     };
 
     return (
