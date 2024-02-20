@@ -11,7 +11,7 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { CreateRoomDto } from '../DTOS/create-room.dto';
 import { JoinRoomDto } from '../DTOS/join-room.dto';
 import { LeaveRoomDto } from '../DTOS/leave-room.dto';
-import { SetAdminDto } from '../DTOS/set-admin-room.dto';
+import { SetAdminDto, UnSetAdminDto } from '../DTOS/set-admin-room.dto';
 import { KickMemberDto } from '../DTOS/kick-member.dto';
 import { BanMemberDto } from '../DTOS/ban-member-dto';
 import { RemoveBanDto } from '../DTOS/remove-ban-dto';
@@ -385,6 +385,11 @@ export class RoomService {
             });
         }
         return updatedRoom;
+    }
+
+    async removeFromAdmins(unSetAdminDto: UnSetAdminDto, userId: string) {
+
+        await this.unsetUserFromAdmins(+unSetAdminDto.roomId, unSetAdminDto.userId)
     }
 
     async kickMember(kickMemberDto: KickMemberDto, userId: string) {

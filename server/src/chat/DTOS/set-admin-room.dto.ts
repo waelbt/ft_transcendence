@@ -16,3 +16,18 @@ export class SetAdminDto {
     @IsString()
     roomTitle: string;
 }
+
+export class UnSetAdminDto {
+    
+    @ApiProperty()
+    @IsString()
+    userId: string;
+
+    @ApiProperty()
+    @IsNumber()
+    roomId: string;
+
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
+}
