@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { Message, User } from '../../../shared/types';
 
 type RoomState = {
-    // ! state 
     isModifiable: boolean;
     id: string;
     roomTitle: string;
@@ -32,15 +31,16 @@ type RoomMethod = {
         nickname: string;
     }) => void;
     userkickedListener: ({
-        adminName,
         id,
         nickname
     }: {
-        adminName: string;
         id: string;
         nickname: string;
     }) => void;
     userJoinedListener: (user: User) => void;
+    isAdmin: (userId: string) => boolean;
+    canSendMessage: (userId: string) => boolean;
+    pushModerator: ({ id, nickname }: { id: string; nickname: string }) => void;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -61,7 +61,7 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
 
         // Check if the user is not already in the array
         if (!users.find((existingUser) => existingUser.id === user.id)) {
-            const newUsers = [...users, user];
+            const newUsers = [user, ...users];
             set({ users: newUsers });
         }
     },
@@ -78,6 +78,27 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
 
         const newMessages = [...messages, msg];
         set({ messages: newMessages });
+    },
+    pushModerator: ({ id, nickname }: { id: string; nickname: string }) => {
+        const { admins, messages } = get();
+
+        // Check if the user is not already in the admins array
+        if (!admins.includes(id)) {
+            const newAdmins = [...admins, id];
+            set({ admins: newAdmins });
+
+            // Print a message
+            const adminMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `an admin made ${nickname} an admin.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, adminMessage];
+            set({ messages: newMessages });
+        }
     },
     alertMessage: (message) => {
         const { messages } = get();
@@ -104,26 +125,30 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         }
     },
     userkickedListener: ({
-        adminName,
         id,
         nickname
     }: {
-        adminName: string;
         id: string;
         nickname: string;
     }) => {
+        console.log(id, '  ', nickname);
         const { users, messages } = get();
-        const filteredRooms = users.filter((user) => user.id !== id);
-        const leaveMessage: Message = {
-            id: 0,
-            senderId: '',
-            avatar: '',
-            nickName: 'System',
-            message: `${adminName} has kicked ${nickname} from the room.`,
-            createdAt: 'no need'
-        };
-        const newMessages = [...messages, leaveMessage];
-        set({ users: filteredRooms, messages: newMessages });
+
+        const userExists = users.some((user) => user.id === id);
+
+        if (userExists) {
+            const filteredRooms = users.filter((user) => user.id !== id);
+            const leaveMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `an admin kicked ${nickname} from the room.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, leaveMessage];
+            set({ users: filteredRooms, messages: newMessages });
+        }
     },
     userLeftListener: ({ id, nickname }) => {
         const { users, messages } = get();
@@ -160,5 +185,17 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
                 return state; // If user is already in the array, return the unchanged state
             }
         });
+    },
+    isAdmin: (userId) => {
+        const { owner, admins } = get();
+        return owner.includes(userId) || admins.includes(userId);
+    },
+    canSendMessage: (userId) => {
+        const { muted, banned, users } = get();
+        const userExists = users.some((user) => user.id === userId);
+
+        return (
+            userExists && !muted.includes(userId) && !banned.includes(userId)
+        );
     }
 }));

@@ -27,7 +27,8 @@ function GroupPanel() {
         users,
         updateState,
         isModifiable,
-        owner
+        owner,
+        isAdmin
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
 
@@ -110,8 +111,12 @@ function GroupPanel() {
         }
     };
 
-    const kickUser = (user : User) => {
-        socket?.emit('kickMember', {userId: user.id, id});
+    const kickUser = (user: User) => {
+        socket?.emit('kickMember', { userId: user.id, roomId: id, roomTitle });
+    };
+
+    const setAsAdmin = (user: User) => {
+        socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
     };
 
     const handleExit = () => {
@@ -332,32 +337,38 @@ function GroupPanel() {
                                 {member.nickName}
                             </div>
                         </div>
-                        <Popup
-                            key={`popup-${index}`}
-                            trigger={
-                                <div
-                                    className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
+                        {isAdmin(userID) &&
+                            member.id !== userID &&
+                            owner[0] !== member.id && (
+                                <Popup
+                                    key={`popup-${index}`}
+                                    trigger={
+                                        <div
+                                            className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
+                                        >
+                                            <BsThreeDots
+                                                className="cursor-pointer text-black"
+                                                size={26}
+                                            />
+                                        </div>
+                                    }
+                                    position="left center"
                                 >
-                                    <BsThreeDots
-                                        className="cursor-pointer text-black"
-                                        size={26}
-                                    />
-                                </div>
-                            }
-                            position="left center"
-                        >
-                            <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                {actions.map((action) => (
-                                    <div
-                                        key={action}
-                                        className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                        onClick={() => kickUser(users)}
-                                    >
-                                        {action}
+                                    <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
+                                        {actions.map((action) => (
+                                            <div
+                                                key={action}
+                                                className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
+                                                onClick={() =>
+                                                    setAsAdmin(member)
+                                                }
+                                            >
+                                                {action}
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        </Popup>
+                                </Popup>
+                            )}
                     </div>
                 ))}
             </div>

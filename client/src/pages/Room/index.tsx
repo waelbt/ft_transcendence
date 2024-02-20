@@ -18,14 +18,16 @@ export function Room() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket } = useChatLayoutStore();
+    const { socket, unpushRoom } = useChatLayoutStore();
     const {
         messages,
         updateState,
         messageListener,
         userJoinedListener,
         userLeftListener,
-        userkickedListener
+        userkickedListener,
+        canSendMessage,
+        pushModerator
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -65,13 +67,27 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
-        socket.on('kickMember', userkickedListener);
+        const handlekick = ({
+            id: kickedUser,
+            nickname
+        }: {
+            id: string;
+            nickname: string;
+        }) => {
+            userkickedListener({ id: kickedUser, nickname });
+            if (kickedUser === userId) unpushRoom(+id);
+        };
+
+        socket.on('setAdmin', pushModerator);
+        socket.on('kickMember', handlekick);
         socket.on('joinRoom', userJoinedListener);
         socket.on('message', messageListener);
         socket.on('leaveRoom', userLeftListener);
+
         return () => {
-            socket.on('kickMember', userkickedListener);
-            socket.on('joinRoom', userJoinedListener);
+            socket.off('setAdmin', pushModerator);
+            socket.off('kickMember', handlekick);
+            socket.off('joinRoom', userJoinedListener);
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
         };
@@ -156,29 +172,34 @@ export function Room() {
                         <div ref={contentRef}></div>
                     </div>
                 </div>
-                <div
-                    //  ${isblocked ? 'hidden' : ''}
-                    className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center"
-                >
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={handleInputChange}
-                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                        placeholder="send message"
-                        className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700  outline-none  text-base font-normal font-['Acme']"
-                    />
-                    <div className=" text-stone-500  w-10 text-xs flex flex-col">
-                        <div className="inline-flex justify-between">
-                            <div>{message.length}</div>/
-                        </div>
-                        <div>{MAX_MESSAGE_LENGTH}</div>
-                    </div>
-                    <RiSendPlaneFill
-                        size={38}
-                        className="text-blue-800 mr-5 cursor-pointer"
-                        onClick={sendMessage}
-                    />
+                <div className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center  text-neutral-700  text-base font-normal font-['Acme']">
+                    {canSendMessage(userId) ? (
+                        <>
+                            <input
+                                type="text"
+                                value={message}
+                                onChange={handleInputChange}
+                                onKeyDown={(e) =>
+                                    e.key === 'Enter' && sendMessage()
+                                }
+                                placeholder="send message"
+                                className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex outline-none "
+                            />
+                            <div className=" text-stone-500  w-10 text-xs flex flex-col">
+                                <div className="inline-flex justify-between">
+                                    <div>{message.length}</div>/
+                                </div>
+                                <div>{MAX_MESSAGE_LENGTH}</div>
+                            </div>
+                            <RiSendPlaneFill
+                                size={38}
+                                className="text-blue-800 mr-5 cursor-pointer"
+                                onClick={sendMessage}
+                            />
+                        </>
+                    ) : (
+                        <div>you can't send messages to this group </div>
+                    )}
                 </div>
             </div>
             <GroupPanel />
