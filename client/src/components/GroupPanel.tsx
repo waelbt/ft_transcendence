@@ -110,8 +110,8 @@ function GroupPanel() {
         }
     };
 
-    const kickUser = (user : User) => {
-        socket?.emit('kickMember', {userId: user.id, id});
+    const kickUser = (user: User) => {
+        socket?.emit('kickMember', { userId: user.id, id, roomTitle });
     };
 
     const handleExit = () => {

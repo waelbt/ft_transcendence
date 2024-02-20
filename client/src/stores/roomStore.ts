@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { Message, User } from '../../../shared/types';
 
 type RoomState = {
-    // ! state 
     isModifiable: boolean;
     id: string;
     roomTitle: string;
@@ -41,6 +40,8 @@ type RoomMethod = {
         nickname: string;
     }) => void;
     userJoinedListener: (user: User) => void;
+    isAdmin: (userId: string) => boolean;
+    canSendMessage: (userId: string) => boolean;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -104,11 +105,9 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         }
     },
     userkickedListener: ({
-        adminName,
         id,
         nickname
     }: {
-        adminName: string;
         id: string;
         nickname: string;
     }) => {
@@ -119,7 +118,7 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
             senderId: '',
             avatar: '',
             nickName: 'System',
-            message: `${adminName} has kicked ${nickname} from the room.`,
+            message: `am admin kicked ${nickname} from the room.`,
             createdAt: 'no need'
         };
         const newMessages = [...messages, leaveMessage];
@@ -160,5 +159,17 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
                 return state; // If user is already in the array, return the unchanged state
             }
         });
+    },
+    isAdmin: (userId) => {
+        const { owner, admins } = get();
+        return owner.includes(userId) || admins.includes(userId);
+    },
+    canSendMessage: (userId) => {
+        const { muted, banned, users } = get();
+        const userExists = users.some((user) => user.id === userId);
+
+        return (
+            userExists && !muted.includes(userId) && !banned.includes(userId)
+        );
     }
 }));
