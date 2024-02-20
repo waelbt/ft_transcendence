@@ -8,7 +8,7 @@ import {
     MessageBody,
     WsException
 } from '@nestjs/websockets';
-import { Logger, NotFoundException, Req, UseGuards } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, Req, UseGuards, forwardRef } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -34,15 +34,20 @@ import { BanMemberDto } from './DTOS/ban-member-dto';
     },
     namespace: '/chat'
 })
+@Injectable()
 export class ChatGateway
     implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
     constructor(
         private readonly prisma: PrismaOrmService,
-        private readonly roomService: RoomService,
+        // private readonly roomService: RoomService,
         private readonly wsService: WebSocketService,
-        private readonly blockService: BlockService
+        private readonly blockService: BlockService,
+        @Inject(forwardRef(() => RoomService))
+        private readonly roomService: RoomService,
     ) {}
+    // @Inject(forwardRef(() => ChatGateway))
+    // private readonly emit: ChatGateway) 
 
     private usersSockets: Map<string, string> = new Map<string, string>();
 

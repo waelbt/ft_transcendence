@@ -10,6 +10,7 @@ import { JoinRoomDto } from './DTOS/join-room.dto';
 import { CreateDmDto } from './DTOS/create-dm.dto';
 import { BlockService } from 'src/users/services/blocked.service';
 import { SendMessageDto } from './DTOS/send-message-dto';
+import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class WebSocketService {
@@ -17,7 +18,7 @@ export class WebSocketService {
         private readonly prisma: PrismaOrmService,
         private readonly roomService: RoomService,
         private readonly jwt: JwtService,
-        private readonly blockService: BlockService
+        private readonly blockService: BlockService,
     ) {}
 
     // async joinUserSocketToItsRooms(

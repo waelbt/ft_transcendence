@@ -37,7 +37,7 @@ const uploadsDestination = process.env.UPLOADS_DESTINATION;
             useClass: accessTokenGuard
         },
         RoomService,
-        BlockService
+        BlockService,
     ]
 })
 
