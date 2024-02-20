@@ -10,6 +10,9 @@ export class KickMemberDto {
 
     @ApiProperty()
     @IsNumber()
-    roomId: number;
+    id: string;
 
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
 }

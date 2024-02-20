@@ -25,6 +25,7 @@ import { SendMessageDto } from './DTOS/send-message-dto';
 import { send } from 'process';
 import { BlockService } from 'src/users/services/blocked.service';
 import { EmitMessageDto } from './DTOS/emit-message-dto';
+import { KickMemberDto } from './DTOS/kick-member.dto';
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -173,6 +174,9 @@ export class ChatGateway
             client.handshake.auth.token
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
+        // console.log(
+        //     `The user ${userCheck.userData.email} is leaving the room ${leaveRoomDto.roomTitle}`
+        // );
         await this.roomService.leaveRoom(leaveRoomDto, userCheck.userData.sub);
         const userSocket = await this.usersSockets.get(
             userCheck.userData.email
@@ -287,7 +291,6 @@ export class ChatGateway
 
     @SubscribeMessage('checkDm')
     async checkDM(client: any, createDmDto: CreateDmDto) {
-        console.log('hello world');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -299,6 +302,47 @@ export class ChatGateway
             );
             // console.log('room that should be sent', dm);
             this.server.emit('checkDM', dm);
+        }
+    }
+
+    @SubscribeMessage('kickMember')
+    async kickUser(client: any, kickmemberDto: KickMemberDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else {
+            await this.roomService.kickMember(kickmemberDto, userCheck.userData.sub);
+            const userToKick = await this.prisma.user.findUnique({
+                where: {
+                    id: kickmemberDto.userId,
+                },
+                select: {
+                    email: true,
+                }
+            });
+
+            const userSocket = await this.usersSockets.get(
+                userToKick.email
+            );
+            if (userSocket)
+                await this.server.in(userSocket).socketsLeave(kickmemberDto.roomTitle);
+
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub,
+                },
+                select: {
+                    nickName: true,
+                },
+            });
+
+            const message = {
+                nickname: user.nickName,
+                id: userCheck.userData.sub,
+            }
+            this.server.to(kickmemberDto.roomTitle).emit('kickMember', message);
         }
     }
 

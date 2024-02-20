@@ -386,7 +386,7 @@ export class RoomService {
     async kickMember(kickMemberDto: KickMemberDto, userId: string) {
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
-                id: kickMemberDto.roomId
+                id: +kickMemberDto.id
             },
             select: {
                 admins: true
@@ -396,7 +396,7 @@ export class RoomService {
         if (roomWithAdmins.admins.includes(userId)) {
             const room = await this.prisma.room.findUnique({
                 where: {
-                    id: kickMemberDto.roomId
+                    id: +kickMemberDto.id
                 },
                 select: {
                     users: {
@@ -408,23 +408,24 @@ export class RoomService {
             });
 
             if (room.users.length === 0)
-                throw new BadRequestException(
-                    'User Is Not A Member In This Room'
-                );
+                return ;
+                // throw new BadRequestException(
+                //     'User Is Not A Member In This Room'
+                // );
 
             await this.isUserOwner(
-                kickMemberDto.roomId,
+                +kickMemberDto.id,
                 kickMemberDto.userId,
                 'Kick'
             );
             await this.unsetUserFromAdmins(
-                kickMemberDto.roomId,
+                +kickMemberDto.id,
                 kickMemberDto.userId
             );
 
             const tmpRoom = await this.prisma.room.update({
                 where: {
-                    id: kickMemberDto.roomId
+                    id: +kickMemberDto.id
                 },
                 data: {
                     users: {
@@ -440,8 +441,8 @@ export class RoomService {
 
             return tmpRoom;
         }
-
-        throw new BadRequestException('Only Admins Can Kick Other Users');
+        return ;
+        // throw new BadRequestException('Only Admins Can Kick Other Users');
     }
 
     async changeRoomTitle(changeRoomTitle: ChangeRoomTitle, userId: string) {
@@ -651,9 +652,10 @@ export class RoomService {
         });
 
         if (roomOwner.owner.includes(userId))
-            throw new BadRequestException(
-                `You Cannot ${message} The Room Owner`
-            );
+            return ;
+            // throw new BadRequestException(
+            //     `You Cannot ${message} The Room Owner`
+            // );
     }
 
     async isUserMember(roomId: number, userId: string) {
