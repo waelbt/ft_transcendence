@@ -5,7 +5,7 @@ export class MuteUserDto {
 
     @ApiProperty()
     @IsNumber()
-    roomId: number;
+    roomId: string;
 
     @ApiProperty()
     @IsString()
@@ -14,6 +14,10 @@ export class MuteUserDto {
     @ApiProperty()
     @IsNumber()
     muteDuration: number;
+
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
 }
 
 export class UnmuteUserDto {
@@ -25,6 +29,10 @@ export class UnmuteUserDto {
     @ApiProperty()
     @IsString()
     userToUnmute: string;
+
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
 }
 
 export class UnmuteUserDetails{

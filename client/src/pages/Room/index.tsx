@@ -28,7 +28,8 @@ export function Room() {
         userkickedListener,
         canSendMessage,
         pushModerator,
-        pushBan
+        pushBan,
+        pushMuted
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -90,6 +91,7 @@ export function Room() {
             if (banUser === userId && id) unpushRoom(+id);
         };
 
+        socket.on('muteUser', pushMuted);
         socket.on('banMember', handleBan);
         socket.on('setAdmin', pushModerator);
         socket.on('kickMember', handlekick);
@@ -98,6 +100,7 @@ export function Room() {
         socket.on('leaveRoom', userLeftListener);
 
         return () => {
+            socket.off('muteUser', pushMuted);
             socket.off('banMember', handleBan);
             socket.off('setAdmin', pushModerator);
             socket.off('kickMember', handlekick);

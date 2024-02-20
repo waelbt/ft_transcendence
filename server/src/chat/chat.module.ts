@@ -10,7 +10,7 @@ import { friendsService } from 'src/users/services/friends.service';
 
 @Module({
   controllers: [ChatController],
-  providers: [ChatGateway, RoomService, JwtService, WebSocketService,BlockService, UsersService, friendsService],
+  providers: [RoomService, JwtService, WebSocketService,BlockService, UsersService, friendsService],
   exports: [RoomService, WebSocketService],
 })
 export class ChatModule {}

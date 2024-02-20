@@ -211,6 +211,20 @@ export class ChatGateway
         if (userCheck.state === false) throw new WsException(userCheck.message);
         console.log('mute function');
         await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
+        const userMuted = await this.prisma.user.findUnique({
+            where: {
+                id: muteUserDto.userToMute,
+            },
+            select: {
+                nickName: true,
+                id: true,
+            },
+        });
+        const message = {
+            nickname: userMuted.nickName,
+            id: userMuted.id,
+        };
+        await this.server.to(muteUserDto.roomTitle).emit('muteUser', message);
     }
 
     @SubscribeMessage('unmuteUser')
@@ -220,6 +234,20 @@ export class ChatGateway
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
         await this.wsService.unmuteUser(unmuteUserDto, userCheck.userData.sub);
+        const userunMuted = await this.prisma.user.findUnique({
+            where: {
+                id: unmuteUserDto.userToUnmute,
+            },
+            select: {
+                nickName: true,
+                id: true,
+            },
+        });
+        const message = {
+            nickname: userunMuted.id,
+            id: userunMuted.id,
+        };
+        await this.server.to(unmuteUserDto.roomTitle).emit('unmuteUser', message);
     }
 
     @SubscribeMessage('dm')

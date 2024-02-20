@@ -9,6 +9,7 @@ import LeaderBoard from '../../components/LeaderBoard';
 
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
+
     const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
     const { id } = useUserStore();

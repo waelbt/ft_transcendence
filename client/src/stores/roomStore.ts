@@ -42,6 +42,7 @@ type RoomMethod = {
     canSendMessage: (userId: string) => boolean;
     pushModerator: ({ id, nickname }: { id: string; nickname: string }) => void;
     pushBan: ({ id, nickname }: { id: string; nickname: string }) => void;
+    pushMuted: ({ id, nickname }: { id: string; nickname: string }) => void;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -221,6 +222,27 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
                 createdAt: 'no need'
             };
             const newMessages = [...messages, banMessage];
+            set({ messages: newMessages });
+        }
+    },
+    pushMuted: ({ id, nickname }) => {
+        const { muted, messages } = get();
+
+        // Check if the user is not already in the muted array
+        if (!muted.includes(id)) {
+            const newMuted = [...muted, id];
+            set({ muted: newMuted });
+
+            // Print a message
+            const muteMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `an admin muted ${nickname}.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, muteMessage];
             set({ messages: newMessages });
         }
     }
