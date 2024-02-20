@@ -3,7 +3,7 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
-import { Message } from '../../../../shared/types';
+import { Message, User } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
 // import { isAxiosError } from 'axios';
@@ -19,7 +19,14 @@ export function Room() {
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const { messages, pushMessage, updateState, unpushMember } = useRoomStore();
+    const {
+        messages,
+        pushMessage,
+        updateState,
+        pushMember,
+        unpushMember,
+        alertMessage
+    } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +65,7 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
+        // ! 7at had actions fe store waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         const messageListener = (message: Message) => {
             console.log('Received message:', message);
 
@@ -74,29 +82,25 @@ export function Room() {
             nickname: string;
         }) => {
             unpushMember(id);
-            const leaveMessage: Message = {
-                id: 0,
-                senderId: '',
-                avatar: '',
-                nickName: 'System',
-                message: `${nickname} has left the room.`,
-                createdAt: new Date().toISOString()
-            };
+            alertMessage(`${nickname} has left the room.`);
+        };
 
-            // Push the leave message to the chat
-            pushMessage(leaveMessage);
+        const userJoinListener = (user: User) => {
+            pushMember(user);
+            alertMessage(`${user.nickName} has join the room.`);
         };
 
         // ! unpushi men members
         // ! render a message
-
+        socket.on('joinRoom', userJoinListener);
         socket.on('message', messageListener);
-        socket?.on('leaveRoom', userLeftListener);
+        socket.on('leaveRoom', userLeftListener);
         return () => {
+            socket.on('joinRoom', userJoinListener);
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
         };
-    }, [socket, id, pushMessage]);
+    }, [socket, id]);
 
     return (
         <div className=" flex-grow h-full flex gap-0 ">
@@ -115,7 +119,10 @@ export function Room() {
                         {messages.map((msg, index) => {
                             if (msg.id === 0) {
                                 return (
-                                    <div className="flex justify-center items-center text-gray-500 font-normal font-['Acme'] text-base mt-5">
+                                    <div
+                                        key={index}
+                                        className="flex justify-center items-center text-gray-500 font-normal font-['Acme'] text-base mt-5"
+                                    >
                                         {`---------------- ${msg.message} ----------------`}
                                     </div>
                                 );

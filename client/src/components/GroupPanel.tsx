@@ -100,9 +100,6 @@ function GroupPanel() {
         }
     };
 
-    useEffect(() => {
-        console.log(users);
-    }, users);
     const handleExit = () => {
         socket?.emit('leaveRoom', {
             id: id,
@@ -310,7 +307,7 @@ function GroupPanel() {
                 {users.map((member, index) => (
                     <div
                         key={index}
-                        className="flex w-full justify-between items-center  "
+                        className="flex w-full justify-between items-center"
                     >
                         <div className="flex items-center justify-center gap-1 cursor-pointer">
                             <Avatar
@@ -322,6 +319,7 @@ function GroupPanel() {
                             </div>
                         </div>
                         <Popup
+                            key={`popup-${index}`}
                             trigger={
                                 <div
                                     className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
@@ -333,17 +331,9 @@ function GroupPanel() {
                                 </div>
                             }
                             position="bottom center"
-                            nested
                         >
-                            <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                {/* {member.actions.map((action) => (
-                                    <div
-                                        key={action}
-                                        className="  text-zinc-600 text-lg font-normal font-['Acme'] self-stretch px-5 border-b border-gray-200 justify-center items-center  inline-flex cursor-pointer hover:bg-neutral-100"
-                                    >
-                                        {action}
-                                    </div>
-                                ))} */}
+                            <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100">
+                                {/* Render Popup content here */}
                             </div>
                         </Popup>
                     </div>

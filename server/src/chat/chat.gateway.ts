@@ -131,6 +131,13 @@ export class ChatGateway
                 userCheck.userData.email
             );
             await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub
+                }
+            });
+            console.log(user, 'joinded');
+            await this.server.to(joinRoomDto.roomTitle).emit('joinRoom', user);
             // return userRoom.joinedRoom;
         }
         // this.logger.log(
@@ -174,12 +181,12 @@ export class ChatGateway
 
         const user = await this.prisma.user.findUnique({
             where: {
-                id: userCheck.userData.sub,
+                id: userCheck.userData.sub
             },
             select: {
                 id: true,
-                nickName: true,
-            },
+                nickName: true
+            }
         });
 
         const message = {
