@@ -26,6 +26,7 @@ import { send } from 'process';
 import { BlockService } from 'src/users/services/blocked.service';
 import { EmitMessageDto } from './DTOS/emit-message-dto';
 import { KickMemberDto } from './DTOS/kick-member.dto';
+import { SetAdminDto } from './DTOS/set-admin-room.dto';
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -341,6 +342,32 @@ export class ChatGateway
                 await this.server
                     .in(userSocket)
                     .socketsLeave(kickmemberDto.roomTitle);
+        }
+    }
+
+    @SubscribeMessage('setAdmin')
+    async setAdmin(client: any, setAdminDto: SetAdminDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else {
+            this.roomService.setUserToAdminRoom(setAdminDto, userCheck.userData.sub);
+            const newAdmin = await this.prisma.user.findUnique({
+                where: {
+                    id: setAdminDto.userId,
+                },
+                select: {
+                    id: true,
+                    nickName: true,
+                }
+            });
+            const message = {
+                id: newAdmin.id,
+                nickname: newAdmin.nickName,
+            }
+            this.server.to(setAdminDto.roomTitle).emit('kickMember', message);
         }
     }
 

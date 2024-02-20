@@ -359,7 +359,7 @@ export class RoomService {
     async setUserToAdminRoom(setAdminDto: SetAdminDto, userId: string) {
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
-                id: setAdminDto.roomId
+                id: +setAdminDto.roomId
             },
             select: {
                 admins: true
@@ -370,7 +370,7 @@ export class RoomService {
         if (roomWithAdmins.admins.includes(userId)) {
             updatedRoom = await this.prisma.room.updateMany({
                 where: {
-                    id: setAdminDto.roomId
+                    id: +setAdminDto.roomId
                 },
                 data: {
                     admins: {
@@ -379,7 +379,6 @@ export class RoomService {
                 }
             });
         }
-
         return updatedRoom;
     }
 
@@ -790,7 +789,8 @@ export class RoomService {
             );
             this.mutedUsers.set(muteUserDto.userToMute, userDetails);
             return this.mutedUsers;
-        } else throw new Error('Only Admins And Owners Can Mute Other Users');
+        } 
+        // else throw new Error('Only Admins And Owners Can Mute Other Users');
     }
 
     async unmuteUser(unmuteUserDto: UnmuteUserDto, userId) {
