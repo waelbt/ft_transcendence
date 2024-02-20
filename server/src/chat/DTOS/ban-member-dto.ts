@@ -9,4 +9,8 @@ export class BanMemberDto {
     @ApiProperty()
     @IsString()
     memberToBanId: string;
+
+    @ApiProperty()
+    @IsString()
+    roomTitle: string;
 }

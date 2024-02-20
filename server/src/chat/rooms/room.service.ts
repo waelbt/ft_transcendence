@@ -614,7 +614,8 @@ export class RoomService {
                 banMemberDto.memberToBanId
             );
             return roomWithBanned.banned;
-        } else throw new BadRequestException('Only Admins Can Ban Other Users');
+        } 
+            // else throw new BadRequestException('Only Admins Can Ban Other Users');
     }
 
     async userAlreadyBanned(roomId: number, userId: string) {
@@ -628,7 +629,8 @@ export class RoomService {
         });
 
         if (bannedUsers.banned.includes(userId))
-            throw new BadRequestException('This Member Is Already Banned');
+            return ;
+            // throw new BadRequestException('This Member Is Already Banned');
     }
 
     async isUserAdmin(userId: string, roomId: number) {
@@ -678,7 +680,8 @@ export class RoomService {
         console.log(room.users);
 
         if (room.users.length === 0)
-            throw new BadRequestException('User Is Not A Member In This Room');
+            return ;
+            // throw new BadRequestException('User Is Not A Member In This Room');
     }
 
     async removeBan(removeBan: RemoveBanDto, userId: string) {

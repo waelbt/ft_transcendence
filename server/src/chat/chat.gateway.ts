@@ -27,6 +27,7 @@ import { BlockService } from 'src/users/services/blocked.service';
 import { EmitMessageDto } from './DTOS/emit-message-dto';
 import { KickMemberDto } from './DTOS/kick-member.dto';
 import { SetAdminDto } from './DTOS/set-admin-room.dto';
+import { BanMemberDto } from './DTOS/ban-member-dto';
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -371,6 +372,39 @@ export class ChatGateway
             };
             console.log(message);
             this.server.to(setAdminDto.roomTitle).emit('setAdmin', message);
+        }
+    }
+
+    @SubscribeMessage('banMember')
+    async banMember(client: any, banMemberDto: BanMemberDto) {
+        const userCheck = await this.wsService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        if (userCheck.state === false)
+            await this.handleDisconnect(client);
+        else {
+            const memberBanned = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub,
+                },
+                select: {
+                    nickName: true,
+                    id: true,
+                    email: true,
+                }
+            });
+
+            this.roomService.banMember(banMemberDto, userCheck.userData.sub);
+            const userSocket = await this.usersSockets.get(
+                memberBanned.email
+            );
+            if (userSocket)
+                await this.server.in(userSocket).socketsLeave(banMemberDto.roomTitle);
+            const message = {
+                id: memberBanned.id,
+                nickname: memberBanned.nickName,
+            }
+            this.server.to(banMemberDto.roomTitle).emit('banMember', message);
         }
     }
 
