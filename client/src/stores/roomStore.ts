@@ -31,11 +31,9 @@ type RoomMethod = {
         nickname: string;
     }) => void;
     userkickedListener: ({
-        adminName,
         id,
         nickname
     }: {
-        adminName: string;
         id: string;
         nickname: string;
     }) => void;
@@ -111,18 +109,24 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         id: string;
         nickname: string;
     }) => {
+        console.log(id, '  ', nickname);
         const { users, messages } = get();
-        const filteredRooms = users.filter((user) => user.id !== id);
-        const leaveMessage: Message = {
-            id: 0,
-            senderId: '',
-            avatar: '',
-            nickName: 'System',
-            message: `am admin kicked ${nickname} from the room.`,
-            createdAt: 'no need'
-        };
-        const newMessages = [...messages, leaveMessage];
-        set({ users: filteredRooms, messages: newMessages });
+
+        const userExists = users.some((user) => user.id === id);
+
+        if (userExists) {
+            const filteredRooms = users.filter((user) => user.id !== id);
+            const leaveMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `an admin kicked ${nickname} from the room.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, leaveMessage];
+            set({ users: filteredRooms, messages: newMessages });
+        }
     },
     userLeftListener: ({ id, nickname }) => {
         const { users, messages } = get();

@@ -111,6 +111,7 @@ function GroupPanel() {
     };
 
     const kickUser = (user: User) => {
+        console.log('kicki ', user.nickName);
         socket?.emit('kickMember', { userId: user.id, id, roomTitle });
     };
 
@@ -351,7 +352,7 @@ function GroupPanel() {
                                     <div
                                         key={action}
                                         className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                        onClick={() => kickUser(users)}
+                                        onClick={() => kickUser(member)}
                                     >
                                         {action}
                                     </div>

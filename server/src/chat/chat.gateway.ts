@@ -307,42 +307,40 @@ export class ChatGateway
 
     @SubscribeMessage('kickMember')
     async kickUser(client: any, kickmemberDto: KickMemberDto) {
+        console.log(
+            'kickMembber-------------------------------------',
+            kickmemberDto
+        );
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false)
-            await this.handleDisconnect(client);
+        if (userCheck.state === false) await this.handleDisconnect(client);
         else {
-            await this.roomService.kickMember(kickmemberDto, userCheck.userData.sub);
+            await this.roomService.kickMember(
+                kickmemberDto,
+                userCheck.userData.sub
+            );
             const userToKick = await this.prisma.user.findUnique({
                 where: {
-                    id: kickmemberDto.userId,
+                    id: kickmemberDto.userId
                 },
                 select: {
                     email: true,
+                    nickName: true,
+                    id: true
                 }
             });
 
-            const userSocket = await this.usersSockets.get(
-                userToKick.email
-            );
-            if (userSocket)
-                await this.server.in(userSocket).socketsLeave(kickmemberDto.roomTitle);
-
-            const user = await this.prisma.user.findUnique({
-                where: {
-                    id: userCheck.userData.sub,
-                },
-                select: {
-                    nickName: true,
-                },
-            });
-
             const message = {
-                nickname: user.nickName,
-                id: userCheck.userData.sub,
-            }
+                nickname: userToKick.nickName,
+                id: userToKick.id
+            };
             this.server.to(kickmemberDto.roomTitle).emit('kickMember', message);
+            const userSocket = await this.usersSockets.get(userToKick.email);
+            if (userSocket)
+                await this.server
+                    .in(userSocket)
+                    .socketsLeave(kickmemberDto.roomTitle);
         }
     }
 

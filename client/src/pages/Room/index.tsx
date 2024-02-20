@@ -18,7 +18,7 @@ export function Room() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket } = useChatLayoutStore();
+    const { socket, unpushRoom } = useChatLayoutStore();
     const {
         messages,
         updateState,
@@ -66,13 +66,24 @@ export function Room() {
     useEffect(() => {
         if (!socket) return;
 
-        socket.on('kickMember', userkickedListener);
+        const handlekick = ({
+            id: kickedUser,
+            nickname
+        }: {
+            id: string;
+            nickname: string;
+        }) => {
+            userkickedListener({ id: kickedUser, nickname });
+            if (kickedUser === userId) unpushRoom(+id);
+        };
+
+        socket.on('kickMember', handlekick);
         socket.on('joinRoom', userJoinedListener);
         socket.on('message', messageListener);
         socket.on('leaveRoom', userLeftListener);
 
         return () => {
-            socket.on('kickMember', userkickedListener);
+            socket.on('kickMember', handlekick);
             socket.on('joinRoom', userJoinedListener);
             socket.off('message', messageListener);
             socket.off('leaveRoom', userLeftListener);
@@ -158,7 +169,7 @@ export function Room() {
                         <div ref={contentRef}></div>
                     </div>
                 </div>
-                <div className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center">
+                <div className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center  text-neutral-700  text-base font-normal font-['Acme']">
                     {canSendMessage(userId) ? (
                         <>
                             <input
@@ -169,7 +180,7 @@ export function Room() {
                                     e.key === 'Enter' && sendMessage()
                                 }
                                 placeholder="send message"
-                                className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex text-neutral-700  outline-none  text-base font-normal font-['Acme']"
+                                className="h-full bg-gray-100 w-full ml-5 border border-stone-300 rounded justify-start pl-4 items-center inline-flex outline-none "
                             />
                             <div className=" text-stone-500  w-10 text-xs flex flex-col">
                                 <div className="inline-flex justify-between">
@@ -184,7 +195,7 @@ export function Room() {
                             />
                         </>
                     ) : (
-                        <div>nooooooooooooooooo</div>
+                        <div>you can't send messages to this group </div>
                     )}
                 </div>
             </div>
