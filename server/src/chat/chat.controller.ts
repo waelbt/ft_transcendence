@@ -25,6 +25,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { WebSocketService } from './chat.gateway.service';
 import { CreateDmDto } from './DTOS/create-dm.dto';
+import { ChangeRoomPrivacy } from './DTOS/change-roomPrivacy-dto';
+import { ChangeRoomTitle } from './DTOS/change-roomTitle-dto';
+import { ChangeRoomAvatar } from './DTOS/change-roomAvatar-dto';
 
 @ApiBearerAuth()
 @ApiTags('Chat')
@@ -51,6 +54,25 @@ export class ChatController {
     @Post('leaveRoom')
     async leaveRoom(@Req() req, @Body() leaveRoomDto: LeaveRoomDto) {
         return await this.roomService.leaveRoom(leaveRoomDto, req.user.sub);
+    }
+
+    @Post('changeRoomPrivacy')
+    async changeRoomPrivacy(@Req() req, @Body() changeRoomPrivacy: ChangeRoomPrivacy) {
+    
+        return await (this.roomService.changeRoomPrivacy(changeRoomPrivacy, req.user.sub));
+    }
+
+    @Post('changeRoomTitle')
+    async changeRoomTitle(@Req() req, @Body() changeRoomTitle: ChangeRoomTitle) {
+
+        console.log('wa zabi', req.user.sub );
+        return await (this.roomService.changeRoomTitle(changeRoomTitle, req.user.sub));
+    }
+
+    @Post('changeRoomAvatar')
+    async changeRoomAvatar(@Req() req, @Body() changeRoomAvatar: ChangeRoomAvatar) {
+
+        return await (this.roomService.changeRoomAvatar(changeRoomAvatar, req.user.sub));
     }
 
     @Get('AllRooms')
