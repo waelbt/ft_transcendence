@@ -19,7 +19,7 @@ export function Room() {
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const { messages, pushMessage, updateState } = useRoomStore();
+    const { messages, pushMessage, updateState, unpushMember } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,10 +41,12 @@ export function Room() {
     }, [messages]);
 
     useEffect(() => {
+        updateState({ isModifiable: false });
         const fetchMessages = async () => {
             try {
                 const res = await axiosPrivate.get(`/chat/room/${id}`);
                 updateState({ ...res.data });
+                updateState({ id: id });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
             }
@@ -64,10 +66,35 @@ export function Room() {
             }
         };
 
-        socket.on('message', messageListener);
+        const userLeftListener = ({
+            id,
+            nickname
+        }: {
+            id: string;
+            nickname: string;
+        }) => {
+            unpushMember(id);
+            const leaveMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `${nickname} has left the room.`,
+                createdAt: new Date().toISOString()
+            };
 
+            // Push the leave message to the chat
+            pushMessage(leaveMessage);
+        };
+
+        // ! unpushi men members
+        // ! render a message
+
+        socket.on('message', messageListener);
+        socket?.on('leaveRoom', userLeftListener);
         return () => {
             socket.off('message', messageListener);
+            socket.off('leaveRoom', userLeftListener);
         };
     }, [socket, id, pushMessage]);
 
@@ -86,6 +113,13 @@ export function Room() {
                     {/* Messages */}
                     <div className="overflow-y-auto h-full flex flex-col justify-start mt-5">
                         {messages.map((msg, index) => {
+                            if (msg.id === 0) {
+                                return (
+                                    <div className="flex justify-center items-center text-gray-500 font-normal font-['Acme'] text-base mt-5">
+                                        {`---------------- ${msg.message} ----------------`}
+                                    </div>
+                                );
+                            }
                             if (userId !== msg.senderId) {
                                 return (
                                     <div
@@ -136,6 +170,7 @@ export function Room() {
                                 </div>
                             );
                         })}
+
                         <div ref={contentRef}></div>
                     </div>
                 </div>

@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { Message, User } from '../../../shared/types';
 
 type RoomState = {
-    id: number;
+    isModifiable: boolean;
+    id: string;
     roomTitle: string;
     avatar: string;
     users: User[];
@@ -18,20 +19,27 @@ type RoomState = {
 type RoomMethod = {
     updateState: (newState: Partial<RoomState>) => void;
     pushMessage: (msg: Message) => void;
+    unpushMember: (id: string) => void; // Adding the unpushRoom method
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
-	id: 0,
-	roomTitle: '',
-	avatar: '',
-	users: [],
-	privacy: '',
-	password: '',
-	owner: [],
-	admins: [],
-	banned: [],
-	muted: [],
+    isModifiable: false,
+    id: '',
+    roomTitle: '',
+    avatar: '',
+    users: [],
+    privacy: '',
+    password: '',
+    owner: [],
+    admins: [],
+    banned: [],
+    muted: [],
     messages: [],
+    unpushMember: (id) => {
+        const { users } = get();
+        const filteredRooms = users.filter((user) => user.id !== id);
+        set({ users: filteredRooms });
+    },
     updateState: (newState) => {
         set((state) => ({ ...state, ...newState }));
     },

@@ -85,6 +85,8 @@ export interface RoomsList {
     isRoom: boolean;
 
     privacy?: string;
+
+    password?: string;
 }
 
 export interface OnlineUser {

@@ -4,22 +4,32 @@ import { ImCross } from 'react-icons/im';
 import { Avatar, ProgressRingLoader } from '.';
 import useImageUpload from '../hooks/uploadImageHook';
 import { MdEdit } from 'react-icons/md';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { IoTrashOutline } from 'react-icons/io5';
 import { VISIBILTYOPTIONS } from '../constants';
 import { useRoomStore } from '../stores/roomStore';
 import Popup from 'reactjs-popup';
 import { BsThreeDots } from 'react-icons/bs';
-// import { useChatLayoutStore } from '../stores/chatLayoutStore';
-// import { useModelStore } from '../stores/ModelStore';
-// import useAxiosPrivate from '../hooks/axiosPrivateHook';
-// import { isAxiosError } from 'axios';
+import { axiosPrivate } from '../api';
+import { isAxiosError } from 'axios';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import { useUserStore } from '../stores/userStore';
+import { useNavigate } from 'react-router-dom';
 
 function GroupPanel() {
-    const [isModifiable, setIsModifiable] = useState<boolean>(false);
-    const { privacy, avatar, roomTitle, users } = useRoomStore();
+    const {
+        privacy,
+        avatar,
+        id,
+        roomTitle,
+        users,
+        updateState,
+        isModifiable,
+        owner
+    } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
+
     const {
         register,
         handleSubmit,
@@ -27,88 +37,97 @@ function GroupPanel() {
         watch,
         formState: { errors, isSubmitting }
     } = useForm({
-        defaultValues: {
-            title: roomTitle
-        }
+        defaultValues: {}
     });
-
-    // // const axiosPrivate = useAxiosPrivate();
-    // const visibilityOptions = watch('visibilityOption');
-    const { progress, uploadData, imagePath, setImagePath, deleteData } =
+    const { id: userID } = useUserStore();
+    const { updateRoomInfo, socket, unpushRoom } = useChatLayoutStore();
+    const visibilityOptions = watch('visibilityOption');
+    const { setProgress, progress, uploadData, imagePath, setImagePath } =
         useImageUpload();
-
-
+    // Update form values when room store data changes
+    const navigate = useNavigate();
     useEffect(() => {
         setImagePath(avatar);
-    },[])
-    // useEffect(() => {
-    //     if (visibilityOptions && visibilityOptions.length === 0) {
-    //         setValue('visibilityOption', [], { shouldValidate: true });
-    //     }
-    // }, [visibilityOptions, setValue]);
+        setValue('roomTitle', roomTitle, { shouldDirty: true });
+        setValue('visibilityOption', privacy, { shouldDirty: true });
+        // If you have a default value for password that should also be updated, include it here
+    }, [roomTitle, privacy, setValue, avatar]);
 
-    // useEffect(() => {
-    //     console.log(errors);
-    //     if (isSubmitting) {
-    //         const firstErrorKey = Object.keys(errors)[0];
-    //         if (firstErrorKey) {
-    //             const errorMessage = errors[firstErrorKey]?.message;
-    //             if (typeof errorMessage === 'string') {
-    //                 toast.dismiss();
-    //                 toast.error(errorMessage);
-    //             }
-    //         }
-    //     }
-    // }, [errors, isSubmitting]);
+    useEffect(() => {
+        if (visibilityOptions && visibilityOptions.length === 0) {
+            setValue('visibilityOption', [], { shouldValidate: true });
+        }
+    }, [visibilityOptions, setValue]);
 
-    // const onSubmit = async (data: FieldValues) => {
-    //     try {
-    //         const res = await axiosPrivate.post(
-    //             '/chat/createRoom',
-    //             JSON.stringify({
-    //                 avatar: imagePath
-    //                     ? imagePath
-    //                     : `${import.meta.env.VITE_DEFAULT_AVATAR}2.png`,
-    //                 roomTitle: data['title'],
-    //                 isConversation: false,
-    //                 privacy: data['visibilityOption'],
-    //                 password: data['password']
-    //             }),
-    //             {
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-    //         pushRoom(res.data);
-    //         socket?.emit('joinRoom', {
-    //             ...res.data,
-    //             password: data['password']
-    //         });
-    //         toast.success('group created successfully');
-    //         closeEvent();
-    //     } catch (error) {
-    //         if (isAxiosError(error)) toast.error(error.response?.data?.message);
-    //     }
-    // };
+    useEffect(() => {
+        console.log(errors);
+        if (isSubmitting) {
+            const firstErrorKey = Object.keys(errors)[0];
+            if (firstErrorKey) {
+                const errorMessage = errors[firstErrorKey]?.message;
+                if (typeof errorMessage === 'string') {
+                    toast.dismiss();
+                    toast.error(errorMessage);
+                }
+            }
+        }
+    }, [errors, isSubmitting]);
 
-    const handleExit = () => {};
+    const onSubmit = async (data: FieldValues) => {
+        try {
+            data['avatar'] = imagePath ? imagePath : avatar;
+            await axiosPrivate.post(
+                '/chat/changeRoomInfo',
+                JSON.stringify({
+                    id: id,
+                    newAvatar: data['avatar'],
+                    newTitle: data['roomTitle'],
+                    newPrivacy: data['visibilityOption'],
+                    password: data['password']
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            updateState({ ...data });
+            updateRoomInfo(+id, data);
+            toast.success('group infos edited successfully');
+            updateState({ isModifiable: false });
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        }
+    };
+
+    useEffect(() => {
+        console.log(users);
+    }, users);
+    const handleExit = () => {
+        socket?.emit('leaveRoom', {
+            id: id,
+            roomTitle: roomTitle
+        });
+        unpushRoom(+id);
+        navigate('/chat');
+    };
 
     return (
         <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative">
-            {!isModifiable ? (
-                <MdEdit
-                    size={30}
-                    className="cursor-pointer absolute right-5 top-5"
-                    onClick={() => setIsModifiable(true)}
-                />
-            ) : (
-                <ImCross
-                    size={22}
-                    className="cursor-pointer absolute right-5 top-5"
-                    onClick={() => setIsModifiable(false)}
-                />
-            )}
+            {owner[0] === userID &&
+                (!isModifiable ? (
+                    <MdEdit
+                        size={30}
+                        className="cursor-pointer absolute right-5 top-5"
+                        onClick={() => updateState({ isModifiable: true })}
+                    />
+                ) : (
+                    <ImCross
+                        size={22}
+                        className="cursor-pointer absolute right-5 top-5"
+                        onClick={() => updateState({ isModifiable: false })}
+                    />
+                ))}
             {!isModifiable ? (
                 <div className=" w-full flex flex-col items-center justify-center gap-4">
                     <div className="justify-center items-center gap-10 inline-flex ">
@@ -133,8 +152,8 @@ function GroupPanel() {
                 </div>
             ) : (
                 <form
-                    className="px-4 pt-4 pb-4 w-full  flex-col justify-start items-center gap-5  inline-flex relative"
-                    onSubmit={handleSubmit(() => {})}
+                    className="px-4 pt-4 pb-4 w-full  flex-col justify-center  items-center gap-5  inline-flex relative"
+                    onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className=" pr-3.5 py-px justify-center items-center gap-10 inline-flex">
                         <input
@@ -153,13 +172,13 @@ function GroupPanel() {
                         />
                         {/* uploader section */}
                         <div className="relative flex items-center justify-center">
-                            <Avatar imageUrl={imagePath} style="w-40 h-40" />
+                            <Avatar imageUrl={imagePath} style="w-32 h-32" />
                             <label htmlFor="groupsAvatar">
                                 <ProgressRingLoader
                                     style={
                                         'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                                     }
-                                    radius={88}
+                                    radius={70}
                                     stroke={2}
                                     progress={progress}
                                 />
@@ -171,7 +190,8 @@ function GroupPanel() {
                                 onClick={async (e) => {
                                     e.stopPropagation(); // This stops the event from reaching the label
                                     setImagePath(null);
-                                    await deleteData();
+                                    setProgress(0);
+                                    // await deleteData();
                                 }}
                             >
                                 <div className="w-9 h-9 flex justify-center items-center">
@@ -198,7 +218,7 @@ function GroupPanel() {
                                 className={`w-full bg-white border-b-2 text-center border-gray-400 justify-start items-center gap-2.5 inline-flex  outline-none  text-black text-lg font-normal font-['Acme']`}
                                 type="text"
                                 placeholder="Choose name for your group"
-                                {...register('title', {
+                                {...register('roomTitle', {
                                     required: 'group name is required!',
                                     maxLength: {
                                         value: 10,
@@ -216,7 +236,7 @@ function GroupPanel() {
                         </div>
                     </div>
 
-                    {/* <div className="flex  w-full items-center justify-between relative">
+                    <div className="flex  w-full items-center justify-between relative">
                         <div className="flex flex-col w-full pl-5 items-start  justify-start">
                             {VISIBILTYOPTIONS.map((visibility, index) => (
                                 <div
@@ -280,9 +300,9 @@ function GroupPanel() {
                                 />
                             </div>
                         )}
-                    </div> */}
-                    <button className="px-5 py-3 bg-black rounded-md flex-col justify-center items-center gap-2.5 flex text-center text-white text-lg font-normal font-['Acme'] cursor-pointer hover:bg-stone-800">
-                        submit
+                    </div>
+                    <button className="px-2 py-2 bg-black rounded-md flex-col justify-center items-center gap-2.5 flex text-center text-white text-lg font-normal font-['Acme'] cursor-pointer hover:bg-stone-800">
+                        save changes
                     </button>
                 </form>
             )}
@@ -292,10 +312,10 @@ function GroupPanel() {
                         key={index}
                         className="flex w-full justify-between items-center  "
                     >
-                        <div className="flex items-center justify-center gap-1">
+                        <div className="flex items-center justify-center gap-1 cursor-pointer">
                             <Avatar
                                 imageUrl={member.avatar}
-                                style="w-14 h-14 bg-black rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
+                                style="w-14 h-14 bg-black  rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
                             />
                             <div className="text-2xl font-normal font-['Acme']">
                                 {member.nickName}

@@ -11,6 +11,8 @@ type ChatMethod = {
     initializeSocket: (token: string | null) => void;
     pushRoom: (room: RoomsList) => void;
     updateState: (newState: Partial<ChatState>) => void;
+    unpushRoom: (roomId: number) => void; // Adding the unpushRoom method
+    updateRoomInfo: (roomId: number, updatedInfo: Partial<RoomsList>) => void;
 };
 
 export const useChatLayoutStore = create<ChatState & ChatMethod>(
@@ -25,6 +27,23 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
 
             const newMessages = [...Layout_Rooms, room];
             set({ Layout_Rooms: newMessages });
+        },
+        updateRoomInfo: (roomId, updatedInfo) => {
+            const { Layout_Rooms } = get();
+            const updatedRooms = Layout_Rooms.map((room) => {
+                if (room.id === roomId) {
+                    return { ...room, ...updatedInfo };
+                }
+                return room;
+            });
+            set({ Layout_Rooms: updatedRooms });
+        },
+        unpushRoom: (roomId) => {
+            const { Layout_Rooms } = get();
+            const filteredRooms = Layout_Rooms.filter(
+                (room) => room.id !== roomId
+            );
+            set({ Layout_Rooms: filteredRooms });
         },
         initializeSocket: (token) => {
             const { socket } = get();

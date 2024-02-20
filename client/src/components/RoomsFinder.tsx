@@ -14,10 +14,23 @@ const RoomsFinder: React.FC = () => {
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
     const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatLayoutStore();
-    const HandleJoin = (room: RoomsList) => {
-        socket?.emit('joinRoom', { ...room });
-        pushRoom(room);
-        closeEvent();
+    const [isLoading, setIsloading] = useState(false);
+    const HandleJoin = async (room: RoomsList) => {
+        try {
+            // ! isloading button
+            setIsloading(true);
+            const res = await axiosPrivate.post('/chat/joinRoom', {
+                roomTitle: room.roomTitle,
+                roomId: room.id
+            });
+            console.log(res);
+            socket?.emit('joinRoom', { ...room });
+            pushRoom(room);
+            closeEvent();
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        }
+        setIsloading(false);
     };
 
     useEffect(() => {
@@ -88,7 +101,7 @@ const RoomsFinder: React.FC = () => {
                                     HandleJoin(room);
                                 }}
                             >
-                                join Rooms
+                                {isLoading ? 'loading...' : 'join Rooms'}
                             </div>
                         ) : (
                             <div className="w-[30%] flex items-center justify-center gap-2">

@@ -28,6 +28,7 @@ import { CreateDmDto } from './DTOS/create-dm.dto';
 import { ChangeRoomPrivacy } from './DTOS/change-roomPrivacy-dto';
 import { ChangeRoomTitle } from './DTOS/change-roomTitle-dto';
 import { ChangeRoomAvatar } from './DTOS/change-roomAvatar-dto';
+import { ChangeRoomInfoDto } from './DTOS/change-roomInfo-dto';
 
 @ApiBearerAuth()
 @ApiTags('Chat')
@@ -159,7 +160,7 @@ export class ChatController {
     }
 
     @Post('changeRoomInfo')
-    async changeRoomInfo(@Req() req, @Body() ChangeRoomInfoDto) {
-
+    async changeRoomInfo(@Req() req, @Body() ChangeRoomInfoDto: ChangeRoomInfoDto) {
+        return (this.roomService.ChangeRoomInfo(ChangeRoomInfoDto, req.user.sub))
     }
 }
