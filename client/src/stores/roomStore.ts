@@ -60,7 +60,7 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
 
         // Check if the user is not already in the array
         if (!users.find((existingUser) => existingUser.id === user.id)) {
-            const newUsers = [...users, user];
+            const newUsers = [user, ...users];
             set({ users: newUsers });
         }
     },
