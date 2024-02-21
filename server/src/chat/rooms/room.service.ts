@@ -3,7 +3,8 @@ import {
     ForbiddenException,
     Injectable,
     NotFoundException,
-    UnauthorizedException
+    UnauthorizedException,
+    forwardRef
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { Room, User, RoomPrivacy } from '@prisma/client';
@@ -31,6 +32,7 @@ import { ChangeRoomPrivacy } from '../DTOS/change-roomPrivacy-dto';
 import { ChangeRoomAvatar } from '../DTOS/change-roomAvatar-dto';
 import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
+import { ChatGateway } from '../chat.gateway';
 
 @Injectable()
 export class RoomService {
@@ -39,7 +41,9 @@ export class RoomService {
         UnmuteUserDetails
     >();
 
-    constructor(private readonly prisma: PrismaOrmService) {}
+    constructor(private readonly prisma: PrismaOrmService,
+    @Inject(forwardRef(() => ChatGateway))
+    private readonly emit: ChatGateway) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
         console.log(` createRoom user id is : ${userId}`);
@@ -119,7 +123,6 @@ export class RoomService {
                 rooms: true
             }
         });
-
         // console.log(joinRoomDto.roomTitle, userId);
 
         let room = await this.prisma.room.findUnique({
@@ -913,8 +916,7 @@ export class RoomService {
         });
 
         this.mutedUsers.delete(unmuteUser.userID);
-
-
+        this.emit.unmuteUser(unmuteUser);
     }
 
     // createMessage
