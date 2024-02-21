@@ -333,6 +333,8 @@ export class RoomService {
             return !isBlocked;
         });
 
+        room.messages = filteredMessages; 
+
         return room;
     }
 
