@@ -1,0 +1,45 @@
+.scroll-container {
+    overflow: auto;
+}
+
+.achievements-card{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    width: 300px;
+    height: 350px;
+}
+
+.card img
+{
+width: 500px;
+height: 500px; 
+}
+ 
+.achievement-icon {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.color {
+filter: none;
+}
+
+.gray {
+filter: grayscale(100%) blur(2px);
+opacity: 0.4;
+}
