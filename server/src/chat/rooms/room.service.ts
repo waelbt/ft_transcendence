@@ -916,8 +916,7 @@ export class RoomService {
         });
 
         this.mutedUsers.delete(unmuteUser.userID);
-
-
+        this.emit.unmuteUser(unmuteUser);
     }
 
     // createMessage
