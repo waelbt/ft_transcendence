@@ -72,7 +72,7 @@ export function Room() {
         const handlekick = ({
             id: kickedUser,
             nickname
-        }: {
+        } : {
             id: string;
             nickname: string;
         }) => {
