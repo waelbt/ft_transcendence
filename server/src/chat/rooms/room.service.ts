@@ -275,6 +275,19 @@ export class RoomService {
     }
 
     async getOneRoom(roomId: number, userId: string) {
+
+        const blockedUsers = await this.prisma.block.findMany({
+            where: {
+                OR: [
+                    { userId: userId },
+                    { blockedUserId: userId },
+                ]
+            },
+            select: {
+                blockedUserId: true,
+            },
+        });
+
         const tmproom = await this.prisma.room.findUnique({
             where: {
                 id: roomId
@@ -298,7 +311,7 @@ export class RoomService {
         });
 
         if (user.rooms.length === 0)
-            throw new BadRequestException(`You are not a member of this room`);
+            throw new ForbiddenException(`You are not a member of this room`);
 
         const room = await this.prisma.room.findUnique({
             where: {
@@ -313,6 +326,11 @@ export class RoomService {
                     }
                 }
             }
+        });
+
+        const filteredMessages = room.messages.filter(message => {
+            const isBlocked = blockedUsers.some(blockedUsers => blockedUsers.blockedUserId === message.senderId);
+            return !isBlocked;
         });
 
         return room;
