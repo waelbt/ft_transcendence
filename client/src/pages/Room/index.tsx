@@ -29,7 +29,9 @@ export function Room() {
         canSendMessage,
         pushModerator,
         pushBan,
-        pushMuted
+        pushMuted,
+        unpushMuted,
+        unpushModerator
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -72,12 +74,12 @@ export function Room() {
         const handlekick = ({
             id: kickedUser,
             nickname
-        } : {
+        }: {
             id: string;
             nickname: string;
         }) => {
             userkickedListener({ id: kickedUser, nickname });
-            if (kickedUser === userId && id) unpushRoom(+id);
+            if (kickedUser === userId && id) unpushRoom(+id, true);
         };
 
         const handleBan = ({
@@ -88,9 +90,11 @@ export function Room() {
             nickname: string;
         }) => {
             pushBan({ id: banUser, nickname });
-            if (banUser === userId && id) unpushRoom(+id);
+            if (banUser === userId && id) unpushRoom(+id, true);
         };
 
+        socket.on('unsetAdmin', unpushModerator);
+        socket.on('unmuteUser', unpushMuted);
         socket.on('muteUser', pushMuted);
         socket.on('banMember', handleBan);
         socket.on('setAdmin', pushModerator);
@@ -100,6 +104,8 @@ export function Room() {
         socket.on('leaveRoom', userLeftListener);
 
         return () => {
+            socket.on('unsetAdmin', unpushModerator);
+            socket.off('unmuteUser', unpushMuted);
             socket.off('muteUser', pushMuted);
             socket.off('banMember', handleBan);
             socket.off('setAdmin', pushModerator);

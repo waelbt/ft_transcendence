@@ -34,25 +34,25 @@ export class WebSocketService {
         let joinedRooms;
         try {
             joinedRooms = await this.roomService.getMyRooms(userId);
+            const dms = await this.getAllDms(userId);
+            for (let j = 0; j < dms.length; j++) {
+                server.in(userSocket).socketsJoin(dms[j].roomTitle);
+                // console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
+            }
+            if (!joinedRooms) {
+                // console.log('No rooms found for user:', userId);
+                return;
+            }
+            for (let i = 0; i < joinedRooms.length; i++) {
+                server.in(userSocket).socketsJoin(joinedRooms[i].roomTitle);
+                console.log(
+                    // `${userId} joined this room ${joinedRooms[i].roomTitle}`
+                );
+            }
         } catch (err) {
             // console.log(err);
         }
         // console.log(joinedRooms);
-        const dms = await this.getAllDms(userId);
-        for (let j = 0; j < dms.length; j++) {
-            server.in(userSocket).socketsJoin(dms[j].roomTitle);
-            // console.log(`${userId} joined this dm ${dms[j].roomTitle}`);
-        }
-        if (!joinedRooms) {
-            // console.log('No rooms found for user:', userId);
-            return;
-        }
-        for (let i = 0; i < joinedRooms.length; i++) {
-            server.in(userSocket).socketsJoin(joinedRooms[i].roomTitle);
-            console.log(
-                // `${userId} joined this room ${joinedRooms[i].roomTitle}`
-            );
-        }
     }
 
     async getUserFromAccessToken(token: string) {
@@ -207,56 +207,62 @@ export class WebSocketService {
         // });
         // console.log('test for id', dm);
         // dm.users = dm.users.filter((user) => userId != user.id);
-        let dm = await this.prisma.dMRooms.findFirst({
-            where: {
-                id: +roomId,
-            },
-            include: {
-                users: true,
-                messages: true,
-            },
-        });
-        dm.users = dm.users.filter((user) => user1id != user.id);
-        
-        if (await this.blockService.isUserBlocked(user1id, dm.users[0].id))
-            return (dm);
-
-        const newMessage = await this.prisma.dmMessage.create({
-            data: {
-                message: message,
-                sender: {
-                    connect: {
-                        id: user1id
+        try {
+            let dm = await this.prisma.dMRooms.findFirst({
+                where: {
+                    id: +roomId,
+                },
+                include: {
+                    users: true,
+                    messages: true,
+                },
+            });
+            dm.users = dm.users.filter((user) => user1id != user.id);
+            
+            if (await this.blockService.isUserBlocked(user1id, dm.users[0].id))
+                return (dm);
+    
+            const newMessage = await this.prisma.dmMessage.create({
+                data: {
+                    message: message,
+                    sender: {
+                        connect: {
+                            id: user1id
+                        }
+                    },
+                    dmroom: {
+                        connect: {
+                            id: +roomId,
+                        }
                     }
                 },
-                dmroom: {
-                    connect: {
-                        id: +roomId,
-                    }
+                include: {
+                    sender: true,
+                    dmroom: true
                 }
-            },
-            include: {
-                sender: true,
-                dmroom: true
-            }
-        });
-        dm = await this.prisma.dMRooms.findFirst({
-            where: {
-                id: +roomId,
-            },
-            include: {
-                users: true,
-                messages: true,
-            },
-        });
-        
-        console.log(
-            'check message creation',
-            newMessage,
-            'id of the room',
-            newMessage.dmId
-        );
-        return dm;
+            });
+            dm = await this.prisma.dMRooms.findFirst({
+                where: {
+                    id: +roomId,
+                },
+                include: {
+                    users: true,
+                    messages: true,
+                },
+            });
+            
+            // console.log(
+            //     'check message creation',
+            //     newMessage,
+            //     'id of the room',
+            //     newMessage.dmId
+            // );
+            return dm;
+
+        } catch(errr)
+        {
+            return ;
+        }
     }
 
     async getAllDms(userId: string) {

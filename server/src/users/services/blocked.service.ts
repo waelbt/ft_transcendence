@@ -34,16 +34,20 @@ export class BlockService {
         userId: string,
         blockedUserId: string
     ): Promise<boolean> {
-        const block = await this.prisma.block.findFirst({
-            where: {
-                OR: [
-                    { userId: userId , blockedUserId: blockedUserId },
-                    { userId: blockedUserId , blockedUserId: userId },
-                ],
-            },
-        });
-        console.log('block: ', !!block);
-        return !!block;
+        try {
+            const block = await this.prisma.block.findFirst({
+                where: {
+                    OR: [
+                        { userId: userId , blockedUserId: blockedUserId },
+                        { userId: blockedUserId , blockedUserId: userId },
+                    ],
+                },
+            });
+            console.log('block: ', !!block);
+            return !!block;
+        } catch(errrrr) {
+            return ;
+        }
     }
 
     async listOfBlockedUsers(userId: string) {

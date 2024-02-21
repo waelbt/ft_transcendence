@@ -29,7 +29,8 @@ function GroupPanel() {
         updateState,
         isModifiable,
         owner,
-        isAdmin
+        isAdmin,
+        isBanned
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
 
@@ -105,7 +106,7 @@ function GroupPanel() {
                 }
             );
             updateState({ ...data });
-            updateRoomInfo(+id, data);
+            updateRoomInfo(+id, true, data);
             toast.success('group infos edited successfully');
             updateState({ isModifiable: false });
         } catch (error) {
@@ -143,13 +144,27 @@ function GroupPanel() {
             id: id,
             roomTitle: roomTitle
         });
-        unpushRoom(+id);
+        unpushRoom(+id, true);
         navigate('/chat');
+    };
+
+    const UnsetModerater = (user: User) => {
+        socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
     };
 
     return (
         <>
-            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative debug">
+            <div
+                className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative "
+                style={
+                    isBanned(userID)
+                        ? {
+                              filter: 'blur(4px)',
+                              pointerEvents: 'none'
+                          }
+                        : {}
+                }
+            >
                 {owner[0] === userID &&
                     (!isModifiable ? (
                         <MdEdit
@@ -386,9 +401,12 @@ function GroupPanel() {
                                                 <div
                                                     key={action}
                                                     className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                                    onClick={() =>
-                                                        // muteUser(member)
-                                                        openEvent()
+                                                    onClick={
+                                                        () =>
+                                                            UnsetModerater(
+                                                                member
+                                                            )
+                                                        // openEvent()
                                                     }
                                                 >
                                                     {action}
