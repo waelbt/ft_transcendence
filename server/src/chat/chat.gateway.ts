@@ -103,16 +103,9 @@ export class ChatGateway
 
     @SubscribeMessage('message')
     async handleMessage(client: any, payload: SendMessageDto) {
-        // this.logger.log(`Message received from client with id: ${client.id}`);
-        // this.logger.debug(`Payload: ${payload}`);
-        // this.server.emit('onMessage', payload);
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        // console.log(
-        //     `this user ${userCheck.userData.email} is sending a message to this room ${payload.roomTitle}`
-        // );
-        // console.log(`the message is : ${payload.message}`);
         try {
             const { room, newMessage } = await this.wsService.createMessage(
                 payload,
@@ -193,9 +186,6 @@ export class ChatGateway
             client.handshake.auth.token
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
-        // console.log(
-        //     `The user ${userCheck.userData.email} is leaving the room ${leaveRoomDto.roomTitle}`
-        // );
         await this.roomService.leaveRoom(leaveRoomDto, userCheck.userData.sub);
         const userSocket = await this.usersSockets.get(
             userCheck.userData.email
@@ -279,24 +269,18 @@ export class ChatGateway
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-        // console.log(
-        //     'messages b888888888888888888888888888888888 == ',
-        //     sendMessage
-        // );
-
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
-            console.log('messages');
+            // console.log('messages');
             // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(
                 userCheck.userData.sub,
                 sendMessage.id,
                 sendMessage.message
             );
-
             if (
                 await this.blockService.isUserBlocked(
                     userCheck.userData.sub,
@@ -308,7 +292,6 @@ export class ChatGateway
             //     .to(client.id)
             //     .emit('forbidden', { id: sendMessage.id });
             else {
-                console.log('event dmMessage');
                 const message: EmitMessageDto = {
                     id: dmroom.messages[dmroom.messages.length - 1].dmId,
                     message:
@@ -318,7 +301,7 @@ export class ChatGateway
                     senderId:
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
-                console.log(dmroom.roomTitle);
+                // console.log(dmroom.roomTitle);
                 await this.server.in(client.id).socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }
