@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { MdClose } from 'react-icons/md';
+import { useState, useEffect, FC } from 'react';
 import { RoomsList } from '../../../shared/types';
 import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
@@ -7,7 +6,11 @@ import toast from 'react-hot-toast';
 import { Avatar, FormComponent } from '.';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
-const RoomsFinder: React.FC = () => {
+type GroupsFormProps = {
+    closeEvent: () => void;
+};
+
+const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
     const fields = ['PUBLIC', 'PROTECTED'];
     const [filter, setFilter] = useState('PUBLIC');
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);

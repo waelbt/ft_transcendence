@@ -5,7 +5,7 @@ import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 // import Popup from 'reactjs-popup';
 // import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
@@ -13,7 +13,11 @@ import { isAxiosError } from 'axios';
 import { VISIBILTYOPTIONS } from '../constants';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
-function GroupsForm() {
+type GroupsFormProps = {
+    closeEvent: () => void;
+};
+
+const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
     const {
         register,
         handleSubmit,

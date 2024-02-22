@@ -141,7 +141,11 @@ function ChatLayouts() {
                     isEventOpen={isEventOpen}
                     closeEvent={closeEvent}
                 >
-                    {state ? <GroupsForm /> : <RoomsFinder />}
+                    {state ? (
+                        <GroupsForm closeEvent={closeEvent} />
+                    ) : (
+                        <RoomsFinder  closeEvent={closeEvent}/>
+                    )}
                 </Modal>
             </div>
             <Outlet />
