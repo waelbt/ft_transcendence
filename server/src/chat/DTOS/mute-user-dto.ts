@@ -28,7 +28,7 @@ export class UnmuteUserDto {
 
     @ApiProperty()
     @IsString()
-    userToUnmute: string;
+    userId: string;
 
     @ApiProperty()
     @IsString()

@@ -857,14 +857,13 @@ export class RoomService {
                 data: {
                     muted: {
                         set: roomWithMutedUsers.muted.filter(
-                            (mutedUser) =>
-                                mutedUser !== unmuteUserDto.userToUnmute
+                            (mutedUser) => mutedUser !== unmuteUserDto.userId
                         )
                     }
                 }
             });
 
-            this.mutedUsers.delete(unmuteUserDto.userToUnmute);
+            this.mutedUsers.delete(unmuteUserDto.userId);
         } else
             throw new BadRequestException(
                 'Only Admins And Owners Can UnMute Other Users'

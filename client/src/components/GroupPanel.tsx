@@ -28,12 +28,13 @@ function GroupPanel() {
         isModifiable,
         owner,
         isAdmin,
-        isBanned
+        isBanned,
+        isMuted
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
     const [isEventOpen, setIsEventOpen] = useState(false);
     const [isEventMute, setIsEventMute] = useState(false);
-
+    const [selectedId, setSelectedId] = useState('');
     const {
         register,
         handleSubmit,
@@ -46,21 +47,18 @@ function GroupPanel() {
     const visibilityOptions = watch('visibilityOption');
     const { setProgress, progress, uploadData, imagePath, setImagePath } =
         useImageUpload();
-    // Update form values when room store data changes
     const navigate = useNavigate();
-    const actions = ['Set As Admin', 'Ban', 'Kick'];
     const muteOptions = [
         { label: 'Mute for 1 min', duration: 1 },
         { label: 'Mute for 1 hour', duration: 60 },
         { label: 'Mute for 1 day', duration: 1440 }
     ];
+    const actions = ['Ban', 'Kick'];
 
-    // useEffect(() => {}, []);
     useEffect(() => {
         setImagePath(avatar);
         setValue('roomTitle', roomTitle, { shouldDirty: true });
         setValue('visibilityOption', privacy, { shouldDirty: true });
-        // If you have a default value for password that should also be updated, include it here
     }, [roomTitle, privacy, setValue, avatar]);
 
     useEffect(() => {
@@ -108,35 +106,6 @@ function GroupPanel() {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
     };
-
-    // const kickUser = (user: User) => {
-    //     socket?.emit('kickMember', { userId: user.id, roomId: id, roomTitle });
-    // };
-
-    // const setAsModerater = (user: User) => {
-    //     socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
-    // };
-
-    // const userBan = (user: User) => {
-    //     socket?.emit('banMember', {
-    //         userId: user.id,
-    //         roomId: id,
-    //         roomTitle
-    //     });
-    // };
-
-    // const muteUser = (user: User) => {
-    //     socket?.emit('muteUser', {
-    //         userId: user.id,
-    //         roomId: id,
-    //         roomTitle,
-    //         muteDuration: 1
-    //     });
-    // };
-
-    // const UnsetModerater = (user: User) => {
-    //     socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
-    // };
 
     const handleExit = () => {
         socket?.emit('leaveRoom', {
@@ -291,7 +260,7 @@ function GroupPanel() {
                                 {VISIBILTYOPTIONS.map((visibility, index) => (
                                     <div
                                         className="flex items-center mb-4 justify-between"
-                                        key={index}
+                                        key={'visiblty' + index}
                                     >
                                         <div className="flex items-center justify-center">
                                             <input
@@ -361,7 +330,7 @@ function GroupPanel() {
                 )}
                 <div className="flex-grow w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
                     {users.map((member, index) => (
-                        <Fragment key={index}>
+                        <Fragment key={'users' + index}>
                             <div
                                 className="flex w-full justify-start items-center  gap-2 cursor-pointer"
                                 onClick={() => {
@@ -369,9 +338,10 @@ function GroupPanel() {
                                         isAdmin(userID) &&
                                         member.id !== userID &&
                                         owner[0] !== member.id
-                                    )
+                                    ) {
+                                        setSelectedId(member.id);
                                         setIsEventOpen(true);
-                                    else navigate(`/profile/${member.id}`);
+                                    } else navigate(`/profile/${member.id}`);
                                 }}
                             >
                                 <Avatar
@@ -382,7 +352,7 @@ function GroupPanel() {
                                     {member.nickName}
                                 </div>
                                 {owner[0] === member.id ? (
-                                    // FaCrown
+                                    // FaCrownisMuted
                                     <FaCrown
                                         size={22}
                                         className="text-yellow-500"
@@ -416,22 +386,63 @@ function GroupPanel() {
                                                 key={index}
                                                 className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
                                                 onClick={() => {
-                                                    setIsEventMute(true);
+                                                    isMuted(selectedId)
+                                                        ? (socket?.emit(
+                                                              'Unmute',
+                                                              {
+                                                                  userId: selectedId,
+                                                                  roomId: id,
+                                                                  roomTitle
+                                                              }
+                                                              // ! unmute function from the server
+                                                          ),
+                                                          setIsEventOpen(false))
+                                                        : setIsEventMute(true);
                                                 }}
                                             >
-                                                Mute
+                                                {isMuted(selectedId)
+                                                    ? 'Unmute'
+                                                    : 'Muted'}
                                             </div>
-                                            {actions.map((action, index) => (
+                                            {owner[0] === userID && (
                                                 <div
                                                     key={index}
                                                     className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
                                                     onClick={() => {
+                                                        socket?.emit(
+                                                            !isAdmin(selectedId)
+                                                                ? 'Unset Admin'
+                                                                : 'Set As Admin',
+                                                            {
+                                                                userId: selectedId,
+                                                                roomId: id,
+                                                                roomTitle
+                                                            }
+                                                        );
+                                                        setIsEventOpen(false);
+                                                        setIsEventMute(false);
+                                                        setSelectedId(
+                                                            member.id
+                                                        );
+                                                    }}
+                                                >
+                                                    {!isAdmin(member.id)
+                                                        ? 'Unset Admin'
+                                                        : 'Set As Admin'}
+                                                </div>
+                                            )}
+                                            {actions.map((action, index) => (
+                                                <div
+                                                    key={'actions' + index}
+                                                    className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                                    onClick={() => {
                                                         socket?.emit(action, {
-                                                            userId: member.id,
+                                                            userId: selectedId,
                                                             roomId: id,
                                                             roomTitle
                                                         });
                                                         setIsEventOpen(false);
+                                                        setIsEventMute(false);
                                                     }}
                                                 >
                                                     {action}
@@ -446,14 +457,19 @@ function GroupPanel() {
                                             {muteOptions.map(
                                                 (option, index) => (
                                                     <div
-                                                        key={index}
+                                                        key={
+                                                            'muteOptions' +
+                                                            index
+                                                        }
                                                         className="font-['Acme'] text-gray-800 font-normal text-xl cursor-pointer hover:bg-gray-300 p-2"
                                                         onClick={() => {
-                                                            console.log('test');
+                                                            console.log(
+                                                                member.id
+                                                            );
                                                             socket?.emit(
                                                                 'Mute',
                                                                 {
-                                                                    userId: member.id,
+                                                                    userId: selectedId,
                                                                     roomId: id,
                                                                     roomTitle,
                                                                     muteDuration:
@@ -477,6 +493,7 @@ function GroupPanel() {
                                         onClick={() => {
                                             setIsEventOpen(false);
                                             setIsEventMute(false);
+                                            setSelectedId('');
                                         }}
                                     >
                                         cancel

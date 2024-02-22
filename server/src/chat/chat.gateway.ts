@@ -389,7 +389,7 @@ export class ChatGateway
 
     @SubscribeMessage('Set As Admin')
     async setAdmin(client: any, setAdminDto: SetAdminDto) {
-        console.log('wwwwwww');
+        console.log(setAdminDto);
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );

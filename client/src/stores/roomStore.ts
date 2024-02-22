@@ -39,6 +39,7 @@ type RoomMethod = {
     }) => void;
     userJoinedListener: (user: User) => void;
     isAdmin: (userId: string) => boolean;
+    isMuted: (userId: string) => boolean;
     isBanned: (userId: string) => boolean;
     canSendMessage: (userId: string) => boolean;
     pushModerator: ({ id, nickname }: { id: string; nickname: string }) => void;
@@ -222,6 +223,10 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         const { owner, admins } = get();
         return owner.includes(userId) || admins.includes(userId);
     },
+    isMuted: (userId) => {
+        const { muted } = get();
+        return muted.includes(userId);
+    },
     isBanned: (userId) => {
         const { banned } = get();
         return banned.includes(userId);
@@ -260,6 +265,7 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         }
     },
     pushMuted: ({ id, nickname }) => {
+        console.log(id);
         const { muted, messages } = get();
 
         // Check if the user is not already in the muted array
