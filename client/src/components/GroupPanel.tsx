@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { HiLogout } from 'react-icons/hi';
 import { ImCross } from 'react-icons/im';
 import { Avatar, Modal, ProgressRingLoader } from '.';
@@ -14,7 +14,6 @@ import { isAxiosError } from 'axios';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../../shared/types';
 
 function GroupPanel() {
     const {
@@ -47,13 +46,13 @@ function GroupPanel() {
     // Update form values when room store data changes
     const navigate = useNavigate();
     const actions = [
-        'kick',
-        'ban',
-        'mute',
-        'unmute',
-        'unban',
-        'set admin',
-        'unset admin'
+        'Set As Admin',
+        'Mute',
+        'Ban',
+        'Kick'
+        // 'Unmute'
+        // 'Unban',
+        // 'unset admin'
     ];
 
     useEffect(() => {
@@ -109,34 +108,34 @@ function GroupPanel() {
         }
     };
 
-    const kickUser = (user: User) => {
-        socket?.emit('kickMember', { userId: user.id, roomId: id, roomTitle });
-    };
+    // const kickUser = (user: User) => {
+    //     socket?.emit('kickMember', { userId: user.id, roomId: id, roomTitle });
+    // };
 
-    const setAsModerater = (user: User) => {
-        socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
-    };
+    // const setAsModerater = (user: User) => {
+    //     socket?.emit('setAdmin', { userId: user.id, roomId: id, roomTitle });
+    // };
 
-    const userBan = (user: User) => {
-        socket?.emit('banMember', {
-            userId: user.id,
-            roomId: id,
-            roomTitle
-        });
-    };
+    // const userBan = (user: User) => {
+    //     socket?.emit('banMember', {
+    //         userId: user.id,
+    //         roomId: id,
+    //         roomTitle
+    //     });
+    // };
 
-    const muteUser = (user: User) => {
-        socket?.emit('muteUser', {
-            userId: user.id,
-            roomId: id,
-            roomTitle,
-            muteDuration: 1
-        });
-    };
+    // const muteUser = (user: User) => {
+    //     socket?.emit('muteUser', {
+    //         userId: user.id,
+    //         roomId: id,
+    //         roomTitle,
+    //         muteDuration: 1
+    //     });
+    // };
 
-    const UnsetModerater = (user: User) => {
-        socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
-    };
+    // const UnsetModerater = (user: User) => {
+    //     socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
+    // };
 
     const handleExit = () => {
         socket?.emit('leaveRoom', {
@@ -361,9 +360,8 @@ function GroupPanel() {
                 )}
                 <div className="flex-grow w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
                     {users.map((member, index) => (
-                        <>
+                        <Fragment key={index}>
                             <div
-                                key={index}
                                 className="flex w-full justify-start items-center  gap-2 cursor-pointer"
                                 onClick={() => {
                                     if (
@@ -398,8 +396,19 @@ function GroupPanel() {
                                     >
                                         View Profile
                                     </div>
-                                    {actions.map((action) => (
-                                        <div className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']">
+                                    {actions.map((action, index) => (
+                                        <div
+                                            key={index}
+                                            className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                            onClick={() => {
+                                                socket?.emit(action, {
+                                                    userId: member.id,
+                                                    roomId: id,
+                                                    roomTitle
+                                                });
+                                                setIsEventOpen(false);
+                                            }}
+                                        >
                                             {action}
                                         </div>
                                     ))}
@@ -411,7 +420,7 @@ function GroupPanel() {
                                     </div>
                                 </div>
                             </Modal>
-                        </>
+                        </Fragment>
                     ))}
                 </div>
                 <div
@@ -426,40 +435,3 @@ function GroupPanel() {
     );
 }
 export default GroupPanel;
-
-// {isAdmin(userID) &&
-//     member.id !== userID &&
-//     owner[0] !== member.id && (
-//         <Popup
-//             key={`popup-${index}`}
-//             trigger={
-//                 <div
-//                     className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
-//                 >
-//                     <BsThreeDots
-//                         className="cursor-pointer text-black"
-//                         size={26}
-//                     />
-//                 </div>
-//             }
-//             position="left center"
-//         >
-//             <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-//                 {actions.map((action) => (
-//                     <div
-//                         key={action}
-//                         className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-//                         onClick={
-//                             () =>
-//                                 UnsetModerater(
-//                                     member
-//                                 )
-//                             // openEvent()
-//                         }
-//                     >
-//                         {action}
-//                     </div>
-//                 ))}
-//             </div>
-//         </Popup>
-//     )}

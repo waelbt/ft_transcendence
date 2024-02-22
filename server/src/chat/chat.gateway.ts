@@ -210,7 +210,7 @@ export class ChatGateway
         await this.server.to(leaveRoomDto.roomTitle).emit('leaveRoom', message);
     }
 
-    @SubscribeMessage('muteUser')
+    @SubscribeMessage('Mute')
     async muteUser(client: Socket, muteUserDto: MuteUserDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -234,7 +234,7 @@ export class ChatGateway
         await this.server.to(muteUserDto.roomTitle).emit('muteUser', message);
     }
 
-    @SubscribeMessage('unmuteUser')
+    @SubscribeMessage('Unmute')
     async unmuteUser(unmuteUserDto: UnmuteUserDetails) {
         // const userCheck = await this.wsService.getUserFromAccessToken(
         //     client.handshake.auth.token
@@ -348,7 +348,7 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('kickMember')
+    @SubscribeMessage('Kick')
     async kickUser(client: any, kickmemberDto: KickMemberDto) {
         console.log(
             'kickMembber-------------------------------------',
@@ -387,7 +387,7 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('setAdmin')
+    @SubscribeMessage('Set As Admin')
     async setAdmin(client: any, setAdminDto: SetAdminDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -416,7 +416,7 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('banMember')
+    @SubscribeMessage('Ban')
     async banMember(client: any, banMemberDto: BanMemberDto) {
         console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         const userCheck = await this.wsService.getUserFromAccessToken(
@@ -452,7 +452,7 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('unsetAdmin')
+    @SubscribeMessage('Unset Admin')
     async unsetAdmin(client: any, unsetAdminDto: UnSetAdminDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
