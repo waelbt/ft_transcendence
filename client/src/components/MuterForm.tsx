@@ -24,8 +24,7 @@ function MuterForm() {
     const muteOptions = [
         { label: 'Mute for 1 min', duration: 1 },
         { label: 'Mute for 1 hour', duration: 60 },
-        { label: 'Mute for 1 day', duration: 1440 },
-        { label: 'Always', duration: 0 }
+        { label: 'Mute for 1 day', duration: 1440 }
     ];
 
     return (
@@ -37,7 +36,7 @@ function MuterForm() {
                 <div
                     key={index}
                     className="font-['Acme'] text-gray-800 font-normal text-xl cursor-pointer hover:bg-gray-300 p-2"
-                    // onClick={() => muteUser(user, option.duration)}
+                    onClick={() => muteUser(user, option.duration)}
                 >
                     {option.label}
                 </div>

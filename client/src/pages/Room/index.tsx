@@ -3,11 +3,8 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
-import { Message, User } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
-// import { isAxiosError } from 'axios';
-// import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 
@@ -159,7 +156,6 @@ export function Room() {
                                                 {msg.nickName}
                                             </div>
                                             <div
-                                                // className="h-9 p-2.5 debug bg-gray-700 rounded-[10px] justify-start items-center gap-2.5 inline-flex text-white text-sm font-normal font-['Acme'] rounded-tl-none max-w-[320px] my-1  flex-col relative rounded-tr-none "
                                                 className="rounded-lg my-1 p-2 text-sm flex flex-col relative rounded-tr-none  bg-gray-700 max-w-[320px] text-white"
                                                 style={{
                                                     wordWrap: 'break-word'

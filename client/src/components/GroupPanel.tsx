@@ -14,6 +14,8 @@ import { isAxiosError } from 'axios';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
+import { FaCrown } from 'react-icons/fa';
+import { IoShield } from 'react-icons/io5';
 
 function GroupPanel() {
     const {
@@ -30,6 +32,7 @@ function GroupPanel() {
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
     const [isEventOpen, setIsEventOpen] = useState(false);
+    const [isEventMute, setIsEventMute] = useState(false);
 
     const {
         register,
@@ -45,16 +48,14 @@ function GroupPanel() {
         useImageUpload();
     // Update form values when room store data changes
     const navigate = useNavigate();
-    const actions = [
-        'Set As Admin',
-        'Mute',
-        'Ban',
-        'Kick'
-        // 'Unmute'
-        // 'Unban',
-        // 'unset admin'
+    const actions = ['Set As Admin', 'Ban', 'Kick'];
+    const muteOptions = [
+        { label: 'Mute for 1 min', duration: 1 },
+        { label: 'Mute for 1 hour', duration: 60 },
+        { label: 'Mute for 1 day', duration: 1440 }
     ];
 
+    // useEffect(() => {}, []);
     useEffect(() => {
         setImagePath(avatar);
         setValue('roomTitle', roomTitle, { shouldDirty: true });
@@ -380,6 +381,17 @@ function GroupPanel() {
                                 <div className="text-2xl font-normal font-['Acme']">
                                     {member.nickName}
                                 </div>
+                                {owner[0] === member.id ? (
+                                    // FaCrown
+                                    <FaCrown
+                                        size={22}
+                                        className="text-yellow-500"
+                                    />
+                                ) : isAdmin(member.id) ? (
+                                    <IoShield className="text-red-800" />
+                                ) : (
+                                    <div></div>
+                                )}
                             </div>
 
                             <Modal
@@ -388,33 +400,84 @@ function GroupPanel() {
                                 closeEvent={() => setIsEventOpen(false)}
                             >
                                 <div className=" bg-white px-16  pt-11 pb-[15px] rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
-                                    <div
-                                        className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
-                                        onClick={() =>
-                                            navigate(`/profile/${member.id}`)
-                                        }
-                                    >
-                                        View Profile
-                                    </div>
-                                    {actions.map((action, index) => (
-                                        <div
-                                            key={index}
-                                            className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
-                                            onClick={() => {
-                                                socket?.emit(action, {
-                                                    userId: member.id,
-                                                    roomId: id,
-                                                    roomTitle
-                                                });
-                                                setIsEventOpen(false);
-                                            }}
-                                        >
-                                            {action}
+                                    {!isEventMute ? (
+                                        <>
+                                            <div
+                                                className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/profile/${member.id}`
+                                                    )
+                                                }
+                                            >
+                                                View Profile
+                                            </div>
+                                            <div
+                                                key={index}
+                                                className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                                onClick={() => {
+                                                    setIsEventMute(true);
+                                                }}
+                                            >
+                                                Mute
+                                            </div>
+                                            {actions.map((action, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                                    onClick={() => {
+                                                        socket?.emit(action, {
+                                                            userId: member.id,
+                                                            roomId: id,
+                                                            roomTitle
+                                                        });
+                                                        setIsEventOpen(false);
+                                                    }}
+                                                >
+                                                    {action}
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <div className="flex flex-col gap-4 bg-white p-4 rounded-md">
+                                            <div className="font-['Acme'] font-normal text-3xl">
+                                                Mute messages
+                                            </div>
+                                            {muteOptions.map(
+                                                (option, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="font-['Acme'] text-gray-800 font-normal text-xl cursor-pointer hover:bg-gray-300 p-2"
+                                                        onClick={() => {
+                                                            console.log('test');
+                                                            socket?.emit(
+                                                                'Mute',
+                                                                {
+                                                                    userId: member.id,
+                                                                    roomId: id,
+                                                                    roomTitle,
+                                                                    muteDuration:
+                                                                        option.duration
+                                                                }
+                                                            );
+                                                            setIsEventOpen(
+                                                                false
+                                                            );
+                                                        }}
+                                                    >
+                                                        {option.label}
+                                                    </div>
+                                                )
+                                            )}
                                         </div>
-                                    ))}
+                                    )}
+
                                     <div
-                                        className="self-stretch mt-4 px-0 py-2 cursor-pointer bg-red-800 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
-                                        onClick={() => setIsEventOpen(false)}
+                                        className="self-stretch mt-4 px-1 py-2 cursor-pointer bg-red-800 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                        onClick={() => {
+                                            setIsEventOpen(false);
+                                            setIsEventMute(false);
+                                        }}
                                     >
                                         cancel
                                     </div>
