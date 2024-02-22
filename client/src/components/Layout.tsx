@@ -56,7 +56,7 @@ function Layout() {
     return (
         <div className="flex flex-col h-screen w-screen ">
             <NavigationMenu />
-            <div className="overflow-y-auto max-h-[700px] flex-grow flex justify-center items-center overflow-hidden bg-gray-50">
+            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden bg-gray-50">
                 <Outlet />
             </div>
         </div>

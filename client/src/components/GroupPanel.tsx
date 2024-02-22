@@ -118,9 +118,6 @@ function GroupPanel() {
 
     return (
         <>
-<<<<<<< HEAD
-            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative ">
-=======
             <div
                 className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative "
                 style={
@@ -132,7 +129,6 @@ function GroupPanel() {
                         : {}
                 }
             >
->>>>>>> 945c572b593c20ed6e6fde9357baf98f2a5a4070
                 {owner[0] === userID &&
                     (!isModifiable ? (
                         <MdEdit
