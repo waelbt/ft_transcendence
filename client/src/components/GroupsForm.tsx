@@ -19,22 +19,13 @@ function GroupsForm() {
         register,
         handleSubmit,
         setValue,
-        // getValues,
         watch,
         formState: { errors, isSubmitting }
     } = useForm({});
     const { pushRoom, socket } = useChatLayoutStore();
     const axiosPrivate = useAxiosPrivate();
-    const {
-        progress,
-        uploadData,
-        imagePath,
-        setImagePath,
-        deleteData
-        // isFailed,
-        // success,
-        // setProgress
-    } = useImageUpload();
+    const { progress, uploadData, imagePath, setImagePath, deleteData } =
+        useImageUpload();
     const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const visibilityOptions = watch('visibilityOption');
@@ -88,7 +79,7 @@ function GroupsForm() {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
     };
-    
+
     return (
         <form
             className="px-4 pt-4 pb-4  bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-5  inline-flex relative"

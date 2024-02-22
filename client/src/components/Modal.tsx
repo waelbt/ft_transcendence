@@ -42,37 +42,3 @@ const Modal = ({ children, removable }: ModalProps) => {
 };
 
 export default Modal;
-
-// import { useNavigate } from 'react-router-dom';
-// import useGameStore from '../../stores/gameStore';
-// import { useEffect } from 'react';
-// import { useUserStore } from '../../stores/userStore';
-
-// export function home() {
-//     // const { isEventOpen, openEvent } = useModelStore();
-//     // const [isModalOpen, setIsModalOpen] = useState(true);
-//     // const closeModal = () => setIsModalOpen(false);
-
-//     return (
-//         <div className="flex flex-col gap-2">
-{
-    /* <div className="container">
-                <button
-                    onClick={() => {
-                        openEvent();
-                    }}
-                >
-                    Open modal
-                </button>
-                {isEventOpen && (
-                    <Modal>
-                        <MatchResultModal />
-                    </Modal>
-                )}
-            </div> */
-}
-{
-    /* </div>
-    );
-} */
-}

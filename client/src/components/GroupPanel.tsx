@@ -17,7 +17,6 @@ import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../../shared/types';
-import { useModelStore } from '../stores/ModelStore';
 
 function GroupPanel() {
     const {
@@ -40,16 +39,13 @@ function GroupPanel() {
         setValue,
         watch,
         formState: { errors, isSubmitting }
-    } = useForm({
-        defaultValues: {}
-    });
+    } = useForm({});
     const { id: userID } = useUserStore();
     const { updateRoomInfo, socket, unpushRoom } = useChatLayoutStore();
     const visibilityOptions = watch('visibilityOption');
     const { setProgress, progress, uploadData, imagePath, setImagePath } =
         useImageUpload();
     // Update form values when room store data changes
-    const { isEventOpen, openEvent, closeEvent } = useModelStore();
     const navigate = useNavigate();
     const actions = [
         'kick',
@@ -139,6 +135,9 @@ function GroupPanel() {
             roomTitle
         });
     };
+    const UnsetModerater = (user: User) => {
+        socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
+    };
     const handleExit = () => {
         socket?.emit('leaveRoom', {
             id: id,
@@ -146,10 +145,6 @@ function GroupPanel() {
         });
         unpushRoom(+id, true);
         navigate('/chat');
-    };
-
-    const UnsetModerater = (user: User) => {
-        socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
     };
 
     return (
