@@ -1,13 +1,9 @@
-import { MdClose } from 'react-icons/md';
-
-import { Avatar, InputField, ProgressRingLoader } from '.';
+import { Avatar, ProgressRingLoader } from '.';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FC, useEffect, useState } from 'react';
-// import Popup from 'reactjs-popup';
-// import { useUserStore } from '../stores/userStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import { VISIBILTYOPTIONS } from '../constants';
@@ -236,6 +232,6 @@ const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
             </button>
         </form>
     );
-}
+};
 
 export default GroupsForm;

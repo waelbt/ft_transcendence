@@ -14,14 +14,12 @@ export function Lobby() {
     const { id } = useUserStore();
     const [isEventOpen, setIsEventOpen] = useState(false);
 
-    const openEvent = () => setIsEventOpen(true);
-    const closeEvent = () => setIsEventOpen(false);
     const { elapsedTime, formatTime, startTimer } = useTimer();
 
     const handleClick = (gameMode: string) => {
         updateState({ gameMode: gameMode });
         socket?.emit('gameMode', { gameMode, userId: id });
-        openEvent();
+        setIsEventOpen(true);
         startTimer();
     };
 
@@ -33,7 +31,7 @@ export function Lobby() {
                 isGameReady: true,
                 opponentId
             });
-            closeEvent();
+            setIsEventOpen(false);
             navigate(`/game/${room}`);
         });
 
@@ -60,7 +58,7 @@ export function Lobby() {
                         <Modal
                             removable={false}
                             isEventOpen={isEventOpen}
-                            closeEvent={closeEvent}
+                            closeEvent={() => setIsEventOpen(false)}
                         >
                             <div
                                 className="flex flex-col gap-4 text-white"

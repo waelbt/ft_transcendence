@@ -9,8 +9,6 @@ import toast from 'react-hot-toast';
 import { IoTrashOutline } from 'react-icons/io5';
 import { VISIBILTYOPTIONS } from '../constants';
 import { useRoomStore } from '../stores/roomStore';
-import Popup from 'reactjs-popup';
-import { BsThreeDots } from 'react-icons/bs';
 import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
@@ -32,6 +30,7 @@ function GroupPanel() {
         isBanned
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
+    const [isEventOpen, setIsEventOpen] = useState(false);
 
     const {
         register,
@@ -362,11 +361,20 @@ function GroupPanel() {
                 )}
                 <div className="flex-grow w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
                     {users.map((member, index) => (
-                        <div
-                            key={index}
-                            className="flex w-full justify-between items-center"
-                        >
-                            <div className="flex items-center justify-center gap-1 cursor-pointer">
+                        <>
+                            <div
+                                key={index}
+                                className="flex w-full justify-start items-center  gap-2 cursor-pointer"
+                                onClick={() => {
+                                    if (
+                                        isAdmin(userID) &&
+                                        member.id !== userID &&
+                                        owner[0] !== member.id
+                                    )
+                                        setIsEventOpen(true);
+                                    else navigate(`/profile/${member.id}`);
+                                }}
+                            >
                                 <Avatar
                                     imageUrl={member.avatar}
                                     style="w-14 h-14 bg-black  rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
@@ -375,43 +383,35 @@ function GroupPanel() {
                                     {member.nickName}
                                 </div>
                             </div>
-                            {isAdmin(userID) &&
-                                member.id !== userID &&
-                                owner[0] !== member.id && (
-                                    <Popup
-                                        key={`popup-${index}`}
-                                        trigger={
-                                            <div
-                                                className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
-                                            >
-                                                <BsThreeDots
-                                                    className="cursor-pointer text-black"
-                                                    size={26}
-                                                />
-                                            </div>
+
+                            <Modal
+                                removable={false}
+                                isEventOpen={isEventOpen}
+                                closeEvent={() => setIsEventOpen(false)}
+                            >
+                                <div className=" bg-white px-16  pt-11 pb-[15px] rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
+                                    <div
+                                        className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                        onClick={() =>
+                                            navigate(`/profile/${member.id}`)
                                         }
-                                        position="left center"
                                     >
-                                        <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
-                                            {actions.map((action) => (
-                                                <div
-                                                    key={action}
-                                                    className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
-                                                    onClick={
-                                                        () =>
-                                                            UnsetModerater(
-                                                                member
-                                                            )
-                                                        // openEvent()
-                                                    }
-                                                >
-                                                    {action}
-                                                </div>
-                                            ))}
+                                        View Profile
+                                    </div>
+                                    {actions.map((action) => (
+                                        <div className="self-stretch px-5 py-2 cursor-pointer bg-zinc-700 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']">
+                                            {action}
                                         </div>
-                                    </Popup>
-                                )}
-                        </div>
+                                    ))}
+                                    <div
+                                        className="self-stretch mt-4 px-0 py-2 cursor-pointer bg-red-800 rounded-sm flex-col justify-center items-center gap-2.5 flex text-white text-lg font-normal font-['Acme']"
+                                        onClick={() => setIsEventOpen(false)}
+                                    >
+                                        cancel
+                                    </div>
+                                </div>
+                            </Modal>
+                        </>
                     ))}
                 </div>
                 <div
@@ -426,3 +426,40 @@ function GroupPanel() {
     );
 }
 export default GroupPanel;
+
+// {isAdmin(userID) &&
+//     member.id !== userID &&
+//     owner[0] !== member.id && (
+//         <Popup
+//             key={`popup-${index}`}
+//             trigger={
+//                 <div
+//                     className={`group  text-white  justify-center items-center inline-flex  border-b-4 border-white  hover:border-neutral-100 hover:bg-neutral-100 rounded cursor-pointer`}
+//                 >
+//                     <BsThreeDots
+//                         className="cursor-pointer text-black"
+//                         size={26}
+//                     />
+//                 </div>
+//             }
+//             position="left center"
+//         >
+//             <div className="py-[5px]  bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex divide-y divide-gray-100 ">
+//                 {actions.map((action) => (
+//                     <div
+//                         key={action}
+//                         className="text-zinc-600 text-lg font-normal font-['Acme'] self-stretch p-2.5 border-b border-gray-200 justify-center items-center gap-2.5 inline-flex cursor-pointer hover:bg-neutral-100"
+//                         onClick={
+//                             () =>
+//                                 UnsetModerater(
+//                                     member
+//                                 )
+//                             // openEvent()
+//                         }
+//                     >
+//                         {action}
+//                     </div>
+//                 ))}
+//             </div>
+//         </Popup>
+//     )}

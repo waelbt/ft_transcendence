@@ -16,6 +16,7 @@ const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
     const { socket, pushRoom } = useChatLayoutStore();
     const [isLoading, setIsloading] = useState(false);
+
     const HandleJoin = async (room: RoomsList) => {
         try {
             // ! isloading button

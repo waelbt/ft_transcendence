@@ -145,7 +145,7 @@ export function Room() {
                                 return (
                                     <div
                                         key={index}
-                                        className="justify-start flex z-[10] mx-5 gap-2 'flex-row' items-end "
+                                        className="justify-start flex z-[10] mx-5 gap-2 flex-row items-center "
                                     >
                                         <div className="relative inline-block">
                                             <Avatar
@@ -159,14 +159,16 @@ export function Room() {
                                                 {msg.nickName}
                                             </div>
                                             <div
-                                                className="h-9 p-2.5 bg-gray-700 rounded-[10px] justify-start items-center gap-2.5 inline-flex text-white text-sm font-normal font-['Acme'] rounded-tl-none max-w-[320px] "
+                                                // className="h-9 p-2.5 debug bg-gray-700 rounded-[10px] justify-start items-center gap-2.5 inline-flex text-white text-sm font-normal font-['Acme'] rounded-tl-none max-w-[320px] my-1  flex-col relative rounded-tr-none "
+                                                className="rounded-lg my-1 p-2 text-sm flex flex-col relative rounded-tr-none  bg-gray-700 max-w-[320px] text-white"
                                                 style={{
                                                     wordWrap: 'break-word'
                                                 }}
                                             >
                                                 {msg.message}
                                             </div>
-                                            {/* <div className="text-gray-600 text-xs leading-none bottom-0">
+                                            {/*//! time
+                                             <div className="text-gray-600 text-xs leading-none bottom-0">
                                                 {DateFormatter(msg.createdAt)}
                                             </div> */}
                                         </div>
