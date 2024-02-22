@@ -119,9 +119,8 @@ function GroupPanel() {
     };
 
     const userBan = (user: User) => {
-        console.log({ memberToBanId: user.id, roomId: id, roomTitle });
         socket?.emit('banMember', {
-            memberToBanId: user.id,
+            userId: user.id,
             roomId: id,
             roomTitle
         });
@@ -129,15 +128,17 @@ function GroupPanel() {
 
     const muteUser = (user: User) => {
         socket?.emit('muteUser', {
-            userToMute: user.id,
-            muteDuration: 1,
+            userId: user.id,
             roomId: id,
-            roomTitle
+            roomTitle,
+            muteDuration: 1
         });
     };
+
     const UnsetModerater = (user: User) => {
         socket?.emit('unsetAdmin', { userId: user.id, roomId: id, roomTitle });
     };
+
     const handleExit = () => {
         socket?.emit('leaveRoom', {
             id: id,

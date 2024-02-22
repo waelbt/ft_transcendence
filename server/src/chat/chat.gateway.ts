@@ -220,7 +220,7 @@ export class ChatGateway
         await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
         const userMuted = await this.prisma.user.findUnique({
             where: {
-                id: muteUserDto.userToMute
+                id: muteUserDto.userId
             },
             select: {
                 nickName: true,
@@ -426,7 +426,7 @@ export class ChatGateway
         else {
             const memberBanned = await this.prisma.user.findUnique({
                 where: {
-                    id: banMemberDto.memberToBanId
+                    id: banMemberDto.userId
                 },
                 select: {
                     nickName: true,
