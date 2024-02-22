@@ -1,5 +1,5 @@
 import { MdClose } from 'react-icons/md';
-import { useModelStore } from '../stores/ModelStore';
+
 import { Avatar, InputField, ProgressRingLoader } from '.';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
@@ -14,7 +14,6 @@ import { VISIBILTYOPTIONS } from '../constants';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function GroupsForm() {
-    const { closeEvent } = useModelStore();
     const {
         register,
         handleSubmit,
@@ -85,14 +84,6 @@ function GroupsForm() {
             className="px-4 pt-4 pb-4  bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-5  inline-flex relative"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <div
-                className="w-full cursor-pointer	"
-                onClick={() => {
-                    closeEvent();
-                }}
-            >
-                <MdClose size={22} />
-            </div>
             <div className="text-black text-xl font-bold font-['Open Sans']">
                 Customize your group
             </div>

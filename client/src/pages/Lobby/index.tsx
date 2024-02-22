@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
-import { useModelStore } from '../../stores/ModelStore';
-import useTimer from '../../hooks/timer';
-import { Modal, MuterForm } from '../../components';
-import { useEffect } from 'react';
+import { Modal } from '../../components';
+import { useEffect, useState } from 'react';
 import LeaderBoard from '../../components/LeaderBoard';
+import useTimer from '../../hooks/timer';
 
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
@@ -13,7 +12,10 @@ export function Lobby() {
     const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
     const { id } = useUserStore();
-    const { isEventOpen, openEvent, closeEvent } = useModelStore();
+    const [isEventOpen, setIsEventOpen] = useState(false);
+
+    const openEvent = () => setIsEventOpen(true);
+    const closeEvent = () => setIsEventOpen(false);
     const { elapsedTime, formatTime, startTimer } = useTimer();
 
     const handleClick = (gameMode: string) => {
@@ -55,7 +57,11 @@ export function Lobby() {
                         </div>
                     ))}
                     {isEventOpen && (
-                        <Modal removable={false}>
+                        <Modal
+                            removable={false}
+                            isEventOpen={isEventOpen}
+                            closeEvent={closeEvent}
+                        >
                             <div
                                 className="flex flex-col gap-4 text-white"
                                 style={{

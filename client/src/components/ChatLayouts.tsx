@@ -6,7 +6,7 @@ import { DateFormatter } from '../tools/date_parsing';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
-import { useModelStore } from '../stores/ModelStore';
+
 import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import RoomsFinder from './RoomsFinder';
@@ -19,8 +19,11 @@ function ChatLayouts() {
     // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
-    const { isEventOpen, openEvent } = useModelStore();
     const [state, setState] = useState<boolean>(false);
+    const [isEventOpen, setIsEventOpen] = useState(false);
+
+    const openEvent = () => setIsEventOpen(true);
+    const closeEvent = () => setIsEventOpen(false);
 
     useEffect(() => {
         // !
@@ -133,15 +136,17 @@ function ChatLayouts() {
                         </NavLink>
                     ))}
                 </div>
-                {isEventOpen && (
-                    <Modal removable={false}>
-                        {state ? <GroupsForm /> : <RoomsFinder />}
-                    </Modal>
-                )}
+                <Modal
+                    removable={true}
+                    isEventOpen={isEventOpen}
+                    closeEvent={closeEvent}
+                >
+                    {state ? <GroupsForm /> : <RoomsFinder />}
+                </Modal>
             </div>
             <Outlet />
         </div>
-    );ss
+    );
 }
 
 export default ChatLayouts;

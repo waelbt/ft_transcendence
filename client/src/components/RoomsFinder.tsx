@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
-import { useModelStore } from '../stores/ModelStore';
 import { RoomsList } from '../../../shared/types';
 import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
@@ -12,7 +11,6 @@ const RoomsFinder: React.FC = () => {
     const fields = ['PUBLIC', 'PROTECTED'];
     const [filter, setFilter] = useState('PUBLIC');
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
-    const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatLayoutStore();
     const [isLoading, setIsloading] = useState(false);
     const HandleJoin = async (room: RoomsList) => {
@@ -68,14 +66,6 @@ const RoomsFinder: React.FC = () => {
                                 <div>{field.toLowerCase()}</div>
                             </div>
                         ))}
-                    </div>
-                    <div
-                        className=" cursor-pointer"
-                        onClick={() => {
-                            closeEvent();
-                        }}
-                    >
-                        <MdClose size={30} />
                     </div>
                 </div>
             </div>
