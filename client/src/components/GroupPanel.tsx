@@ -149,7 +149,7 @@ function GroupPanel() {
 
     return (
         <>
-            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative debug">
+            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-start gap-4 justify-between px-5 py-10 relative ">
                 {owner[0] === userID &&
                     (!isModifiable ? (
                         <MdEdit
