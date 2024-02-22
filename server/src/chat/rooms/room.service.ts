@@ -7,7 +7,7 @@ import {
     forwardRef
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { Room, User, RoomPrivacy } from '@prisma/client';
+import { Room, User, RoomPrivacy, Message } from '@prisma/client';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { CreateRoomDto } from '../DTOS/create-room.dto';
 import { JoinRoomDto } from '../DTOS/join-room.dto';
@@ -33,6 +33,7 @@ import { ChangeRoomAvatar } from '../DTOS/change-roomAvatar-dto';
 import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 import { ChatGateway } from '../chat.gateway';
+import { BlockService } from 'src/users/services/blocked.service';
 
 @Injectable()
 export class RoomService {
@@ -41,11 +42,9 @@ export class RoomService {
         UnmuteUserDetails
     >();
 
-    constructor(
-        private readonly prisma: PrismaOrmService,
-        @Inject(forwardRef(() => ChatGateway))
-        private readonly emit: ChatGateway
-    ) {}
+    constructor(private readonly prisma: PrismaOrmService,
+    @Inject(forwardRef(() => ChatGateway))
+    private readonly emit: ChatGateway) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
         console.log(` createRoom user id is : ${userId}`);
@@ -275,15 +274,19 @@ export class RoomService {
 
         return allRooms;
     }
-
+    
     async getOneRoom(roomId: number, userId: string) {
+
         const blockedUsers = await this.prisma.block.findMany({
             where: {
-                OR: [{ userId: userId }, { blockedUserId: userId }]
+                OR: [
+                    { userId: userId },
+                    { blockedUserId: userId },
+                ]
             },
             select: {
-                blockedUserId: true
-            }
+                blockedUserId: true,
+            },
         });
 
         const tmproom = await this.prisma.room.findUnique({
@@ -326,16 +329,35 @@ export class RoomService {
             }
         });
 
-        const filteredMessages = room.messages.filter((message) => {
-            const isBlocked = blockedUsers.some(
-                (blockedUsers) =>
-                    blockedUsers.blockedUserId === message.senderId
-            );
+        const filteredMessages = room.messages.filter(message => {
+            const isBlocked = blockedUsers.some(blockedUsers => blockedUsers.blockedUserId === message.senderId);
             return !isBlocked;
         });
 
-        room.messages = filteredMessages;
+        // room.messages = filteredMessages;
 
+        type Message = {
+            id: number;
+            message: string;
+            createdAt: Date;
+            senderId: string;
+            roomId: number;
+            nickName: string;
+            avatar: string;
+            room: Room;
+            sender: User;
+        };
+    
+        const filteredMessages: Message[] = (await Promise.all(
+            room.messages.map(async (message) => {
+                const isBlocked = await this.blockService.isUserBlocked(userId, message.senderId);
+                return isBlocked ? null : message;
+            })
+        )).filter((message): message is Message => message !== null);
+        
+        // console.log('=====================================', filteredMessages, 'user is ', user.email);
+        room.messages = filteredMessages;
+        console.log('=====================================',filteredMessages, 'user is ', user.email);
         return room;
     }
 
