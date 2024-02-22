@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
-import { useModelStore } from '../../stores/ModelStore';
-import useTimer from '../../hooks/timer';
-import { Modal, MuterForm } from '../../components';
-import { useEffect } from 'react';
+import { Modal } from '../../components';
+import { useEffect, useState } from 'react';
 import LeaderBoard from '../../components/LeaderBoard';
+import useTimer from '../../hooks/timer';
 
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
@@ -13,13 +12,14 @@ export function Lobby() {
     const { updateState, socket } = useGameStore();
     const navigate = useNavigate();
     const { id } = useUserStore();
-    const { isEventOpen, openEvent, closeEvent } = useModelStore();
+    const [isEventOpen, setIsEventOpen] = useState(false);
+
     const { elapsedTime, formatTime, startTimer } = useTimer();
 
     const handleClick = (gameMode: string) => {
         updateState({ gameMode: gameMode });
         socket?.emit('gameMode', { gameMode, userId: id });
-        openEvent();
+        setIsEventOpen(true);
         startTimer();
     };
 
@@ -31,7 +31,7 @@ export function Lobby() {
                 isGameReady: true,
                 opponentId
             });
-            closeEvent();
+            setIsEventOpen(false);
             navigate(`/game/${room}`);
         });
 
@@ -42,33 +42,6 @@ export function Lobby() {
     return (
         <>
             <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex">
-                {/* <div className="self-stretch">
-                    <span className="text-rose-600 text-base font-normal font-['Poppins']">
-                        Good Morning,{' '}
-                    </span>
-                    <span className="text-zinc-400 text-base font-normal font-['Poppins']">
-                        {' '}
-                    </span>
-                    <span className="text-black text-xl font-normal font-['Acme']">
-                        dos404
-                    </span>
-                </div> */}
-                {/* <div className="self-stretch grow shrink basis-0 px-[100px] py-5 flex-col justify-end items-center gap-2.5 flex">
-                    <div className="self-stretch grow shrink basis-0 p-2.5 bg-white rounded-[40px] border border-black justify-center items-center gap-2.5 inline-flex">
-                        <div className="w-[800px] text-right text-black text-[50px] font-normal font-['Acme']">
-                            Crafted with dedication, our playground is a
-                            testament to our efforts for your gaming enjoyment
-                        </div>
-                    </div>
-                </div> */}
-
-                {/* <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
-                    <div className="w-[350px] h-[0px] border border-zinc-400"></div>
-                    <div className="text-center text-zinc-400 text-lg font-normal font-['Acme']">
-                        modes
-                    </div>
-                    <div className="w-[350px] h-[0px] border border-zinc-400"></div>
-                </div> */}
                 <div className="self-stretch px-[167px] py-[13px] justify-center items-center gap-[60px] inline-flex">
                     {MODES.map((mode, index) => (
                         <div
@@ -82,9 +55,12 @@ export function Lobby() {
                         </div>
                     ))}
                     {isEventOpen && (
-                        <Modal removable={false}>
-                            <MuterForm />
-                            {/* <div
+                        <Modal
+                            removable={false}
+                            isEventOpen={isEventOpen}
+                            closeEvent={() => setIsEventOpen(false)}
+                        >
+                            <div
                                 className="flex flex-col gap-4 text-white"
                                 style={{
                                     animation: 'fade 1.5s infinite'
@@ -102,7 +78,7 @@ export function Lobby() {
                                         Waiting time: {formatTime(elapsedTime)}
                                     </p>
                                 </div>
-                            </div> */}
+                            </div>
                         </Modal>
                     )}
                 </div>
@@ -118,9 +94,3 @@ export function Lobby() {
         </>
     );
 }
-
-//! needed later
-
-// <div className="flex flex-col gap-2">
-
-// </div>

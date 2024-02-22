@@ -1,40 +1,30 @@
-import { MdClose } from 'react-icons/md';
-import { useModelStore } from '../stores/ModelStore';
-import { Avatar, InputField, ProgressRingLoader } from '.';
+import { Avatar, ProgressRingLoader } from '.';
 import useImageUpload from '../hooks/uploadImageHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-// import Popup from 'reactjs-popup';
-// import { useUserStore } from '../stores/userStore';
+import { FC, useEffect, useState } from 'react';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import { VISIBILTYOPTIONS } from '../constants';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
-function GroupsForm() {
-    const { closeEvent } = useModelStore();
+type GroupsFormProps = {
+    closeEvent: () => void;
+};
+
+const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
     const {
         register,
         handleSubmit,
         setValue,
-        // getValues,
         watch,
         formState: { errors, isSubmitting }
     } = useForm({});
     const { pushRoom, socket } = useChatLayoutStore();
     const axiosPrivate = useAxiosPrivate();
-    const {
-        progress,
-        uploadData,
-        imagePath,
-        setImagePath,
-        deleteData
-        // isFailed,
-        // success,
-        // setProgress
-    } = useImageUpload();
+    const { progress, uploadData, imagePath, setImagePath, deleteData } =
+        useImageUpload();
     const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const visibilityOptions = watch('visibilityOption');
@@ -88,20 +78,12 @@ function GroupsForm() {
             if (isAxiosError(error)) toast.error(error.response?.data?.message);
         }
     };
-    
+
     return (
         <form
             className="px-4 pt-4 pb-4  bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-5  inline-flex relative"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <div
-                className="w-full cursor-pointer	"
-                onClick={() => {
-                    closeEvent();
-                }}
-            >
-                <MdClose size={22} />
-            </div>
             <div className="text-black text-xl font-bold font-['Open Sans']">
                 Customize your group
             </div>
@@ -250,6 +232,6 @@ function GroupsForm() {
             </button>
         </form>
     );
-}
+};
 
 export default GroupsForm;

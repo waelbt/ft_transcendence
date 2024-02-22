@@ -39,10 +39,19 @@ type RoomMethod = {
     }) => void;
     userJoinedListener: (user: User) => void;
     isAdmin: (userId: string) => boolean;
+    isBanned: (userId: string) => boolean;
     canSendMessage: (userId: string) => boolean;
     pushModerator: ({ id, nickname }: { id: string; nickname: string }) => void;
+    unpushModerator: ({
+        id,
+        nickname
+    }: {
+        id: string;
+        nickname: string;
+    }) => void;
     pushBan: ({ id, nickname }: { id: string; nickname: string }) => void;
     pushMuted: ({ id, nickname }: { id: string; nickname: string }) => void;
+    unpushMuted: ({ id, nickname }: { id: string; nickname: string }) => void;
 };
 
 export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
@@ -95,7 +104,28 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
                 senderId: '',
                 avatar: '',
                 nickName: 'System',
-                message: `an admin made ${nickname} an admin.`,
+                message: `group owner made ${nickname} an admin.`,
+                createdAt: 'no need'
+            };
+            const newMessages = [...messages, adminMessage];
+            set({ messages: newMessages });
+        }
+    },
+    unpushModerator: ({ id, nickname }: { id: string; nickname: string }) => {
+        const { admins, messages } = get();
+
+        // Check if the user is in the admins array
+        if (admins.includes(id)) {
+            const newAdmins = admins.filter((adminId) => adminId !== id);
+            set({ admins: newAdmins });
+
+            // Print a message
+            const adminMessage: Message = {
+                id: 0,
+                senderId: '',
+                avatar: '',
+                nickName: 'System',
+                message: `${nickname} is no longer an admin.`,
                 createdAt: 'no need'
             };
             const newMessages = [...messages, adminMessage];
@@ -192,6 +222,10 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         const { owner, admins } = get();
         return owner.includes(userId) || admins.includes(userId);
     },
+    isBanned: (userId) => {
+        const { banned } = get();
+        return banned.includes(userId);
+    },
     canSendMessage: (userId) => {
         const { muted, banned, users } = get();
         const userExists = users.some((user) => user.id === userId);
@@ -244,6 +278,28 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
             };
             const newMessages = [...messages, muteMessage];
             set({ messages: newMessages });
+        }
+    },
+    unpushMuted: ({ id }) => {
+        const { muted } = get();
+
+        // Check if the user is in the muted array
+        if (muted.includes(id)) {
+            // Remove the user from the muted array
+            const newMuted = muted.filter((userId) => userId !== id);
+            set({ muted: newMuted });
+
+            // ? Optionally print a message
+            // const unmuteMessage = {
+            //     id: 0,
+            //     senderId: '',
+            //     avatar: '',
+            //     nickName: 'System',
+            //     message: `an admin unmuted ${nickname}.`,
+            //     createdAt: 'no need'
+            // };
+            // const newMessages = [...messages, unmuteMessage];
+            // set({ messages: newMessages });
         }
     }
 }));

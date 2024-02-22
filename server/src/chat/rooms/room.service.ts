@@ -44,8 +44,7 @@ export class RoomService {
 
     constructor(private readonly prisma: PrismaOrmService,
     @Inject(forwardRef(() => ChatGateway))
-    private readonly emit: ChatGateway,
-    private readonly blockService: BlockService) {}
+    private readonly emit: ChatGateway) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
         console.log(` createRoom user id is : ${userId}`);
@@ -278,17 +277,17 @@ export class RoomService {
     
     async getOneRoom(roomId: number, userId: string) {
 
-        // const blockedUsers = await this.prisma.block.findMany({
-        //     where: {
-        //         OR: [
-        //             { userId: userId },
-        //             { blockedUserId: userId },
-        //         ]
-        //     },
-        //     select: {
-        //         blockedUserId: true,
-        //     },
-        // });
+        const blockedUsers = await this.prisma.block.findMany({
+            where: {
+                OR: [
+                    { userId: userId },
+                    { blockedUserId: userId },
+                ]
+            },
+            select: {
+                blockedUserId: true,
+            },
+        });
 
         const tmproom = await this.prisma.room.findUnique({
             where: {
@@ -330,10 +329,10 @@ export class RoomService {
             }
         });
 
-        // const filteredMessages = room.messages.filter(message => {
-        //     const isBlocked = blockedUsers.some(blockedUsers => blockedUsers.blockedUserId === message.senderId);
-        //     return !isBlocked;
-        // });
+        const filteredMessages = room.messages.filter(message => {
+            const isBlocked = blockedUsers.some(blockedUsers => blockedUsers.blockedUserId === message.senderId);
+            return !isBlocked;
+        });
 
         // room.messages = filteredMessages;
 
@@ -435,8 +434,10 @@ export class RoomService {
     }
 
     async removeFromAdmins(unSetAdminDto: UnSetAdminDto, userId: string) {
-
-        await this.unsetUserFromAdmins(+unSetAdminDto.roomId, unSetAdminDto.userId)
+        await this.unsetUserFromAdmins(
+            +unSetAdminDto.roomId,
+            unSetAdminDto.userId
+        );
     }
 
     async kickMember(kickMemberDto: KickMemberDto, userId: string) {
@@ -616,18 +617,15 @@ export class RoomService {
         );
         if (await this.isUserAdmin(userId, +banMemberDto.roomId)) {
             console.log('dkhel');
-            await this.isUserMember(
-                +banMemberDto.roomId,
-                banMemberDto.memberToBanId
-            );
+            await this.isUserMember(+banMemberDto.roomId, banMemberDto.userId);
             await this.isUserOwner(
                 +banMemberDto.roomId,
-                banMemberDto.memberToBanId,
+                banMemberDto.userId,
                 'Ban'
             );
             await this.userAlreadyBanned(
                 +banMemberDto.roomId,
-                banMemberDto.memberToBanId
+                banMemberDto.userId
             );
             const roomWithBanned = await this.prisma.room.findUnique({
                 where: {
@@ -643,10 +641,7 @@ export class RoomService {
                 },
                 data: {
                     banned: {
-                        set: [
-                            ...roomWithBanned.banned,
-                            banMemberDto.memberToBanId
-                        ]
+                        set: [...roomWithBanned.banned, banMemberDto.userId]
                     }
                 }
             });
@@ -658,16 +653,13 @@ export class RoomService {
                 data: {
                     users: {
                         disconnect: {
-                            id: banMemberDto.memberToBanId
+                            id: banMemberDto.userId
                         }
                     }
                 }
             });
 
-            this.unsetUserFromAdmins(
-                +banMemberDto.roomId,
-                banMemberDto.memberToBanId
-            );
+            this.unsetUserFromAdmins(+banMemberDto.roomId, banMemberDto.userId);
             const banned = await this.prisma.room.findUnique({
                 where: {
                     id: +banMemberDto.roomId
@@ -815,13 +807,13 @@ export class RoomService {
     }
 
     async muteUser(muteUserDto: MuteUserDto, userId: string) {
-        // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userToMute);
+        // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userId);
         // you cannot mute the room owner is working succefully
         if (await this.isUserAdmin(userId, +muteUserDto.roomId)) {
             console.log(`user ${userId}`);
             await this.isUserOwner(
                 +muteUserDto.roomId,
-                muteUserDto.userToMute,
+                muteUserDto.userId,
                 'Mute'
             );
             const unmuteTime = new Date();
@@ -843,10 +835,7 @@ export class RoomService {
                 },
                 data: {
                     muted: {
-                        set: [
-                            ...roomWithMutedUsers.muted,
-                            muteUserDto.userToMute
-                        ]
+                        set: [...roomWithMutedUsers.muted, muteUserDto.userId]
                     }
                 }
             });
@@ -863,10 +852,10 @@ export class RoomService {
 
             const userDetails = new UnmuteUserDetails(
                 +muteUserDto.roomId,
-                muteUserDto.userToMute,
+                muteUserDto.userId,
                 unmuteTime
             );
-            this.mutedUsers.set(muteUserDto.userToMute, userDetails);
+            this.mutedUsers.set(muteUserDto.userId, userDetails);
             return this.mutedUsers;
         }
         // else throw new Error('Only Admins And Owners Can Mute Other Users');

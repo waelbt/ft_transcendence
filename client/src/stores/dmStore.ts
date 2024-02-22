@@ -3,6 +3,7 @@ import { Message, User } from '../../../shared/types';
 
 type dmState = {
     currentDm: User | null;
+    isForbbiden: boolean;
     messages: Message[];
 };
 
@@ -14,6 +15,7 @@ type dmMethod = {
 export const useDmStore = create<dmState & dmMethod>((set, get) => ({
     currentDm: null,
     messages: [],
+    isForbbiden: false,
     updateState: (newState) => {
         set((state) => ({ ...state, ...newState }));
     },

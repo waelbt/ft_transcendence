@@ -16,10 +16,11 @@ export function Chat() {
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const { messages, currentDm, pushMessage, updateState } = useDmStore();
+    const { messages, currentDm, pushMessage, updateState, isForbbiden } =
+        useDmStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
-
+    const { unpushRoom } = useChatLayoutStore();
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value.length <= MAX_MESSAGE_LENGTH)
             setMessage(e.target.value);
@@ -51,17 +52,21 @@ export function Chat() {
                 pushMessage(message);
             }
         };
+        if (!socket) return;
 
-        if (socket) {
-            socket.on('dm', messageListener);
-        }
+        // const forbiddenListener = ({ id }: { id: string }) => {
+        //     updateState({ isForbbiden: true });
+        //     unpushRoom(+id, false);
+        // };
+
+        // socket.on('forbidden', forbiddenListener);
+        socket.on('dm', messageListener);
 
         fetchMessages();
 
         return () => {
-            if (socket) {
-                socket.off('dm', messageListener);
-            }
+            // socket.off('forbidden', forbiddenListener);
+            socket.off('dm', messageListener);
         };
     }, [socket, id, pushMessage, axiosPrivate, updateState]);
 
@@ -81,7 +86,7 @@ export function Chat() {
     };
 
     return (
-        <div className=" flex-grow h-full flex gap-0 ">
+        <div className=" flex-grow h-full flex gap-0  ">
             <div className="flex flex-col w-[70%] items-center justify-end ">
                 {/* content */}
                 <div className="flex-grow w-full bg-gray-200 z-[0] pb-5 overflow-y-auto flex flex-col relative justify-end">
@@ -127,6 +132,8 @@ export function Chat() {
                     //  ${isblocked ? 'hidden' : ''}
                     className="flex items-center w-full h-[8%] gap-2 border border-stone-300  bg-white py-2 justify-center"
                 >
+                    {/* {!isForbbiden ? (
+                        <> */}
                     <input
                         type="text"
                         value={message}
@@ -146,9 +153,23 @@ export function Chat() {
                         className="text-blue-800 mr-5 cursor-pointer"
                         onClick={sendMessage}
                     />
+                    {/* </>
+                    ) : (
+                        <div>you can't send messages to this group </div>
+                    )} */}
                 </div>
             </div>
-            <div className="flex flex-col bg-white border-l border-stone-300 flex-grow items-center justify-center gap-10">
+            <div
+                className="flex flex-col bg-white border-l border-stone-300 flex-grow items-center justify-center gap-10"
+                // style={
+                //     isForbbiden
+                //         ? {
+                //               filter: 'blur(4px)',
+                //               pointerEvents: 'none'
+                //           }
+                //         : {}
+                // }
+            >
                 <div className="flex flex-col items-center justify-center gap-2">
                     <Avatar
                         imageUrl={currentDm?.avatar}

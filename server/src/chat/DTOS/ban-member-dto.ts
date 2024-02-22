@@ -8,7 +8,7 @@ export class BanMemberDto {
 
     @ApiProperty()
     @IsString()
-    memberToBanId: string;
+    userId: string;
 
     @ApiProperty()
     @IsString()

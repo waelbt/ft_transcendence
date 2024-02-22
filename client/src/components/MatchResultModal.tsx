@@ -1,10 +1,8 @@
 import { Avatar } from '.';
 import { VersusIcon, WinHeader } from '../assets/custom-icons';
-import { useModelStore } from '../stores/ModelStore';
 import { ImCross } from 'react-icons/im';
 
 function MatchResultModal() {
-    const { closeEvent } = useModelStore();
     return (
         <div className="w-[478px]  bg-white flex-col relative justify-start shadow rounded-[20px] round items-center gap-2.5 inline-flex overflow-hidden">
             <div className="absolute top-0 z-10 left-0">

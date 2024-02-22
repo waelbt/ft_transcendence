@@ -3,11 +3,8 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
-import { Message, User } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
-// import { isAxiosError } from 'axios';
-// import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 
@@ -29,7 +26,9 @@ export function Room() {
         canSendMessage,
         pushModerator,
         pushBan,
-        pushMuted
+        pushMuted,
+        unpushMuted,
+        unpushModerator
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -77,7 +76,7 @@ export function Room() {
             nickname: string;
         }) => {
             userkickedListener({ id: kickedUser, nickname });
-            if (kickedUser === userId && id) unpushRoom(+id);
+            if (kickedUser === userId && id) unpushRoom(+id, true);
         };
 
         const handleBan = ({
@@ -88,9 +87,11 @@ export function Room() {
             nickname: string;
         }) => {
             pushBan({ id: banUser, nickname });
-            if (banUser === userId && id) unpushRoom(+id);
+            if (banUser === userId && id) unpushRoom(+id, true);
         };
 
+        socket.on('unsetAdmin', unpushModerator);
+        socket.on('unmuteUser', unpushMuted);
         socket.on('muteUser', pushMuted);
         socket.on('banMember', handleBan);
         socket.on('setAdmin', pushModerator);
@@ -100,6 +101,8 @@ export function Room() {
         socket.on('leaveRoom', userLeftListener);
 
         return () => {
+            socket.on('unsetAdmin', unpushModerator);
+            socket.off('unmuteUser', unpushMuted);
             socket.off('muteUser', pushMuted);
             socket.off('banMember', handleBan);
             socket.off('setAdmin', pushModerator);
@@ -139,7 +142,7 @@ export function Room() {
                                 return (
                                     <div
                                         key={index}
-                                        className="justify-start flex z-[10] mx-5 gap-2 'flex-row' items-end "
+                                        className="justify-start flex z-[10] mx-5 gap-2 flex-row items-center "
                                     >
                                         <div className="relative inline-block">
                                             <Avatar
@@ -153,14 +156,15 @@ export function Room() {
                                                 {msg.nickName}
                                             </div>
                                             <div
-                                                className="h-9 p-2.5 bg-gray-700 rounded-[10px] justify-start items-center gap-2.5 inline-flex text-white text-sm font-normal font-['Acme'] rounded-tl-none max-w-[320px] "
+                                                className="rounded-lg my-1 p-2 text-sm flex flex-col relative rounded-tr-none  bg-gray-700 max-w-[320px] text-white"
                                                 style={{
                                                     wordWrap: 'break-word'
                                                 }}
                                             >
                                                 {msg.message}
                                             </div>
-                                            {/* <div className="text-gray-600 text-xs leading-none bottom-0">
+                                            {/*//! time
+                                             <div className="text-gray-600 text-xs leading-none bottom-0">
                                                 {DateFormatter(msg.createdAt)}
                                             </div> */}
                                         </div>

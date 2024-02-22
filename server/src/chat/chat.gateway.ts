@@ -8,7 +8,15 @@ import {
     MessageBody,
     WsException
 } from '@nestjs/websockets';
-import { Inject, Injectable, Logger, NotFoundException, Req, UseGuards, forwardRef } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    Logger,
+    NotFoundException,
+    Req,
+    UseGuards,
+    forwardRef
+} from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { JoinRoomDto } from './DTOS/join-room.dto';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -18,7 +26,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { use } from 'passport';
 import { CreateMessageDto } from './DTOS/create-message-dto';
 import { LeaveRoomDto } from './DTOS/leave-room.dto';
-import { MuteUserDto, UnmuteUserDetails, UnmuteUserDto } from './DTOS/mute-user-dto';
+import {
+    MuteUserDto,
+    UnmuteUserDetails,
+    UnmuteUserDto
+} from './DTOS/mute-user-dto';
 import { CreateDmDto } from './DTOS/create-dm.dto';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { SendMessageDto } from './DTOS/send-message-dto';
@@ -45,10 +57,10 @@ export class ChatGateway
         private readonly wsService: WebSocketService,
         private readonly blockService: BlockService,
         @Inject(forwardRef(() => RoomService))
-        private readonly roomService: RoomService,
+        private readonly roomService: RoomService
     ) {}
     // @Inject(forwardRef(() => ChatGateway))
-    // private readonly emit: ChatGateway) 
+    // private readonly emit: ChatGateway)
 
     private usersSockets: Map<string, string> = new Map<string, string>();
 
@@ -232,7 +244,7 @@ export class ChatGateway
         await this.server.to(leaveRoomDto.roomTitle).emit('leaveRoom', message);
     }
 
-    @SubscribeMessage('muteUser')
+    @SubscribeMessage('Mute')
     async muteUser(client: Socket, muteUserDto: MuteUserDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -242,21 +254,21 @@ export class ChatGateway
         await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
         const userMuted = await this.prisma.user.findUnique({
             where: {
-                id: muteUserDto.userToMute,
+                id: muteUserDto.userId
             },
             select: {
                 nickName: true,
-                id: true,
-            },
+                id: true
+            }
         });
         const message = {
             nickname: userMuted.nickName,
-            id: userMuted.id,
+            id: userMuted.id
         };
         await this.server.to(muteUserDto.roomTitle).emit('muteUser', message);
     }
 
-    @SubscribeMessage('unmuteUser')
+    @SubscribeMessage('Unmute')
     async unmuteUser(unmuteUserDto: UnmuteUserDetails) {
         // const userCheck = await this.wsService.getUserFromAccessToken(
         //     client.handshake.auth.token
@@ -265,33 +277,32 @@ export class ChatGateway
         // await this.wsService.unmuteUser(unmuteUserDto, userCheck.userData.sub);
         const room = await this.prisma.room.findUnique({
             where: {
-                id: unmuteUserDto.roomID,
+                id: unmuteUserDto.roomID
             },
             select: {
-                roomTitle: true,
-            },
+                roomTitle: true
+            }
         });
 
         const userunMuted = await this.prisma.user.findUnique({
             where: {
-                id: unmuteUserDto.userID,
+                id: unmuteUserDto.userID
             },
             select: {
                 nickName: true,
-                id: true,
-            },
+                id: true
+            }
         });
         const message = {
             nickname: userunMuted.id,
-            id: userunMuted.id,
+            id: userunMuted.id
         };
-        console.log(message,'---------mute details----------' , unmuteUserDto);
+        console.log(message, '---------mute details----------', unmuteUserDto);
         await this.server.to(room.roomTitle).emit('unmuteUser', message);
     }
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -308,10 +319,13 @@ export class ChatGateway
                 await this.blockService.isUserBlocked(
                     userCheck.userData.sub,
                     dmroom.users[0].id
-                    )
-                    )
-                    this.server.to(client.id).emit('forbidden');
-                    else {
+                )
+            )
+                return;
+            // this.server
+            //     .to(client.id)
+            //     .emit('forbidden', { id: sendMessage.id });
+            else {
                 const message: EmitMessageDto = {
                     id: dmroom.messages[dmroom.messages.length - 1].dmId,
                     message:
@@ -368,7 +382,7 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('kickMember')
+    @SubscribeMessage('Kick')
     async kickUser(client: any, kickmemberDto: KickMemberDto) {
         console.log(
             'kickMembber-------------------------------------',
@@ -407,8 +421,9 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('setAdmin')
+    @SubscribeMessage('Set As Admin')
     async setAdmin(client: any, setAdminDto: SetAdminDto) {
+        console.log('wwwwwww');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -436,9 +451,9 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('banMember')
+    @SubscribeMessage('Ban')
     async banMember(client: any, banMemberDto: BanMemberDto) {
-        console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -446,7 +461,7 @@ export class ChatGateway
         else {
             const memberBanned = await this.prisma.user.findUnique({
                 where: {
-                    id: banMemberDto.memberToBanId,
+                    id: banMemberDto.userId
                 },
                 select: {
                     nickName: true,
@@ -472,29 +487,31 @@ export class ChatGateway
         }
     }
 
-    @SubscribeMessage('unsetAdmin')
+    @SubscribeMessage('Unset Admin')
     async unsetAdmin(client: any, unsetAdminDto: UnSetAdminDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false)
-            await this.handleDisconnect(client);
+        if (userCheck.state === false) await this.handleDisconnect(client);
         else {
             const admineRemoved = await this.prisma.user.findUnique({
                 where: {
-                    id: unsetAdminDto.userId,
+                    id: unsetAdminDto.userId
                 },
                 select: {
                     nickName: true,
-                    id: true,
-                },
+                    id: true
+                }
             });
             const message = {
                 id: admineRemoved.id,
-                nickname: admineRemoved.nickName,
+                nickname: admineRemoved.nickName
             };
 
-            this.roomService.removeFromAdmins(unsetAdminDto, userCheck.userData.sub);
+            this.roomService.removeFromAdmins(
+                unsetAdminDto,
+                userCheck.userData.sub
+            );
             this.server.to(unsetAdminDto.roomTitle).emit('unsetAdmin', message);
         }
     }

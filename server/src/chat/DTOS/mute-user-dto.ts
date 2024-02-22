@@ -9,7 +9,7 @@ export class MuteUserDto {
 
     @ApiProperty()
     @IsString()
-    userToMute: string;
+    userId: string;
 
     @ApiProperty()
     @IsNumber()

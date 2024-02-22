@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { MdClose } from 'react-icons/md';
-import { useModelStore } from '../stores/ModelStore';
+import { useState, useEffect, FC } from 'react';
 import { RoomsList } from '../../../shared/types';
 import { axiosPrivate } from '../api';
 import { isAxiosError } from 'axios';
@@ -8,13 +6,17 @@ import toast from 'react-hot-toast';
 import { Avatar, FormComponent } from '.';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
-const RoomsFinder: React.FC = () => {
+type GroupsFormProps = {
+    closeEvent: () => void;
+};
+
+const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
     const fields = ['PUBLIC', 'PROTECTED'];
     const [filter, setFilter] = useState('PUBLIC');
     const [roomsList, SetRoomsList] = useState<RoomsList[]>([]);
-    const { closeEvent } = useModelStore();
     const { socket, pushRoom } = useChatLayoutStore();
     const [isLoading, setIsloading] = useState(false);
+
     const HandleJoin = async (room: RoomsList) => {
         try {
             // ! isloading button
@@ -68,14 +70,6 @@ const RoomsFinder: React.FC = () => {
                                 <div>{field.toLowerCase()}</div>
                             </div>
                         ))}
-                    </div>
-                    <div
-                        className=" cursor-pointer"
-                        onClick={() => {
-                            closeEvent();
-                        }}
-                    >
-                        <MdClose size={30} />
                     </div>
                 </div>
             </div>
