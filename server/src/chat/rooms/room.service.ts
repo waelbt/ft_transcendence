@@ -34,6 +34,7 @@ import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 import { ChatGateway } from '../chat.gateway';
 import { BlockService } from 'src/users/services/blocked.service';
+import { AddUserToPrivateRoom } from '../DTOS/add-user-to-private-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -152,10 +153,10 @@ export class RoomService {
         // };
         // if (!room)
         //     throw new NotFoundException('No Exsiting Room With This Id');
-        else if (room.privacy == 'PRIVATE')
+        else if (room.privacy === 'PRIVATE' && !room.privateMembers.includes(userId))
             throw new ForbiddenException('This Room Is PRIVATE');
         // return { message: 'This Room Is Private', state: false };
-        else if (room.privacy == 'PROTECTED') {
+        else if (room.privacy === 'PROTECTED') {
             const matched = verifyPassowrd(joinRoomDto.password, room.password);
             if (!matched) throw new ForbiddenException('Pssword Does No Match');
             // return { message: 'Password Does Not Match', state: false };
@@ -1144,4 +1145,35 @@ export class RoomService {
                 'Only Owner And Admins Can Change Room Informations'
             );
     }
+
+    async addUserToPrivateRoom(addUser: AddUserToPrivateRoom, userId: string) {
+
+        const roomWithPrvMembers = await this.prisma.room.findUnique({
+            where: {
+                id: addUser.roomId,
+            },
+        });
+
+        const room = await this.prisma.room.updateMany({
+            where: {
+                id: addUser.roomId,
+            },
+            data: {
+                privateMembers: {
+                    set : [...roomWithPrvMembers.privateMembers, addUser.userId]
+                }
+            }
+        });
+    }
 }
+
+// const room = await this.prisma.room.updateMany({
+//     where: {
+//         id: +muteUserDto.roomId
+//     },
+//     data: {
+//         muted: {
+//             set: [...roomWithMutedUsers.muted, muteUserDto.userId]
+//         }
+//     }
+// });
