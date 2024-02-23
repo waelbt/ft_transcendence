@@ -3,24 +3,34 @@ import { Avatar } from '.';
 import { useDebounce } from '../hooks/debouncerHook';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { Friend } from '../../../shared/types';
+import { useUserStore } from '../stores/userStore';
+import { useRoomStore } from '../stores/roomStore';
+import toast from 'react-hot-toast';
+import { isAxiosError } from 'axios';
+import loadGif from '../assets/loading.gif';
 
 function AddMembers() {
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedValue = useDebounce<string>(searchTerm, 500);
     const axiosPrivate = useAxiosPrivate();
     const [searchResults, setSearchResults] = useState<Friend[]>([]);
-    const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const { id } = useUserStore();
+    const { id: roomId } = useRoomStore();
+    const [isloading, setIsloading] = useState<boolean>(false);
     useEffect(() => {
         const fetchData = async () => {
+            setIsloading(true);
             const res = await axiosPrivate.get(`/users/search/${searchTerm}`);
-            setSearchResults(res.data);
+            setSearchResults(res.data.filter((user: Friend) => user.id !== id));
+            setIsloading(false);
         };
+
         if (searchTerm.length) fetchData();
         else setSearchResults([]);
     }, [debouncedValue]);
 
-    const handleCheckboxChange = (id: number) => {
+    const handleCheckboxChange = (id: string) => {
         setSelectedIds((prevIds) => {
             if (prevIds.includes(id)) {
                 return prevIds.filter((prevId) => prevId !== id);
@@ -30,13 +40,27 @@ function AddMembers() {
         });
     };
 
-    const handleCheckboxDoubleClick = (id: number) => {
+    const handleCheckboxDoubleClick = (id: string) => {
         setSelectedIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
     };
 
     const handleSubmit = async () => {
-        
-        // Submit logic
+        try {
+            setIsloading(true);
+            const promises = selectedIds.map((id) => {
+                return axiosPrivate.post('/chat/addUserToPrivateRoom', {
+                    userId: id,
+                    roomId: +roomId
+                });
+            });
+
+            await Promise.all(promises);
+            toast.success('requests send successfully');
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        } finally {
+            setIsloading(false);
+        }
     };
 
     return (
@@ -63,38 +87,46 @@ function AddMembers() {
                 </button>
             </div>
             <div className="self-stretch  h-[340px] flex-col justify-start items-start gap-2.5 flex overflow-y-auto">
-                <div className="self-stretch h-[340px] flex-col justify-start items-start gap-2.5 flex overflow-y-auto">
-                    {searchResults.map((result, index) => (
-                        <label
-                            key={`search${index}`}
-                            htmlFor={`checkbox-input${index}`}
-                            className="self-stretch p-2.5 border-b border-black border-opacity-30 justify-between items-center inline-flex cursor-pointer"
-                        >
-                            <div className="justify-center items-center gap-2 flex ">
-                                <Avatar
-                                    imageUrl={result.avatar}
-                                    style="w-11 h-11 bg-black rounded-[150px] border border-white"
+                {isloading ? (
+                    <div className="self-stretch h-[340px] flex-col justify-center items-center gap-2.5 flex overflow-y-auto">
+                        <img src={loadGif} alt="loading..." />{' '}
+                    </div>
+                ) : (
+                    <div className="self-stretch h-[340px] flex-col justify-start items-start gap-2.5 flex overflow-y-auto">
+                        {searchResults.map((result, index) => (
+                            <label
+                                key={`search${index}`}
+                                htmlFor={`checkbox-input${index}`}
+                                className="self-stretch p-2.5 border-b border-black border-opacity-30 justify-between items-center inline-flex cursor-pointer"
+                            >
+                                <div className="justify-center items-center gap-2 flex ">
+                                    <Avatar
+                                        imageUrl={result.avatar}
+                                        style="w-11 h-11 bg-black rounded-[150px] border border-white"
+                                    />
+                                    <div className="text-black text-base font-normal font-['Acme']">
+                                        {result.nickName}
+                                    </div>
+                                    <div className="text-zinc-500 text-base font-normal font-['Acme']">
+                                        {result.fullName}
+                                    </div>
+                                </div>
+                                <input
+                                    id={`checkbox-input${index}`}
+                                    type="checkbox"
+                                    checked={selectedIds.includes(result.id)}
+                                    onChange={() =>
+                                        handleCheckboxChange(result.id)
+                                    }
+                                    onDoubleClick={() =>
+                                        handleCheckboxDoubleClick(result.id)
+                                    }
+                                    className="form-checkbox h-4 w-4 border border-gray-300 rounded-none"
                                 />
-                                <div className="text-black text-base font-normal font-['Acme']">
-                                    {result.nickName}
-                                </div>
-                                <div className="text-zinc-500 text-base font-normal font-['Acme']">
-                                    {result.fullName}
-                                </div>
-                            </div>
-                            <input
-                                id={`checkbox-input${index}`}
-                                type="checkbox"
-                                checked={selectedIds.includes(result.id)}
-                                onChange={() => handleCheckboxChange(result.id)}
-                                onDoubleClick={() =>
-                                    handleCheckboxDoubleClick(result.id)
-                                }
-                                className="form-checkbox h-4 w-4 border border-gray-300 rounded-none"
-                            />
-                        </label>
-                    ))}
-                </div>
+                            </label>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -45,7 +45,7 @@ export interface Player {
 }
 
 export interface Friend {
-    id: number;
+    id: string;
     nickName: string;
     avatar: string;
     fullName?: string;
