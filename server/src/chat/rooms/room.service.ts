@@ -34,7 +34,11 @@ import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 import { ChatGateway } from '../chat.gateway';
 import { BlockService } from 'src/users/services/blocked.service';
+<<<<<<< HEAD
 import { AddUserToPrivateRoom } from '../DTOS/add-user-to-private-room.dto';
+=======
+import { WebSocketService } from '../chat.gateway.service';
+>>>>>>> 93cded86a69fe0b2e06a20a58a6c4c964774ce55
 
 @Injectable()
 export class RoomService {
@@ -47,7 +51,6 @@ export class RoomService {
         private readonly prisma: PrismaOrmService,
         @Inject(forwardRef(() => ChatGateway))
         private readonly emit: ChatGateway,
-        private readonly blockService: BlockService
     ) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
@@ -337,7 +340,7 @@ export class RoomService {
         const filteredMessages: Message[] = (
             await Promise.all(
                 room.messages.map(async (message) => {
-                    const isBlocked = await this.blockService.isUserBlocked(
+                    const isBlocked = await this.isUserBlocked(
                         userId,
                         message.senderId
                     );
@@ -1164,6 +1167,23 @@ export class RoomService {
                 }
             }
         });
+    }
+
+    async isUserBlocked( userId: string, blockedUserId: string): Promise<boolean> {
+        try {
+            const block = await this.prisma.block.findFirst({
+                where: {
+                    OR: [
+                        { userId: userId , blockedUserId: blockedUserId },
+                        { userId: blockedUserId , blockedUserId: userId },
+                    ],
+                },
+            });
+            // console.log('block: ', !!block);
+            return !!block;
+        } catch(errrrr) {
+            return ;
+        }
     }
 }
 

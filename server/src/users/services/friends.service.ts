@@ -8,6 +8,7 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { UsersService } from './users.service';
 import { BlockService } from './blocked.service';
+import { notificationGateway } from '../notification/notification.gateway';
 
 @Injectable()
 export class friendsService {
@@ -15,18 +16,19 @@ export class friendsService {
         private prisma: PrismaOrmService,
         @Inject(forwardRef(() => UsersService))
         private userService: UsersService,
-        private blockUser: BlockService
+        private blockUser: BlockService,
+        private notificationGateway: notificationGateway,
     ) {}
 
-    async sendFriendRequest(userId1: string, userId2: string) {
-        console.log('user1: ', userId1, 'user2: ', userId2);
+    async sendFriendRequest(userMe: string, friendId: string) {
+        console.log('user1: ', userMe, 'user2: ', friendId);
         //check for users if exists
-        await this.checkUsersExistence(userId1, userId2);
+        await this.checkUsersExistence(userMe, friendId);
 
         //check if u already send friend request to this one
         const existRequest = await this.findFirstStatusPending(
-            userId1,
-            userId2
+            userMe,
+            friendId
         );
 
         if (existRequest) {
@@ -36,28 +38,32 @@ export class friendsService {
         //create a new friendship request
         await this.prisma.friendship.create({
             data: {
-                id: userId1 + userId2,
-                userId1,
-                userId2,
+                id: userMe + friendId,
+                userId1: userMe,
+                userId2: friendId,
                 status: 'pending',
                 user: {
                     connect: {
-                        id: userId1
+                        id: userMe
                     }
                 }
             }
         });
         //websocket();
+        const receiver = await this.getNickNameEmail(friendId);
+        const sender = await this.getNickNameEmail(userMe)
+        await this.notificationGateway.notificationEvent(receiver, sender, 'send invitaion');
     }
-    async acceptFriendRequest(userId1: string, userId2: string) {
+
+    async acceptFriendRequest(userMe: string, friendId: string) {
         //check for users if exists
-        await this.checkUsersExistence(userId1, userId2);
+        await this.checkUsersExistence(userMe, friendId);
 
         const friendship = await this.prisma.friendship.findFirst({
-            where: { userId1: userId2, userId2: userId1, status: 'pending' }
+            where: { userId1: friendId, userId2: userMe, status: 'pending' }
         });
 
-        console.log('id1: ', userId2, 'id2: ', userId1);
+        console.log('id1: ', friendId, 'id2: ', userMe);
 
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
@@ -70,11 +76,16 @@ export class friendsService {
                 status: 'accepted',
                 user: {
                     connect: {
-                        id: userId1
+                        id: userMe
                     }
                 }
             }
         });
+
+        //websocket();
+        const receiver = await this.getNickNameEmail(friendId);
+        const sender = await this.getNickNameEmail(userMe)
+        await this.notificationGateway.notificationEvent(receiver, sender, 'accept invitaion');
     }
 
     async rejectFriendRequest(userId1: string, userId2: string) {
@@ -457,6 +468,15 @@ export class friendsService {
         return { message: 'not friend' };
         // this.listFriends()
         // return user;
+    }
+
+    async getNickNameEmail(userId: string){
+        const friend = await this.userService.getOneUser(userId);
+        const data = {
+            email: friend.email,
+            nickName: friend.nickName,
+        };
+        return data;
     }
 
     async isUserPending(userId1: string, userId2: string) {

@@ -2,13 +2,11 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { gameDto } from './dto/game.dto';
 import { Achievement } from '@prisma/client';
-import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
 export class gameService {
     constructor(
-        private prisma: PrismaOrmService,
-        private readonly userService: UsersService){}
+        private prisma: PrismaOrmService,){}
 
     async createGame(game: gameDto){
         const newGame = await this.prisma.game.create({
@@ -31,7 +29,11 @@ export class gameService {
 
 
     async updateLevelAndXP(userId: string, earnedXP: number){
-        const user = await this.userService.getOneUser(userId);
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        });
 
         if (!user)
             throw new NotFoundException('user not found');
@@ -42,7 +44,10 @@ export class gameService {
             user.level++;
             user.exp = 0 + (user.exp - xpForThisLevel);
         }
-        const updatedUser = await this.userService.saveUser(user);
+        const updatedUser = await this.prisma.user.update({
+            where: { id: user.id },
+            data: user
+        });
     }
 
     private calculateExperienceRequiredForNextLevel(currentLevel: number): number {
@@ -142,4 +147,20 @@ export class gameService {
             });
         }
     }
+
+    async checkUsers(userId1: string, userId2: string) {
+        const user1 = await this.prisma.user.findUnique({
+            where: {
+                id: userId1
+            }
+        });
+        const user2 = await this.prisma.user.findUnique({
+            where: {
+                id: userId2
+            }
+        });
+
+        if (!user1 || !user2) throw new NotFoundException('user not found');
+    }
+
 }

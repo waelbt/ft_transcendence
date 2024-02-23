@@ -4,13 +4,7 @@ import { RoomService } from './rooms/room.service';
 import { Server } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { MuteUserDto, UnmuteUserDto } from './DTOS/mute-user-dto';
-import { CreateMessageDto } from './DTOS/create-message-dto';
-import { RoomPrivacy } from '@prisma/client';
-import { JoinRoomDto } from './DTOS/join-room.dto';
-import { CreateDmDto } from './DTOS/create-dm.dto';
-import { BlockService } from 'src/users/services/blocked.service';
 import { SendMessageDto } from './DTOS/send-message-dto';
-import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class WebSocketService {
@@ -18,7 +12,6 @@ export class WebSocketService {
         private readonly prisma: PrismaOrmService,
         private readonly roomService: RoomService,
         private readonly jwt: JwtService,
-        private readonly blockService: BlockService,
     ) {}
 
     // async joinUserSocketToItsRooms(
@@ -219,7 +212,7 @@ export class WebSocketService {
             });
             dm.users = dm.users.filter((user) => user1id != user.id);
             
-            if (await this.blockService.isUserBlocked(user1id, dm.users[0].id))
+            if (await this.isUserBlocked(user1id, dm.users[0].id))
                 return (dm);
     
             const newMessage = await this.prisma.dmMessage.create({
@@ -279,4 +272,25 @@ export class WebSocketService {
         // console.log('dms are', user.dm);
         return user.dm;
     }
+
+    async isUserBlocked(
+        userId: string,
+        blockedUserId: string
+    ): Promise<boolean> {
+        try {
+            const block = await this.prisma.block.findFirst({
+                where: {
+                    OR: [
+                        { userId: userId , blockedUserId: blockedUserId },
+                        { userId: blockedUserId , blockedUserId: userId },
+                    ],
+                },
+            });
+            console.log('block: ', !!block);
+            return !!block;
+        } catch(errrrr) {
+            return ;
+        }
+    }
+
 }

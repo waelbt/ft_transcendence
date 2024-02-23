@@ -17,6 +17,6 @@ import { notificationService } from './services/notification.service';
   controllers: [UsersController, friendsController],
   providers: [PrismaOrmService, UsersService, friendsService, BlockService, JwtService, notificationGateway, notificationService],
   imports: [PrismaOrmModule, MulterModule.register(multerOptions)],
-  exports: [UsersService, friendsService, BlockService, UsersService]
+  exports: [UsersService, friendsService, BlockService]
 })
 export class UsersModule {}
