@@ -42,9 +42,12 @@ export class RoomService {
         UnmuteUserDetails
     >();
 
-    constructor(private readonly prisma: PrismaOrmService,
-    @Inject(forwardRef(() => ChatGateway))
-    private readonly emit: ChatGateway) {}
+    constructor(
+        private readonly prisma: PrismaOrmService,
+        @Inject(forwardRef(() => ChatGateway))
+        private readonly emit: ChatGateway,
+        private readonly blockService: BlockService
+    ) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
         console.log(` createRoom user id is : ${userId}`);
@@ -274,21 +277,8 @@ export class RoomService {
 
         return allRooms;
     }
-    
+
     async getOneRoom(roomId: number, userId: string) {
-
-        const blockedUsers = await this.prisma.block.findMany({
-            where: {
-                OR: [
-                    { userId: userId },
-                    { blockedUserId: userId },
-                ]
-            },
-            select: {
-                blockedUserId: true,
-            },
-        });
-
         const tmproom = await this.prisma.room.findUnique({
             where: {
                 id: roomId
@@ -329,11 +319,6 @@ export class RoomService {
             }
         });
 
-        const filteredMessages = room.messages.filter(message => {
-            const isBlocked = blockedUsers.some(blockedUsers => blockedUsers.blockedUserId === message.senderId);
-            return !isBlocked;
-        });
-
         // room.messages = filteredMessages;
 
         type Message = {
@@ -347,17 +332,27 @@ export class RoomService {
             room: Room;
             sender: User;
         };
-    
-        const filteredMessages: Message[] = (await Promise.all(
-            room.messages.map(async (message) => {
-                const isBlocked = await this.blockService.isUserBlocked(userId, message.senderId);
-                return isBlocked ? null : message;
-            })
-        )).filter((message): message is Message => message !== null);
-        
+
+        const filteredMessages: Message[] = (
+            await Promise.all(
+                room.messages.map(async (message) => {
+                    const isBlocked = await this.blockService.isUserBlocked(
+                        userId,
+                        message.senderId
+                    );
+                    return isBlocked ? null : message;
+                })
+            )
+        ).filter((message): message is Message => message !== null);
+
         // console.log('=====================================', filteredMessages, 'user is ', user.email);
         room.messages = filteredMessages;
-        console.log('=====================================',filteredMessages, 'user is ', user.email);
+        console.log(
+            '=====================================',
+            filteredMessages,
+            'user is ',
+            user.email
+        );
         return room;
     }
 
