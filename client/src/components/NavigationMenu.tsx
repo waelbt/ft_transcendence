@@ -1,14 +1,34 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { MENU_FIELDS, NAV_LINKS } from '../constants';
 import Popup from 'reactjs-popup';
-import { IoIosNotifications } from 'react-icons/io';
+import {
+    IoIosCheckmarkCircleOutline,
+    IoIosCloseCircleOutline,
+    IoIosNotifications
+} from 'react-icons/io';
 import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 import SearchBar from './SearchBar';
+import { useEffect, useState } from 'react';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function NavigationMenu() {
     const navigate = useNavigate();
     const { logout, nickName, avatar } = useUserStore();
+    const { socket } = useChatLayoutStore();
+    const [notificationsCount, setNotificationsCount] = useState(0);
+
+    useEffect(() => {
+        socket?.on('notification', (Payload) => {
+            console.log(Payload)
+            setNotificationsCount((prevCount) => prevCount + 1);
+        });
+
+        return () => {
+            socket?.off('notification');
+        };
+    }, [socket]);
+
     return (
         <nav className="bg-white border-b border-neutral-100">
             <div className="w-full px-4">
@@ -50,14 +70,59 @@ function NavigationMenu() {
                                         className="text-gray-500"
                                         size={28}
                                     />
-                                    {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
+                                    {notificationsCount > 0 && (
+                                        <span className="absolute top-0 right-0  h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-xs text-white">
+                                            {notificationsCount}
+                                        </span>
+                                    )}
                                 </div>
                             }
                             position="bottom right"
                             nested
                         >
-                            <div className="p-2.5 bg-white rounded-[10px]    shadow flex-col justify-start items-center inline-flex w-max">
-                                not implemneted yet
+                            <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
+                                {/* Render your notifications content here */}
+                                {notificationsCount === 0 ? (
+                                    <p>No new notifications</p>
+                                ) : (
+                                    <ul className="space-y-2">
+                                        {[...Array(notificationsCount)].map(
+                                            (_, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center justify-between p-4 border-b border-gray-200"
+                                                >
+                                                    <div className="flex items-center">
+                                                        <img
+                                                            alt="Avatar"
+                                                            className="w-10 h-10 rounded-full mr-4"
+                                                        />
+                                                        <div className=" gap-1">
+                                                            <p className="font-semibold">
+                                                                nickname
+                                                            </p>
+                                                            <p className="text-gray-500">
+                                                                incoming friend
+                                                                request{' '}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex  gap-2 ml-4">
+                                                        <IoIosCheckmarkCircleOutline
+                                                            className="text-green-500 cursor-pointer"
+                                                            size={40}
+                                                        />
+                                                        <IoIosCloseCircleOutline
+                                                            className="text-red-500 cursor-pointer"
+                                                            size={40}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                // <li key={index} className="font-bold">flaaaan galiiikkk Notification {index + 1}</li>
+                                            )
+                                        )}
+                                    </ul>
+                                )}
                             </div>
                         </Popup>
 
