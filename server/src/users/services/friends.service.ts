@@ -51,7 +51,9 @@ export class friendsService {
         });
         //websocket();
         const receiver = await this.getNickNameEmail(friendId);
-        const sender = await this.getNickNameEmail(userMe)
+        const sender = await this.getNickNameEmail(userMe);
+        console.log('--------------- sender: ', sender);
+        console.log('--------------- reciever: ', receiver);
         await this.notificationGateway.notificationEvent(receiver, sender, 'send invitaion');
     }
 
@@ -475,6 +477,7 @@ export class friendsService {
         const data = {
             email: friend.email,
             nickName: friend.nickName,
+            avatar: friend.avatar,
         };
         return data;
     }

@@ -3,6 +3,7 @@ import { PrismaOrmService } from "src/prisma-orm/prisma-orm.service";
 import { Server, Socket } from 'socket.io';
 import { notificationService } from "../services/notification.service";
 import { SocketIOMIDDELWARE } from "src/auth/middlware/ws.middlware";
+import { send } from "process";
 
 
 @WebSocketGateway({
@@ -71,6 +72,13 @@ export class notificationGateway
                 action: action
             };
             await this.server.to(userSocket).emit('notification', notificationPayload);
+        }
+        else{
+            console.log('sender: ', sender);
+            console.log('reciever: ', receiver);
+            console.log('action: ', action);
+            //hna ghtstory dkchi f database
+            await this.notificationService.createNotification(sender.nickName, sender.avatar, receiver.nickName, receiver.avatar, action);
         }
     }
 
