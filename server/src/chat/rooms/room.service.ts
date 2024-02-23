@@ -75,6 +75,7 @@ export class RoomService {
             }
         });
         if (createRoomDto.privacy === 'PROTECTED') {
+            console.log(createRoomDto.password);
             const password = hashPassword(createRoomDto.password);
             const room = await this.prisma.room.update({
                 where: {
@@ -84,7 +85,16 @@ export class RoomService {
                     password: password
                 }
             });
-            return room;
+            const roomCreated: GetRoomsDto = {
+                id: room.id,
+                avatar: room.avatar,
+                roomTitle: room.roomTitle,
+                lastMessage: '',
+                nickName: room.roomTitle,
+                lastMessageTime: null,
+                isRoom: true
+            };
+            return roomCreated;
         }
 
         const roomCreated: GetRoomsDto = {
@@ -438,7 +448,7 @@ export class RoomService {
     async kickMember(kickMemberDto: KickMemberDto, userId: string) {
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
-                id: +kickMemberDto.id
+                id: +kickMemberDto.roomId
             },
             select: {
                 admins: true
@@ -448,7 +458,7 @@ export class RoomService {
         if (roomWithAdmins.admins.includes(userId)) {
             const room = await this.prisma.room.findUnique({
                 where: {
-                    id: +kickMemberDto.id
+                    id: +kickMemberDto.roomId
                 },
                 select: {
                     users: {
@@ -465,18 +475,18 @@ export class RoomService {
             // );
 
             await this.isUserOwner(
-                +kickMemberDto.id,
+                +kickMemberDto.roomId,
                 kickMemberDto.userId,
                 'Kick'
             );
             await this.unsetUserFromAdmins(
-                +kickMemberDto.id,
+                +kickMemberDto.roomId,
                 kickMemberDto.userId
             );
 
             const tmpRoom = await this.prisma.room.update({
                 where: {
-                    id: +kickMemberDto.id
+                    id: +kickMemberDto.roomId
                 },
                 data: {
                     users: {

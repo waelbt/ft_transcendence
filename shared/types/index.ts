@@ -48,6 +48,7 @@ export interface Friend {
     id: number;
     nickName: string;
     avatar: string;
+    fullName?: string;
     status: string;
     actions: string[];
 }

@@ -14,9 +14,7 @@ import GroupsForm from './GroupsForm';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function ChatLayouts() {
-    // const [searchTerm, setSearchTerm] = useState<string>('');
     const { Layout_Rooms, updateState } = useChatLayoutStore();
-    // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
     const [state, setState] = useState<boolean>(false);

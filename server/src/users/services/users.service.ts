@@ -208,10 +208,12 @@ export class UsersService {
                 const id = user.id;
                 const nickName = user.nickName;
                 const avatar = user.avatar;
+                const fullName = user.fullName;
                 return {
                     id,
                     nickName,
-                    avatar
+                    avatar,
+                    fullName
                 };
             })
         );

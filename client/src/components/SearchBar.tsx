@@ -19,6 +19,7 @@ function SearchBar() {
             setSearchResults(res.data);
         };
         if (searchTerm.length) fetchData();
+        else setSearchResults([]);
     }, [debouncedValue]);
 
     // ? clear searh item
@@ -39,35 +40,28 @@ function SearchBar() {
             position="bottom right"
             nested
         >
-            <ul className=" w-[440px] pl-2.5 py-2.5 bg-white rounded-bl-[20px] rounded-br-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
-                {searchResults.map((result, index) => (
-                    <Link
-                        key={index}
-                        to={`/profile/${result.id}`}
-                        className="w-full h-full pl-3 pr-[13px] py-[15px] bg-white border-b border-black border-opacity-40  justify-start items-center gap-2.5 inline-flex"
-                    >
-                        <Avatar imageUrl={result.avatar} style="w-16 h-16" />
+            {searchResults.length && (
+                <ul className=" w-[440px] pl-2.5 py-2.5 bg-white rounded-bl-[20px] rounded-br-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
+                    {searchResults.map((result, index) => (
+                        <Link
+                            key={index}
+                            to={`/profile/${result.id}`}
+                            className="w-full h-full pl-3 pr-[13px] py-[15px] bg-white border-b border-black border-opacity-40  justify-start items-center gap-2.5 inline-flex"
+                        >
+                            <Avatar
+                                imageUrl={result.avatar}
+                                style="w-16 h-16"
+                            />
 
-                        <div className="text-black text-base font-normal font-['Acme'] leading-tight">
-                            {result.nickName}
-                        </div>
-                    </Link>
-                ))}
-            </ul>
+                            <div className="text-black text-base font-normal font-['Acme'] leading-tight">
+                                {result.nickName}
+                            </div>
+                        </Link>
+                    ))}
+                </ul>
+            )}
         </Popup>
     );
 }
 
 export default SearchBar;
-
-<div className="w-[430px] h-[62px] pl-3 pr-[13px] py-[15px] bg-white border-b border-black border-opacity-40 flex-col justify-center items-start inline-flex">
-    <div className="justify-center items-center gap-2.5 inline-flex">
-        <img
-            className="w-8 h-8 rounded-full"
-            src="https://via.placeholder.com/32x32"
-        />
-        <div className="text-black text-base font-normal font-['Acme'] leading-tight">
-            dos404
-        </div>
-    </div>
-</div>;
