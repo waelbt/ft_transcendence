@@ -1,4 +1,4 @@
-import { FaCrown } from 'react-icons/fa';
+import { FaCrown, FaPlus } from 'react-icons/fa';
 import { IoShield } from 'react-icons/io5';
 import { useRoomStore } from '../stores/roomStore';
 import { Fragment, useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { Avatar, Modal } from '.';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import AddMembers from './AddMembers';
 
 const EventButton = ({ task, label }: { task: () => void; label: string }) => {
     return (
@@ -27,6 +28,7 @@ function MembersList() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [actions, setActions] = useState<string[]>([]);
     const { socket } = useChatLayoutStore();
+    const [showMembersModel, setShowMembersModel] = useState<boolean>(false);
     const [isEventMute, setIsEventMute] = useState<boolean>(false);
     const muteOptions = [
         { label: 'Mute for 1 min', duration: 1 },
@@ -55,7 +57,17 @@ function MembersList() {
     }, [selectedId, owner, admins]);
 
     return (
-        <div className="flex-grow w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
+        <div className="flex-grow debug relative w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
+            <div
+                className="absolute bottom-5 right-5"
+                onClick={() => setShowMembersModel(true)}
+            >
+                <FaPlus
+                    size={33}
+                    className="cursor-pointer  text-black"
+                    // onClick=()
+                />
+            </div>
             {users.map((member, index) => (
                 <Fragment key={'users' + index}>
                     <div
@@ -87,7 +99,13 @@ function MembersList() {
                             <IoShield size={22} className="text-red-800" />
                         ) : null}
                     </div>
-
+                    <Modal
+                        removable={false}
+                        isEventOpen={showMembersModel}
+                        closeEvent={() => setShowMembersModel(false)}
+                    >
+                        <AddMembers />
+                    </Modal>
                     <Modal
                         removable={false}
                         isEventOpen={isEventOpen}

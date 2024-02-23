@@ -327,13 +327,6 @@ function GroupPanel() {
                     <HiLogout size={33} />
                     <div>Exit Group</div>
                 </div>
-                <Modal
-                    removable={false}
-                    isEventOpen={true}
-                    closeEvent={() => setIsEventOpen(false)}
-                >
-                    <AddMembers />
-                </Modal>
             </div>
         </>
     );

@@ -64,8 +64,8 @@ function AddMembers() {
     };
 
     return (
-        <div className=" p-4 bg-white rounded flex-col justify-start items-start gap-2.5 inline-flex">
-            <div className="text-black text-lg font-normal font-['Acme']">
+        <div className=" py-4  px-6 bg-white rounded flex-col justify-start items-start gap-2.5 inline-flex">
+            <div className="text-black text-2xl font-normal font-['Acme']">
                 Select Friends
             </div>
             <div className="text-neutral-600 text-base font-normal font-['Acme']">
@@ -77,7 +77,7 @@ function AddMembers() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search for users"
-                    className="w-[290px] h-10 p-2.5 bg-neutral-200 rounded-[5px] justify-start items-center gap-2.5 flex  outline-none  text-zinc-600 text-base font-normal font-['Acme']"
+                    className="w-[290px] h-11 p-2.5 bg-neutral-200 rounded-[5px] justify-start items-center gap-2.5 flex  outline-none  text-zinc-600 text-base font-normal font-['Acme']"
                 />
                 <button
                     className="px-[15px] py-2.5 bg-indigo-800 rounded-[5px] flex-col justify-center items-center  inline-flex text-white text-base font-normal font-['Acme']"
@@ -102,9 +102,9 @@ function AddMembers() {
                                 <div className="justify-center items-center gap-2 flex ">
                                     <Avatar
                                         imageUrl={result.avatar}
-                                        style="w-11 h-11 bg-black rounded-[150px] border border-white"
+                                        style="w-14 h-14 bg-black rounded-[150px] border border-white"
                                     />
-                                    <div className="text-black text-base font-normal font-['Acme']">
+                                    <div className="text-black text-xl font-normal font-['Acme']">
                                         {result.nickName}
                                     </div>
                                     <div className="text-zinc-500 text-base font-normal font-['Acme']">
