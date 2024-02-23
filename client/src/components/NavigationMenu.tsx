@@ -10,17 +10,16 @@ import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 import SearchBar from './SearchBar';
 import { useEffect, useState } from 'react';
-import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import { useNotificationStore } from '../stores/notiSocketfStore';
 
 function NavigationMenu() {
     const navigate = useNavigate();
     const { logout, nickName, avatar } = useUserStore();
-    const { socket } = useChatLayoutStore();
     const [notificationsCount, setNotificationsCount] = useState(0);
-
+    const { socket } = useNotificationStore();
     useEffect(() => {
         socket?.on('notification', (Payload) => {
-            console.log(Payload)
+            console.log(Payload);
             setNotificationsCount((prevCount) => prevCount + 1);
         });
 

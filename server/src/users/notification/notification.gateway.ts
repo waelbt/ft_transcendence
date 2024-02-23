@@ -35,6 +35,7 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
+        console.log('socket: ', this.usersSockets);
         console.log('in handle connection');
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -74,6 +75,7 @@ export class notificationGateway
                 avatar: sender.avatar,
                 action: action
             };
+            console.log('notification: ', notificationPayload);
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
