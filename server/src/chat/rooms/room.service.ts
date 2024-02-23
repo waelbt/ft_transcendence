@@ -34,11 +34,8 @@ import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 import { ChatGateway } from '../chat.gateway';
 import { BlockService } from 'src/users/services/blocked.service';
-<<<<<<< HEAD
 import { AddUserToPrivateRoom } from '../DTOS/add-user-to-private-room.dto';
-=======
 import { WebSocketService } from '../chat.gateway.service';
->>>>>>> 93cded86a69fe0b2e06a20a58a6c4c964774ce55
 
 @Injectable()
 export class RoomService {
