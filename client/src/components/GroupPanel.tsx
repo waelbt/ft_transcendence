@@ -26,7 +26,7 @@ function GroupPanel() {
         updateState,
         isModifiable,
         owner,
-        isBanned,
+        isBanned
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
 
@@ -324,7 +324,6 @@ function GroupPanel() {
                 >
                     <HiLogout size={33} />
                     <div>Exit Group</div>
-                    mmembersList
                 </div>
             </div>
         </>

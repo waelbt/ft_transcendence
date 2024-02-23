@@ -88,19 +88,19 @@ export class ChatGateway
         else {
             // const sockets = await io.in("room1").fetchSockets();
             // await this.prisma.user.update({
-                //     where: { id: userCheck.userData.sub },
-                //     data: { status: true }
-                // });
-                console.log(
-                    `This user ${userCheck.userData.email} is now connected`
-                    );
-                    this.usersSockets.set(userCheck.userData.email, client.id);
-                    console.log(this.usersSockets);
-                    this.wsService.joinUserSocketToItsRooms(
-                        client.id,
-                        userCheck.userData.sub,
-                        this.server
-                        );
+            //     where: { id: userCheck.userData.sub },
+            //     data: { status: true }
+            // });
+            console.log(
+                `This user ${userCheck.userData.email} is now connected`
+            );
+            this.usersSockets.set(userCheck.userData.email, client.id);
+            console.log(this.usersSockets);
+            this.wsService.joinUserSocketToItsRooms(
+                client.id,
+                userCheck.userData.sub,
+                this.server
+            );
             // this.logger.debug(`Number of clients connected: ${sockets.size}`);
         }
     }
@@ -129,23 +129,29 @@ export class ChatGateway
                 createdAt: room.messages[room.messages.length - 1].createdAt,
                 senderId: room.messages[room.messages.length - 1].senderId
             };
-            const socketssss = await this.server.in(room.roomTitle).fetchSockets();
+            const socketssss = await this.server
+                .in(room.roomTitle)
+                .fetchSockets();
             // console.log('====================================', await this.blockService.listOfBlockedUsers(userCheck.userData.sub));
             // console.log('---------------------------------------',socketssss[0].id, socketssss[1].id);
             // console.log('==============================================');
             socketssss.forEach(async (oneSocket) => {
-
-                if (oneSocket.id != client.id)
-                {
-                    const userOneData = await this.wsService.getUserFromAccessToken(
-                        oneSocket.handshake.auth.token
+                if (oneSocket.id != client.id) {
+                    const userOneData =
+                        await this.wsService.getUserFromAccessToken(
+                            oneSocket.handshake.auth.token
                         );
 
-                    const userTwoData = await this.wsService.getUserFromAccessToken(
-                        client.handshake.auth.token
-                    );
-                    if (!await this.blockService.isUserBlocked(userOneData.userData.sub, userTwoData.userData.sub))
-                    {
+                    const userTwoData =
+                        await this.wsService.getUserFromAccessToken(
+                            client.handshake.auth.token
+                        );
+                    if (
+                        !(await this.blockService.isUserBlocked(
+                            userOneData.userData.sub,
+                            userTwoData.userData.sub
+                        ))
+                    ) {
                         this.server.in(oneSocket.id).emit('message', message);
                         // console.log('leave---------', userOneData.userData.email, userTwoData.userData.email);
                         // this.server.in(oneSocket.id).socketsLeave(room.roomTitle);
@@ -178,6 +184,7 @@ export class ChatGateway
                 userCheck.userData.email
             );
             await this.server.in(userSocket).socketsJoin(joinRoomDto.roomTitle);
+            this.server.in(client.id).socketsJoin(joinRoomDto.roomTitle);
             const user = await this.prisma.user.findUnique({
                 where: {
                     id: userCheck.userData.sub
