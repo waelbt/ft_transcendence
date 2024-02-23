@@ -10,7 +10,7 @@ import { BlockService } from 'src/users/services/blocked.service';
 
 @Module({
   	controllers: [GameController],
-  	providers: [PrismaOrmService, friendsService, BlockService, gameService, UsersService, GameGateway],
+  	providers: [PrismaOrmService, gameService, GameGateway],
   	imports: [PrismaOrmModule],
   	exports: [gameService],
 })

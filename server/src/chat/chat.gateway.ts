@@ -53,14 +53,10 @@ export class ChatGateway
 {
     constructor(
         private readonly prisma: PrismaOrmService,
-        // private readonly roomService: RoomService,
         private readonly wsService: WebSocketService,
-        private readonly blockService: BlockService,
         @Inject(forwardRef(() => RoomService))
         private readonly roomService: RoomService
     ) {}
-    // @Inject(forwardRef(() => ChatGateway))
-    // private readonly emit: ChatGateway)
 
     private usersSockets: Map<string, string> = new Map<string, string>();
 
@@ -75,6 +71,7 @@ export class ChatGateway
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
 
+        console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
         // const sockets = this.server.sockets;
         // console.log('-----------',this.server.sockets.sockets);
@@ -144,7 +141,7 @@ export class ChatGateway
                     const userTwoData = await this.wsService.getUserFromAccessToken(
                         client.handshake.auth.token
                     );
-                    if (!await this.blockService.isUserBlocked(userOneData.userData.sub, userTwoData.userData.sub))
+                    if (!await this.wsService.isUserBlocked(userOneData.userData.sub, userTwoData.userData.sub))
                     {
                         this.server.in(oneSocket.id).emit('message', message);
                         // console.log('leave---------', userOneData.userData.email, userTwoData.userData.email);
@@ -316,7 +313,7 @@ export class ChatGateway
                 sendMessage.message
             );
             if (
-                await this.blockService.isUserBlocked(
+                await this.wsService.isUserBlocked(
                     userCheck.userData.sub,
                     dmroom.users[0].id
                 )

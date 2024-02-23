@@ -34,6 +34,7 @@ import { ChangeRoomTitle } from '../DTOS/change-roomTitle-dto';
 import { ChangeRoomInfoDto } from '../DTOS/change-roomInfo-dto';
 import { ChatGateway } from '../chat.gateway';
 import { BlockService } from 'src/users/services/blocked.service';
+import { WebSocketService } from '../chat.gateway.service';
 
 @Injectable()
 export class RoomService {
@@ -46,7 +47,6 @@ export class RoomService {
         private readonly prisma: PrismaOrmService,
         @Inject(forwardRef(() => ChatGateway))
         private readonly emit: ChatGateway,
-        private readonly blockService: BlockService
     ) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
@@ -336,7 +336,7 @@ export class RoomService {
         const filteredMessages: Message[] = (
             await Promise.all(
                 room.messages.map(async (message) => {
-                    const isBlocked = await this.blockService.isUserBlocked(
+                    const isBlocked = await this.isUserBlocked(
                         userId,
                         message.senderId
                     );
@@ -1143,5 +1143,25 @@ export class RoomService {
             throw new ForbiddenException(
                 'Only Owner And Admins Can Change Room Informations'
             );
+    }
+
+    async isUserBlocked(
+        userId: string,
+        blockedUserId: string
+    ): Promise<boolean> {
+        try {
+            const block = await this.prisma.block.findFirst({
+                where: {
+                    OR: [
+                        { userId: userId , blockedUserId: blockedUserId },
+                        { userId: blockedUserId , blockedUserId: userId },
+                    ],
+                },
+            });
+            console.log('block: ', !!block);
+            return !!block;
+        } catch(errrrr) {
+            return ;
+        }
     }
 }
