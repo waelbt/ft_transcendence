@@ -108,7 +108,10 @@ export class notificationGateway
         //update stat in database from true to false
         await this.prisma.user.update({
             where : { id: userCheck.userData.sub },
-            data : { status : false},
+            data : { 
+                status : false,
+                inGame: false,
+            },
         })
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
