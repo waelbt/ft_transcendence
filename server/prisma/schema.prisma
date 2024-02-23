@@ -105,6 +105,7 @@ model Room {
   admins         String[]
   banned         String[]
   muted          String[]
+  privateMembers String[]
 }
 
 model Message {

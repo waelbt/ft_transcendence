@@ -53,14 +53,10 @@ export class ChatGateway
 {
     constructor(
         private readonly prisma: PrismaOrmService,
-        // private readonly roomService: RoomService,
         private readonly wsService: WebSocketService,
-        private readonly blockService: BlockService,
         @Inject(forwardRef(() => RoomService))
         private readonly roomService: RoomService
     ) {}
-    // @Inject(forwardRef(() => ChatGateway))
-    // private readonly emit: ChatGateway)
 
     private usersSockets: Map<string, string> = new Map<string, string>();
 
@@ -75,6 +71,7 @@ export class ChatGateway
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
 
+        console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
         // const sockets = this.server.sockets;
         // console.log('-----------',this.server.sockets.sockets);
@@ -142,16 +139,11 @@ export class ChatGateway
                             oneSocket.handshake.auth.token
                         );
 
-                    const userTwoData =
-                        await this.wsService.getUserFromAccessToken(
-                            client.handshake.auth.token
-                        );
-                    if (
-                        !(await this.blockService.isUserBlocked(
-                            userOneData.userData.sub,
-                            userTwoData.userData.sub
-                        ))
-                    ) {
+                    const userTwoData = await this.wsService.getUserFromAccessToken(
+                        client.handshake.auth.token
+                    );
+                    if (!await this.wsService.isUserBlocked(userOneData.userData.sub, userTwoData.userData.sub))
+                    {
                         this.server.in(oneSocket.id).emit('message', message);
                         // console.log('leave---------', userOneData.userData.email, userTwoData.userData.email);
                         // this.server.in(oneSocket.id).socketsLeave(room.roomTitle);
@@ -315,23 +307,18 @@ export class ChatGateway
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
-            // console.log('messages');
-            // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(
                 userCheck.userData.sub,
                 sendMessage.id,
                 sendMessage.message
             );
             if (
-                await this.blockService.isUserBlocked(
+                await this.wsService.isUserBlocked(
                     userCheck.userData.sub,
                     dmroom.users[0].id
                 )
             )
                 return;
-            // this.server
-            //     .to(client.id)
-            //     .emit('forbidden', { id: sendMessage.id });
             else {
                 const message: EmitMessageDto = {
                     id: dmroom.messages[dmroom.messages.length - 1].dmId,
@@ -343,6 +330,7 @@ export class ChatGateway
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
                 // console.log(dmroom.roomTitle);
+                const users = dmroom.users;
                 await this.server.in(client.id).socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }
