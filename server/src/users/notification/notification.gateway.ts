@@ -34,10 +34,10 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log('socket: ', this.usersSockets);
+        console.log('lwl ------ socket: ', this.usersSockets);
         console.log('in handle connection');
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -53,6 +53,7 @@ export class notificationGateway
                 await this.handleDisconnect(client);
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
+                console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: true }
@@ -101,7 +102,7 @@ export class notificationGateway
         console.log('in handle disconnection');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);

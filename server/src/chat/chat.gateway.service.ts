@@ -293,4 +293,19 @@ export class WebSocketService {
         }
     }
 
+    async createNotification(senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string) {
+		const notification = await this.prisma.notification.create({
+		  data: {
+			senderNickName,
+			senderAvatar,
+			recieverNickName,
+			recieverAvatar,
+			action,
+		  }
+		});
+
+		console.log('-------: ', notification);
+		return notification;
+	  }
+
 }

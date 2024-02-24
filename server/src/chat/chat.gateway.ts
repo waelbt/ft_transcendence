@@ -366,14 +366,40 @@ export class ChatGateway
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false) await this.handleDisconnect(client);
+        if (userCheck.state === false){
+            await this.handleDisconnect(client);
+        }
         else {
-            const dm = await this.wsService.CheckForExistingDmRoom(
-                userCheck.userData.sub,
-                createDmDto.friendId
-            );
-            // console.log('room that should be sent', dm);
-            this.server.emit('checkDM', dm);
+            if (userCheck.userData.sub) {
+                var dm = await this.wsService.CheckForExistingDmRoom(
+                    userCheck.userData.sub,
+                    createDmDto.friendId
+                );
+                var isUser = await this.prisma.user.findFirst({
+                    where: {
+                        id: createDmDto.friendId,
+                    }
+                });
+            }
+            if (!isUser) {
+                await this.handleDisconnect(client);
+            } else {
+                const userSocket = await this.usersSockets.get(isUser.email);
+                if (userSocket){
+                    // console.log('room that should be sent', dm);
+                    const notificationPayload = {
+                        // receiver: receiver.nickName,
+                        id: userCheck.userData.sub,
+                        nickName: userCheck.userData.nickName,
+                        avatar: userCheck.userData.avatar,
+                        action: 'user want to send u message'
+                    };
+                    this.server.in(userSocket).emit('notification', notificationPayload);
+                    this.server.emit('checkDM', dm);
+                }else{
+                    await this.wsService.createNotification(userCheck.userData.nickName, userCheck.userData.avatar, isUser.nickName, isUser.avatar, 'user want to send u message');
+                }
+            }
         }
     }
 
