@@ -183,10 +183,9 @@ export class WebSocketService {
 
         if (!dm) {
             const newDm = await this.createDm(user1id, user2id);
-            console.log(newDm, 'first time talking');
-            return newDm.id;
+            return newDm;
         }
-        return dm.id;
+        return dm;
     }
 
     async sendDM(user1id: string, roomId: string, message: string) {
@@ -307,6 +306,6 @@ export class WebSocketService {
 
 		console.log('-------: ', notification);
 		return notification;
-	  }
+	}
 
 }

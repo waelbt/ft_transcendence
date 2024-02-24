@@ -122,7 +122,6 @@ export class ChatController {
 
     @Get('/dm/:id')
     async getDmRoom(@Req() req, @Param('id', ParseIntPipe) id: number) {
-        console.log('wwww ', id);
         return await this.roomService.getDmRoom(id, req.user.sub);
     }
 

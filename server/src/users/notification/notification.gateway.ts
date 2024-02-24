@@ -10,6 +10,10 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
 
+
+/************************************************************************ */
+/*******************************error boundries************************** */
+/************************************************************************ */
 @WebSocketGateway({
     cors: {
         origin: '*'
