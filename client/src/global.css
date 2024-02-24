@@ -67,7 +67,7 @@ body {
         background-position: 468px 0;
     }
 }
-
+/* 
 .debug {
     border: 2px solid red !important;
     & > * {
@@ -76,7 +76,7 @@ body {
             border: 2px solid blue !important;
         }
     }
-}
+} */
 
 .avatar-container {
     position: relative;

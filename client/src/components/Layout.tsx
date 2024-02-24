@@ -51,6 +51,7 @@ function Layout() {
             } catch (error) {
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
+                logout();
             } finally {
                 setIsLoading(false);
             }
