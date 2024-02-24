@@ -48,9 +48,7 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
             set({ Layout_Rooms: updatedRooms });
         },
         unpushRoom: (roomId, isRoom) => {
-            console.log('id: ', roomId,'isRoom: ',  isRoom);
             const { Layout_Rooms } = get();
-            console.log('layoout', Layout_Rooms);
             const filteredRooms = Layout_Rooms.filter(
                 (room) => room.id !== roomId || isRoom !== room.isRoom
             );

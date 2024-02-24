@@ -140,7 +140,7 @@ function Layout() {
             <div
                 id="sidebar"
                 ref={sidebarRef}
-                className="w-[74px] h-[45%] py-5 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-between items-center inline-flex  absolute top-1/2 left-4 transform  -translate-y-1/2"
+                className="w-[74px] h-[400px] py-5 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-between items-center inline-flex  absolute top-1/2 left-4 transform  -translate-y-1/2"
             >
                 <div className="flex-col justify-start items-center gap-5 flex ">
                     {navItems.map(({ path, icon: Icon }) => (

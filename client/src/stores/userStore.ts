@@ -1,6 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { NotificationDto } from '../../../shared/types';
 
 type UserStateType = {
     isLogged: boolean;
@@ -19,7 +20,7 @@ type UserStateType = {
     completeProfile: boolean;
     friendsIds: string[];
     blocksIds: string[];
-    notifications: Notification[];
+    notifications: NotificationDto[];
 };
 
 const initialState: UserStateType = {
@@ -51,8 +52,8 @@ type UserActionsType = {
     removeUserFriendId: (id: string) => void;
     addUserBlockId: (id: string) => void;
     removeUserBlockId: (id: string) => void;
+    pushNotification: (notif: NotificationDto) => void;
     unpushNotification: (id: string) => void;
-    pushNotification: (notification: Notification) => void;
 };
 
 // ? remove storing in local storage and test the behavior
@@ -128,11 +129,18 @@ export const useUserStore = createWithEqualityFn<
             },
             updateState: (newState) =>
                 set((state) => ({ ...state, ...newState })),
-            unpushNotification: (id) => {
-                console.log(id);
+            pushNotification: (notif) => {
+                const { notifications } = get();
+
+                const newNotification = [...notifications, notif];
+                set({ notifications: newNotification });
             },
-            pushNotification: (notification) => {
-                console.log(notification);
+            unpushNotification: (id) => {
+                const { notifications } = get();
+                const filteredRooms = notifications.filter(
+                    (notif) => notif.id !== id
+                );
+                set({ notifications: filteredRooms });
             }
         }),
         {
@@ -142,3 +150,6 @@ export const useUserStore = createWithEqualityFn<
     ),
     shallow
 );
+
+// unpushNotification: (id: string) => void;
+// pushNotification: (notif: NotificationDto) => void;
