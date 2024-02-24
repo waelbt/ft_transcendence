@@ -57,7 +57,7 @@ function MembersList() {
     }, [selectedId, owner, admins]);
 
     return (
-        <div className="flex-grow debug relative w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
+        <div className="flex-grow  relative w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
             <div
                 className="absolute bottom-5 right-5"
                 onClick={() => setShowMembersModel(true)}
@@ -100,7 +100,7 @@ function MembersList() {
                         ) : null}
                     </div>
                     <Modal
-                        removable={false}
+                        removable={true}
                         isEventOpen={showMembersModel}
                         closeEvent={() => setShowMembersModel(false)}
                     >

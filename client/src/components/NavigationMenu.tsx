@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { MENU_FIELDS, NAV_LINKS } from '../constants';
+import { useNavigate } from 'react-router-dom';
+import { MENU_FIELDS } from '../constants';
 import Popup from 'reactjs-popup';
 import {
     IoIosCheckmarkCircleOutline,
@@ -14,7 +14,7 @@ import { useNotificationStore } from '../stores/notiSocketfStore';
 
 function NavigationMenu() {
     const navigate = useNavigate();
-    const { logout, nickName, avatar } = useUserStore();
+    const { avatar } = useUserStore();
     const [notificationsCount, setNotificationsCount] = useState(0);
     const { socket } = useNotificationStore();
     useEffect(() => {
@@ -124,57 +124,10 @@ function NavigationMenu() {
                                 )}
                             </div>
                         </Popup>
-
-                        <Popup
-                            trigger={
-                                <div
-                                    className={`group inline-flex items-center rounded-md  px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 text-white`}
-                                >
-                                    <Avatar
-                                        imageUrl={avatar}
-                                        style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2"
-                                    />
-                                </div>
-                            }
-                            position="bottom right"
-                            nested
-                        >
-                            <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
-                                <li
-                                    className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => {
-                                        navigate('/profile/me');
-                                    }}
-                                >
-                                    <Avatar
-                                        style="h-10 w-10"
-                                        imageUrl={avatar}
-                                        state="online"
-                                    />
-                                    <div className="text-black text-2xl font-normal font-['Acme']">
-                                        {nickName}
-                                    </div>
-                                </li>
-                                {MENU_FIELDS.map((field, index) => (
-                                    <li
-                                        key={index}
-                                        className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                        onClick={() => {
-                                            field.path == '/'
-                                                ? logout()
-                                                : navigate(field.path);
-                                        }}
-                                    >
-                                        <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
-                                            <field.icon size={24} />
-                                        </div>
-                                        <div className="text-zinc-600 text-xl font-normal font-['Acme'] pr-10">
-                                            {field.name}
-                                        </div>
-                                    </li>
-                                ))}
-                            </div>
-                        </Popup>
+                        <Avatar
+                            imageUrl={avatar}
+                            style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-auto"
+                        />
                     </div>
                 </div>
             </div>

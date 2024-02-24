@@ -40,7 +40,7 @@ function SearchBar() {
             position="bottom right"
             nested
         >
-            {searchResults.length && (
+            {searchResults.length ? (
                 <ul className=" w-[440px] pl-2.5 py-2.5 bg-white rounded-bl-[20px] rounded-br-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
                     {searchResults.map((result, index) => (
                         <Link
@@ -59,7 +59,7 @@ function SearchBar() {
                         </Link>
                     ))}
                 </ul>
-            )}
+            ) : null}
         </Popup>
     );
 }

@@ -45,8 +45,9 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
         unpushRoom: (roomId, isRoom) => {
             const { Layout_Rooms } = get();
             const filteredRooms = Layout_Rooms.filter(
-                (room) => room.id !== roomId && isRoom == room.isRoom
+                (room) => room.id !== roomId || isRoom !== room.isRoom
             );
+            console.log(filteredRooms);
             set({ Layout_Rooms: filteredRooms });
         },
         initializeSocket: (token) => {

@@ -161,18 +161,7 @@ body {
     top: 0;
 }
 
-input[type='radio'] {
-    border: 1px solid #fff;
-    padding: 0.5em;
-    /* -webkit-appearance: none; */
-}
-
-input[type='radio']:checked {
-    background: url(data:image/gif;base64,R0lGODlhAQABAPAAAP///////yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==)
-        no-repeat center center;
-    background-size: 9px 9px;
-}
-
-input[type='radio']:focus {
-    outline-color: transparent;
+#sidebar {
+    left: -74px;
+    transition: left 0.5s;
 }
