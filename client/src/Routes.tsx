@@ -107,15 +107,6 @@ const router = createBrowserRouter([
                     }
                 ]
             },
-            // {
-            //     path: '/error/403',
-            //     lazy: async () => {
-            //         let { Forbidden } = await import(
-            //             './components/errorPages/Forbidden'
-            //         );
-            //         return { Component: Forbidden };
-            //     }
-            // },
             {
                 path: '/error/500',
                 lazy: async () => {

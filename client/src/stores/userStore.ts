@@ -19,6 +19,7 @@ type UserStateType = {
     completeProfile: boolean;
     friendsIds: string[];
     blocksIds: string[];
+    notifications: Notification[];
 };
 
 const initialState: UserStateType = {
@@ -37,7 +38,8 @@ const initialState: UserStateType = {
     inGame: false,
     completeProfile: false,
     friendsIds: [],
-    blocksIds: []
+    blocksIds: [],
+    notifications: []
 };
 
 type UserActionsType = {
@@ -49,6 +51,8 @@ type UserActionsType = {
     removeUserFriendId: (id: string) => void;
     addUserBlockId: (id: string) => void;
     removeUserBlockId: (id: string) => void;
+    unpushNotification: (id: string) => void;
+    pushNotification: (notification: Notification) => void;
 };
 
 // ? remove storing in local storage and test the behavior
@@ -123,7 +127,13 @@ export const useUserStore = createWithEqualityFn<
                 }));
             },
             updateState: (newState) =>
-                set((state) => ({ ...state, ...newState }))
+                set((state) => ({ ...state, ...newState })),
+            unpushNotification: (id) => {
+                console.log(id);
+            },
+            pushNotification: (notification) => {
+                console.log(notification);
+            }
         }),
         {
             name: 'userStore',

@@ -18,33 +18,32 @@ function NavigationMenu() {
     const navigate = useNavigate();
     const { id: paramId } = useParams();
     const axiosPrivate = useAxiosPrivate();
-    const { logout, nickName, avatar } = useUserStore();
-    const [notificationsCount, setNotificationsCount] = useState(0);
+    const { avatar } = useUserStore();
     const { socket } = useNotificationStore();
-    const [notifications, setNotifications] = useState<{ action: string; nickName: string }[]>([]);
-    
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
     useEffect(() => {
-        console.log('nowaaaay')
         socket?.on('notification', (payload) => {
-            console.log("notification == ", payload)
-            setNotifications((prevNotifications) => [...prevNotifications, payload]);
-            setNotificationsCount((prevCount) => prevCount + 1);
+            setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                payload
+            ]);
         });
 
         return () => {
             socket?.off('notification');
         };
     }, [socket]);
-    const handleAccept = async  () => {
+
+    const handleAccept = async () => {
         await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
         console.log('Accepted notification ');
-        setNotificationsCount((prevCount) => prevCount - 1);
     };
 
-    const handleDecline = async  () => {
+    const handleDecline = async () => {
         await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
         console.log('Declined notification');
-        setNotificationsCount((prevCount) => prevCount - 1);
+
     };
 
     return (
@@ -67,12 +66,15 @@ function NavigationMenu() {
                         <Popup
                             trigger={
                                 <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                                    <IoIosNotifications className="text-gray-500" size={28} />
-                                    {notificationsCount > 0 && (
+                                    <IoIosNotifications
+                                        className="text-gray-500"
+                                        size={28}
+                                    />
+                                    {/* {notificationsCount > 0 && (
                                         <span className="absolute top-0 right-0  h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-xs text-white">
                                             {notificationsCount}
                                         </span>
-                                    )}
+                                    )} */}
                                 </div>
                             }
                             position="bottom right"
@@ -80,41 +82,63 @@ function NavigationMenu() {
                         >
                             <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
                                 {/* Render your notifications content here */}
-                                {notificationsCount === 0 ? (
+                                {/* {notificationsCount === 0 ? (
                                     <p>No new notifications</p>
                                 ) : (
                                     <ul className="space-y-2">
-                                        {notifications.map((notification, index) => (
-                                            <div key={index} className="flex items-center justify-between p-4 border-b border-gray-200">
-                                                <div className="flex items-center">
-                                                    <img alt="Avatar" className="w-10 h-10 rounded-full mr-4" />
-                                                    <div className="gap-1">
-                                                        <p className="font-semibold">{notification.nickName}</p>
-                                                        <p className="text-gray-500">{notification.action}</p>
+                                        {notifications.map(
+                                            (notification, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center justify-between p-4 border-b border-gray-200"
+                                                >
+                                                    <div className="flex items-center">
+                                                        <img
+                                                            alt="Avatar"
+                                                            className="w-10 h-10 rounded-full mr-4"
+                                                        />
+                                                        <div className="gap-1">
+                                                            <p className="font-semibold">
+                                                                {
+                                                                    notification.nickName
+                                                                }
+                                                            </p>
+                                                            <p className="text-gray-500">
+                                                                {
+                                                                    notification.action
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-2 ml-4">
+                                                        <IoIosCheckmarkCircleOutline
+                                                            className="text-green-500 cursor-pointer"
+                                                            size={40}
+                                                            onClick={() =>
+                                                                handleAccept()
+                                                            }
+                                                        />
+                                                        <IoIosCloseCircleOutline
+                                                            className="text-red-500 cursor-pointer"
+                                                            size={40}
+                                                            onClick={() =>
+                                                                handleDecline()
+                                                            }
+                                                        />
                                                     </div>
                                                 </div>
-                                                <div className="flex gap-2 ml-4">
-                                                    <IoIosCheckmarkCircleOutline
-                                                        className="text-green-500 cursor-pointer"
-                                                        size={40}
-                                                        onClick={() => handleAccept()}
-                                                    />
-                                                    <IoIosCloseCircleOutline
-                                                        className="text-red-500 cursor-pointer"
-                                                        size={40}
-                                                        onClick={() => handleDecline()}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        )}
                                     </ul>
-                                )}
+                                )} */}
                             </div>
                         </Popup>
-                        <Avatar
-                            imageUrl={avatar}
-                            style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-default"
-                        />
+                        <div onClick={() => navigate('/profile/me')}>
+                            <Avatar
+                                imageUrl={avatar}
+                                style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-default"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
