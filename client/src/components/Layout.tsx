@@ -29,7 +29,7 @@ function Layout() {
 
     const navItems = [
         { path: '/home', icon: GoHome },
-        { path: '/profile/me', icon: GoPerson },
+        { path: '/profile/me/history', icon: GoPerson },
         { path: '/profile/me/friends', icon: GoPeople },
         { path: '/chat/', icon: GoCommentDiscussion },
         { path: '/profile/me/setting', icon: GoGear }
@@ -76,7 +76,7 @@ function Layout() {
     useEffect(() => {
         // ... [fetchData logic]
 
-        const handleMouseMove = (event : MouseEvent) => {
+        const handleMouseMove = (event: MouseEvent) => {
             const sidebar = sidebarRef.current;
             const threshold = 50; // distance in pixels from the edge
 
@@ -139,7 +139,7 @@ function Layout() {
             <div
                 id="sidebar"
                 ref={sidebarRef}
-                className="w-[74px] h-[364px] py-5 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-between items-center inline-flex  absolute top-1/2 left-4 transform  -translate-y-1/2"
+                className="w-[74px] h-[45%] py-5 bg-white rounded-[20px] shadow border border-stone-300 flex-col justify-between items-center inline-flex  absolute top-1/2 left-4 transform  -translate-y-1/2"
             >
                 <div className="flex-col justify-start items-center gap-5 flex ">
                     {navItems.map(({ path, icon: Icon }) => (
@@ -150,7 +150,7 @@ function Layout() {
                                 `p-[5px] rounded-[10px] justify-center items-center inline-flex cursor-pointer${
                                     isActive
                                         ? 'bg-orange-600 bg-opacity-20 text-orange-600  '
-                                        : 'text-black'
+                                        : 'text-slate-400'
                                 }`
                             }
                         >
