@@ -34,10 +34,11 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log('socket: ', this.usersSockets);
-        console.log('in handle connection');
+        console.log(
+            'malo : ---------------------------------------------------------------------------------in handle connection'
+        );
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -57,6 +58,7 @@ export class notificationGateway
                     where: { id: userCheck.userData.sub },
                     data: { status: true }
                 });
+                console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
             }
         }
@@ -79,13 +81,18 @@ export class notificationGateway
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
-        }
-        else{
+        } else {
             console.log('sender: ', sender);
             console.log('reciever: ', receiver);
             console.log('action: ', action);
             //hna ghtstory dkchi f database
-            await this.notificationService.createNotification(sender.nickName, sender.avatar, receiver.nickName, receiver.avatar, action);
+            await this.notificationService.createNotification(
+                sender.nickName,
+                sender.avatar,
+                receiver.nickName,
+                receiver.avatar,
+                action
+            );
         }
     }
 
@@ -101,7 +108,7 @@ export class notificationGateway
         console.log('in handle disconnection');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);
@@ -121,12 +128,12 @@ export class notificationGateway
 
         //update stat in database from true to false
         await this.prisma.user.update({
-            where : { id: userCheck.userData.sub },
-            data : { 
-                status : false,
-                inGame: false,
-            },
-        })
+            where: { id: userCheck.userData.sub },
+            data: {
+                status: false,
+                inGame: false
+            }
+        });
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
         // this.notificationService.removeSocket(client.data.playload.sub, client);

@@ -67,7 +67,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
                 const res = await axiosPrivate.post('/chat/createDm', {
                     friendId: target
                 });
-                navigate(`/chat/dms/${res.data}`);
+                navigate(`/chat/dms/${res.data.id}`);
             } catch (error) {
                 console.log(error);
             }

@@ -154,7 +154,7 @@ function Layout() {
                                 }`
                             }
                         >
-                            <Icon size={26} />
+                            <Icon size={24} />
                         </NavLink>
                     ))}
                 </div>
@@ -162,7 +162,7 @@ function Layout() {
                     className="justify-center items-center gap-3 inline-flex cursor-pointer"
                     onClick={() => logout()}
                 >
-                    <GoSignOut size={26} />
+                    <GoSignOut size={24} />
                 </div>
             </div>
             <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden bg-gray-50">
