@@ -2,11 +2,14 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { gameDto } from './dto/game.dto';
 import { Achievement } from '@prisma/client';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class gameService {
     constructor(
-        private prisma: PrismaOrmService,){}
+        private prisma: PrismaOrmService,
+        private jwt: JwtService,
+        ){}
 
     async createGame(game: gameDto){
         const newGame = await this.prisma.game.create({
@@ -53,6 +56,19 @@ export class gameService {
     private calculateExperienceRequiredForNextLevel(currentLevel: number): number {
         return (currentLevel + 1) * 1200;
     }
+
+    async getUserFromAccessToken(token: string) {
+        // const accessToken =  await this.retrieveAccessToken(cookie);
+        try {
+            var jwtCheck = await this.jwt.verify(token, {
+                secret: process.env.JWT_secret
+            });
+        } catch (err) {
+            return { message: 'Not Authorized', state: false };
+        }
+        return { userData: jwtCheck, state: true };
+    }
+
 
     async winnerAchievements(userId: string, mode: string, result: string){
         const achievement = await this.prisma.achievement.findUnique({ where: { UserId: userId } });

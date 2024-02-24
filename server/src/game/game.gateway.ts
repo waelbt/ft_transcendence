@@ -5,7 +5,9 @@ import {
     SubscribeMessage,
     OnGatewayDisconnect
 } from '@nestjs/websockets';
+import { PrismaClient } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
+import { gameService } from './game.service';
 
 interface Ball {
     pos: { x: number; y: number };
@@ -15,8 +17,13 @@ interface Ball {
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+    
+    constructor(private readonly gameService: gameService) {}
+
     @WebSocketServer()
     server: Server;
+
+    prisma = new PrismaClient();
 
     private waitingFriend: Socket | null = null;
 
@@ -45,12 +52,75 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
     > = {};
 
-    handleConnection(client: Socket, ...args: any[]) {
+    async handleConnection(client: any, ...args: any[]) {
         console.log('A client just connected: ' + client.id);
+
+        const userCheck = await this.gameService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        console.log('howa : ', client.handshake.auth.token)
+        console.log('user: ', userCheck);
+        if (userCheck.state === false){
+            console.log('from h');
+            await this.handleDisconnect(client);
+        }
+            
+        else{
+            if (userCheck.userData.sub){
+                const isUser = await this.prisma.user.findUnique({
+                    where: {
+                        id: userCheck.userData.sub,
+                    }
+                });
+                if (!isUser) await this.handleDisconnect(client);
+                await this.prisma.user.update({
+                    where: {id: userCheck.userData.sub},
+                    data: {inGame: true},
+                })
+            }
+        }
     }
 
-    handleDisconnect(client: Socket) {
+    async handleDisconnect(client: any) {
         console.log('A client disconnected: ' + client.id);
+
+
+        // console.log('client : ', client);
+        const userCheck = await this.gameService.getUserFromAccessToken(
+            client.handshake.auth.token
+        );
+        console.log('howa : ', client.handshake.auth.token)
+        console.log('user: ', userCheck);
+        if (userCheck.userData)
+            var user = await this.prisma.user.findUnique({
+                where: {
+                    id: userCheck.userData.sub,
+                }
+            });
+        if (!user){
+            client.disconnect(true);
+            // for (const room in this.rooms) {
+            //     if (
+            //         this.rooms[room].players[0].id === client.id ||
+            //         this.rooms[room].players[1].id === client.id
+            //     ) {
+            //         client.broadcast
+            //             .to(room)
+            //             .emit('PlayerDisconnected', this.rooms[room].plysIds); // khasaktsifat data mli ki ydecconecti chi had
+            //         clearInterval(Number(this.rooms[room].intervalId));
+            //         delete this.rooms[room];
+            //     }
+            // }
+            return;
+        }
+
+        // update stat in database from true to false
+        await this.prisma.user.update({
+            where: { id: userCheck.userData.sub },
+            data: { inGame: false }
+        });
+
+
         for (const gameMode in this.waitingRooms) {
             if (this.waitingRooms[gameMode]?.id === client.id) {
                 this.waitingRooms[gameMode] = null;

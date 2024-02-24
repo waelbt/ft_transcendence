@@ -9,7 +9,6 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
-import { SocketIOMIDDELWARE } from 'src/auth/middlware/ws.middlware';
 
 @WebSocketGateway({
     cors: {
@@ -38,7 +37,7 @@ export class notificationGateway
         console.log('socket: ', this.usersSockets);
         console.log('in handle connection');
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -66,11 +65,12 @@ export class notificationGateway
     }
 
     @SubscribeMessage('notification')
-    async notificationEvent(receiver, sender, action) {
+    async notificationEvent(receiver, sender, senderId, action) {
         const userSocket = await this.usersSockets.get(receiver.email);
         if (userSocket) {
             const notificationPayload = {
                 // receiver: receiver.nickName,
+                id: senderId,
                 nickName: sender.nickName,
                 avatar: sender.avatar,
                 action: action
@@ -79,6 +79,13 @@ export class notificationGateway
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
+        }
+        else{
+            console.log('sender: ', sender);
+            console.log('reciever: ', receiver);
+            console.log('action: ', action);
+            //hna ghtstory dkchi f database
+            await this.notificationService.createNotification(sender.nickName, sender.avatar, receiver.nickName, receiver.avatar, action);
         }
     }
 
@@ -94,7 +101,7 @@ export class notificationGateway
         console.log('in handle disconnection');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);
@@ -114,9 +121,12 @@ export class notificationGateway
 
         //update stat in database from true to false
         await this.prisma.user.update({
-            where: { id: userCheck.userData.sub },
-            data: { status: false }
-        });
+            where : { id: userCheck.userData.sub },
+            data : { 
+                status : false,
+                inGame: false,
+            },
+        })
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
         // this.notificationService.removeSocket(client.data.playload.sub, client);
