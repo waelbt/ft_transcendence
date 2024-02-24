@@ -3,7 +3,7 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
 import { NavLink, useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
-import { Message } from '../../../../shared/types';
+import { Message, RoomsList } from '../../../../shared/types';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ export function Chat() {
         useDmStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
-    const { unpushRoom } = useChatLayoutStore();
+    const { pushRoom } = useChatLayoutStore();
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value.length <= MAX_MESSAGE_LENGTH)
             setMessage(e.target.value);
@@ -60,12 +60,14 @@ export function Chat() {
         // };
 
         // socket.on('forbidden', forbiddenListener);
+       
         socket.on('dm', messageListener);
+        socket.on('checkDm', pushRoom);
 
         fetchMessages();
 
         return () => {
-            // socket.off('forbidden', forbiddenListener);
+            socket.off('checkDm', pushRoom);
             socket.off('dm', messageListener);
         };
     }, [socket, id, pushMessage, axiosPrivate, updateState]);

@@ -5,6 +5,10 @@ import { notificationService } from "../services/notification.service";
 import { SocketIOMIDDELWARE } from "src/auth/middlware/ws.middlware";
 
 
+
+/************************************************************************ */
+/*******************************error boundries************************** */
+/************************************************************************ */
 @WebSocketGateway({
     cors: {
         origin: '*'

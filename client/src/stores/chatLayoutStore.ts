@@ -29,8 +29,13 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
         pushRoom: (room) => {
             const { Layout_Rooms } = get();
 
-            const newMessages = [...Layout_Rooms, room];
-            set({ Layout_Rooms: newMessages });
+            if (!Layout_Rooms.some((rooms) => (
+                rooms.id === room.id && room.isRoom === room.isRoom
+            )
+            )) {
+                const newMessages = [...Layout_Rooms, room];
+                set({ Layout_Rooms: newMessages });
+            }
         },
         updateRoomInfo: (roomId, isRoom, updatedInfo) => {
             const { Layout_Rooms } = get();
@@ -43,9 +48,11 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
             set({ Layout_Rooms: updatedRooms });
         },
         unpushRoom: (roomId, isRoom) => {
+            console.log('id: ', roomId,'isRoom: ',  isRoom);
             const { Layout_Rooms } = get();
+            console.log('layoout', Layout_Rooms);
             const filteredRooms = Layout_Rooms.filter(
-                (room) => room.id !== roomId && isRoom == room.isRoom
+                (room) => room.id !== roomId || isRoom !== room.isRoom
             );
             set({ Layout_Rooms: filteredRooms });
         },

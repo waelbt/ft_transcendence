@@ -15,7 +15,7 @@ import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');
-    const { Layout_Rooms, updateState } = useChatLayoutStore();
+    const { Layout_Rooms, updateState, socket, pushRoom } = useChatLayoutStore();
     // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
@@ -37,11 +37,6 @@ function ChatLayouts() {
                     toast.error(error.response?.data?.message);
             }
         };
-
-        fetchDns();
-    }, []);
-
-    useEffect(() => {
         const fetchOnlineUsers = async () => {
             try {
                 const res = await axiosPrivate.get('/users/onlineUsers');
@@ -53,6 +48,14 @@ function ChatLayouts() {
         };
 
         fetchOnlineUsers();
+        fetchDns();
+        socket?.on('checkDm', pushRoom);
+
+        // fetchMessages();
+
+        return () => {
+            socket?.off('checkDm', pushRoom);
+        };
     }, []);
 
     return (
@@ -144,7 +147,7 @@ function ChatLayouts() {
                     {state ? (
                         <GroupsForm closeEvent={closeEvent} />
                     ) : (
-                        <RoomsFinder  closeEvent={closeEvent}/>
+                        <RoomsFinder closeEvent={closeEvent} />
                     )}
                 </Modal>
             </div>
