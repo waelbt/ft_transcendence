@@ -24,7 +24,7 @@ function NavigationMenu() {
     const [notifications, setNotifications] = useState<{ action: string; nickName: string }[]>([]);
     
     useEffect(() => {
-        console.log('week weeek')
+        console.log('nowaaaay')
         socket?.on('notification', (payload) => {
             console.log("notification == ", payload)
             setNotifications((prevNotifications) => [...prevNotifications, payload]);
@@ -38,14 +38,12 @@ function NavigationMenu() {
     const handleAccept = async  () => {
         await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
         console.log('Accepted notification ');
-        // setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
         setNotificationsCount((prevCount) => prevCount - 1);
     };
 
     const handleDecline = async  () => {
         await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
         console.log('Declined notification');
-        // setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
         setNotificationsCount((prevCount) => prevCount - 1);
     };
 
