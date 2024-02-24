@@ -24,6 +24,7 @@ function NavigationMenu() {
     const [notifications, setNotifications] = useState<{ action: string; nickName: string }[]>([]);
     
     useEffect(() => {
+        console.log('week weeek')
         socket?.on('notification', (payload) => {
             console.log("notification == ", payload)
             setNotifications((prevNotifications) => [...prevNotifications, payload]);
