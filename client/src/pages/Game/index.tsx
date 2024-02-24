@@ -166,10 +166,16 @@ export function Game() {
         id: opponentId
     });
 
+    useEffect(() => {
+        return () => {
+            socket?.emit('gameended');
+        }
+    }, [socket]);
+    
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
-
+    console.log('gameMode', roomId);
     React.useEffect(() => {
         socket?.on('leftscored', async () => {
             setLeftScore((prevScore: number) => {
@@ -186,7 +192,7 @@ export function Game() {
                             })
                             .then((res) => res)
                             .catch((error) => console.log(error));
-                        socket?.emit('gameended');
+                        socket?.emit('gameended',{payload : {roomId}});
                         navigate('/');
                     }
                     return prvRightscore;

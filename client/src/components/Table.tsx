@@ -33,7 +33,7 @@ const Table = <D extends object>({
         // <div className='"max-h-[300px] overflow-y-auto"'>
         <table {...getTableProps()} className={` ${styles.tableStyle || ''}`}>
             <thead className={styles.theadStyle || ''}>
-                {headerGroups.map((headerGroup) => (
+                {headerGroups?.map((headerGroup) => (
                     <tr
                         {...headerGroup.getHeaderGroupProps()}
                         className={styles.trStyle || ''}
@@ -53,21 +53,21 @@ const Table = <D extends object>({
                 {...getTableBodyProps()}
                 className={(styles.tbodyStyle || '')}
             >
-               {rows.length > 0 ? (
-                    rows.map((row) => {
+               {rows?.length > 0 ? (
+                    rows?.map((row) => {
                         prepareRow(row);
                         return (
                             <tr
-                                {...row.getRowProps()}
-                                className={styles.trStyle || ''}
+                                {...row?.getRowProps()}
+                                className={styles?.trStyle || ''}
                                 {...getRowProps(row)}
                             >
-                                {row.cells.map((cell) => (
+                                {row?.cells?.map((cell) => (
                                     <td
-                                        {...cell.getCellProps()}
-                                        className={styles.tdStyle || ''}
+                                        {...cell?.getCellProps()}
+                                        className={styles?.tdStyle || ''}
                                     >
-                                        {cell.render('Cell')}
+                                        {cell?.render('Cell')}
                                     </td>
                                 ))}
                             </tr>

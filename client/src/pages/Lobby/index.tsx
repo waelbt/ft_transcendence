@@ -5,6 +5,7 @@ import { Modal } from '../../components';
 import { useEffect, useState } from 'react';
 import LeaderBoard from '../../components/LeaderBoard';
 import useTimer from '../../hooks/timer';
+import toast from 'react-hot-toast';
 
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
@@ -23,22 +24,75 @@ export function Lobby() {
         startTimer();
     };
 
+    const {id  : userId} = useUserStore();
+    
     useEffect(() => {
-        socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
+        console.log('startgame useEffect');
+        socket?.on('startgame', ({ room, SecondPlayer, opponentId, chosen }) => {
+            console.log(SecondPlayer);
             updateState({
                 isSecondPlayer: SecondPlayer === 1,
                 roomId: room,
                 isGameReady: true,
-                opponentId
+                opponentId,
+                gameMode: chosen
             });
-            setIsEventOpen(false);
+            // setIsEventOpen(false);
+            // window.location.href =(`/game/${room}`);
             navigate(`/game/${room}`);
         });
 
         return () => {
             socket?.off('startgame');
         };
-    });
+    }, [socket]);
+
+    useEffect(() => {
+        socket?.on('challenge', () => {
+            // navigate('/game');
+            toast((t) => (
+                <div className=" justify-center items-center flex flex-row gap-3">
+                    <span>
+                        you have been challenged by{' '}
+                    </span>
+                    <button 
+                        className=' rounded-lg border border-green-500 p-1 text-green-500' 
+                        onClick={() =>{ 
+                            socket.emit('friends', {userid : '', myid:userId})
+                            toast.dismiss(t.id)
+                        }}
+                    >
+                        Accept
+                    </button>
+                    <button 
+                        className=' rounded-lg border border-green-500 p-1 text-green-500' 
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        Cancel
+                    </button>
+                  </div>
+              ));
+        });
+        return () => {socket?.off('challenge')};
+    }, [socket]);
+    
+
+    // useEffect(() => {
+    //     socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
+    //         updateState({
+    //             isSecondPlayer: SecondPlayer === 1,
+    //             roomId: room,
+    //             isGameReady: true,
+    //             opponentId
+    //         });
+    //         setIsEventOpen(false);
+    //         navigate(`/game/${room}`);
+    //     });
+
+    //     return () => {
+    //         socket?.off('startgame');
+    //     };
+    // });
     return (
         <>
             <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex">

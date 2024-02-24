@@ -1,4 +1,7 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+import useGameStore from './stores/gameStore';
+import { useEffect } from 'react';
+import { useUserStore } from './stores/userStore';
 
 const router = createBrowserRouter([
     {
@@ -148,5 +151,7 @@ const router = createBrowserRouter([
 ]);
 
 export default function AllRoutes() {
+
+    
     return <RouterProvider router={router} />;
 }
