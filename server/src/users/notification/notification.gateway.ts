@@ -37,7 +37,7 @@ export class notificationGateway
         console.log('socket: ', this.usersSockets);
         console.log('in handle connection');
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -65,11 +65,12 @@ export class notificationGateway
     }
 
     @SubscribeMessage('notification')
-    async notificationEvent(receiver, sender, action) {
+    async notificationEvent(receiver, sender, senderId, action) {
         const userSocket = await this.usersSockets.get(receiver.email);
         if (userSocket) {
             const notificationPayload = {
                 // receiver: receiver.nickName,
+                id: senderId,
                 nickName: sender.nickName,
                 avatar: sender.avatar,
                 action: action
@@ -100,7 +101,7 @@ export class notificationGateway
         console.log('in handle disconnection');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);
