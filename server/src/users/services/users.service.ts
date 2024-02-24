@@ -446,7 +446,11 @@ export class UsersService {
         return onlineUsers;
     }
 
-    async getAllUsersRank() {
+    async getAllUsersRank(userId: string) {
+        const isUser = await this.findOneUser(userId);
+        if (!isUser){
+            throw new NotFoundException('this user does not exist');
+        }
         const users = await this.findAllUser();
 
         const sortedUsers = users.sort((user1, user2) => {
@@ -459,6 +463,9 @@ export class UsersService {
         console.log(sortedUsers);
         var index = 1;
         const allRank = sortedUsers.map((sortedUsers) => {
+            if (!sortedUsers.completeProfile || this.blockUsers.isUserBlocked(userId, sortedUsers.id)){
+                return ;
+            }
             const id = sortedUsers.id;
             const rank = index++;
             const nickName = sortedUsers.nickName;

@@ -407,13 +407,12 @@ export class RoomService {
                 }
             }
         });
-        console.log('dm: ', dm);
         dm.users = dm.users.filter((user) => userId != user.id);
+        this.emit.joinDm(userId, dm.roomTitle);
         return dm;
     }
 
     async setUserToAdminRoom(setAdminDto: SetAdminDto, userId: string) {
-        console.log('=====================', setAdminDto);
         const roomWithAdmins = await this.prisma.room.findUnique({
             where: {
                 id: +setAdminDto.roomId

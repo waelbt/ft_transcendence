@@ -183,10 +183,9 @@ export class WebSocketService {
 
         if (!dm) {
             const newDm = await this.createDm(user1id, user2id);
-            console.log(newDm, 'first time talking');
-            return newDm.id;
+            return newDm;
         }
-        return dm.id;
+        return dm;
     }
 
     async sendDM(user1id: string, roomId: string, message: string) {
@@ -293,4 +292,20 @@ export class WebSocketService {
             return;
         }
     }
+
+    async createNotification(senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string) {
+		const notification = await this.prisma.notification.create({
+		  data: {
+			senderNickName,
+			senderAvatar,
+			recieverNickName,
+			recieverAvatar,
+			action,
+		  }
+		});
+
+		console.log('-------: ', notification);
+		return notification;
+	}
+
 }

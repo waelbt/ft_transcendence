@@ -10,6 +10,10 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
 
+
+/************************************************************************ */
+/*******************************error boundries************************** */
+/************************************************************************ */
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -34,9 +38,7 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log(
-            'malo : ---------------------------------------------------------------------------------in handle connection'
-        );
+
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -54,6 +56,7 @@ export class notificationGateway
                 await this.handleDisconnect(client);
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
+                console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: true }

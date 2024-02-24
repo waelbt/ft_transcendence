@@ -7,6 +7,7 @@ import { FC, useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { ACTIONS_ENDPOINTS, ACTION_TO_KNOW_RELATION } from '../constants';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 type ActionsHandlerProps = {
     relationship: string;
@@ -19,7 +20,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     const axiosPrivate = useAxiosPrivate();
     const [actions, setActions] = useState<string[]>(['Block user']);
     const [relation, setRelation] = useState<string>(relationship);
-
+    const { socket } = useChatLayoutStore();
     const { removeUserFriendId, addUserBlockId, addUserFriendId } =
         useUserStore();
 
@@ -67,6 +68,8 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
                 const res = await axiosPrivate.post('/chat/createDm', {
                     friendId: target
                 });
+                console.log(res);
+                socket?.emit('checkDm', { friendId: target });
                 navigate(`/chat/dms/${res.data.id}`);
             } catch (error) {
                 console.log(error);

@@ -54,7 +54,7 @@ export class friendsService {
         const sender = await this.getNickNameEmail(userMe);
         console.log('--------------- sender: ', sender);
         console.log('--------------- reciever: ', receiver);
-        await this.notificationGateway.notificationEvent(receiver, sender, userMe, 'send invitaion');
+        await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`);
     }
 
     async acceptFriendRequest(userMe: string, friendId: string) {
@@ -85,9 +85,9 @@ export class friendsService {
         });
 
         //websocket();
-        const receiver = await this.getNickNameEmail(friendId);
-        const sender = await this.getNickNameEmail(userMe)
-        await this.notificationGateway.notificationEvent(receiver, sender, userMe, 'accept invitaion');
+        // const receiver = await this.getNickNameEmail(friendId);
+        // const sender = await this.getNickNameEmail(userMe);
+        // await this.notificationGateway.notificationEvent(receiver, sender, userMe, `accept invitaion');
     }
 
     async rejectFriendRequest(userId1: string, userId2: string) {

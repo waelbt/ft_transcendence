@@ -77,6 +77,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     where: {id: userCheck.userData.sub},
                     data: {inGame: true},
                 })
+                this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
     }
@@ -120,6 +121,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             data: { inGame: false }
         });
 
+        this.broadcastUserStatus(userCheck.userData.sub, 'outGame');
 
         for (const gameMode in this.waitingRooms) {
             if (this.waitingRooms[gameMode]?.id === client.id) {
@@ -141,6 +143,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 delete this.rooms[room];
             }
         }
+    }
+
+    private broadcastUserStatus(userId: string, status: 'inGame' | 'outGame') {
+        const message = {
+            userId,
+            status
+        };
+        this.server.emit('gameStatusChange', message);
     }
 
     @SubscribeMessage('friends')

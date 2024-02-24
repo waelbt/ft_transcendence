@@ -12,7 +12,6 @@ import {
     Req,
     HttpException,
     HttpStatus,
-    UseGuards,
     Res
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
@@ -273,8 +272,8 @@ export class UsersController {
         description: 'Returns rank of all users',
         type: rank
     })
-    async allUsersRank(): Promise<rank[]> {
-        return await this.usersService.getAllUsersRank();
+    async allUsersRank(@Req() req): Promise<rank[]> {
+        return await this.usersService.getAllUsersRank(req.user.sub);
     }
 
     @Post('/blockUser/:blockedUserId')

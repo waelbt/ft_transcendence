@@ -1,5 +1,6 @@
 import {
     FileTypeValidator,
+    ForbiddenException,
     MaxFileSizeValidator,
     ParseFilePipe
 } from '@nestjs/common';
@@ -33,7 +34,7 @@ export const multerOptions = {
         const fileExtension = extname(file.originalname).toLowerCase();
         if (!allowedFileTypes.includes(fileExtension)) {
             return callback(
-                new InvalidFileException(
+                new ForbiddenException(
                     'Invalid file type. Only PNG and JPG files are allowed.'
                 ),
                 false
