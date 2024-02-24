@@ -42,23 +42,6 @@ function NavigationMenu() {
 
                     {/* <!-- Menu Section --> */}
                     <SearchBar />
-                    {/* <div className="justify-center items-center gap-2.5 inline-flex">
-                        {NAV_LINKS.map((link) => (
-                            <NavLink
-                                key={link}
-                                to={`/${link}`}
-                                className={({ isActive }) =>
-                                    `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
-                                        isActive
-                                            ? 'text-black border-b-4 border-black '
-                                            : ' text-neutral-500'
-                                    }`
-                                }
-                            >
-                                {link}
-                            </NavLink>
-                        ))}
-                    </div> */}
                     {/* <!-- avatar && notifaction uSection --> */}
                     <div className=" px-2.5 justify-start items-center gap-[30px] inline-flex">
                         {/* <!-- notifaction Section --> */}
@@ -126,7 +109,7 @@ function NavigationMenu() {
                         </Popup>
                         <Avatar
                             imageUrl={avatar}
-                            style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-auto"
+                            style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-default"
                         />
                     </div>
                 </div>
