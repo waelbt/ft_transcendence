@@ -67,6 +67,7 @@ const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
                     }
                 }
             );
+            console.log(res.data);
             pushRoom(res.data);
             socket?.emit('joinRoom', {
                 ...res.data,
@@ -215,12 +216,7 @@ const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
                             type="password"
                             placeholder="set password"
                             {...register('password', {
-                                required: 'password is required!',
-                                minLength: {
-                                    value: 5,
-                                    message:
-                                        'password name must be at least 3 characters'
-                                }
+                                required: 'password is required!'
                             })}
                             disabled={isSubmitting}
                         />

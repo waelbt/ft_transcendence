@@ -1,14 +1,52 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { MENU_FIELDS, NAV_LINKS } from '../constants';
+import { useNavigate } from 'react-router-dom';
+import { MENU_FIELDS } from '../constants';
 import Popup from 'reactjs-popup';
-import { IoIosNotifications } from 'react-icons/io';
+import {
+    IoIosCheckmarkCircleOutline,
+    IoIosCloseCircleOutline,
+    IoIosNotifications
+} from 'react-icons/io';
 import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 import SearchBar from './SearchBar';
+import { useEffect, useState } from 'react';
+import { useNotificationStore } from '../stores/notiSocketfStore';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useParams } from 'react-router-dom';
 
 function NavigationMenu() {
     const navigate = useNavigate();
+    const { id: paramId } = useParams();
+    const axiosPrivate = useAxiosPrivate();
     const { logout, nickName, avatar } = useUserStore();
+    const [notificationsCount, setNotificationsCount] = useState(0);
+    const { socket } = useNotificationStore();
+    const [notifications, setNotifications] = useState<{ action: string; nickName: string }[]>([]);
+    
+    useEffect(() => {
+        console.log('nowaaaay')
+        socket?.on('notification', (payload) => {
+            console.log("notification == ", payload)
+            setNotifications((prevNotifications) => [...prevNotifications, payload]);
+            setNotificationsCount((prevCount) => prevCount + 1);
+        });
+
+        return () => {
+            socket?.off('notification');
+        };
+    }, [socket]);
+    const handleAccept = async  () => {
+        await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
+        console.log('Accepted notification ');
+        setNotificationsCount((prevCount) => prevCount - 1);
+    };
+
+    const handleDecline = async  () => {
+        await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
+        console.log('Declined notification');
+        setNotificationsCount((prevCount) => prevCount - 1);
+    };
+
     return (
         <nav className="bg-white border-b border-neutral-100">
             <div className="w-full px-4">
@@ -23,94 +61,60 @@ function NavigationMenu() {
 
                     {/* <!-- Menu Section --> */}
                     <SearchBar />
-                    {/* <div className="justify-center items-center gap-2.5 inline-flex">
-                        {NAV_LINKS.map((link) => (
-                            <NavLink
-                                key={link}
-                                to={`/${link}`}
-                                className={({ isActive }) =>
-                                    `px-2.5 py-[21px] justify-center items-center gap-2.5 flex text-xl font-normal font-['Acme'] ${
-                                        isActive
-                                            ? 'text-black border-b-4 border-black '
-                                            : ' text-neutral-500'
-                                    }`
-                                }
-                            >
-                                {link}
-                            </NavLink>
-                        ))}
-                    </div> */}
                     {/* <!-- avatar && notifaction uSection --> */}
                     <div className=" px-2.5 justify-start items-center gap-[30px] inline-flex">
                         {/* <!-- notifaction Section --> */}
                         <Popup
                             trigger={
                                 <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                                    <IoIosNotifications
-                                        className="text-gray-500"
-                                        size={28}
-                                    />
-                                    {/*  //!  Red dot for new notifications <span className="absolute top-0 right-0 block h-3 w-3 bg-red-600 rounded-full"></span> */}
-                                </div>
-                            }
-                            position="bottom right"
-                            nested
-                        >
-                            <div className="p-2.5 bg-white rounded-[10px]    shadow flex-col justify-start items-center inline-flex w-max">
-                                not implemneted yet
-                            </div>
-                        </Popup>
-
-                        <Popup
-                            trigger={
-                                <div
-                                    className={`group inline-flex items-center rounded-md  px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 text-white`}
-                                >
-                                    <Avatar
-                                        imageUrl={avatar}
-                                        style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2"
-                                    />
+                                    <IoIosNotifications className="text-gray-500" size={28} />
+                                    {notificationsCount > 0 && (
+                                        <span className="absolute top-0 right-0  h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-xs text-white">
+                                            {notificationsCount}
+                                        </span>
+                                    )}
                                 </div>
                             }
                             position="bottom right"
                             nested
                         >
                             <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
-                                <li
-                                    className="self-stretch p-2.5  border-b border-neutral-300 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => {
-                                        navigate('/profile/me');
-                                    }}
-                                >
-                                    <Avatar
-                                        style="h-10 w-10"
-                                        imageUrl={avatar}
-                                        state="online"
-                                    />
-                                    <div className="text-black text-2xl font-normal font-['Acme']">
-                                        {nickName}
-                                    </div>
-                                </li>
-                                {MENU_FIELDS.map((field, index) => (
-                                    <li
-                                        key={index}
-                                        className="self-stretch p-2.5 justify-start items-center gap-4 inline-flex hover:bg-gray-100 cursor-pointer"
-                                        onClick={() => {
-                                            field.path == '/'
-                                                ? logout()
-                                                : navigate(field.path);
-                                        }}
-                                    >
-                                        <div className="p-1 rounded-[50px] justify-start items-center gap-2.5 flex">
-                                            <field.icon size={24} />
-                                        </div>
-                                        <div className="text-zinc-600 text-xl font-normal font-['Acme'] pr-10">
-                                            {field.name}
-                                        </div>
-                                    </li>
-                                ))}
+                                {/* Render your notifications content here */}
+                                {notificationsCount === 0 ? (
+                                    <p>No new notifications</p>
+                                ) : (
+                                    <ul className="space-y-2">
+                                        {notifications.map((notification, index) => (
+                                            <div key={index} className="flex items-center justify-between p-4 border-b border-gray-200">
+                                                <div className="flex items-center">
+                                                    <img alt="Avatar" className="w-10 h-10 rounded-full mr-4" />
+                                                    <div className="gap-1">
+                                                        <p className="font-semibold">{notification.nickName}</p>
+                                                        <p className="text-gray-500">{notification.action}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2 ml-4">
+                                                    <IoIosCheckmarkCircleOutline
+                                                        className="text-green-500 cursor-pointer"
+                                                        size={40}
+                                                        onClick={() => handleAccept()}
+                                                    />
+                                                    <IoIosCloseCircleOutline
+                                                        className="text-red-500 cursor-pointer"
+                                                        size={40}
+                                                        onClick={() => handleDecline()}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                )}
                             </div>
                         </Popup>
+                        <Avatar
+                            imageUrl={avatar}
+                            style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-default"
+                        />
                     </div>
                 </div>
             </div>

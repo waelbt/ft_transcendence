@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 function SearchBar() {
     const [searchTerm, setSearchTerm] = useState('');
-    const debouncedValue = useDebounce<string>(searchTerm, 500);
+    const debouncedValue = useDebounce<string>(searchTerm, 600);
     const axiosPrivate = useAxiosPrivate();
     const [searchResults, setSearchResults] = useState<Friend[]>([]);
 
@@ -19,55 +19,50 @@ function SearchBar() {
             setSearchResults(res.data);
         };
         if (searchTerm.length) fetchData();
+        else setSearchResults([]);
     }, [debouncedValue]);
 
-    // ? clear searh item
     return (
         <Popup
             trigger={
-                <div className="w-[450px] h-[49px] pl-[15px] pr-2.5 py-2.5 bg-stone-50 rounded-[20px] border border-neutral-200 justify-start items-center gap-2.5 inline-flex">
+                <div className="w-[300px] h-11 pl-[15px] pr-2.5 py-2.5 bg-stone-50 rounded-[20px] border border-neutral-200 justify-start items-center gap-2.5 inline-flex">
                     <CiSearch size={24} />
                     <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Search for users"
-                        className="bg-transparent text-neutral-500 text-sm font-normal font-['Poppins'] outline-none w-full"
+                        className="w-full h-11 p-2.5 bg-transparent rounded-[5px] justify-start items-center gap-2.5 flex  outline-none  text-slate-600 text-base font-normal font-['Acme']"
                     />
                 </div>
             }
-            position="bottom right"
+            position="bottom center"
             nested
         >
-            <ul className=" w-[440px] pl-2.5 py-2.5 bg-white rounded-bl-[20px] rounded-br-[20px] shadow border border-stone-300 flex-col justify-start items-center gap-2.5 inline-flex">
-                {searchResults.map((result, index) => (
-                    <Link
-                        key={index}
-                        to={`/profile/${result.id}`}
-                        className="w-full h-full pl-3 pr-[13px] py-[15px] bg-white border-b border-black border-opacity-40  justify-start items-center gap-2.5 inline-flex"
-                    >
-                        <Avatar imageUrl={result.avatar} style="w-16 h-16" />
-
-                        <div className="text-black text-base font-normal font-['Acme'] leading-tight">
-                            {result.nickName}
-                        </div>
-                    </Link>
-                ))}
-            </ul>
+            {searchResults.length ? (
+                <ul className="w-[300px] pl-2.5 py-2.5 bg-white rounded-bl-[20px] rounded-br-[20px] shadow border border-stone-300 flex-col justify-start items-start    cursor-pointer gap-2.5 inline-flex">
+                    {searchResults.map((result, index) => (
+                        <Link
+                            key={index}
+                            className="justify-center items-center gap-2 flex "
+                            to={`/profile/${result.id}`}
+                        >
+                            <Avatar
+                                imageUrl={result.avatar}
+                                style="w-14 h-14 bg-black rounded-[150px] border border-white"
+                            />
+                            <div className="text-black text-xl font-normal font-['Acme']">
+                                {result.nickName}
+                            </div>
+                            <div className="text-zinc-500 text-base font-normal font-['Acme']">
+                                {result.fullName}
+                            </div>
+                        </Link>
+                    ))}
+                </ul>
+            ) : null}
         </Popup>
     );
 }
 
 export default SearchBar;
-
-<div className="w-[430px] h-[62px] pl-3 pr-[13px] py-[15px] bg-white border-b border-black border-opacity-40 flex-col justify-center items-start inline-flex">
-    <div className="justify-center items-center gap-2.5 inline-flex">
-        <img
-            className="w-8 h-8 rounded-full"
-            src="https://via.placeholder.com/32x32"
-        />
-        <div className="text-black text-base font-normal font-['Acme'] leading-tight">
-            dos404
-        </div>
-    </div>
-</div>;

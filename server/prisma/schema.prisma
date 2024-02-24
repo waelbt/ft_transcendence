@@ -28,18 +28,29 @@ model User {
   exp             Int?     @default(0)
   level           Int?     @default(0)
 
-  achievement  Achievement?
-  friends      Friendship[]
+  achievement   Achievement?
+  friends       Friendship[]
   // Define the blocks initiated by this user
-  blockedUsers Block[]      @relation("BlockedUsers")
-  games1       Game[]       @relation("User1Games")
-  games2       Game[]       @relation("User2Games")
-  winner       Game[]       @relation("Winner")
-  loser        Game[]       @relation("Loser")
-  rooms        Room[]
-  messages     Message[]
-  dm           DMRooms[]
-  dmMessages   dmMessage[]
+  blockedUsers  Block[]      @relation("BlockedUsers")
+  games1        Game[]       @relation("User1Games")
+  games2        Game[]       @relation("User2Games")
+  winner        Game[]       @relation("Winner")
+  loser         Game[]       @relation("Loser")
+  rooms         Room[]
+  messages      Message[]
+  dm            DMRooms[]
+  dmMessages    dmMessage[]
+  notifications notification[]
+}
+
+model notification{
+  id                      Int    @id @default(autoincrement())
+  senderNickName          String
+  senderAvatar            String
+  recieverNickName        String
+  recieverAvatar          String
+  action                  String
+  user                    User[]
 }
 
 model Friendship {

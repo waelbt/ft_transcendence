@@ -38,6 +38,7 @@ import { user, userData } from '../dto/userData.dto';
 import { smallData } from '../dto/smallData.dto';
 import { rank } from '../dto/rank.dto';
 import { achievement } from '../dto/achievements.dto';
+import { notificationService } from '../services/notification.service';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -45,7 +46,8 @@ import { achievement } from '../dto/achievements.dto';
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,
-        private readonly blockService: BlockService
+        private readonly blockService: BlockService,
+        private readonly notificationService: notificationService,
     ) {}
 
     @Get(':id/profile')
@@ -110,6 +112,14 @@ export class UsersController {
                 HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    @Get('notification')
+    async getNotifications(@Req() req){
+        const user = await this.usersService.getOneUser(req.user.sub);
+        if (!user)
+            throw new NotFoundException('this user does not exist');
+        return await this.notificationService.getNotificationsForUser(user.nickName);
     }
 
     // ! don't accept the one in backend
@@ -263,8 +273,8 @@ export class UsersController {
         description: 'Returns rank of all users',
         type: rank
     })
-    async allUsersRank(): Promise<rank[]> {
-        return await this.usersService.getAllUsersRank();
+    async allUsersRank(@Req() req): Promise<rank[]> {
+        return await this.usersService.getAllUsersRank(req.user.sub);
     }
 
     @Post('/blockUser/:blockedUserId')

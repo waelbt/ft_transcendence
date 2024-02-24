@@ -160,3 +160,8 @@ body {
     left: -10px;
     top: 0;
 }
+
+#sidebar {
+    left: -74px;
+    transition: left 0.5s;
+}

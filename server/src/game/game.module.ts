@@ -7,10 +7,11 @@ import { PrismaOrmModule } from 'src/prisma-orm/prisma-orm.module';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { friendsService } from 'src/users/services/friends.service';
 import { BlockService } from 'src/users/services/blocked.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   	controllers: [GameController],
-  	providers: [PrismaOrmService, gameService, GameGateway],
+  	providers: [PrismaOrmService, gameService, GameGateway, JwtService],
   	imports: [PrismaOrmModule],
   	exports: [gameService],
 })

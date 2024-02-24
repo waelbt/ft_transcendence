@@ -11,7 +11,7 @@ export class WebSocketService {
     constructor(
         private readonly prisma: PrismaOrmService,
         private readonly roomService: RoomService,
-        private readonly jwt: JwtService,
+        private readonly jwt: JwtService
     ) {}
 
     // async joinUserSocketToItsRooms(
@@ -38,9 +38,10 @@ export class WebSocketService {
             }
             for (let i = 0; i < joinedRooms.length; i++) {
                 server.in(userSocket).socketsJoin(joinedRooms[i].roomTitle);
-                console.log(
+                console
+                    .log
                     // `${userId} joined this room ${joinedRooms[i].roomTitle}`
-                );
+                    ();
             }
         } catch (err) {
             // console.log(err);
@@ -84,8 +85,11 @@ export class WebSocketService {
 
     async createMessage(payload: SendMessageDto, userId: string) {
         try {
-           const {room, newMessage} =  await this.roomService.createMessage(payload, userId);
-           return ({room, newMessage})
+            const { room, newMessage } = await this.roomService.createMessage(
+                payload,
+                userId
+            );
+            return { room, newMessage };
         } catch (err) {
             const message = err;
             throw Error(message);
@@ -202,18 +206,17 @@ export class WebSocketService {
         try {
             let dm = await this.prisma.dMRooms.findFirst({
                 where: {
-                    id: +roomId,
+                    id: +roomId
                 },
                 include: {
                     users: true,
-                    messages: true,
-                },
+                    messages: true
+                }
             });
             dm.users = dm.users.filter((user) => user1id != user.id);
-            
-            if (await this.isUserBlocked(user1id, dm.users[0].id))
-                return (dm);
-    
+
+            if (await this.isUserBlocked(user1id, dm.users[0].id)) return dm;
+
             const newMessage = await this.prisma.dmMessage.create({
                 data: {
                     message: message,
@@ -224,7 +227,7 @@ export class WebSocketService {
                     },
                     dmroom: {
                         connect: {
-                            id: +roomId,
+                            id: +roomId
                         }
                     }
                 },
@@ -235,14 +238,14 @@ export class WebSocketService {
             });
             dm = await this.prisma.dMRooms.findFirst({
                 where: {
-                    id: +roomId,
+                    id: +roomId
                 },
                 include: {
                     users: true,
-                    messages: true,
-                },
+                    messages: true
+                }
             });
-            
+
             // console.log(
             //     'check message creation',
             //     newMessage,
@@ -250,10 +253,8 @@ export class WebSocketService {
             //     newMessage.dmId
             // );
             return dm;
-
-        } catch(errr)
-        {
-            return ;
+        } catch (errr) {
+            return;
         }
     }
 
@@ -280,16 +281,34 @@ export class WebSocketService {
             const block = await this.prisma.block.findFirst({
                 where: {
                     OR: [
-                        { userId: userId , blockedUserId: blockedUserId },
-                        { userId: blockedUserId , blockedUserId: userId },
-                    ],
-                },
+                        { userId: userId, blockedUserId: blockedUserId },
+                        { userId: blockedUserId, blockedUserId: userId }
+                    ]
+                }
             });
             console.log('block: ', !!block);
             return !!block;
-        } catch(errrrr) {
-            return ;
+        } catch (errrrr) {
+            return;
         }
     }
+<<<<<<< HEAD
 
+    async createNotification(senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string) {
+		const notification = await this.prisma.notification.create({
+		  data: {
+			senderNickName,
+			senderAvatar,
+			recieverNickName,
+			recieverAvatar,
+			action,
+		  }
+		});
+
+		console.log('-------: ', notification);
+		return notification;
+	  }
+
+=======
+>>>>>>> 8fe684840d2c5611c9403f8923fa93338a553ac7
 }

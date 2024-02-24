@@ -1,5 +1,6 @@
 import {
     Controller,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -44,6 +45,8 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
+        if (req.user.sub === friendId)
+            throw new ForbiddenException('you can not make this request');
         console.log('my id: ', req.user.sub, 'ur id: ', friendId);
         try {
             await this.friendsService.sendFriendRequest(req.user.sub, friendId);
@@ -71,6 +74,9 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
+        
+        if (req.user.sub === friendId)
+            throw new ForbiddenException('you can not make this request');
         try {
             await this.friendsService.acceptFriendRequest(
                 req.user.sub,
@@ -95,6 +101,9 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
+        
+        if (req.user.sub === friendId)
+            throw new ForbiddenException('you can not make this request');
         try {
             await this.friendsService.rejectFriendRequest(
                 req.user.sub,
@@ -118,6 +127,9 @@ export class friendsController {
         );
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
+        
+        if (req.user.sub === userId)
+            throw new ForbiddenException('you can not make this request');
         return await this.friendsService.typeOfProfile(req.user.sub, userId);
     }
 
@@ -134,6 +146,9 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
+        
+        if (req.user.sub === friendId)
+            throw new ForbiddenException('you can not make this request');
         try {
             await this.friendsService.removeSentFriendRequest(
                 req.user.sub,
@@ -158,6 +173,9 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
+        
+        if (req.user.sub === friendId)
+            throw new ForbiddenException('you can not make this request');
         try {
             await this.friendsService.removeFriend(req.user.sub, friendId);
             return { message: 'Friend remove successfully' };

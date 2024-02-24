@@ -131,7 +131,6 @@ function LeaderBoard() {
         const fetchData = async () => {
             try {
                 const response = await axiosPrivate.get('/users/rank');
-                console.log(response.data);
                 setData(response.data);
             } catch (error) {
                 console.error('Error:', error);

@@ -333,7 +333,9 @@ export class ChatGateway
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false) await this.handleDisconnect(client);
+        if (userCheck.state === false){
+            await this.handleDisconnect(client);
+        }
         else {
             const dm = await this.wsService.CheckForExistingDmRoom(
                 userCheck.userData.sub,
