@@ -15,6 +15,7 @@ import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import MembersList from './MembersList';
+import AddMembers from './AddMembers';
 
 function GroupPanel() {
     const {
@@ -29,6 +30,7 @@ function GroupPanel() {
         isBanned
     } = useRoomStore();
     const [selectedVisibility, setSelectedVisibility] = useState(privacy);
+    const [isEventOpen, setIsEventOpen] = useState(false);
 
     const {
         register,

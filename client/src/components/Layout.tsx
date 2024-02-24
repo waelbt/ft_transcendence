@@ -8,14 +8,15 @@ import useGameStore from '../stores/gameStore';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { useNotificationStore } from '../stores/notiSocketfStore';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
-    const { updateState, accessToken, id } = useUserStore();
+    const { updateState, accessToken } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket: chatSocket } = useChatLayoutStore();
     const { socket: gameSocket, initializeGameSocket } = useGameStore();
-
+    const { socket, initializeNotifSocket } = useNotificationStore();
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -43,10 +44,13 @@ function Layout() {
             redirectedFor2FA: true,
             redirectedForProfileCompletion: true
         });
+
         initializeSocket(accessToken);
         initializeGameSocket();
+        initializeNotifSocket(accessToken);
 
         return () => {
+            socket?.disconnect();
             chatSocket?.disconnect();
             gameSocket?.disconnect();
         };

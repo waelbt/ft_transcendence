@@ -28,6 +28,7 @@ function App() {
                 toastOptions={{
                     duration: 3000
                 }}
+                containerStyle={{ zIndex: 9999 }}
             />
             <ReactQueryDevtools />
         </QueryClientProvider>

@@ -307,8 +307,6 @@ export class ChatGateway
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
-            // console.log('messages');
-            // function to check if they have already talked
             const dmroom = await this.wsService.sendDM(
                 userCheck.userData.sub,
                 sendMessage.id,
@@ -321,9 +319,6 @@ export class ChatGateway
                 )
             )
                 return;
-            // this.server
-            //     .to(client.id)
-            //     .emit('forbidden', { id: sendMessage.id });
             else {
                 const message: EmitMessageDto = {
                     id: dmroom.messages[dmroom.messages.length - 1].dmId,
@@ -335,6 +330,7 @@ export class ChatGateway
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
                 // console.log(dmroom.roomTitle);
+                const users = dmroom.users;
                 await this.server.in(client.id).socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }

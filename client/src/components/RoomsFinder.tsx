@@ -5,6 +5,7 @@ import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { Avatar, FormComponent } from '.';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import { FieldValues } from 'react-hook-form';
 
 type GroupsFormProps = {
     closeEvent: () => void;
@@ -19,13 +20,13 @@ const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
 
     const HandleJoin = async (room: RoomsList) => {
         try {
-            // ! isloading button
             setIsloading(true);
-            const res = await axiosPrivate.post('/chat/joinRoom', {
+            await axiosPrivate.post('/chat/joinRoom', {
                 roomTitle: room.roomTitle,
-                roomId: room.id
+                roomId: room.id,
+                password: room.password
             });
-            console.log(res);
+            toast.success('joined the room successfully');
             socket?.emit('joinRoom', { ...room });
             pushRoom(room);
             closeEvent();
@@ -108,21 +109,14 @@ const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
                                             placeholder: 'password',
                                             validation: {
                                                 required:
-                                                    'password is required!',
-                                                maxLength: {
-                                                    value: 10,
-                                                    message:
-                                                        'password name must be less than 10 characters'
-                                                },
-                                                minLength: {
-                                                    value: 3,
-                                                    message:
-                                                        'password name must be at least 3 characters'
-                                                }
+                                                    'password is required!'
                                             }
                                         }
                                     ]}
-                                    onSubmit={() => {}} // ! join room
+                                    onSubmit={async (data: FieldValues) => {
+                                        room.password = data['password'];
+                                        HandleJoin(room);
+                                    }}
                                 />
                             </div>
                         )}
