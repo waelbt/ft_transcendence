@@ -11,15 +11,22 @@ import { useUserStore } from '../stores/userStore';
 import SearchBar from './SearchBar';
 import { useEffect, useState } from 'react';
 import { useNotificationStore } from '../stores/notiSocketfStore';
+import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { useParams } from 'react-router-dom';
 
 function NavigationMenu() {
     const navigate = useNavigate();
-    const { avatar } = useUserStore();
+    const { id: paramId } = useParams();
+    const axiosPrivate = useAxiosPrivate();
+    const { logout, nickName, avatar } = useUserStore();
     const [notificationsCount, setNotificationsCount] = useState(0);
     const { socket } = useNotificationStore();
+    const [notifications, setNotifications] = useState<{ action: string; nickName: string }[]>([]);
+    
     useEffect(() => {
-        socket?.on('notification', (Payload) => {
-            console.log(Payload);
+        socket?.on('notification', (payload) => {
+            console.log("notification == ", payload)
+            setNotifications((prevNotifications) => [...prevNotifications, payload]);
             setNotificationsCount((prevCount) => prevCount + 1);
         });
 
@@ -27,6 +34,19 @@ function NavigationMenu() {
             socket?.off('notification');
         };
     }, [socket]);
+    const handleAccept = async  () => {
+        await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
+        console.log('Accepted notification ');
+        // setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
+        setNotificationsCount((prevCount) => prevCount - 1);
+    };
+
+    const handleDecline = async  () => {
+        await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
+        console.log('Declined notification');
+        // setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
+        setNotificationsCount((prevCount) => prevCount - 1);
+    };
 
     return (
         <nav className="bg-white border-b border-neutral-100">
@@ -65,10 +85,7 @@ function NavigationMenu() {
                         <Popup
                             trigger={
                                 <div className="relative p-2.5 bg-neutral-100 rounded-[50px] justify-start items-center gap-2.5 inline-flex">
-                                    <IoIosNotifications
-                                        className="text-gray-500"
-                                        size={28}
-                                    />
+                                    <IoIosNotifications className="text-gray-500" size={28} />
                                     {notificationsCount > 0 && (
                                         <span className="absolute top-0 right-0  h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-xs text-white">
                                             {notificationsCount}
@@ -85,41 +102,29 @@ function NavigationMenu() {
                                     <p>No new notifications</p>
                                 ) : (
                                     <ul className="space-y-2">
-                                        {[...Array(notificationsCount)].map(
-                                            (_, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex items-center justify-between p-4 border-b border-gray-200"
-                                                >
-                                                    <div className="flex items-center">
-                                                        <img
-                                                            alt="Avatar"
-                                                            className="w-10 h-10 rounded-full mr-4"
-                                                        />
-                                                        <div className=" gap-1">
-                                                            <p className="font-semibold">
-                                                                nickname
-                                                            </p>
-                                                            <p className="text-gray-500">
-                                                                incoming friend
-                                                                request{' '}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex  gap-2 ml-4">
-                                                        <IoIosCheckmarkCircleOutline
-                                                            className="text-green-500 cursor-pointer"
-                                                            size={40}
-                                                        />
-                                                        <IoIosCloseCircleOutline
-                                                            className="text-red-500 cursor-pointer"
-                                                            size={40}
-                                                        />
+                                        {notifications.map((notification, index) => (
+                                            <div key={index} className="flex items-center justify-between p-4 border-b border-gray-200">
+                                                <div className="flex items-center">
+                                                    <img alt="Avatar" className="w-10 h-10 rounded-full mr-4" />
+                                                    <div className="gap-1">
+                                                        <p className="font-semibold">{notification.nickName}</p>
+                                                        <p className="text-gray-500">{notification.action}</p>
                                                     </div>
                                                 </div>
-                                                // <li key={index} className="font-bold">flaaaan galiiikkk Notification {index + 1}</li>
-                                            )
-                                        )}
+                                                <div className="flex gap-2 ml-4">
+                                                    <IoIosCheckmarkCircleOutline
+                                                        className="text-green-500 cursor-pointer"
+                                                        size={40}
+                                                        onClick={() => handleAccept()}
+                                                    />
+                                                    <IoIosCloseCircleOutline
+                                                        className="text-red-500 cursor-pointer"
+                                                        size={40}
+                                                        onClick={() => handleDecline()}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
                                     </ul>
                                 )}
                             </div>
