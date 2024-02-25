@@ -86,6 +86,19 @@ export function Lobby() {
                                         Waiting time: {formatTime(elapsedTime)}
                                     </p>
                                 </div>
+                                <div
+                                    className="w-full text-center cursor-pointer text-4xl font-['Acme']"
+                                    onClick={() => {
+                                        socket?.emit('leaveGameMode', {
+                                            gameMode,
+                                            userId: id
+                                        });
+
+                                        setIsEventOpen(false);
+                                    }}
+                                >
+                                    cancel
+                                </div>
                             </div>
                         </Modal>
                     )}

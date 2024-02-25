@@ -139,13 +139,16 @@ function LeaderBoard() {
 
         fetchData();
     }, []);
-    console.log(data);
 
     return (
         <div className="overflow-y-auto h-[470px] w-[1100px] bg-white  items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
             <Table
                 columns={columns}
-                data={data?.filter((entry) => entry !== null) as LeaderboardEntry[]}
+                data={
+                    data?.filter(
+                        (entry) => entry !== null
+                    ) as LeaderboardEntry[]
+                }
                 styles={{
                     tableStyle:
                         'w-full  text-zinc-500 text-base font-normal font-["Acme"]',
