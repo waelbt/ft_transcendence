@@ -143,8 +143,8 @@ export class UsersController {
     @ApiOperation({ summary: 'update user nickName and avatar' })
     @ApiResponse({ status: 200, description: 'Returns my data', type: user })
     async UserInfo(@Req() req, @Body() dto: dto): Promise<User> {
-        console.log('hi');
-        console.log('avatar: ', dto.avatar, 'nick: ', dto.nickName);
+        // console.log('hi');
+        // console.log('avatar: ', dto.avatar, 'nick: ', dto.nickName);
         return await this.usersService.userInfo(req, dto.avatar, dto.nickName);
     }
 
@@ -207,7 +207,7 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse()
     async findOneUser(@Param('id') id: string) {
-        console.log('hi im here');
+        // console.log('hi im here');
         const findUser = await this.usersService.getOneUser(id);
         if (!findUser)
             throw new NotFoundException(
@@ -238,7 +238,7 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse()
     async removeUser(@Param('id') id: string) {
-        console.log('id is : ', id);
+        // console.log('id is : ', id);
         await this.usersService.removeUser(id);
         return 'true';
     }

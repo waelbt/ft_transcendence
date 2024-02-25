@@ -2,7 +2,6 @@ import { Controller, Get, NotFoundException, Req, Res, Body, Post } from "@nestj
 import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 import { twoFAService } from "../services/2FA.services";
 import { UsersService } from "src/users/services/users.service";
-import * as otplib from 'otplib';
 
 @ApiBearerAuth()
 @ApiTags('2fa')

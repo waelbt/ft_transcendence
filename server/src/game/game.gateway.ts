@@ -52,15 +52,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     > = {};
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log('A client just connected: ' + client.id);
-
+        
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token);
-        console.log('user: ', userCheck);
-        if (userCheck.state === false) {
-            console.log('from h');
+        // console.log('howa : ', client.handshake.auth.token)
+        // console.log('user: ', userCheck);
+        if (userCheck.state === false){
+            // console.log('from h');
             await this.handleDisconnect(client);
         } else {
             if (userCheck.userData.sub) {
@@ -71,8 +70,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 });
                 if (!isUser) await this.handleDisconnect(client);
                 await this.prisma.user.update({
-                    where: { id: userCheck.userData.sub },
-                    data: { inGame: true }
+                    where: {id: userCheck.userData.sub},
+                    data: {inGame: true},
                 });
                 this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
@@ -80,14 +79,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: any) {
-        console.log('A client disconnected: ' + client.id);
-
+        
+        
         // console.log('client : ', client);
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token);
-        console.log('user: ', userCheck);
+        // console.log('howa : ', client.handshake.auth.token)
+        // console.log('user: ', userCheck);
         if (userCheck.userData)
             var user = await this.prisma.user.findUnique({
                 where: {
@@ -96,6 +95,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             });
         if (!user) {
             client.disconnect(true);
+        console.log('A client disconnected: (GAME) ' + client.id);
             // for (const room in this.rooms) {
             //     if (
             //         this.rooms[room].players[0].id === client.id ||

@@ -63,7 +63,7 @@ export class UsersService {
     }
 
     async findOneUser(id: string) {
-        console.log('that a user ; ', id);
+        // console.log('that a user ; ', id);
         const user = await this.prisma.user.findUnique({
             where: {
                 id: id
@@ -80,7 +80,7 @@ export class UsersService {
     }
 
     async getOneUser(id: string) {
-        console.log('userId: ', id);
+        // console.log('userId: ', id);
         return await this.prisma.user.findUnique({
             where: {
                 id: id
@@ -125,8 +125,8 @@ export class UsersService {
             where: { id }
         });
 
-        console.log('user data : ', ana);
-        console.log('id : ', id);
+        // console.log('user data : ', ana);
+        // console.log('id : ', id);
 
         await this.prisma.achievement.delete({
             where: { UserId: id }
@@ -153,7 +153,7 @@ export class UsersService {
         const user = await this.findOneUser(req.user.sub);
         if (!user) throw new NotFoundException(`User does not exist`);
 
-        console.log('localhost:4000/upload/' + file.filename);
+        // console.log('localhost:4000/upload/' + file.filename);
         const filename = 'http://localhost:4000/upload/' + file.filename;
         return filename;
         // return (file.path);
@@ -167,7 +167,7 @@ export class UsersService {
             var file =
                 process.env.UPLOADS_DESTINATION + '/' + splitedStrings[1];
         } else {
-            console.log('path: ', path);
+            // console.log('path: ', path);
             return 'this is default it can not be deleted';
         }
         try {
@@ -218,7 +218,7 @@ export class UsersService {
             })
         );
 
-        console.log(data);
+        // console.log(data);
         return data;
     }
 
@@ -227,7 +227,7 @@ export class UsersService {
             where: { UserId: userId }
         });
 
-        console.log('achievements : ', findAchievement);
+        // console.log('achievements : ', findAchievement);
         const {
             UserId,
             welcome,
@@ -309,7 +309,7 @@ export class UsersService {
         avatar: string,
         nickName: string
     ): Promise<User> {
-        console.log('id: ', req.user.sub);
+        // console.log('id: ', req.user.sub);
         const isUser = this.findOneUser(req.user.sub);
         if (!isUser) throw new NotFoundException(`User does not exist`);
         //update user avatar and nickName if the front send them if not do not do anything
@@ -319,12 +319,12 @@ export class UsersService {
         // }
 
         if (avatar.length !== 0) {
-            console.log('update avatar');
+            // console.log('update avatar');
             await this.updateAvatar(req.user.sub, avatar);
         }
 
         if (nickName) {
-            console.log('update nickname');
+            // console.log('update nickname');
             await this.updateNickName(req.user.sub, nickName);
         }
 
@@ -358,7 +358,7 @@ export class UsersService {
             req.user.sub
         );
 
-        console.log('FFF: ', friends);
+        // console.log('FFF: ', friends);
         if (friends[0] !== undefined) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
@@ -374,14 +374,14 @@ export class UsersService {
             throw new NotFoundException('this user does not exist');
         }
         delete user.HashPassword;
-        console.log(user);
+        // console.log(user);
         //add the type of profile string
         const type = await this.friendService.typeOfProfile(
             req.user.sub,
             userId
         );
         const info = { user, friendsIds, type };
-        console.log('info wael ', info);
+        // console.log('info wael ', info);
         return info;
     }
 
@@ -392,24 +392,24 @@ export class UsersService {
         }
 
         delete user.HashPassword;
-        console.log(user);
+        // console.log(user);
 
         const friends = await this.friendService.listFriends(user.id);
-        console.log('......................................................');
-        console.log(friends);
-        console.log('......................................................');
+        // console.log('......................................................');
+        // console.log(friends);
+        // console.log('......................................................');
 
         const friendsIds = friends.map((friends) => {
             return friends.id;
         });
 
-        console.log(friendsIds);
+        // console.log(friendsIds);
 
         const block = await this.blockUsers.listOfBlockedUsers(user.id);
         const blocksIds = block.map((block) => {
             return block.id;
         });
-        console.log('ids ', friendsIds);
+        // console.log('ids ', friendsIds);
 
         return { user, friendsIds, blocksIds };
     }
@@ -460,7 +460,7 @@ export class UsersService {
                 return user2.exp - user1.exp; // If levels are equal, sort by experience in descending order
             }
         });
-        console.log(sortedUsers);
+        // console.log(sortedUsers);
         var index = 1;
         const allRankPromises = sortedUsers.map(async(sortedUsers) => {
             if (!sortedUsers.completeProfile || await this.blockUsers.isUserBlocked(userId, sortedUsers.id)){
@@ -484,7 +484,7 @@ export class UsersService {
         const allRank = await Promise.all(allRankPromises);
         const filteredRank = allRank.filter(Boolean);
 
-        console.log('rank: ', filteredRank);
+        // console.log('rank: ', filteredRank);
         return filteredRank;
     }
 }

@@ -59,30 +59,30 @@ export class notificationService {
 		  }
 		});
 
-		console.log('-------: ', notification);
+		// console.log('-------: ', notification);
 		return notification;
 	  }
 	
 	  async getNotificationsForUser(recieverNickName: string) {
 		
-		console.log('nickName: ', recieverNickName);
+		// console.log('nickName: ', recieverNickName);
 		const notifications = await this.prisma.notification.findMany({
 		  where: {
 			recieverNickName
 		  }
 		});
-		console.log('notifications: ', notifications);
+		// console.log('notifications: ', notifications);
 		// this.deleteAllNotificationsForUser(recieverNickName);
 		return (notifications);
 	  }
 	
 	  async deleteNotification(userMe: string, friendId: string, recieverNickName: string) {
 		
-		console.log('userMe: ', userMe, 'friendId: ', friendId, 'recieverNickName: ', recieverNickName);
+		// console.log('userMe: ', userMe, 'friendId: ', friendId, 'recieverNickName: ', recieverNickName);
 
 		const allNotifications = await this.getNotificationsForUser(recieverNickName);
 		
-		console.log('allNOOOOOOTTTT:   ', allNotifications);
+		// console.log('allNOOOOOOTTTT:   ', allNotifications);
 		const user1 = await this.prisma.user.findFirst({
 			where: {
 				id: friendId
@@ -93,7 +93,7 @@ export class notificationService {
 				id: userMe
 			}
 		});
-		console.log('user1: ', user1.id, 'user2: ', user2.id);
+		// console.log('user1: ', user1.id, 'user2: ', user2.id);
 		const allNotificationId = allNotifications.map((notification)=>{
 			if (notification.senderNickName === user1.nickName 
 				&& notification.recieverNickName === user2.nickName
@@ -103,9 +103,9 @@ export class notificationService {
 			}
 			return null;
 		});
-		console.log('allIDS: ', allNotificationId);
+		// console.log('allIDS: ', allNotificationId);
 		const notificationId = allNotificationId.filter(Boolean);
-		console.log('after filter: ', notificationId);
+		// console.log('after filter: ', notificationId);
 		// const id = notificationId[0];
 		// console.log('notificationId: ', id);
 		// const isNotification = await this.prisma.notification.findUnique({
@@ -115,7 +115,7 @@ export class notificationService {
 		//   });
 		//   console.log('check: ', isNotification);
 		// if (isNotification){
-			console.log('hoooooowa hdak');
+			// console.log('hoooooowa hdak');
 			await this.prisma.notification.delete({
 				where: {
 					id: notificationId[0],
