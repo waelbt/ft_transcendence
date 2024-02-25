@@ -17,7 +17,6 @@ interface Ball {
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    
     constructor(private readonly gameService: gameService) {}
 
     @WebSocketServer()
@@ -58,25 +57,23 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token)
+        console.log('howa : ', client.handshake.auth.token);
         console.log('user: ', userCheck);
-        if (userCheck.state === false){
+        if (userCheck.state === false) {
             console.log('from h');
             await this.handleDisconnect(client);
-        }
-            
-        else{
-            if (userCheck.userData.sub){
+        } else {
+            if (userCheck.userData.sub) {
                 const isUser = await this.prisma.user.findUnique({
                     where: {
-                        id: userCheck.userData.sub,
+                        id: userCheck.userData.sub
                     }
                 });
                 if (!isUser) await this.handleDisconnect(client);
                 await this.prisma.user.update({
-                    where: {id: userCheck.userData.sub},
-                    data: {inGame: true},
-                })
+                    where: { id: userCheck.userData.sub },
+                    data: { inGame: true }
+                });
                 this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
@@ -85,20 +82,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async handleDisconnect(client: any) {
         console.log('A client disconnected: ' + client.id);
 
-
         // console.log('client : ', client);
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token)
+        console.log('howa : ', client.handshake.auth.token);
         console.log('user: ', userCheck);
         if (userCheck.userData)
             var user = await this.prisma.user.findUnique({
                 where: {
-                    id: userCheck.userData.sub,
+                    id: userCheck.userData.sub
                 }
             });
-        if (!user){
+        if (!user) {
             client.disconnect(true);
             // for (const room in this.rooms) {
             //     if (
