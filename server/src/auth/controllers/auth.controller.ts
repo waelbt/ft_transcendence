@@ -1,11 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
+import {  Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
-import { AuthDto, AuthDtoSignIn } from "../dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { accessTokenGuard, refreshTokenGuard } from "src/common/guards";
-import { Public, getCurrentUser, getCurrentUserId } from "src/common/decorators";
-import { Request } from "express";
-import { JwtStrategy } from "../strategy";
+import { Public } from "src/common/decorators";
 import { AuthGuard } from "@nestjs/passport";
 import { UsersService } from "src/users/services/users.service";
 import { jwtGuard } from "../authGuard";
@@ -27,7 +23,7 @@ export class AuthController {
     @Public()
     @UseGuards(AuthGuard('google'))
     async googleLogin(@Req() req, @Res() res){
-        console.log('im in callback google');
+        // console.log('im in callback google');
         await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
@@ -40,8 +36,8 @@ export class AuthController {
     @Public()
     @UseGuards(AuthGuard('42'))
     async intraLogin(@Req() req, @Res() res){
-        console.log('im in callback 42');
-        console.log('logId : ', req.user.id);
+        // console.log('im in callback 42');
+        // console.log('logId : ', req.user.id);
         await this.AuthService.setUpTokens(req, res, req.user.id);
     }
 
@@ -58,7 +54,7 @@ export class AuthController {
     @UseGuards(jwtGuard)
     @Get('refresh')
     async refreshToken(@Req() req, @Res() res){
-        console.log('im in refresh');
+        // console.log('im in refresh');
         res.send(await this.AuthService.refreshToken(req, res));
     }
 

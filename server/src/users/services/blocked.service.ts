@@ -43,7 +43,7 @@ export class BlockService {
                     ],
                 },
             });
-            console.log('block: ', !!block);
+            // console.log('block: ', !!block);
             return !!block;
         } catch(errrrr) {
             return ;

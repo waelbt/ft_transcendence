@@ -56,12 +56,12 @@ export class notificationGateway
                 await this.handleDisconnect(client);
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
-                console.log('---- ok socket: ', this.usersSockets);
+                // console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: true }
                 });
-                console.log('socket: ', this.usersSockets);
+                // console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
             }
         }
@@ -80,10 +80,10 @@ export class notificationGateway
                 avatar: sender.avatar,
                 action: action
             };
-            console.log('notification: ', notificationPayload);
-            console.log('sender: ', sender);
-            console.log('reciever: ', receiver);
-            console.log('action: ', action);
+            // console.log('notification: ', notificationPayload);
+            // console.log('sender: ', sender);
+            // console.log('reciever: ', receiver);
+            // console.log('action: ', action);
             //hna ghtstory dkchi f database
             await this.notificationService.createNotification(
                 sender.nickName,
@@ -96,9 +96,9 @@ export class notificationGateway
                 .to(userSocket)
                 .emit('notification', notificationPayload);
         } else {
-            console.log('sender: ', sender);
-            console.log('reciever: ', receiver);
-            console.log('action: ', action);
+            // console.log('sender: ', sender);
+            // console.log('reciever: ', receiver);
+            // console.log('action: ', action);
             //hna ghtstory dkchi f database
             await this.notificationService.createNotification(
                 sender.nickName,

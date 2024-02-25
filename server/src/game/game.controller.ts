@@ -2,12 +2,9 @@ import {
     Body,
     Controller,
     Get,
-    NotFoundException,
-    Param,
     Post
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { UsersService } from 'src/users/services/users.service';
 import { gameService } from './game.service';
 import { gameDto } from './dto/game.dto';
 
@@ -29,7 +26,7 @@ export class GameController {
     async create(@Body() game: gameDto) {
         await this.gameService.checkUsers(game.winnerId, game.loserId);
 
-        console.log('hi im in create game');
+        // console.log('hi im in create game');
         return await this.gameService.createGame(game);
     }
 }

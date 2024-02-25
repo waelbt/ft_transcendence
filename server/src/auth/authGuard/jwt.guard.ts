@@ -1,5 +1,5 @@
 import { ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtModule, JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "@nestjs/passport";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class jwtGuard extends AuthGuard('jwt'){
         try{
             const user = this.jwt.verify(token);
             request.user = user;
-            console.log('hada', user);
+            // console.log('hada', user);
             return request;
         } catch{
             throw new UnauthorizedException('this refresh token is not valid');

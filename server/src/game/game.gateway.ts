@@ -58,10 +58,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token)
-        console.log('user: ', userCheck);
+        // console.log('howa : ', client.handshake.auth.token)
+        // console.log('user: ', userCheck);
         if (userCheck.state === false){
-            console.log('from h');
+            // console.log('from h');
             await this.handleDisconnect(client);
         }
             
@@ -90,8 +90,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('howa : ', client.handshake.auth.token)
-        console.log('user: ', userCheck);
+        // console.log('howa : ', client.handshake.auth.token)
+        // console.log('user: ', userCheck);
         if (userCheck.userData)
             var user = await this.prisma.user.findUnique({
                 where: {

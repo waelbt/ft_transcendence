@@ -61,19 +61,19 @@ export class twoFAService {
     }
 
     async validateTwoFA(@Req() req, code, @Res() res) {
-        console.log('code   ', code);
+        // console.log('code   ', code);
         const user = await this.prisma.user.findUnique({
             where: { id: req.user.sub }
         });
 
         if (!user) throw new NotFoundException(`User does not exist`);
 
-        console.log('secret: ', user.f2A_Secret);
+        // console.log('secret: ', user.f2A_Secret);
         const isValidToken = await this.validateTwoFAToken(
             code,
             user.f2A_Secret
         );
-        console.log('hda : ', isValidToken);
+        // console.log('hda : ', isValidToken);
         if (isValidToken) {
             await this.prisma.user.update({
                 where: { id: req.user.sub },

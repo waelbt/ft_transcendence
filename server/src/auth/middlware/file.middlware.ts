@@ -6,11 +6,11 @@ import { JwtService } from "@nestjs/jwt";
 export class Middlware implements NestMiddleware {
     constructor(private readonly jwt: JwtService) {}
     async use(req: Request, res: Response, next: NextFunction) {
-        console.log('zbiiiiii');
+        // console.log('zbiiiiii');
 
         const authHeader = req.headers.authorization;
 
-        console.log(req.headers);
+        // console.log(req.headers);
         if (authHeader && authHeader.startsWith('Bearer ')) {
             var accessToken = authHeader.slice(7);
         }
@@ -21,12 +21,12 @@ export class Middlware implements NestMiddleware {
 
         try {
             const user = await this.jwt.verify(accessToken);
-            console.log(`here check \n ${accessToken}`);
+            // console.log(`here check \n ${accessToken}`);
             req.user = user;
-            console.log('user is: ',req.user);
+            // console.log('user is: ',req.user);
             next();
         } catch (error) {
-            console.log('hiiii');
+            // console.log('hiiii');
             console.log(error);
             return res.status(401).json({ message: 'Unauthorized' });
         }
