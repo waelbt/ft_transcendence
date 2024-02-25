@@ -40,7 +40,7 @@ export class notificationGateway
     async handleConnection(client: any, ...args: any[]) {
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -81,6 +81,17 @@ export class notificationGateway
                 action: action
             };
             console.log('notification: ', notificationPayload);
+            console.log('sender: ', sender);
+            console.log('reciever: ', receiver);
+            console.log('action: ', action);
+            //hna ghtstory dkchi f database
+            await this.notificationService.createNotification(
+                sender.nickName,
+                sender.avatar,
+                receiver.nickName,
+                receiver.avatar,
+                action
+            );
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
@@ -111,7 +122,7 @@ export class notificationGateway
         console.log('in handle disconnection');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.auth.token
+            client.handshake.headers.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);

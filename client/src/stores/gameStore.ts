@@ -67,15 +67,15 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     updateState: (newState) => set((state) => ({ ...state, ...newState })),
     initializeGameSocket: (token) => {
         const { socket } = get();
-        if (token && !socket) {
-            const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
-                path: '/socket.io',
-                transports: ['websocket'],
-                secure: true,
-                auth: { token: token }
-            });
-            set({ socket: newSocket });
-        }
+            if (token && !socket) {
+                const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
+                    path: '/socket.io',
+                    transports: ['websocket'],
+                    secure: true,
+                    auth: { token: token }
+                });
+                set({ socket: newSocket });
+            }
     },
     updateBallPosition: (x: number, y: number) =>
         set((state) => ({

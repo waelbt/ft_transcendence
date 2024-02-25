@@ -462,8 +462,8 @@ export class UsersService {
         });
         console.log(sortedUsers);
         var index = 1;
-        const allRank = sortedUsers.map((sortedUsers) => {
-            if (!sortedUsers.completeProfile || this.blockUsers.isUserBlocked(userId, sortedUsers.id)){
+        const allRankPromises = sortedUsers.map(async(sortedUsers) => {
+            if (!sortedUsers.completeProfile || await this.blockUsers.isUserBlocked(userId, sortedUsers.id)){
                 return ;
             }
             const id = sortedUsers.id;
@@ -481,6 +481,10 @@ export class UsersService {
                 xp
             };
         });
-        return allRank;
+        const allRank = await Promise.all(allRankPromises);
+        const filteredRank = allRank.filter(Boolean);
+
+        console.log('rank: ', filteredRank);
+        return filteredRank;
     }
 }
