@@ -65,7 +65,7 @@ function Layout() {
         });
 
         initializeSocket(accessToken);
-        initializeGameSocket();
+        initializeGameSocket(accessToken);
         initializeNotifSocket(accessToken);
 
         return () => {

@@ -39,7 +39,7 @@ type GameState = {
 };
 
 type GameAction = {
-    initializeGameSocket: () => void;
+    initializeGameSocket: (token: string | null) => void;
     updateState: (newState: Partial<GameState>) => void;
     moveMyPaddle: (y: number) => void;
     updateBallPosition: (x: number, y: number) => void;
@@ -65,15 +65,14 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     isGameReady: false,
     // Actions
     updateState: (newState) => set((state) => ({ ...state, ...newState })),
-    initializeGameSocket: () => {
+    initializeGameSocket: (token) => {
         const { socket } = get();
-        if (!socket) {
+        if (token && !socket) {
             const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
+                path: '/socket.io',
                 transports: ['websocket'],
-                reconnection: true,
-                reconnectionDelay: 1000,
-                reconnectionDelayMax: 1000,
-                reconnectionAttempts: 5
+                secure: true,
+                auth: { token: token }
             });
             set({ socket: newSocket });
         }
