@@ -368,9 +368,9 @@ export class ChatGateway
                 isRoom: false
             };
     
-            console.log('============================================================');
-            console.log(singleRoom)
-            console.log('============================================================');
+            // console.log('============================================================');
+            // console.log(singleRoom)
+            // console.log('============================================================');
             // this.server.in(client.id).socketsJoin(dm.roomTitle);
             const userSocket = this.usersSockets.get(user.email);
             if (userSocket)
@@ -381,10 +381,10 @@ export class ChatGateway
 
     @SubscribeMessage('Kick')
     async kickUser(client: any, kickmemberDto: KickMemberDto) {
-        console.log(
-            'kickMembber-------------------------------------',
-            kickmemberDto
-        );
+        // console.log(
+        //     'kickMembber-------------------------------------',
+        //     kickmemberDto
+        // );
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -450,7 +450,7 @@ export class ChatGateway
 
     @SubscribeMessage('Ban')
     async banMember(client: any, banMemberDto: BanMemberDto) {
-        console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+        // console.log('jaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -513,8 +513,50 @@ export class ChatGateway
         }
     }
 
+
+    @SubscribeMessage('notification')
+    async notificationEvent(receiver, sender, senderId, action, type) {
+        const userSocket = this.usersSockets.get(receiver.email);
+        if (userSocket) {
+            const notification = await this.prisma.notification.create({
+                data: {
+                    userId: senderId,
+                    senderNickName: sender.nickName,
+                    senderAvatar: sender.avatar,
+                    recieverNickName: receiver.nickName,
+                    recieverAvatar: receiver.avatar,
+                    action,
+                    type
+                }
+            });
+            const notificationPayload = {
+                id: notification.id,
+                userId: senderId,
+                nickName: sender.nickName,
+                avatar: sender.avatar,
+                action: action,
+                type
+            };
+            this.server
+                .to(userSocket)
+                .emit('notification', notificationPayload);
+        } else {
+
+            const notification = await this.prisma.notification.create({
+                data: {
+                    userId: senderId,
+                    senderNickName: sender.nickName,
+                    senderAvatar: sender.avatar,
+                    recieverNickName: receiver.nickName,
+                    recieverAvatar: receiver.avatar,
+                    action,
+                    type
+                }
+            });
+        }
+    }
+
     async handleDisconnect(client: any) {
-        // console.log('kn disconnect');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -531,7 +573,6 @@ export class ChatGateway
 
         if (!user) return;
 
-        //update stat in database from true to false
         await this.prisma.user.update({
             where: { id: userCheck.userData.sub },
             data: { status: false }

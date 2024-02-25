@@ -127,7 +127,7 @@ else {
         console.log('in handle disconnection (NOTIFICATION)');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);
