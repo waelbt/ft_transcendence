@@ -2,12 +2,11 @@ import AllRoutes from './Routes';
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
-    QueryOptions,
     QueryClient,
-    QueryClientProvider
+    QueryClientProvider,
+    QueryOptions
 } from '@tanstack/react-query';
-// import { useEffect } from 'react';
-// import useGameStore from './stores/gameStore';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -21,15 +20,17 @@ const queryClient = new QueryClient({
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <AllRoutes />
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                toastOptions={{
-                    duration: 3000
-                }}
-                containerStyle={{ zIndex: 9999 }}
-            />
+            <ErrorBoundary>
+                <AllRoutes />
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                    toastOptions={{
+                        duration: 3000
+                    }}
+                    containerStyle={{ zIndex: 9999 }}
+                />
+            </ErrorBoundary>
             <ReactQueryDevtools />
         </QueryClientProvider>
     );

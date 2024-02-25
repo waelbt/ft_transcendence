@@ -113,3 +113,10 @@ export interface DMRooms {
     messages: Message[];
     friendId: string;
 }
+
+export interface Notification {
+    id: string;
+    nickName: string;
+    avatar: string;
+    action: string;
+}
