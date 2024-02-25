@@ -220,16 +220,16 @@ export class friendsService {
                 status
             };
         });
-        console.log('friends: ', friends);
+        // console.log('friends: ', friends);
         return friends;
     }
 
     async userListFriends(viewerId: string, userId: string) {
         const myFriends = await this.getFriends(userId, viewerId);
-        console.log('hna my friend : ', myFriends);
+        // console.log('hna my friend : ', myFriends);
 
         const otherFriends = await this.getFriends(viewerId, userId);
-        console.log('hna other friend : ', otherFriends);
+        // console.log('hna other friend : ', otherFriends);
 
         const friends = await this.filterFriends(
             myFriends,
@@ -237,7 +237,7 @@ export class friendsService {
             viewerId,
             userId
         );
-        console.log('his friends: ', friends);
+        // console.log('his friends: ', friends);
         return friends;
     }
 
@@ -386,8 +386,8 @@ export class friendsService {
         const mutualFriends = await Promise.all(mutualFriendsPromises);
         const potentialFriends = await Promise.all(potentialFriendsPromises);
 
-        console.log('mutualFriends: ', mutualFriends);
-        console.log('potentialFriends: ', potentialFriends);
+        // console.log('mutualFriends: ', mutualFriends);
+        // console.log('potentialFriends: ', potentialFriends);
 
         return mutualFriends.concat(potentialFriends);
     }

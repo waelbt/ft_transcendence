@@ -33,7 +33,7 @@ export class notificationGateway
     @WebSocketServer() server: Server;
 
     afterInit(client: Socket) {
-        console.log('in init');
+        // console.log('in init');
         // client.use(SocketIOMIDDELWARE() as any);
     }
 
@@ -80,10 +80,10 @@ export class notificationGateway
                 avatar: sender.avatar,
                 action: action
             };
-            console.log('notification: ', notificationPayload);
-            console.log('sender: ', sender);
-            console.log('reciever: ', receiver);
-            console.log('action: ', action);
+            // console.log('notification: ', notificationPayload);
+            // console.log('sender: ', sender);
+            // console.log('reciever: ', receiver);
+            // console.log('action: ', action);
             //hna ghtstory dkchi f database
             await this.notificationService.createNotification(
                 sender.nickName,
@@ -96,9 +96,9 @@ export class notificationGateway
                 .to(userSocket)
                 .emit('notification', notificationPayload);
         } else {
-            console.log('sender: ', sender);
-            console.log('reciever: ', receiver);
-            console.log('action: ', action);
+            // console.log('sender: ', sender);
+            // console.log('reciever: ', receiver);
+            // console.log('action: ', action);
             //hna ghtstory dkchi f database
             await this.notificationService.createNotification(
                 sender.nickName,
@@ -119,7 +119,7 @@ export class notificationGateway
     }
 
     async handleDisconnect(client: any) {
-        console.log('in handle disconnection');
+        console.log('in handle disconnection (NOTIFICATION)');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.headers.token
