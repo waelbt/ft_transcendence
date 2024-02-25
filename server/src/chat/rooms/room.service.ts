@@ -358,12 +358,12 @@ export class RoomService {
 
         // console.log('=====================================', filteredMessages, 'user is ', user.email);
         room.messages = filteredMessages;
-        console.log(
-            '=====================================',
-            filteredMessages,
-            'user is ',
-            user.email
-        );
+        // console.log(
+        //     '=====================================',
+        //     filteredMessages,
+        //     'user is ',
+        //     user.email
+        // );
         return room;
     }
 

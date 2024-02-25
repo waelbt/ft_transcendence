@@ -72,7 +72,7 @@ export class ChatGateway
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
 
-        console.log(this.usersSockets);
+        // console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
         // const sockets = this.server.sockets;
         // console.log('-----------',this.server.sockets.sockets);
@@ -90,10 +90,10 @@ export class ChatGateway
             //     data: { status: true }
             // });
             console.log(
-                `This user ${userCheck.userData.email} is now connected`
+                `This user ${userCheck.userData.email} is now connected (CHAT)`
             );
             this.usersSockets.set(userCheck.userData.email, client.id);
-            console.log(this.usersSockets);
+            console.log('CHAT', this.usersSockets);
             this.wsService.joinUserSocketToItsRooms(
                 client.id,
                 userCheck.userData.sub,
