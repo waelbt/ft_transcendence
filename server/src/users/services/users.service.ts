@@ -409,6 +409,8 @@ export class UsersService {
         const blocksIds = block.map((block) => {
             return block.id;
         });
+
+        // const notification = this.noti;
         // console.log('ids ', friendsIds);
 
         return { user, friendsIds, blocksIds };

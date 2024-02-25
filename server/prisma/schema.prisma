@@ -45,11 +45,13 @@ model User {
 
 model notification{
   id                      Int    @id @default(autoincrement())
+  userId                  String
   senderNickName          String
   senderAvatar            String
   recieverNickName        String
   recieverAvatar          String
   action                  String
+  type                    String
   user                    User[]
 }
 

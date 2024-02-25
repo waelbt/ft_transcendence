@@ -51,7 +51,7 @@ export class BlockService {
     }
 
     async listOfBlockedUsers(userId: string) {
-        console.log('id: ', userId);
+        // console.log('id: ', userId);
         const listBlocked = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { blockedUsers: true }
