@@ -42,6 +42,7 @@ export class notificationGateway
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
         );
+        console.log('id: ', userCheck.userData.sub);
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
             //update stat in database from false to true
@@ -51,11 +52,12 @@ export class notificationGateway
                         id: userCheck.userData.sub
                     }
                 });
-                if (!isUser) {
-                    console.log('hello');
-                    await this.handleDisconnect(client);
-                }
-            } else {
+            }
+            if (!isUser) {
+                console.log('hello');
+                await this.handleDisconnect(client);
+            } 
+            else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
                 console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
