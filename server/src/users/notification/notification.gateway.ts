@@ -70,28 +70,31 @@ else {
     }
 
     @SubscribeMessage('notification')
-    async notificationEvent(receiver, sender, senderId, action) {
+    async notificationEvent(receiver, sender, senderId, action, type) {
         const userSocket = await this.usersSockets.get(receiver.email);
         if (userSocket) {
-            const notificationPayload = {
-                // receiver: receiver.nickName,
-                id: senderId,
-                nickName: sender.nickName,
-                avatar: sender.avatar,
-                action: action
-            };
             // console.log('notification: ', notificationPayload);
             // console.log('sender: ', sender);
             // console.log('reciever: ', receiver);
             // console.log('action: ', action);
             //hna ghtstory dkchi f database
-            await this.notificationService.createNotification(
+            const notification = await this.notificationService.createNotification(
+                senderId,
                 sender.nickName,
                 sender.avatar,
                 receiver.nickName,
                 receiver.avatar,
-                action
+                action,
+                type,
             );
+            const notificationPayload = {
+                id: notification.id,
+                userId: senderId,
+                nickName: sender.nickName,
+                avatar: sender.avatar,
+                action: action,
+                type
+            };
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
@@ -101,11 +104,13 @@ else {
             // console.log('action: ', action);
             //hna ghtstory dkchi f database
             await this.notificationService.createNotification(
+                senderId,
                 sender.nickName,
                 sender.avatar,
                 receiver.nickName,
                 receiver.avatar,
-                action
+                action,
+                type
             );
         }
     }

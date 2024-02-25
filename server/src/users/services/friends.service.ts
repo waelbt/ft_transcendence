@@ -56,7 +56,7 @@ export class friendsService {
         const sender = await this.getNickNameEmail(userMe);
         // console.log('--------------- sender: ', sender);
         // console.log('--------------- reciever: ', receiver);
-        await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`);
+        await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`, 'friend');
     }
 
     async acceptFriendRequest(userMe: string, friendId: string) {

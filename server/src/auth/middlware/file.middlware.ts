@@ -27,7 +27,7 @@ export class Middlware implements NestMiddleware {
             next();
         } catch (error) {
             // console.log('hiiii');
-            console.log(error);
+            // console.log(error);
             return res.status(401).json({ message: 'Unauthorized' });
         }
     }

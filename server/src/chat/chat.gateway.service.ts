@@ -286,25 +286,27 @@ export class WebSocketService {
                     ]
                 }
             });
-            console.log('block: ', !!block);
+            // console.log('block: ', !!block);
             return !!block;
         } catch (errrrr) {
             return;
         }
     }
 
-    async createNotification(senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string) {
+    async createNotification(userId: string, senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string, type) {
 		const notification = await this.prisma.notification.create({
 		  data: {
+            userId,
 			senderNickName,
 			senderAvatar,
 			recieverNickName,
 			recieverAvatar,
 			action,
+            type,
 		  }
 		});
 
-		console.log('-------: ', notification);
+		// console.log('-------: ', notification);
 		return notification;
 	}
 

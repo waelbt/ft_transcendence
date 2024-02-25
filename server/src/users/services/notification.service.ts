@@ -48,17 +48,18 @@ export class notificationService {
 	// 	});
 	//   }
 
-	async createNotification(senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string) {
+	async createNotification(userId: string, senderNickName: string, senderAvatar: string, recieverNickName: string, recieverAvatar: string, action: string, type: string) {
 		const notification = await this.prisma.notification.create({
 		  data: {
+			userId,
 			senderNickName,
 			senderAvatar,
 			recieverNickName,
 			recieverAvatar,
 			action,
+			type
 		  }
 		});
-
 		// console.log('-------: ', notification);
 		return notification;
 	  }
@@ -71,67 +72,85 @@ export class notificationService {
 			recieverNickName
 		  }
 		});
+
+		//
+		const filterNotification = notifications.map((oneNotificaion) => {
+			const id = oneNotificaion.id;
+			const userId = oneNotificaion.userId;
+			const nickName = oneNotificaion.senderNickName;
+			const avatar = oneNotificaion.senderAvatar;
+			const action = oneNotificaion.action;
+			const type = oneNotificaion.type;
+			return {
+				id,
+				userId,
+				nickName,
+				avatar,
+				action,
+				type,
+			} 
+		} );
 		// console.log('notifications: ', notifications);
 		// this.deleteAllNotificationsForUser(recieverNickName);
-		return (notifications);
+		return (filterNotification);
 	  }
 	
 	  async deleteNotification(userMe: string, friendId: string, recieverNickName: string) {
 		
-		// console.log('userMe: ', userMe, 'friendId: ', friendId, 'recieverNickName: ', recieverNickName);
+		// // console.log('userMe: ', userMe, 'friendId: ', friendId, 'recieverNickName: ', recieverNickName);
 
-		const allNotifications = await this.getNotificationsForUser(recieverNickName);
+		// const allNotifications = await this.getNotificationsForUser(recieverNickName);
 		
-		// console.log('allNOOOOOOTTTT:   ', allNotifications);
-		const user1 = await this.prisma.user.findFirst({
-			where: {
-				id: friendId
-			}
-		});
-		const user2 = await this.prisma.user.findFirst({
-			where: {
-				id: userMe
-			}
-		});
-		// console.log('user1: ', user1.id, 'user2: ', user2.id);
-		const allNotificationId = allNotifications.map((notification)=>{
-			if (notification.senderNickName === user1.nickName 
-				&& notification.recieverNickName === user2.nickName
-				&& notification.action.includes('send you a friend request')){
-
-				return notification.id;
-			}
-			return null;
-		});
-		// console.log('allIDS: ', allNotificationId);
-		const notificationId = allNotificationId.filter(Boolean);
-		// console.log('after filter: ', notificationId);
-		// const id = notificationId[0];
-		// console.log('notificationId: ', id);
-		// const isNotification = await this.prisma.notification.findUnique({
+		// // console.log('allNOOOOOOTTTT:   ', allNotifications);
+		// const user1 = await this.prisma.user.findFirst({
 		// 	where: {
-		// 	  id: id,
+		// 		id: friendId
 		// 	}
-		//   });
-		//   console.log('check: ', isNotification);
-		// if (isNotification){
-			// console.log('hoooooowa hdak');
-			await this.prisma.notification.delete({
-				where: {
-					id: notificationId[0],
-				}
-			});
-		// }
+		// });
+		// const user2 = await this.prisma.user.findFirst({
+		// 	where: {
+		// 		id: userMe
+		// 	}
+		// });
+		// // console.log('user1: ', user1.id, 'user2: ', user2.id);
+		// const allNotificationId = allNotifications.map((notification)=>{
+		// 	if (notification.senderNickName === user1.nickName 
+		// 		&& notification.recieverNickName === user2.nickName
+		// 		&& notification.action.includes('send you a friend request')){
 
-		// for (const notif of notification) {
-		// 	const id: number = notif; // Assuming id is the property representing the notification ID
-		// 	console.log('notificationId: ', notificationId);
+		// 		return notification.id;
+		// 	}
+		// 	return null;
+		// });
+		// // console.log('allIDS: ', allNotificationId);
+		// const notificationId = allNotificationId.filter(Boolean);
+		// // console.log('after filter: ', notificationId);
+		// // const id = notificationId[0];
+		// // console.log('notificationId: ', id);
+		// // const isNotification = await this.prisma.notification.findUnique({
+		// // 	where: {
+		// // 	  id: id,
+		// // 	}
+		// //   });
+		// //   console.log('check: ', isNotification);
+		// // if (isNotification){
+		// 	// console.log('hoooooowa hdak');
 		// 	await this.prisma.notification.delete({
 		// 		where: {
-		// 			id: id,
+		// 			id: notificationId[0],
 		// 		}
 		// 	});
-		// }
+		// // }
+
+		// // for (const notif of notification) {
+		// // 	const id: number = notif; // Assuming id is the property representing the notification ID
+		// // 	console.log('notificationId: ', notificationId);
+		// // 	await this.prisma.notification.delete({
+		// // 		where: {
+		// // 			id: id,
+		// // 		}
+		// // 	});
+		// // }
 	  }
 
 	  async deleteAllNotificationsForUser(recieverNickName: string): Promise<void> {
