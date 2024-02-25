@@ -218,7 +218,7 @@ export class UsersService {
             })
         );
 
-        console.log(data);
+        // console.log(data);
         return data;
     }
 
@@ -227,7 +227,7 @@ export class UsersService {
             where: { UserId: userId }
         });
 
-        console.log('achievements : ', findAchievement);
+        // console.log('achievements : ', findAchievement);
         const {
             UserId,
             welcome,
@@ -319,12 +319,12 @@ export class UsersService {
         // }
 
         if (avatar.length !== 0) {
-            console.log('update avatar');
+            // console.log('update avatar');
             await this.updateAvatar(req.user.sub, avatar);
         }
 
         if (nickName) {
-            console.log('update nickname');
+            // console.log('update nickname');
             await this.updateNickName(req.user.sub, nickName);
         }
 
@@ -358,7 +358,7 @@ export class UsersService {
             req.user.sub
         );
 
-        console.log('FFF: ', friends);
+        // console.log('FFF: ', friends);
         if (friends[0] !== undefined) {
             var friendsIds = friends.map((friends) => {
                 return friends.id;
@@ -374,14 +374,14 @@ export class UsersService {
             throw new NotFoundException('this user does not exist');
         }
         delete user.HashPassword;
-        console.log(user);
+        // console.log(user);
         //add the type of profile string
         const type = await this.friendService.typeOfProfile(
             req.user.sub,
             userId
         );
         const info = { user, friendsIds, type };
-        console.log('info wael ', info);
+        // console.log('info wael ', info);
         return info;
     }
 

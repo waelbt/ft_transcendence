@@ -47,7 +47,7 @@ export class friendsController {
 
         if (req.user.sub === friendId)
             throw new ForbiddenException('you can not make this request');
-        console.log('my id: ', req.user.sub, 'ur id: ', friendId);
+        // console.log('my id: ', req.user.sub, 'ur id: ', friendId);
         try {
             await this.friendsService.sendFriendRequest(req.user.sub, friendId);
             return { message: 'Friend request sent successfully' };

@@ -1,12 +1,6 @@
-import {
-    FileTypeValidator,
-    ForbiddenException,
-    MaxFileSizeValidator,
-    ParseFilePipe
-} from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { InvalidFileException } from './file.exception';
 
 export const multerOptions = {
     storage: diskStorage({

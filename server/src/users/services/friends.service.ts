@@ -23,7 +23,7 @@ export class friendsService {
     ) {}
 
     async sendFriendRequest(userMe: string, friendId: string) {
-        console.log('user1: ', userMe, 'user2: ', friendId);
+        // console.log('user1: ', userMe, 'user2: ', friendId);
         //check for users if exists
         await this.checkUsersExistence(userMe, friendId);
 
@@ -54,8 +54,8 @@ export class friendsService {
         //websocket();
         const receiver = await this.getNickNameEmail(friendId);
         const sender = await this.getNickNameEmail(userMe);
-        console.log('--------------- sender: ', sender);
-        console.log('--------------- reciever: ', receiver);
+        // console.log('--------------- sender: ', sender);
+        // console.log('--------------- reciever: ', receiver);
         await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`);
     }
 
@@ -67,7 +67,7 @@ export class friendsService {
             where: { userId1: friendId, userId2: userMe, status: 'pending' }
         });
 
-        console.log('id1: ', friendId, 'id2: ', userMe);
+        // console.log('id1: ', friendId, 'id2: ', userMe);
 
         if (!friendship) {
             throw new NotFoundException('Friend request not found');
@@ -88,7 +88,7 @@ export class friendsService {
 
         //websocket();
         const receiver = await this.getNickNameEmail(friendId);
-        console.log('in accept: ', receiver);
+        // console.log('in accept: ', receiver);
         const sender = await this.getNickNameEmail(userMe);
         await this.notificationService.deleteNotification(userMe, friendId, sender.nickName);
         // await this.notificationGateway.notificationEvent(receiver, sender, userMe, `accept invitaion');
@@ -249,7 +249,7 @@ export class friendsService {
 
         const userFriends = user.friends || [];
 
-        console.log('user: ', user);
+        // console.log('user: ', user);
         return userFriends;
     }
 
@@ -343,7 +343,7 @@ export class friendsService {
                         friend.userId2 === friendId
                 )
             ) {
-                console.log('=====================================');
+                // console.log('=====================================');
 
                 // if (userId === friendId) return;
                 const promise = this.prisma.user
@@ -443,8 +443,8 @@ export class friendsService {
     // }
 
     async areUsersFriends(userId1: string, userId2: string): Promise<boolean> {
-        console.log('id1: ', userId1);
-        console.log('id2: ', userId2);
+        // console.log('id1: ', userId1);
+        // console.log('id2: ', userId2);
         const friendship = await this.prisma.friendship.findFirst({
             where: {
                 OR: [
@@ -454,7 +454,7 @@ export class friendsService {
             }
         });
 
-        console.log('3alam : ', friendship);
+        // console.log('3alam : ', friendship);
         return !!friendship;
     }
 

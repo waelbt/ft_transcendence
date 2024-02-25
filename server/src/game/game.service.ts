@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { gameDto } from './dto/game.dto';
 import { Achievement } from '@prisma/client';
@@ -73,8 +73,8 @@ export class gameService {
     async winnerAchievements(userId: string, mode: string, result: string){
         const achievement = await this.prisma.achievement.findUnique({ where: { UserId: userId } });
 
-        console.log('chihja');
-        console.log(achievement);
+        // console.log('chihja');
+        // console.log(achievement);
         // if u win ur first game
         await this.firstGameWin(achievement, userId);
 
@@ -106,7 +106,7 @@ export class gameService {
     async firstGameWin(achievement: Achievement, userId: string){
         // console.log('here: ', achievement.welcome);
         if (achievement && !achievement.welcome) {          
-            console.log('hanaya: ', userId);
+            // console.log('hanaya: ', userId);
             await this.prisma.achievement.update({
                 where: { UserId: userId },
                 data: { welcome: true },

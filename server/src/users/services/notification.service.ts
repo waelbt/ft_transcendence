@@ -59,7 +59,7 @@ export class notificationService {
 		  }
 		});
 
-		console.log('-------: ', notification);
+		// console.log('-------: ', notification);
 		return notification;
 	  }
 	
