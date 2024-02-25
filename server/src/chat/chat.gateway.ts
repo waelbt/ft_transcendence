@@ -71,7 +71,7 @@ export class ChatGateway
 
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
-
+        console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
         // console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
         // const sockets = this.server.sockets;
@@ -140,11 +140,16 @@ export class ChatGateway
                             oneSocket.handshake.auth.token
                         );
 
-                    const userTwoData = await this.wsService.getUserFromAccessToken(
-                        client.handshake.auth.token
-                    );
-                    if (!await this.wsService.isUserBlocked(userOneData.userData.sub, userTwoData.userData.sub))
-                    {
+                    const userTwoData =
+                        await this.wsService.getUserFromAccessToken(
+                            client.handshake.auth.token
+                        );
+                    if (
+                        !(await this.wsService.isUserBlocked(
+                            userOneData.userData.sub,
+                            userTwoData.userData.sub
+                        ))
+                    ) {
                         this.server.in(oneSocket.id).emit('message', message);
                         // console.log('leave---------', userOneData.userData.email, userTwoData.userData.email);
                         // this.server.in(oneSocket.id).socketsLeave(room.roomTitle);
@@ -193,9 +198,7 @@ export class ChatGateway
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
         await this.roomService.leaveRoom(leaveRoomDto, userCheck.userData.sub);
-        const userSocket = this.usersSockets.get(
-            userCheck.userData.email
-        );
+        const userSocket = this.usersSockets.get(userCheck.userData.email);
         await this.server.in(userSocket).socketsLeave(leaveRoomDto.roomTitle);
 
         const user = await this.prisma.user.findUnique({
@@ -303,29 +306,26 @@ export class ChatGateway
                         dmroom.messages[dmroom.messages.length - 1].senderId
                 };
                 const users = dmroom.users;
-                
+
                 // this.server.in(client.id).socketsJoin(dmroom.roomTitle);
                 this.server.to(dmroom.roomTitle).emit('dm', message);
             }
         }
     }
 
-
     @SubscribeMessage('joinDm')
-    async joinDm (userId: string, roomTitle: string) {
-
+    async joinDm(userId: string, roomTitle: string) {
         const user = await this.prisma.user.findUnique({
             where: {
-                id: userId,
+                id: userId
             },
             select: {
-                email: true,
-            },
+                email: true
+            }
         });
 
         const userSocket = this.usersSockets.get(user.email);
-        if (userSocket)
-            this.server.in(userSocket).socketsJoin(roomTitle);
+        if (userSocket) this.server.in(userSocket).socketsJoin(roomTitle);
     }
 
     @SubscribeMessage('checkDm')
@@ -333,10 +333,9 @@ export class ChatGateway
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        if (userCheck.state === false){
+        if (userCheck.state === false) {
             await this.handleDisconnect(client);
-        }
-        else {
+        } else {
             const dm = await this.wsService.CheckForExistingDmRoom(
                 userCheck.userData.sub,
                 createDmDto.friendId
@@ -344,18 +343,20 @@ export class ChatGateway
 
             const user = await this.prisma.user.findUnique({
                 where: {
-                    id: createDmDto.friendId,
+                    id: createDmDto.friendId
                 },
                 select: {
                     email: true,
-                    nickName: true,
-                },
+                    nickName: true
+                }
             });
 
             // if (userSocket)
             //     this.server.in(userSocket).socketsJoin(dm.roomTitle);
-            dm.users = dm.users.filter((user) => user.id != createDmDto.friendId);
-        
+            dm.users = dm.users.filter(
+                (user) => user.id != createDmDto.friendId
+            );
+
             let lastMessage = '';
             let createdAt = new Date();
             const singleRoom: GetRoomsDto = {
@@ -367,10 +368,14 @@ export class ChatGateway
                 lastMessageTime: createdAt,
                 isRoom: false
             };
-    
-            console.log('============================================================');
-            console.log(singleRoom)
-            console.log('============================================================');
+
+            console.log(
+                '============================================================'
+            );
+            console.log(singleRoom);
+            console.log(
+                '============================================================'
+            );
             // this.server.in(client.id).socketsJoin(dm.roomTitle);
             const userSocket = this.usersSockets.get(user.email);
             if (userSocket)
@@ -526,7 +531,7 @@ export class ChatGateway
                 }
             });
         } catch (errrr) {
-            return ;
+            return;
         }
 
         if (!user) return;

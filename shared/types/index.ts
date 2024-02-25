@@ -115,7 +115,9 @@ export interface DMRooms {
 }
 
 export interface NotificationDto {
-    id: string;
+    id: number;
+    userId: string;
+    type: string;
     nickName: string;
     avatar: string;
     action: string;

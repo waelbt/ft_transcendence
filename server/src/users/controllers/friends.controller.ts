@@ -74,7 +74,6 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
-        
         if (req.user.sub === friendId)
             throw new ForbiddenException('you can not make this request');
         try {
@@ -101,7 +100,6 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
-        
         if (req.user.sub === friendId)
             throw new ForbiddenException('you can not make this request');
         try {
@@ -127,7 +125,7 @@ export class friendsController {
         );
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
-        
+
         if (req.user.sub === userId)
             throw new ForbiddenException('you can not make this request');
         return await this.friendsService.typeOfProfile(req.user.sub, userId);
@@ -146,7 +144,6 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
-        
         if (req.user.sub === friendId)
             throw new ForbiddenException('you can not make this request');
         try {
@@ -173,7 +170,6 @@ export class friendsController {
         if (isItBlocked)
             throw new NotFoundException('this user does not exist');
 
-        
         if (req.user.sub === friendId)
             throw new ForbiddenException('you can not make this request');
         try {
@@ -225,11 +221,15 @@ export class friendsController {
     //endPoint to list friends for another user
     @Get('friends/:viewerId')
     @ApiOperation({ summary: 'get list of another user friends' })
-    @ApiResponse({ status: 200, description: 'Returns list of my friends', type: friendsData })
+    @ApiResponse({
+        status: 200,
+        description: 'Returns list of my friends',
+        type: friendsData
+    })
     async userListFriends(
         @Req() req,
         @Param('viewerId') viewerId: string
-    ): Promise<friendsData[]>{
+    ): Promise<friendsData[]> {
         const isItBlocked = await this.blockService.isUserBlocked(
             viewerId,
             req.user.sub

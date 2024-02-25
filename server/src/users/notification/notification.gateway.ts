@@ -9,8 +9,7 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
-
-
+import { log } from 'console';
 
 @WebSocketGateway({
     cors: {
@@ -36,6 +35,9 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
+        console.log(
+            'notif handlee con.................................................................................'
+        );
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -50,13 +52,12 @@ export class notificationGateway
                     }
                 });
                 if (!isUser) {
-                    console.log('hello')
+                    console.log('hello');
                     await this.handleDisconnect(client);
-                } 
-            }
-else {
+                }
+            } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
-                // console.log('---- ok socket: ', this.usersSockets);
+                console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: true }
@@ -71,22 +72,29 @@ else {
 
     @SubscribeMessage('notification')
     async notificationEvent(receiver, sender, senderId, action, type) {
+        console.log(
+            '...............................................................................................................................'
+        );
+
         const userSocket = await this.usersSockets.get(receiver.email);
+        console.log(userSocket);
+
         if (userSocket) {
             // console.log('notification: ', notificationPayload);
             // console.log('sender: ', sender);
             // console.log('reciever: ', receiver);
             // console.log('action: ', action);
             //hna ghtstory dkchi f database
-            const notification = await this.notificationService.createNotification(
-                senderId,
-                sender.nickName,
-                sender.avatar,
-                receiver.nickName,
-                receiver.avatar,
-                action,
-                type,
-            );
+            const notification =
+                await this.notificationService.createNotification(
+                    senderId,
+                    sender.nickName,
+                    sender.avatar,
+                    receiver.nickName,
+                    receiver.avatar,
+                    action,
+                    type
+                );
             const notificationPayload = {
                 id: notification.id,
                 userId: senderId,
@@ -95,6 +103,8 @@ else {
                 action: action,
                 type
             };
+            console.log('notif', notificationPayload);
+
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
@@ -127,7 +137,7 @@ else {
         console.log('in handle disconnection (NOTIFICATION)');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) {
             client.disconnect(true);

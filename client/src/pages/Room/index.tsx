@@ -76,6 +76,7 @@ export function Room() {
             nickname: string;
         }) => {
             userkickedListener({ id: kickedUser, nickname });
+            console.log('kick ', kickedUser, '   ', userId, id);
             if (kickedUser === userId && id) unpushRoom(+id, true);
         };
 

@@ -2,7 +2,6 @@ import {
     ForbiddenException,
     Inject,
     Injectable,
-    NotFoundException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -23,7 +22,7 @@ export class friendsService {
     ) {}
 
     async sendFriendRequest(userMe: string, friendId: string) {
-        // console.log('user1: ', userMe, 'user2: ', friendId);
+        console.log('user1: ', userMe, 'user2: ', friendId);
         //check for users if exists
         await this.checkUsersExistence(userMe, friendId);
 
@@ -34,7 +33,7 @@ export class friendsService {
         );
 
         if (existRequest) {
-            throw new NotFoundException('-------Friend request already sent'); //need to handle this because it causes 500
+            throw new ForbiddenException('-------Friend request already sent'); //need to handle this because it causes 500
         }
 
         //create a new friendship request
@@ -70,7 +69,7 @@ export class friendsService {
         // console.log('id1: ', friendId, 'id2: ', userMe);
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         // update friendship status to accepted
@@ -109,7 +108,7 @@ export class friendsService {
         // console.log('joj: ', userId2);
         // console.log('friends: ', friendship);
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
@@ -127,7 +126,7 @@ export class friendsService {
         });
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
@@ -514,7 +513,7 @@ export class friendsService {
         const user2 = await this.userService.getOneUser(userId2);
 
         if (!user1 || !user2) {
-            throw new NotFoundException('User not found');
+            throw new ForbiddenException('User not found');
         }
     }
 }

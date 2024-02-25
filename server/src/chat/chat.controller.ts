@@ -183,8 +183,10 @@ export class ChatController {
     }
 
     @Post('addUserToPrivateRoom')
-    async addUserToPrivateRoom(@Req() req, @Body() addUser: AddUserToPrivateRoom) {
-
-        return (this.roomService.addUserToPrivateRoom(addUser, req.user.sub));
+    async addUserToPrivateRoom(
+        @Req() req,
+        @Body() addUser: AddUserToPrivateRoom
+    ) {
+        return this.roomService.addUserToPrivateRoom(addUser, req.user.sub);
     }
 }

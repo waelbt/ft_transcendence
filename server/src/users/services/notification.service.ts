@@ -90,7 +90,7 @@ export class notificationService {
 				type,
 			} 
 		} );
-		// console.log('notifications: ', notifications);
+		// console.log('notifications: ', filterNotification);
 		// this.deleteAllNotificationsForUser(recieverNickName);
 		return (filterNotification);
 	  }

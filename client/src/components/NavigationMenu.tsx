@@ -1,51 +1,55 @@
 import { useNavigate } from 'react-router-dom';
-import { MENU_FIELDS } from '../constants';
 import Popup from 'reactjs-popup';
-import {
-    IoIosCheckmarkCircleOutline,
-    IoIosCloseCircleOutline,
-    IoIosNotifications
-} from 'react-icons/io';
+import { IoIosNotifications } from 'react-icons/io';
 import { Avatar } from '.';
 import { useUserStore } from '../stores/userStore';
 import SearchBar from './SearchBar';
-import { useEffect, useState } from 'react';
+import { ImCheckmark } from 'react-icons/im';
+import { FaXmark } from 'react-icons/fa6';
 import { useNotificationStore } from '../stores/notiSocketfStore';
-import useAxiosPrivate from '../hooks/axiosPrivateHook';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { NotificationDto } from '../../../shared/types';
+import { axiosPrivate } from '../api';
+
+// import { useEffect, useState } from 'react';
+// import { useParams } from 'react-router-dom';
+// import { NotificationDto } from '../../../shared/types';
 
 function NavigationMenu() {
     const navigate = useNavigate();
-    const { id: paramId } = useParams();
-    const axiosPrivate = useAxiosPrivate();
     const { avatar } = useUserStore();
-    const { socket } = useNotificationStore();
-    const [notifications, setNotifications] = useState<NotificationDto[]>([]);
+    const { socket, pushNotification, notifications } = useNotificationStore();
 
     useEffect(() => {
-        socket?.on('notification', (payload) => {
-            setNotifications((prevNotifications) => [
-                ...prevNotifications,
-                payload
-            ]);
-        });
+        const fetchData = async () => {
+            const res = await axiosPrivate.get('/users/notification');
+            console.log('response not', res);
+            const notifications: NotificationDto[] = res.data;
+            notifications.map((notification) => {
+                pushNotification(notification);
+            });
+        };
+
+        fetchData();
+        socket?.on('notification', pushNotification);
 
         return () => {
-            socket?.off('notification');
+            socket?.off('notification', pushNotification);
         };
     }, [socket]);
 
-    const handleAccept = async () => {
-        await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
-        console.log('Accepted notification ');
-    };
+    // /users/notification
 
-    const handleDecline = async () => {
-        await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
-        console.log('Declined notification');
+    // const handleAccept = async () => {
+    //     await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
+    //     console.log('Accepted notification ');
+    // };
 
-    };
+    // const handleDecline = async () => {
+    //     await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
+    //     console.log('Declined notification');
+
+    // };
 
     return (
         <nav className="bg-white border-b border-neutral-100">
@@ -71,67 +75,53 @@ function NavigationMenu() {
                                         className="text-gray-500"
                                         size={28}
                                     />
-                                    {/* {notificationsCount > 0 && (
+                                    {notifications.length ? (
                                         <span className="absolute top-0 right-0  h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-xs text-white">
-                                            {notificationsCount}
+                                            {notifications.length}
                                         </span>
-                                    )} */}
+                                    ) : null}
                                 </div>
                             }
                             position="bottom right"
                             nested
                         >
-                            <div className="p-2.5 bg-white rounded-[10px] shadow flex-col justify-start items-center inline-flex w-max">
-                                {/* Render your notifications content here */}
-                                {/* {notificationsCount === 0 ? (
-                                    <p>No new notifications</p>
-                                ) : (
-                                    <ul className="space-y-2">
-                                        {notifications.map(
-                                            (notification, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex items-center justify-between p-4 border-b border-gray-200"
-                                                >
-                                                    <div className="flex items-center">
-                                                        <img
-                                                            alt="Avatar"
-                                                            className="w-10 h-10 rounded-full mr-4"
-                                                        />
-                                                        <div className="gap-1">
-                                                            <p className="font-semibold">
-                                                                {
-                                                                    notification.nickName
-                                                                }
-                                                            </p>
-                                                            <p className="text-gray-500">
-                                                                {
-                                                                    notification.action
-                                                                }
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex gap-2 ml-4">
-                                                        <IoIosCheckmarkCircleOutline
-                                                            className="text-green-500 cursor-pointer"
-                                                            size={40}
-                                                            onClick={() =>
-                                                                handleAccept()
-                                                            }
-                                                        />
-                                                        <IoIosCloseCircleOutline
-                                                            className="text-red-500 cursor-pointer"
-                                                            size={40}
-                                                            onClick={() =>
-                                                                handleDecline()
-                                                            }
-                                                        />
-                                                    </div>
+                            <div className="w-96 overflow-y-auto h-[188px]   py-px bg-white rounded-md border border-black border-opacity-20 flex-col justify-start items-center inline-flex relative">
+                                {notifications.length ? (
+                                    notifications.map((notification, index) => (
+                                        <div
+                                            key={index}
+                                            className="self-stretch debug p-2.5 bg-white border-b border-black border-opacity-20 justify-between items-center inline-flex mx-4 "
+                                        >
+                                            <img
+                                                className="w-14 h-w-14 rounded-full"
+                                                src={notification.avatar}
+                                            />
+                                            <div className="w-[148px]">
+                                                <span className="text-black text-base font-bold font-['Lemonada']">
+                                                    {notification.nickName}
+                                                </span>
+                                                <span className="text-black text-base font-normal font-['Acme']">
+                                                    {' '}
+                                                </span>
+                                                <span className="text-zinc-600 text-base font-normal font-['Acme']">
+                                                    {notification.action}
+                                                </span>
+                                            </div>
+                                            <div className="justify-center items-center gap-[5px] flex">
+                                                <div className=" p-2 bg-blue-700 text-blue-600  bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer">
+                                                    <ImCheckmark />
                                                 </div>
-                                            )
-                                        )}
-                                    </ul>
-                                )} */}
+                                                <div className="p-2 bg-red-600 text-red-600 bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer">
+                                                    <FaXmark />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className=' bg-white flex justify-center items-center text-zinc-400 text-4xl font-normal font-["Acme"] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 '>
+                                        EMPTY
+                                    </div>
+                                )}
                             </div>
                         </Popup>
                         <div onClick={() => navigate('/profile/me')}>
