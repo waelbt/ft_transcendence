@@ -47,7 +47,7 @@ export function Lobby() {
                         <div
                             key={`mode-${index}`}
                             onClick={() => handleClick(mode)}
-                            className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-black justify-center items-center gap-2.5 flex cursor-pointer"
+                            className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
                         >
                             <div className="text-black text-[33px] font-normal font-['Acme'] leading-[42.90px]">
                                 {mode}

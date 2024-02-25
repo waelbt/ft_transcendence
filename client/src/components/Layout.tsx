@@ -15,6 +15,7 @@ import { GoPerson } from 'react-icons/go';
 import { GoCommentDiscussion } from 'react-icons/go';
 import { GoSignOut } from 'react-icons/go';
 import { GoPeople } from 'react-icons/go';
+import ParticleBackground from './ParticleBackground';
 
 function Layout() {
     const axiosPrivate = useAxiosPrivate();
@@ -73,7 +74,7 @@ function Layout() {
             chatSocket?.disconnect();
             gameSocket?.disconnect();
         };
-    }, []);
+    }, [socket, chatSocket, gameSocket]);
     useEffect(() => {
         // ... [fetchData logic]
 
@@ -135,7 +136,11 @@ function Layout() {
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
-        <div className="flex flex-col h-screen w-screen relative ">
+        <div className="flex  flex-col h-screen w-screen relative ">
+            <div className="absolute top-0 left-0 z-100">
+                <ParticleBackground />
+            </div>
+
             <NavigationMenu />
             <div
                 id="sidebar"
@@ -166,7 +171,7 @@ function Layout() {
                     <GoSignOut size={24} />
                 </div>
             </div>
-            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden bg-gray-50">
+            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden ">
                 <Outlet />
             </div>
         </div>

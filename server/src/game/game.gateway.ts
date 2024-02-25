@@ -17,7 +17,6 @@ interface Ball {
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    
     constructor(private readonly gameService: gameService) {}
 
     @WebSocketServer()
@@ -62,13 +61,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (userCheck.state === false){
             // console.log('from h');
             await this.handleDisconnect(client);
-        }
-            
-        else{
-            if (userCheck.userData.sub){
+        } else {
+            if (userCheck.userData.sub) {
                 const isUser = await this.prisma.user.findUnique({
                     where: {
-                        id: userCheck.userData.sub,
+                        id: userCheck.userData.sub
                     }
                 });
                 if (!isUser) await this.handleDisconnect(client);
@@ -82,9 +79,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: any) {
-        console.log('A client disconnected: (GAME)' + client.id);
-
-
+        
+        
         // console.log('client : ', client);
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -94,11 +90,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (userCheck.userData)
             var user = await this.prisma.user.findUnique({
                 where: {
-                    id: userCheck.userData.sub,
+                    id: userCheck.userData.sub
                 }
             });
-        if (!user){
+        if (!user) {
             client.disconnect(true);
+        console.log('A client disconnected: (GAME) ' + client.id);
             // for (const room in this.rooms) {
             //     if (
             //         this.rooms[room].players[0].id === client.id ||

@@ -11,9 +11,7 @@ import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
 
 
-/************************************************************************ */
-/*******************************error boundries************************** */
-/************************************************************************ */
+
 @WebSocketGateway({
     cors: {
         origin: '*'
@@ -33,14 +31,14 @@ export class notificationGateway
     @WebSocketServer() server: Server;
 
     afterInit(client: Socket) {
-        console.log('in init');
+        // console.log('in init');
         // client.use(SocketIOMIDDELWARE() as any);
     }
 
     async handleConnection(client: any, ...args: any[]) {
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
-            client.handshake.headers.token
+            client.handshake.auth.token
         );
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
@@ -51,10 +49,12 @@ export class notificationGateway
                         id: userCheck.userData.sub
                     }
                 });
+                if (!isUser) {
+                    console.log('hello')
+                    await this.handleDisconnect(client);
+                } 
             }
-            if (!isUser) {
-                await this.handleDisconnect(client);
-            } else {
+else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
                 // console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
@@ -124,7 +124,7 @@ export class notificationGateway
     }
 
     async handleDisconnect(client: any) {
-        console.log('in handle disconnection');
+        console.log('in handle disconnection (NOTIFICATION)');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.headers.token
