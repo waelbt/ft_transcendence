@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useNotificationStore } from '../stores/notiSocketfStore';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useParams } from 'react-router-dom';
+import { NotificationDto } from '../../../shared/types';
 
 function NavigationMenu() {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ function NavigationMenu() {
     const axiosPrivate = useAxiosPrivate();
     const { avatar } = useUserStore();
     const { socket } = useNotificationStore();
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notifications, setNotifications] = useState<NotificationDto[]>([]);
 
     useEffect(() => {
         socket?.on('notification', (payload) => {

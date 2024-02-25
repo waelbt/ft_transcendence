@@ -10,6 +10,7 @@ import { formatDateTime } from '../tools/date_parsing';
 import { useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { useUserStore } from '../stores/userStore';
+import { Avatar } from '.';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
@@ -51,18 +52,14 @@ const MatchTable = () => {
                 Cell: ({ value }) => (
                     <div className="justify-center items-center gap-4 inline-flex">
                         <VersusIcon />
-                        <div className="p-2.5 justify-center items-center gap-2.5 flex">
-                            <div className="flex-col justify-center items-center gap-1 inline-flex">
-                                <img
-                                    className="w-8 h-8 relative rounded-[60px] border border-black"
-                                    src={value?.avatar}
-                                />
-                            </div>
-                            <div className="text-black">
-                                {/* // ! types  */}
-                                {/* {value?.name} ({value?.rating}.{Math.floor((value?.exp / 1200) * 10)) */}
-                                {value?.name} ({value?.rating})
-                            </div>
+                        <div className="p-2.5 justify-center items-center gap-2.5 flex text-black">
+                            <Avatar
+                                imageUrl={value?.avatar}
+                                style="w-12 h-12 relative rounded-[60px] border border-black"
+                            />
+                            {/* // ! types  */}
+                            {/* {value?.name} ({value?.rating}.{Math.floor((value?.exp / 1200) * 10)) */}
+                            {value?.name} ({value?.rating})
                         </div>
                     </div>
                 )
