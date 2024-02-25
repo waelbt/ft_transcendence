@@ -109,7 +109,7 @@ export class notificationService {
 		// this.deleteAllNotificationsForUser(recieverNickName);
 		return (filterNotification);
 	  }
-	
+
 	  async deleteNotification(userMe: string, friendId: string, recieverNickName: string) {
 		
 		// console.log('userMe: ', userMe, 'friendId: ', friendId, 'recieverNickName: ', recieverNickName);

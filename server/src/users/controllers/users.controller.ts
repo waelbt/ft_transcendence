@@ -39,6 +39,7 @@ import { smallData } from '../dto/smallData.dto';
 import { rank } from '../dto/rank.dto';
 import { achievement } from '../dto/achievements.dto';
 import { notificationService } from '../services/notification.service';
+import { notification } from '../dto/notification.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -115,6 +116,8 @@ export class UsersController {
     }
 
     @Get('notification')
+    @ApiOperation({ summary: 'get your notification notification ' })
+    @ApiResponse({ status: 200, description: 'Returns my notification', type: notification })
     async getNotifications(@Req() req){
         const user = await this.usersService.getOneUser(req.user.sub);
         if (!user)
