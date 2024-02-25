@@ -82,9 +82,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: any) {
-        console.log('A client disconnected: (GAME)' + client.id);
-
-
+        
+        
         // console.log('client : ', client);
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -99,6 +98,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             });
         if (!user){
             client.disconnect(true);
+        console.log('A client disconnected: (GAME) ' + client.id);
             // for (const room in this.rooms) {
             //     if (
             //         this.rooms[room].players[0].id === client.id ||

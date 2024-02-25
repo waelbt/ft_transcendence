@@ -514,7 +514,7 @@ export class ChatGateway
     }
 
     async handleDisconnect(client: any) {
-        console.log('kn disconnect');
+        // console.log('kn disconnect');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );

@@ -73,7 +73,7 @@ function Layout() {
             chatSocket?.disconnect();
             gameSocket?.disconnect();
         };
-    }, []);
+    }, [socket, chatSocket, gameSocket]);
     useEffect(() => {
         // ... [fetchData logic]
 

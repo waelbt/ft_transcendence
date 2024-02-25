@@ -43,7 +43,7 @@ export class ChatController {
 
     @Post('createRoom')
     async createRoom(@Req() req, @Body() createRoomDto: CreateRoomDto) {
-        console.log('room ', createRoomDto);
+        // console.log('room ', createRoomDto);
         return await this.roomService.createRoom(createRoomDto, req.user.sub);
     }
 
