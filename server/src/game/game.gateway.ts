@@ -17,7 +17,7 @@ interface Ball {
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    constructor(private readonly gameService: gameService) {}
+    constructor(private readonly gameService: gameService) { }
 
     @WebSocketServer()
     server: Server;
@@ -169,7 +169,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         ids: { userid: string; myid: string }
     ): void {
         console.log('friends mode', ids);
-        if (this.waitingFriend && this.waitingFriend !== client) {
+        if (this.checkIfPlyrIsInGame(client, ids.userid) || this.checkIfPlyrIsInGame(client, ids.myid)) {
+            this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
+            return;
+        }
+        if (this.waitingFriend && this.waitingFriend !== client 
+            && this.waitibgids['frd'] !== ids.myid) {
             console.log('game started in friends mode');
             const room = `${this.waitingFriend.id}${client.id}`;
             client.join(room);
@@ -211,7 +216,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
             this.waitingFriend = null;
             this.waitibgids['frd'] = null;
-        } else {
+        } else if (ids.myid !== ids.userid) {
             console.log(this.connectedUsers);
 
             for (const user in this.connectedUsers) {
@@ -226,30 +231,35 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
     }
 
-    // @SubscribeMessage('leaveGameMode')
-    // handleLeaveGameMode(
-    //     client: Socket,
-    //     payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
-    // ): void {
-    //     console.log(`Client ${client.id} left ${payload.gameMode} mode`);
-    //     for (const room in this.rooms) {
-    //         if (this.rooms[room].players[0].id === client.id) {
-    //             clearInterval(Number(this.rooms[room].intervalId));
-    //             delete this.rooms[room];
-    //         }
-    //     }
-    //     // Check if the client is the one in the waiting room for the specified game mode
-    //     if (this.waitingRooms[payload.gameMode] === client) {
-    //         // Remove the client from the waiting room
-    //         delete this.waitingRooms[payload.gameMode];
-    //     }
+    @SubscribeMessage('leaveGameMode')
+    handleLeaveGameMode(
+        client: Socket,
+        payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
+    ): void {
+        console.log(`Client ${client.id} left ${payload.gameMode} mode`);
+        // for (const room in this.rooms) {
+        //     if (this.rooms[room].players[0].id === client.id) {
+        //         clearInterval(Number(this.rooms[room].intervalId));
+        //         delete this.rooms[room];
+        //     }
+        // }
+        if (this.waitingRooms[payload.gameMode] === client) {
+            this.waitingRooms[payload.gameMode] = null;
+        }
+    }
 
-    //     // Check if the userId matches the one in the waitingIds for the specified game mode
-    //     if (this.waitibgids[payload.gameMode] === payload.userId) {
-    //         // Remove the userId from the waitingIds
-    //         delete this.waitibgids[payload.gameMode];
-    //     }
-    // }
+    checkIfPlyrIsInGame(client: Socket, userId: string) {
+        for (const room in this.rooms) {
+            if (
+                this.rooms[room].players[0].id === client.id ||
+                this.rooms[room].players[1].id === client.id ||
+                this.rooms[room].plysIds.includes(userId)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @SubscribeMessage('gameMode')
     handleGameMode(
@@ -258,7 +268,31 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     ): void {
         console.log(`Client ${client.id} chose ${payload.gameMode} mode`);
 
-        if (payload.gameMode === 'training') {
+        if (this.checkIfPlyrIsInGame(client, payload.userId)) {
+            this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
+            return;
+        }
+
+
+        if ((this.waitingRooms['classic'] &&
+            this.waitingRooms['classic'] !== client &&
+            this.waitibgids['classic'] === payload.userId)) {
+            this.server
+                .to(this.waitingRooms['classic'].id)
+                .emit('gameCanceled', 'The game has been canceled');
+            this.waitingRooms[payload.gameMode] = client;
+            this.waitibgids[payload.gameMode] = payload.userId;
+        }
+        else if ((this.waitingRooms['crazy'] &&
+            this.waitingRooms['crazy'] !== client &&
+            this.waitibgids['crazy'] === payload.userId)) {
+            this.server
+                .to(this.waitingRooms['crazy'].id)
+                .emit('gameCanceled', 'The game has been canceled');
+            this.waitingRooms[payload.gameMode] = client;
+            this.waitibgids[payload.gameMode] = payload.userId;
+        }
+        else if (payload.gameMode === 'training') {
             const room = `${client.id}`;
             console.log(
                 `Game started in ${payload.gameMode} mode and ${client.id}`
@@ -303,9 +337,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] !== client &&
             this.waitibgids[payload.gameMode] !== payload.userId
         ) {
-            const room = `${this.waitibgids[payload.gameMode]}${
-                payload.userId
-            }`;
+            const room = `${this.waitibgids[payload.gameMode]}${payload.userId
+                }`;
             client.join(room);
             this.waitingRooms[payload.gameMode].join(room);
 
@@ -350,8 +383,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             });
 
             console.log(
-                `Game started in ${payload.gameMode} mode between ${
-                    this.waitingRooms[payload.gameMode].id
+                `Game started in ${payload.gameMode} mode between ${this.waitingRooms[payload.gameMode].id
                 } and ${client.id}`
             );
 

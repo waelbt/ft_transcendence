@@ -78,7 +78,7 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     return <div style={paddleStyle}></div>;
 };
 
-const Ball = ({}, {}) => {
+const Ball = ({ }, { }) => {
     const [ballPos, setBallPos] = React.useState({ x: 0, y: 0 });
     const [ballColor, setBallColor] = React.useState('white');
     const [shadow, setShadow] = React.useState('0 0 1.25rem white');

@@ -27,15 +27,12 @@ export function Profile() {
         isCurrentUser
     );
 
-    /*************************** */
-
     useEffect(() => {
         console.log(user);
         refetch();
     }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
 
 
-    /*************************** */
     if (isLoading) {
         return (
             <div className="flex-col h-full justify-center items-center inline-flex gap-5">

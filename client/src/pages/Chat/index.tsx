@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Message, RoomsList } from '../../../../shared/types';
 import { Avatar } from '../../components';
@@ -30,70 +30,9 @@ export function Chat() {
     const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
 
     
-    const navigate = useNavigate();
 
 
-    // useEffect(() => {
-    //     console.log('start startgame useEffect');
-    //     gameSocket?.on('startgame', ({ room, SecondPlayer, opponentId, chosen }) => {
-    //         console.log(SecondPlayer);
-    //         updateStateGame({
-    //             isSecondPlayer: SecondPlayer === 1,
-    //             roomId: room,
-    //             isGameReady: true,
-    //             opponentId,
-    //             gameMode: chosen
-    //         });
-    //         // setIsEventOpen(false);
-    //         // window.location.href =(`/game/${room}`);
-    //         navigate(`/game/${room}`);
-    //     });
 
-    //     return () => {
-    //         gameSocket?.off('startgame');
-    //         console.log('stop startgame useEffect');
-
-    //     };
-    // }, [gameSocket]);
-
-    // useEffect(() => {
-    //     socket?.on('challenge', () => {
-    //         // navigate('/game');
-    //         toast((t) => (
-    //             <div className=" justify-center items-center flex flex-row gap-3">
-    //                 <span>
-    //                     you have been challenged by{' '}
-    //                 </span>
-    //                 <button 
-    //                     className=' rounded-lg border border-green-500 p-1 text-green-500' 
-    //                     onClick={() =>{ 
-    //                         socket.emit('friends', {userid : '', myid:userId})
-    //                         toast.dismiss(t.id)
-    //                     }}
-    //                 >
-    //                     Accept
-    //                 </button>
-    //                 <button 
-    //                     className=' rounded-lg border border-green-500 p-1 text-green-500' 
-    //                     onClick={() => toast.dismiss(t.id)}
-    //                 >
-    //                     Cancel
-    //                 </button>
-    //               </div>
-    //           ));
-    //     });
-    //     return () => {socket?.off('challenge')};
-    // }, [socket]);
-    
-    // useEffect(() => {
-    //     socket?.on('challenge', () => {
-    //         // navigate('/game');
-    //         console.log('challenge');
-    //         socket.emit('friends', {userid : undefined, myid:userId});
-    //         // window.location.href = `/game`;
-    //     });
-    //     return () => {socket?.off('challenge')};
-    // }, [socket]);
     
 
     const sendMessage = () => {
@@ -157,6 +96,17 @@ export function Chat() {
         }
     };
     const { id : ID} = useUserStore();
+
+    useEffect(() => {
+        gameSocket?.on('gameCanceled', (message) => {
+            toast.error(message);
+        });
+
+        return () => {
+            gameSocket?.off('gameCanceled');
+        }
+    }
+        , [gameSocket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0  ">

@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
 import { Modal } from '../../components';
@@ -40,6 +39,19 @@ export function Lobby() {
             gameSocket?.off('error');
         };
     }, [gameSocket]);
+
+    useEffect(() => {
+        gameSocket?.on('gameCanceled', (message) => {
+            toast.error(message);
+            setIsEventOpen(false);
+        });
+
+        return () => {
+            gameSocket?.off('gameCanceled');
+        }
+    }
+        , [gameSocket]);
+
     return (
         <>
             <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex">
