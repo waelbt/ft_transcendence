@@ -17,7 +17,6 @@ interface Ball {
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    
     constructor(private readonly gameService: gameService) {}
 
     @WebSocketServer()
@@ -51,7 +50,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             gameMode?: any;
             plysIds?: string[];
         }
-    > = {};  
+    > = {};
 
     private connectedUsers: Record<
         string,
@@ -68,26 +67,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        // console.log('ha ana : ', client) 
+        // console.log('ha ana : ', client)
         // console.log('howa : ', client.handshake.auth.token)
         // console.log('user: ', userCheck);
-        if (userCheck.state === false){
+        if (userCheck.state === false) {
             console.log('from h');
             await this.handleDisconnect(client);
-        }
-            
-        else{
-            if (userCheck.userData.sub){
+        } else {
+            if (userCheck.userData.sub) {
                 const isUser = await this.prisma.user.findUnique({
                     where: {
-                        id: userCheck.userData.sub,
+                        id: userCheck.userData.sub
                     }
                 });
                 if (!isUser) await this.handleDisconnect(client);
                 await this.prisma.user.update({
-                    where: {id: userCheck.userData.sub},
-                    data: {inGame: true},
-                })
+                    where: { id: userCheck.userData.sub },
+                    data: { inGame: true }
+                });
                 this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
@@ -108,10 +105,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (userCheck.userData)
             var user = await this.prisma.user.findUnique({
                 where: {
-                    id: userCheck.userData.sub,
+                    id: userCheck.userData.sub
                 }
             });
-        if (!user){
+        if (!user) {
             client.disconnect(true);
             // for (const room in this.rooms) {
             //     if (
@@ -167,10 +164,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('friends')
-    handleFriendsMode(client: Socket, ids: {userid : string, myid: string}): void {
+    handleFriendsMode(
+        client: Socket,
+        ids: { userid: string; myid: string }
+    ): void {
         console.log('friends mode', ids);
-        if (this.waitingFriend&&
-            this.waitingFriend !== client) {
+        if (this.waitingFriend && this.waitingFriend !== client) {
             console.log('game started in friends mode');
             const room = `${this.waitingFriend.id}${client.id}`;
             client.join(room);
@@ -199,9 +198,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             console.log('waitroom', this.waitingFriend.id);
             this.server.to(this.waitingFriend.id).emit('startgame', {
                 room: room,
-                SecondPlayer: 1, 
+                SecondPlayer: 1,
                 chosen: 'classic',
-                opponentId: ids.myid,
+                opponentId: ids.myid
             });
             this.server.to(client.id).emit('startgame', {
                 room: room,
@@ -211,12 +210,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             });
 
             this.waitingFriend = null;
-            this.waitibgids['frd']= null;
+            this.waitibgids['frd'] = null;
         } else {
             console.log(this.connectedUsers);
 
             for (const user in this.connectedUsers) {
-                console.log(this.connectedUsers[user]?.userData?.sub , ids)
+                console.log(this.connectedUsers[user]?.userData?.sub, ids);
                 if (this.connectedUsers[user]?.userData?.sub === ids.userid) {
                     console.log('challenge');
                     this.server.to(user).emit('challenge', user);
@@ -224,10 +223,33 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             }
             this.waitingFriend = client;
             this.waitibgids['frd'] = ids.myid;
-        } 
-    } 
+        }
+    }
 
+    // @SubscribeMessage('leaveGameMode')
+    // handleLeaveGameMode(
+    //     client: Socket,
+    //     payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
+    // ): void {
+    //     console.log(`Client ${client.id} left ${payload.gameMode} mode`);
+    //     for (const room in this.rooms) {
+    //         if (this.rooms[room].players[0].id === client.id) {
+    //             clearInterval(Number(this.rooms[room].intervalId));
+    //             delete this.rooms[room];
+    //         }
+    //     }
+    //     // Check if the client is the one in the waiting room for the specified game mode
+    //     if (this.waitingRooms[payload.gameMode] === client) {
+    //         // Remove the client from the waiting room
+    //         delete this.waitingRooms[payload.gameMode];
+    //     }
 
+    //     // Check if the userId matches the one in the waitingIds for the specified game mode
+    //     if (this.waitibgids[payload.gameMode] === payload.userId) {
+    //         // Remove the userId from the waitingIds
+    //         delete this.waitibgids[payload.gameMode];
+    //     }
+    // }
 
     @SubscribeMessage('gameMode')
     handleGameMode(
@@ -247,7 +269,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 speed: 6 / 16,
                 angle: Math.PI / 4
             };
- 
+
             this.rooms[room] = {
                 ballPos: initialBall.pos,
                 moveAngle: initialBall.angle,
@@ -278,7 +300,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] = null;
         } else if (
             this.waitingRooms[payload.gameMode] &&
-            this.waitingRooms[payload.gameMode] !== client
+            this.waitingRooms[payload.gameMode] !== client &&
+            this.waitibgids[payload.gameMode] !== payload.userId
         ) {
             const room = `${this.waitibgids[payload.gameMode]}${
                 payload.userId
@@ -317,13 +340,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     room: room,
                     SecondPlayer: 1,
                     opponentId: payload.userId,
-                    chosen: payload.gameMode,
+                    chosen: payload.gameMode
                 });
             this.server.to(client.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 2,
                 opponentId: this.waitibgids[payload.gameMode],
-                chosen: payload.gameMode,
+                chosen: payload.gameMode
             });
 
             console.log(
@@ -337,6 +360,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingRooms[payload.gameMode] = client;
             this.waitibgids[payload.gameMode] = payload.userId;
         }
+        // else if (this.waitibgids[payload.gameMode] === payload.userId) {
+        //     this.server
+        //         .to(client.id)
+        //         .emit('error', 'Cannot play with yourself in this game mode.');
+        // }
     }
 
     updateBallPosition(room: string, ball: Ball, mode: string): void {
@@ -461,5 +489,4 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             }
         }
     }
-   
- 
+}

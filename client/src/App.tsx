@@ -18,14 +18,12 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-
-
     return (
         <QueryClientProvider client={queryClient}>
             <ErrorBoundary>
                 <AllRoutes />
                 <Toaster
-                    position="top-right"
+                    position="bottom-right"
                     reverseOrder={false}
                     toastOptions={{
                         duration: 3000

@@ -169,9 +169,9 @@ export function Game() {
     useEffect(() => {
         return () => {
             socket?.emit('gameended');
-        }
+        };
     }, [socket]);
-    
+
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
@@ -183,17 +183,19 @@ export function Game() {
                 setRightScore((prvRightscore: number) => {
                     if (removeDecimalPart(newScore) === 5) {
                         setGameOver(true);
-                        axiosPrivate
-                            .post('/game/create', {
-                                winnerId: id,
-                                loserId: opponentId,
-                                result: `${newScore}-${prvRightscore}`,
-                                mode: gameMode
-                            })
-                            .then((res) => res)
-                            .catch((error) => console.log(error));
-                        socket?.emit('gameended',{payload : {roomId}});
-                        navigate('/');
+                        if (gameMode !== 'training') {
+                            axiosPrivate
+                                .post('/game/create', {
+                                    winnerId: id,
+                                    loserId: opponentId,
+                                    result: `${newScore}-${prvRightscore}`,
+                                    mode: gameMode
+                                })
+                                .then((res) => res)
+                                .catch((error) => console.log(error));
+                            socket?.emit('gameended', { payload: { roomId } });
+                            navigate('/');
+                        }
                     }
                     return prvRightscore;
                 });
@@ -285,15 +287,18 @@ export function Game() {
         socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
             console.log('player disconnected');
             console.log('ids :', playerIds);
-            //   fetch("http://localhost:3001/game1", {
-            //   method: 'POST',
-            //   mode: 'no-cors',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify({room: 'dzdzed'}),
-            // }).then((res) => console.log('data 1 ',res.json()));
-            // navigate('/')
+            if (gameMode !== 'training') {
+                axiosPrivate
+                    .post('/game/create', {
+                        winnerId: id,
+                        loserId: opponentId,
+                        result: `${leftscore}-${rightscore}`,
+                        mode: gameMode
+                    })
+                    .then((res) => res)
+                    .catch((error) => console.log(error));
+                socket?.emit('gameended', { payload: { roomId } });
+            }
             navigate('/');
         });
         return () => {

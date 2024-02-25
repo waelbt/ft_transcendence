@@ -88,7 +88,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <div className="px-1 py-1 justify-center items-center gap-2.5 inline-flex">
                         <AchievementIcon />
                         <div className="text-amber-500 text-3xl font-normal font-['Acme']">
-                            0/13 achievement
+                            0/7 achievement
                         </div>
                     </div>
                     <div className="tooltip cursor-context-menu text-neutral-400 text-sm font-normal font-['Acme']">
