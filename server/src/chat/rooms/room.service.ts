@@ -36,6 +36,8 @@ import { ChatGateway } from '../chat.gateway';
 import { BlockService } from 'src/users/services/blocked.service';
 import { AddUserToPrivateRoom } from '../DTOS/add-user-to-private-room.dto';
 import { WebSocketService } from '../chat.gateway.service';
+import { UsersService } from 'src/users/services/users.service';
+import { user } from 'src/users/dto/mydata.dto';
 
 @Injectable()
 export class RoomService {
@@ -1173,6 +1175,27 @@ export class RoomService {
                 }
             }
         });
+
+        const receiver = await this.getUserData(addUser.userId);
+        const sender = await this.getUserData(userId);
+
+        this.emit.notificationEvent(receiver, sender, userId, `invited you to join ${roomWithPrvMembers.roomTitle}`, 'chat');
+    }
+
+    async getUserData(userId: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+        });
+
+        const userData = {
+            email: user.email,
+            nickname: user.nickName,
+            avatar: user.avatar
+        }
+
+        return (userData);
     }
 
     async isUserBlocked( userId: string, blockedUserId: string): Promise<boolean> {
