@@ -13,6 +13,7 @@ import { friendsService } from './friends.service';
 import { BlockService } from './blocked.service';
 import { match_history } from '../dto/matchHistory.dto';
 import { mydata } from '../dto/mydata.dto';
+import { notificationService } from './notification.service';
 
 export interface Player {
     avatar: string;
@@ -36,7 +37,8 @@ export class UsersService {
         private prisma: PrismaOrmService,
         @Inject(forwardRef(() => friendsService))
         private friendService: friendsService,
-        private blockUsers: BlockService
+        private blockUsers: BlockService,
+        private notificationService: notificationService
     ) {}
 
     // const prisma = new PrismaClient();
@@ -410,10 +412,10 @@ export class UsersService {
             return block.id;
         });
 
-        // const notification = this.noti;
+        const notification = await this.notificationService.getFilterNotificationsForUser(user.nickName);
         // console.log('ids ', friendsIds);
 
-        return { user, friendsIds, blocksIds };
+        return { user, friendsIds, blocksIds, notification };
     }
 
     async userData(userId: string) {

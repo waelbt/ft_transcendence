@@ -28,12 +28,14 @@ export class friendsService {
         await this.checkUsersExistence(userMe, friendId);
 
         //check if u already send friend request to this one
-        const existRequest = await this.findFirstStatusPending(
+        const existPending = await this.findFirstStatusPending(
             userMe,
             friendId
         );
 
-        if (existRequest) {
+        const existAccept = await this.areUsersFriends(userMe, friendId);
+
+        if (existPending || existAccept) {
             throw new NotFoundException('-------Friend request already sent'); //need to handle this because it causes 500
         }
 

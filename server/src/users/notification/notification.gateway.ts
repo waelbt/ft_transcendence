@@ -53,8 +53,7 @@ export class notificationGateway
                     console.log('hello')
                     await this.handleDisconnect(client);
                 } 
-            }
-else {
+            } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
                 // console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({

@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { notification } from "./notification.dto";
 
 export class user{
 
@@ -47,6 +48,8 @@ export class user{
     createdAt: Date;
 }
 
+
+
 export class mydata{
 
     @ApiProperty({type: user})
@@ -60,4 +63,8 @@ export class mydata{
     @ApiProperty()
 
     blocksIds: string[];
+
+    @ApiProperty({type: notification})
+
+    notification: notification[];
 }
