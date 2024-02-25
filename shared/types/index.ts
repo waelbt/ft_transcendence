@@ -114,7 +114,7 @@ export interface DMRooms {
     friendId: string;
 }
 
-export interface Notification {
+export interface NotificationDto {
     id: string;
     nickName: string;
     avatar: string;

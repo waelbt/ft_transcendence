@@ -53,8 +53,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     > = {};
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log('A client just connected: ' + client.id);
-
+        
         const userCheck = await this.gameService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -76,14 +75,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 await this.prisma.user.update({
                     where: {id: userCheck.userData.sub},
                     data: {inGame: true},
-                })
+                });
                 this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
     }
 
     async handleDisconnect(client: any) {
-        console.log('A client disconnected: ' + client.id);
+        console.log('A client disconnected: (GAME)' + client.id);
 
 
         // console.log('client : ', client);

@@ -131,7 +131,17 @@ function LeaderBoard() {
         const fetchData = async () => {
             try {
                 const response = await axiosPrivate.get('/users/rank');
-                setData(response.data);
+                // Check if the data is an array and filter out null or invalid entries
+                if (Array.isArray(response.data)) {
+                    const validData = response.data.filter(
+                        (entry) => entry != null
+                    );
+                    setData(validData);
+                } else {
+                    // Handle unexpected data format (e.g., log an error or set an empty array)
+                    console.error('Invalid data format:', response.data);
+                    setData([]);
+                }
             } catch (error) {
                 console.error('Error:', error);
             }
