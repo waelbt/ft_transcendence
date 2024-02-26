@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
@@ -10,8 +10,6 @@ import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 import GroupPanel from '../../components/GroupPanel';
 import { useRoomStore } from '../../stores/roomStore';
-import useGameStore from '../../stores/gameStore';
-import toast from 'react-hot-toast';
 
 export function Room() {
     const { id } = useParams();
@@ -40,9 +38,8 @@ export function Room() {
     };
 
     // const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
-    
-    // const navigate = useNavigate();
 
+    // const navigate = useNavigate();
 
     // useEffect(() => {
     //     console.log('start startgame useEffect');
@@ -75,17 +72,17 @@ export function Room() {
     //                 <span>
     //                     you have been challenged by{' '}
     //                 </span>
-    //                 <button 
-    //                     className=' rounded-lg border border-green-500 p-1 text-green-500' 
-    //                     onClick={() =>{ 
+    //                 <button
+    //                     className=' rounded-lg border border-green-500 p-1 text-green-500'
+    //                     onClick={() =>{
     //                         socket.emit('friends', {userid : '', myid:userId})
     //                         toast.dismiss(t.id)
     //                     }}
     //                 >
     //                     Accept
     //                 </button>
-    //                 <button 
-    //                     className=' rounded-lg border border-green-500 p-1 text-green-500' 
+    //                 <button
+    //                     className=' rounded-lg border border-green-500 p-1 text-green-500'
     //                     onClick={() => toast.dismiss(t.id)}
     //                 >
     //                     Cancel
@@ -95,7 +92,6 @@ export function Room() {
     //     });
     //     return () => {socket?.off('challenge')};
     // }, [socket]);
-    
 
     // const [isblocked, setIsblocked] = useState<boolean>(false);
     // const navigate = useNavigate();

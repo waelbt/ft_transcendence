@@ -11,7 +11,7 @@ export function Lobby() {
 
     const { updateState, socket, gameMode } = useGameStore();
     // const navigate = useNavigate();
-    const { id, inGame, updateState: upatedUserState } = useUserStore();
+    const { id } = useUserStore();
     const [isEventOpen, setIsEventOpen] = useState(false);
 
     const { elapsedTime, formatTime, startTimer } = useTimer();
@@ -48,9 +48,8 @@ export function Lobby() {
 
         return () => {
             gameSocket?.off('gameCanceled');
-        }
-    }
-        , [gameSocket]);
+        };
+    }, [gameSocket]);
 
     return (
         <>
