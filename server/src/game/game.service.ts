@@ -94,7 +94,7 @@ export class gameService {
 
         if (achievement && !achievement.khari){
             // User has lose a game with a score of 0-5
-            if (result === "0-5") {
+            if (result === "5-0") {
                 await this.prisma.achievement.update({
                     where: { UserId: userId },
                     data: { khari: true },

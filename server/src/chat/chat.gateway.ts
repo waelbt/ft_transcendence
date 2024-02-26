@@ -71,7 +71,6 @@ export class ChatGateway
 
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
-<<<<<<< HEAD
         console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
         // console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
@@ -80,8 +79,6 @@ export class ChatGateway
         // const userCheck = await this.wsService.getUserFromAccessToken(
         //     client.handshake.auth.token
         // console.log(client.handshake);
-=======
->>>>>>> origin/main
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -349,7 +346,7 @@ export class ChatGateway
                 lastMessageTime: createdAt,
                 isRoom: false
             };
-    
+
             // console.log('============================================================');
             // console.log(singleRoom)
             // console.log('============================================================');
@@ -495,7 +492,6 @@ export class ChatGateway
         }
     }
 
-
     @SubscribeMessage('notification')
     async notificationEvent(receiver, sender, senderId, action, type) {
         const userSocket = this.usersSockets.get(receiver.email);
@@ -523,7 +519,6 @@ export class ChatGateway
                 .to(userSocket)
                 .emit('notification', notificationPayload);
         } else {
-
             const notification = await this.prisma.notification.create({
                 data: {
                     userId: senderId,

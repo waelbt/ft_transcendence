@@ -81,7 +81,7 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     return <div style={paddleStyle}></div>;
 };
 
-const Ball = ({ }, { }) => {
+const Ball = ({}, {}) => {
     const [ballPos, setBallPos] = React.useState({ x: 0, y: 0 });
     const [ballColor, setBallColor] = React.useState('white');
     const [shadow, setShadow] = React.useState('0 0 1.25rem white');
@@ -312,15 +312,22 @@ export function Game() {
 
     return (
         <>
-            <div className="flex flex-col w-full items-center justify-center h-full"
+            <div
+                className="flex flex-col w-full items-center justify-center h-full"
                 style={{
-                    backgroundImage: `url(${gameMode === 'classic' ? classicBackground : gameMode === 'crazy' ? crazyBackground : trainingBackground})`,
+                    backgroundImage: `url(${
+                        gameMode === 'classic'
+                            ? classicBackground
+                            : gameMode === 'crazy'
+                            ? crazyBackground
+                            : trainingBackground
+                    })`,
                     backgroundSize: '100% 200%',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     filter: 'grayscale(20%) blur(1px)'
-                }}>
-                
+                }}
+            >
                 {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
