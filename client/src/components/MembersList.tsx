@@ -7,6 +7,7 @@ import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import AddMembers from './AddMembers';
+import { UserStatus } from './Avatar';
 
 const EventButton = ({ task, label }: { task: () => void; label: string }) => {
     return (
@@ -63,11 +64,7 @@ function MembersList() {
                     className="absolute bottom-5 right-5"
                     onClick={() => setShowMembersModel(true)}
                 >
-                    <FaPlus
-                        size={33}
-                        className="cursor-pointer  text-black"
-                        // onClick=()
-                    />
+                    <FaPlus size={33} className="cursor-pointer  text-black" />
                 </div>
             ) : null}
             {users.map((member, index) => (
@@ -91,6 +88,8 @@ function MembersList() {
                         <Avatar
                             imageUrl={member.avatar}
                             style="w-14 h-14 bg-black  rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
+                            userStatus={member.status as UserStatus}
+                            avatarUserId={member.id}
                         />
                         <div className="text-2xl font-normal font-['Acme']">
                             {member.nickName}

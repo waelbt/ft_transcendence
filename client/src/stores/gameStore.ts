@@ -44,6 +44,8 @@ type GameAction = {
     moveMyPaddle: (y: number) => void;
     updateBallPosition: (x: number, y: number) => void;
     updateOpponentPaddlePosition: (y: number) => void;
+    disconnectSocket: () => void;
+
     // updatePaddlePosition: () => void;
 };
 
@@ -67,15 +69,15 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
     updateState: (newState) => set((state) => ({ ...state, ...newState })),
     initializeGameSocket: (token) => {
         const { socket } = get();
-            if (token && !socket) {
-                const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
-                    path: '/socket.io',
-                    transports: ['websocket'],
-                    secure: true,
-                    auth: { token: token }
-                });
-                set({ socket: newSocket });
-            }
+        if (token && !socket) {
+            const newSocket = io(`${import.meta.env.VITE_BASE_URL}/game`, {
+                path: '/socket.io',
+                transports: ['websocket'],
+                secure: true,
+                auth: { token: token }
+            });
+            set({ socket: newSocket });
+        }
     },
     updateBallPosition: (x: number, y: number) =>
         set((state) => ({
@@ -105,6 +107,13 @@ const useGameStore = create<GameState & GameAction>((set, get) => ({
                 y
             }
         }));
+    },
+    disconnectSocket: () => {
+        const { socket } = get();
+        if (socket) {
+            socket.disconnect();
+            set({ socket: null });
+        }
     }
 }));
 

@@ -1,7 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { NotificationDto } from '../../../shared/types';
+import { UserStatus } from '../components/Avatar';
 
 type UserStateType = {
     isLogged: boolean;
@@ -14,7 +14,7 @@ type UserStateType = {
     nickName: string;
     fullName: string;
     createdAt: string;
-    status: boolean;
+    status: UserStatus;
     f2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
@@ -33,7 +33,7 @@ const initialState: UserStateType = {
     nickName: '',
     fullName: '',
     createdAt: '',
-    status: false,
+    status: 'offline',
     f2A: false,
     inGame: false,
     completeProfile: false,

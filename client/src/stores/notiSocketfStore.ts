@@ -12,6 +12,7 @@ type ChatMethod = {
     pushNotification: (notif: NotificationDto) => void;
     unpushNotification: (id: number) => void;
     initializeNotifSocket: (token: string | null) => void;
+    disconnectSocket: () => void;
 };
 
 export const useNotificationStore = create<ChatState & ChatMethod>(
@@ -53,6 +54,13 @@ export const useNotificationStore = create<ChatState & ChatMethod>(
                 (notif) => notif.id !== id
             );
             set({ notifications: filteredRooms });
+        },
+        disconnectSocket: () => {
+            const { socket } = get();
+            if (socket) {
+                socket.disconnect();
+                set({ socket: null });
+            }
         }
     })
 );

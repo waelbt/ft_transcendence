@@ -21,13 +21,19 @@ function Layout() {
     const axiosPrivate = useAxiosPrivate();
     const { updateState, accessToken } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { initializeSocket, socket: chatSocket } = useChatLayoutStore();
+    const {
+        initializeSocket,
+        socket: chatSocket,
+        disconnectSocket: disconnectChatSocket
+    } = useChatLayoutStore();
     const {
         socket: gameSocket,
         initializeGameSocket,
-        updateState: updateStateGame
+        updateState: updateStateGame,
+        disconnectSocket: disconnectGameSocket
     } = useGameStore();
-    const { socket, initializeNotifSocket } = useNotificationStore();
+    const { socket, initializeNotifSocket, disconnectSocket } =
+        useNotificationStore();
     const sidebarRef = useRef<HTMLDivElement>(null); // Create a ref for the sidebar
     const location = useLocation(); // Get the current location
     const { logout } = useUserStore();
@@ -203,7 +209,12 @@ function Layout() {
                 </div>
                 <div
                     className="justify-center items-center gap-3 inline-flex cursor-pointer"
-                    onClick={() => logout()}
+                    onClick={() => {
+                        disconnectGameSocket();
+                        disconnectChatSocket();
+                        disconnectSocket();
+                        logout();
+                    }}
                 >
                     <GoSignOut size={24} />
                 </div>

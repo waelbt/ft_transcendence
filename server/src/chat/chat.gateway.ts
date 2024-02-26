@@ -557,7 +557,7 @@ export class ChatGateway
 
         await this.prisma.user.update({
             where: { id: userCheck.userData.sub },
-            data: { status: false }
+            data: { status: "offline" }
         });
         client.disconnect(true);
         // this.logger.log(`This client ${client.id} disconnected`);

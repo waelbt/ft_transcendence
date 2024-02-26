@@ -6,6 +6,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { Friend } from '../../../shared/types';
 import { Avatar } from '.';
 import { Link } from 'react-router-dom';
+import { UserStatus } from './Avatar';
 
 function SearchBar() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,6 +51,8 @@ function SearchBar() {
                             <Avatar
                                 imageUrl={result.avatar}
                                 style="w-14 h-14 bg-black rounded-[150px] border border-white"
+                                userStatus={result.status as UserStatus}
+                                avatarUserId={result.id}
                             />
                             <div className="text-black text-xl font-normal font-['Acme']">
                                 {result.nickName}

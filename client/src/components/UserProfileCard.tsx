@@ -6,6 +6,7 @@ import { FC, useEffect } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import ActionsHandler from './ActionsHandler';
 import { formatDate } from '../tools/date_parsing';
+import { UserStatus } from './Avatar';
 
 type UserProfileCardProps = {
     id: string;
@@ -13,7 +14,7 @@ type UserProfileCardProps = {
     nickName: string;
     fullName: string;
     createdAt: string;
-    status: true;
+    status: UserStatus;
     exp: 0;
     level: 0;
     isCurrentUser: boolean;
@@ -28,6 +29,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
     }
 
     useEffect(() => {
+        console.log(props);
         console.log((props.exp / 1200) * 100);
     }, []);
 
@@ -37,8 +39,10 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                 <div className="px-5 py-2.5 flex-col justify-center items-center gap-2.5 inline-flex">
                     <Avatar
                         imageUrl={props.avatar}
-                        state="online"
+                        // state="online"
                         style="w-40 h-40 ring ring-stone-300 ring-offset-base-100 ring-offset-1"
+                        userStatus={props.status as UserStatus}
+                        avatarUserId={props.id}
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
                         {props.nickName}

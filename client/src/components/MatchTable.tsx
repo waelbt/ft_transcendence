@@ -11,6 +11,7 @@ import { useOutletContext } from 'react-router-dom';
 import { ProfileOutletContextType } from '../types/global';
 import { useUserStore } from '../stores/userStore';
 import { Avatar } from '.';
+import { UserStatus } from './Avatar';
 
 const MatchTable = () => {
     const [data, setData] = useState<Match[]>([]);
@@ -56,6 +57,8 @@ const MatchTable = () => {
                             <Avatar
                                 imageUrl={value?.avatar}
                                 style="w-12 h-12 relative rounded-[60px] border border-black"
+                                userStatus={value?.status as UserStatus}
+                                avatarUserId={value?.id}
                             />
                             {/* // ! types  */}
                             {/* {value?.name} ({value?.rating}.{Math.floor((value?.exp / 1200) * 10)) */}

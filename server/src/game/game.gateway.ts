@@ -80,11 +80,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     }
                 });
                 if (!isUser) await this.handleDisconnect(client);
-                await this.prisma.user.update({
-                    where: { id: userCheck.userData.sub },
-                    data: { inGame: true }
-                });
-                this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
+                // await this.prisma.user.update({
+                //     where: { id: userCheck.userData.sub },
+                //     data: { status: "inGame" }
+                // });
+                // this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
 
@@ -128,10 +128,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // update stat in database from true to false
         await this.prisma.user.update({
             where: { id: userCheck.userData.sub },
-            data: { inGame: false }
+            data: { status: "online" }
         });
 
-        this.broadcastUserStatus(userCheck.userData.sub, 'outGame');
+        this.broadcastUserStatus(userCheck.userData.sub, 'online');
 
         for (const gameMode in this.waitingRooms) {
             if (this.waitingRooms[gameMode]?.id === client.id) {
@@ -155,12 +155,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
     }
 
-    private broadcastUserStatus(userId: string, status: 'inGame' | 'outGame') {
+    private broadcastUserStatus(userId: string, status: 'inGame' | 'online') {
         const message = {
             userId,
             status
         };
-        this.server.emit('gameStatusChange', message);
+        console.log('message in game: ', message);
+        this.server.emit('userStatusChange', message);
     }
 
     @SubscribeMessage('friends')
@@ -262,14 +263,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('gameMode')
-    handleGameMode(
+    async handleGameMode(
         client: Socket,
         payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
-    ): void {
+    ): Promise<void> {
         console.log(`Client ${client.id} chose ${payload.gameMode} mode`);
+
+
 
         if (this.checkIfPlyrIsInGame(client, payload.userId)) {
             this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
+            // await this.prisma.user.update({
+            //     where: { id: payload.userId },
+            //     data: { status: "inGame" }
+            // });
+            // this.broadcastUserStatus(payload.userId, 'inGame');
             return;
         }
 
@@ -324,6 +332,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ],
                 plysIds: [this.waitibgids[payload.gameMode], payload.userId]
             };
+           
+
+            // await this.prisma.user.update({
+            //     where: { id: payload.userId },
+            //     data: { status: "inGame" }
+            // });
+            // this.broadcastUserStatus(payload.userId, 'inGame');
+
+            // await this.prisma.user.update({
+            //     where: { id: this.waitingRooms[payload.gameMode].id },
+            //     data: { status: "inGame" }
+            // });
+            // this.broadcastUserStatus(this.waitingRooms[payload.gameMode].id, 'inGame');
 
             this.server.to(client.id).emit('startgame', {
                 room: room,
@@ -507,7 +528,18 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('gameended')
-    handleEndgame(client: Socket, payload: { room: string }): void {
+    async handleEndgame(client: Socket, payload: { room: string }): Promise<void>{
+    
+        // const userCheck = await this.gameService.getUserFromAccessToken(
+        //     client.handshake.auth.token
+        // );
+
+        // await this.prisma.user.update({
+        //     where: { id: userCheck.userData.sub },
+        //     data: { status: "inGame" }
+        // });
+        // this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
+
         for (const room in this.rooms) {
             if (
                 this.rooms[room].players[0].id === client.id ||

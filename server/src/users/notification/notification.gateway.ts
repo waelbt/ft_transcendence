@@ -56,13 +56,12 @@ export class notificationGateway
             if (!isUser) {
                 console.log('hello');
                 await this.handleDisconnect(client);
-            } 
-            else {
+            } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
                 console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
-                    data: { status: true }
+                    data: { status: 'online' }
                 });
                 // console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
@@ -132,6 +131,7 @@ export class notificationGateway
             userId,
             status
         };
+        console.log('message: ', message);
         this.server.emit('userStatusChange', message);
     }
 
@@ -158,13 +158,14 @@ export class notificationGateway
         }
 
         //update stat in database from true to false
-        await this.prisma.user.update({
+        const howa = await this.prisma.user.update({
             where: { id: userCheck.userData.sub },
             data: {
-                status: false,
-                inGame: false
+                status: 'offline',
+                inGame: 'online'
             }
         });
+        console.log('howa : ', howa.status);
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
         // this.notificationService.removeSocket(client.data.playload.sub, client);

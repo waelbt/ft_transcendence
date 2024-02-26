@@ -17,6 +17,7 @@ type ChatMethod = {
         isRoom: boolean,
         updatedInfo: Partial<RoomsList>
     ) => void;
+    disconnectSocket: () => void;
 };
 
 export const useChatLayoutStore = create<ChatState & ChatMethod>(
@@ -29,10 +30,12 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
         pushRoom: (room) => {
             const { Layout_Rooms } = get();
 
-            if (!Layout_Rooms.some((rooms) => (
-                rooms.id === room.id && room.isRoom === room.isRoom
-            )
-            )) {
+            if (
+                !Layout_Rooms.some(
+                    (rooms) =>
+                        rooms.id === room.id && room.isRoom === room.isRoom
+                )
+            ) {
                 const newMessages = [...Layout_Rooms, room];
                 set({ Layout_Rooms: newMessages });
             }
@@ -65,6 +68,13 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
                     auth: { token: token }
                 });
                 set({ socket: newSocket });
+            }
+        },
+        disconnectSocket: () => {
+            const { socket } = get();
+            if (socket) {
+                socket.disconnect();
+                set({ socket: null });
             }
         }
     })

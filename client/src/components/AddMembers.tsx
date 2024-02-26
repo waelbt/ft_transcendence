@@ -8,6 +8,7 @@ import { useRoomStore } from '../stores/roomStore';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import loadGif from '../assets/loading.gif';
+import { UserStatus } from './Avatar';
 
 function AddMembers() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -106,6 +107,8 @@ function AddMembers() {
                                     <Avatar
                                         imageUrl={result.avatar}
                                         style="w-14 h-14 bg-black rounded-[150px] border border-white"
+                                        userStatus={result.status as UserStatus}
+                                        avatarUserId={''}
                                     />
                                     <div className="text-black text-xl font-normal font-['Acme']">
                                         {result.nickName}

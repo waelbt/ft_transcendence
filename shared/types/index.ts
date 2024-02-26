@@ -1,3 +1,5 @@
+import { UserStatus } from '../../client/src/components/Avatar';
+
 export interface User {
     actions: any;
     id: string;
@@ -6,7 +8,7 @@ export interface User {
     avatar: string;
     nickName: string;
     fullName: string;
-    status: boolean;
+    status: UserStatus;
     f2A: boolean;
     f2A_Secret: string;
     inGame: boolean;
@@ -42,6 +44,8 @@ export interface Player {
     avatar: string;
     name: string;
     rating: number;
+    id: string;
+    status: string;
 }
 
 export interface Friend {
@@ -68,6 +72,7 @@ export interface LeaderboardEntry {
     avatar: string;
     level: number;
     xp: number;
+    status: string;
 }
 
 export interface RoomsList {
@@ -102,6 +107,7 @@ export interface Message {
     message: string;
     createdAt: string;
     senderId: string;
+    status?: string;
 }
 
 export interface DMRooms {

@@ -11,6 +11,7 @@ import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 import { useDmStore } from '../../stores/dmStore';
 import useGameStore from '../../stores/gameStore';
+import { UserStatus } from '../../components/Avatar';
 
 export function Chat() {
     const { id } = useParams();
@@ -27,13 +28,7 @@ export function Chat() {
             setMessage(e.target.value);
     };
 
-    const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
-
-    
-
-
-
-    
+    const { socket: gameSocket, updateState: updateStateGame } = useGameStore();
 
     const sendMessage = () => {
         if (message.trim() && socket) {
@@ -69,7 +64,7 @@ export function Chat() {
         // };
 
         // socket.on('forbidden', forbiddenListener);
-       
+
         socket.on('dm', messageListener);
         socket.on('checkDm', pushRoom);
 
@@ -95,7 +90,7 @@ export function Chat() {
             }
         }
     };
-    const { id : ID} = useUserStore();
+    const { id: ID } = useUserStore();
 
     useEffect(() => {
         gameSocket?.on('gameCanceled', (message) => {
@@ -104,9 +99,8 @@ export function Chat() {
 
         return () => {
             gameSocket?.off('gameCanceled');
-        }
-    }
-        , [gameSocket]);
+        };
+    }, [gameSocket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0  ">
@@ -197,6 +191,8 @@ export function Chat() {
                     <Avatar
                         imageUrl={currentDm?.avatar}
                         style="w-32 h-32 bg-black rounded-[150px]  mr-2 flex-shrink-0 ring ring-stone-700"
+                        userStatus={currentDm?.status as UserStatus}
+                        avatarUserId={currentDm?.id as string}
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
                         {currentDm?.nickName}
@@ -214,8 +210,10 @@ export function Chat() {
                     <div
                         className="justify-start items-center gap-0.5 inline-flex"
                         onClick={() => {
-                            gameSocket?.emit('friends', {userid : currentDm?.id, myid:ID});
-                            
+                            gameSocket?.emit('friends', {
+                                userid: currentDm?.id,
+                                myid: ID
+                            });
                         }}
                     >
                         <div className="text-sky-500 text-2xl font-normal font-['Acme'] leading-none cursor-pointer">

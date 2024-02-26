@@ -11,6 +11,7 @@ import Skeleton from 'react-loading-skeleton';
 import classicBackground from './classic.jpeg';
 import crazyBackground from './bg.jpeg';
 import trainingBackground from './trr.jpeg';
+import { UserStatus } from '../../components/Avatar';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -348,6 +349,8 @@ export function Game() {
                             <Avatar
                                 imageUrl={avatar}
                                 style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-amber-500 ring-offset-base-100 ring-offset-1"
+                                userStatus={'online'}
+                                avatarUserId={''}
                             />
                             <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
                                 <div className="text-white text-[29px] font-normal font-['Acme']">
@@ -367,6 +370,8 @@ export function Game() {
                                 <Avatar
                                     imageUrl={friend?.avatar}
                                     style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
+                                    userStatus={friend?.status as UserStatus}
+                                    avatarUserId={friend?.id as string}
                                 />
                             )}
                         </div>

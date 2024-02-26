@@ -205,6 +205,8 @@ export function Room() {
                                             <Avatar
                                                 imageUrl={msg.avatar}
                                                 style="w-11 h-11 bg-black rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
+                                                userStatus={'online'}
+                                                avatarUserId={`${msg.id}`}
                                             />
                                         </div>
                                         <div className="flex-col justify-start items-start gap-0.5 inline-flex">

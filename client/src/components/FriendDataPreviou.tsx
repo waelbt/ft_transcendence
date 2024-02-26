@@ -2,6 +2,7 @@ import { Avatar } from '.';
 import { Link } from 'react-router-dom';
 import useFriendPrevious from '../hooks/friendPreviousHook';
 import { useEffect } from 'react';
+import { UserStatus } from './Avatar';
 
 type FriendDataPreviouProps = {
     friendId: string;
@@ -39,6 +40,8 @@ function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
                 <Avatar
                     imageUrl={friend ? friend.avatar : ''}
                     style="w-16 h-16"
+                    userStatus={friend?.status as UserStatus}
+                    avatarUserId={friend?.id as string}
                 />
                 <div className="flex flex-col justify-center items-start gap-[5px]">
                     <div className="text-black text-xl font-normal font-['Acme']">

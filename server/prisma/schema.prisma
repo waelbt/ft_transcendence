@@ -19,10 +19,10 @@ model User {
   avatar          String?
   nickName        String   @unique
   fullName        String
-  status          Boolean  @default(false)
+  status          String   @default("offline")
   f2A             Boolean  @default(false)
   f2A_Secret      String?
-  inGame          Boolean  @default(false)
+  inGame          String  @default("outGame")
   completeProfile Boolean  @default(false)
   createdAt       DateTime @default(now())
   exp             Int?     @default(0)

@@ -108,7 +108,12 @@ const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
                 />
                 {/* uploader section */}
                 <div className="relative flex items-center justify-center">
-                    <Avatar imageUrl={imagePath} style="w-40 h-40" />
+                    <Avatar
+                        imageUrl={imagePath}
+                        style="w-40 h-40"
+                        userStatus={'online'}
+                        avatarUserId={''}
+                    />
                     <label htmlFor="groupsAvatar">
                         <ProgressRingLoader
                             style={

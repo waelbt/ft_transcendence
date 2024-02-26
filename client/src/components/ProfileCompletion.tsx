@@ -113,7 +113,10 @@ function ProfileCompletion() {
                                             isloading={
                                                 !!(progress && progress < 100)
                                             }
-                                            errror={isFailed}
+                                            error={isFailed}
+                                            // ! optinal
+                                            userStatus={'online'}
+                                            avatarUserId={''}
                                         />
                                         <label htmlFor="inputTag">
                                             <ProgressRingLoader

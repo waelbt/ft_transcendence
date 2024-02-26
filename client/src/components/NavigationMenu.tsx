@@ -196,7 +196,9 @@ function NavigationMenu() {
                         <div onClick={() => navigate('/profile/me')}>
                             <Avatar
                                 imageUrl={avatar}
+                                userStatus="online"
                                 style="w-12 h-12 ring ring-amber-500 ring-offset-base-100 ring-offset-2 mx-3 my-2  cursor-default"
+                                avatarUserId={myId}
                             />
                         </div>
                     </div>
