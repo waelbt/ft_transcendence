@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
@@ -22,7 +22,11 @@ function Layout() {
     const { updateState, accessToken } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { initializeSocket, socket: chatSocket } = useChatLayoutStore();
-    const { socket: gameSocket, initializeGameSocket } = useGameStore();
+    const {
+        socket: gameSocket,
+        initializeGameSocket,
+        updateState: updateStateGame
+    } = useGameStore();
     const { socket, initializeNotifSocket } = useNotificationStore();
     const sidebarRef = useRef<HTMLDivElement>(null); // Create a ref for the sidebar
     const location = useLocation(); // Get the current location
@@ -40,10 +44,9 @@ function Layout() {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const { user, friendsIds, blocksIds } = (
-                    await axiosPrivate.get('/users/me')
-                ).data;
-
+                const res = await axiosPrivate.get('/users/me');
+                const { user, friendsIds, blocksIds } = res.data;
+                console.log(res);
                 updateState({
                     friendsIds,
                     blocksIds,
@@ -74,7 +77,68 @@ function Layout() {
             chatSocket?.disconnect();
             gameSocket?.disconnect();
         };
-    }, [socket, chatSocket, gameSocket]);
+    }, []);
+
+    //const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
+    const { id: userId } = useUserStore();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log('start startgame useEffect');
+        gameSocket?.on(
+            'startgame',
+            ({ room, SecondPlayer, opponentId, chosen }) => {
+                console.log(SecondPlayer);
+                updateStateGame({
+                    isSecondPlayer: SecondPlayer === 1,
+                    roomId: room,
+                    isGameReady: true,
+                    opponentId,
+                    gameMode: chosen
+                });
+                // setIsEventOpen(false);
+                // window.location.href =(`/game/${room}`);
+                navigate(`/game/${room}`);
+            }
+        );
+
+        return () => {
+            gameSocket?.off('startgame');
+            console.log('stop startgame useEffect');
+        };
+    }, [gameSocket]);
+    useEffect(() => {
+        gameSocket?.on('challenge', () => {
+            toast((t) => (
+                <div className=" justify-center items-center flex flex-row gap-3">
+                    <span>you have been challenged by </span>
+                    <button
+                        className=" rounded-lg border border-green-500 p-1 text-green-500"
+                        onClick={() => {
+                            gameSocket.emit('friends', {
+                                userid: '',
+                                myid: userId
+                            });
+                            toast.dismiss(t.id);
+                        }}
+                    >
+                        Accept
+                    </button>
+                    <button
+                        className=" rounded-lg border border-red-500 p-1 text-red-500"
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            ));
+        });
+        return () => {
+            gameSocket?.off('challenge');
+        };
+    }, [gameSocket]);
+
     useEffect(() => {
         // ... [fetchData logic]
 
@@ -106,33 +170,6 @@ function Layout() {
             }
         };
     }, [location]);
-
-    // useEffect(() => {
-    //     // ... [other code]
-    //     console.log(location);
-
-    //     const handleMouseMove = (event) => {
-    //         const sidebar = sidebarRef.current;
-    //         const threshold = 50;
-
-    //         if (sidebar && event.clientX < threshold) {
-    //             sidebar.style.left = '0px';
-    //         } else if (sidebar) {
-    //             sidebar.style.left = '-74px';
-    //         }
-    //     };
-
-    //     // Add event listener only when on /chat route
-    //     if (location.pathname === '/chat') {
-    //         document.addEventListener('mousemove', handleMouseMove);
-    //     } else if (sidebarRef.current) sidebarRef.current.style.left = '0px';
-
-    //     return () => {
-    //         if (location.pathname === '/chat') {
-    //             document.removeEventListener('mousemove', handleMouseMove);
-    //         }
-    //     };
-    // }, [location]); // Add location t
 
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
@@ -171,7 +208,7 @@ function Layout() {
                     <GoSignOut size={24} />
                 </div>
             </div>
-            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden ">
+            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden">
                 <Outlet />
             </div>
         </div>

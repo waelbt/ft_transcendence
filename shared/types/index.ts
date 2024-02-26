@@ -121,4 +121,6 @@ export interface NotificationDto {
     nickName: string;
     avatar: string;
     action: string;
+    roomTitle?: string;
+    roomId?: string;
 }

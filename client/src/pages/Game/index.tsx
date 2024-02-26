@@ -8,6 +8,9 @@ import { useUserStore } from '../../stores/userStore';
 import useFriendPrevious from '../../hooks/friendPreviousHook';
 import { Avatar } from '../../components';
 import Skeleton from 'react-loading-skeleton';
+import classicBackground from './classic.jpeg';
+import crazyBackground from './bg.jpeg';
+import trainingBackground from './trr.jpeg';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -166,10 +169,17 @@ export function Game() {
         id: opponentId
     });
 
+    useEffect(() => {
+        return () => {
+            socket?.emit('gameended');
+        };
+    }, [socket]);
+
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
 
+    console.log('gameMode', roomId);
     React.useEffect(() => {
         socket?.on('leftscored', async () => {
             setLeftScore((prevScore: number) => {
@@ -177,17 +187,19 @@ export function Game() {
                 setRightScore((prvRightscore: number) => {
                     if (removeDecimalPart(newScore) === 5) {
                         setGameOver(true);
-                        axiosPrivate
-                            .post('/game/create', {
-                                winnerId: id,
-                                loserId: opponentId,
-                                result: `${newScore}-${prvRightscore}`,
-                                mode: gameMode
-                            })
-                            .then((res) => res)
-                            .catch((error) => console.log(error));
-                        socket?.emit('gameended');
-                        navigate('/');
+                        if (gameMode !== 'training') {
+                            axiosPrivate
+                                .post('/game/create', {
+                                    winnerId: id,
+                                    loserId: opponentId,
+                                    result: `${newScore}-${prvRightscore}`,
+                                    mode: gameMode
+                                })
+                                .then((res) => res)
+                                .catch((error) => console.log(error));
+                            socket?.emit('gameended', { payload: { roomId } });
+                            navigate('/');
+                        }
                     }
                     return prvRightscore;
                 });
@@ -279,15 +291,18 @@ export function Game() {
         socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
             console.log('player disconnected');
             console.log('ids :', playerIds);
-            //   fetch("http://localhost:3001/game1", {
-            //   method: 'POST',
-            //   mode: 'no-cors',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify({room: 'dzdzed'}),
-            // }).then((res) => console.log('data 1 ',res.json()));
-            // navigate('/')
+            if (gameMode !== 'training') {
+                axiosPrivate
+                    .post('/game/create', {
+                        winnerId: id,
+                        loserId: opponentId,
+                        result: `${leftscore}-${rightscore}`,
+                        mode: gameMode
+                    })
+                    .then((res) => res)
+                    .catch((error) => console.log(error));
+                socket?.emit('gameended', { payload: { roomId } });
+            }
             navigate('/');
         });
         return () => {
@@ -297,7 +312,22 @@ export function Game() {
 
     return (
         <>
-            <div className="flex flex-col w-full items-center justify-center h-full ">
+            <div
+                className="flex flex-col w-full items-center justify-center h-full"
+                style={{
+                    backgroundImage: `url(${
+                        gameMode === 'classic'
+                            ? classicBackground
+                            : gameMode === 'crazy'
+                            ? crazyBackground
+                            : trainingBackground
+                    })`,
+                    backgroundSize: '100% 200%',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    filter: 'grayscale(20%) blur(1px)'
+                }}
+            >
                 {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p

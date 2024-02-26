@@ -23,7 +23,7 @@ function App() {
             <ErrorBoundary>
                 <AllRoutes />
                 <Toaster
-                    position="top-center"
+                    position="bottom-right"
                     reverseOrder={false}
                     toastOptions={{
                         duration: 3000

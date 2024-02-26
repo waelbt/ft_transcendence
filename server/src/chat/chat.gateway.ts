@@ -79,7 +79,10 @@ export class ChatGateway
         // const userCheck = await this.wsService.getUserFromAccessToken(
         //     client.handshake.auth.token
         // console.log(client.handshake);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7c615b5ddd22e9c2211967bcef0d3a4f7d445937
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -168,6 +171,10 @@ export class ChatGateway
             });
             this.server.to(joinRoomDto.roomTitle).emit('joinRoom', user);
         }
+    }
+
+    async joinPrvRoom({ roomId, roomTitle, userId }) {
+        this.server.emit('prvRoom', { roomId, roomTitle, userId });
     }
 
     @SubscribeMessage('leaveRoom')
@@ -494,7 +501,6 @@ export class ChatGateway
         }
     }
 
-
     @SubscribeMessage('notification')
     async notificationEvent(receiver, sender, senderId, action, type) {
         const userSocket = this.usersSockets.get(receiver.email);
@@ -518,11 +524,11 @@ export class ChatGateway
                 action: action,
                 type
             };
+            console.log('lokii:       ', notificationPayload);
             this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
         } else {
-
             const notification = await this.prisma.notification.create({
                 data: {
                     userId: senderId,

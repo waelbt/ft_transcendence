@@ -40,6 +40,7 @@ import { rank } from '../dto/rank.dto';
 import { achievement } from '../dto/achievements.dto';
 import { notificationService } from '../services/notification.service';
 import { notification } from '../dto/notification.dto';
+import { deleteNotById } from '../dto/deleteNotif.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -48,7 +49,7 @@ export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly blockService: BlockService,
-        private readonly notificationService: notificationService,
+        private readonly notificationService: notificationService
     ) {}
 
     @Get(':id/profile')
@@ -117,12 +118,24 @@ export class UsersController {
 
     @Get('notification')
     @ApiOperation({ summary: 'get your notification notification ' })
-    @ApiResponse({ status: 200, description: 'Returns my notification', type: notification })
-    async getNotifications(@Req() req){
+    @ApiResponse({
+        status: 200,
+        description: 'Returns my notification',
+        type: notification
+    })
+    async getNotifications(@Req() req) {
         const user = await this.usersService.getOneUser(req.user.sub);
-        if (!user)
-            throw new NotFoundException('this user does not exist');
-        return await this.notificationService.getNotificationsForUser(user.nickName);
+        if (!user) throw new NotFoundException('this user does not exist');
+        return await this.notificationService.getFilterNotificationsForUser(
+            user.nickName
+        );
+    }
+
+    @Delete('notification/:id')
+    async deleteNotification(@Param('id') id: number) {
+        await this.notificationService.deleteNotificationById(
+            id
+        );
     }
 
     // ! don't accept the one in backend

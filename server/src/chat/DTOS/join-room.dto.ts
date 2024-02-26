@@ -16,4 +16,10 @@ export class JoinRoomDto {
     })
     @IsOptional()
     password?: string;
+
+    @ApiProperty()
+    @IsNumber()
+    @IsOptional()
+    notificationId?: number;
+
 }
