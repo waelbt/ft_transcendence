@@ -192,7 +192,8 @@ export class ChatGateway
 
         const message = {
             id: user.id,
-            nickname: user.nickName
+            nickname: user.nickName,
+            roomId: leaveRoomDto.id
         };
 
         this.server.to(leaveRoomDto.roomTitle).emit('leaveRoom', message);
@@ -217,7 +218,8 @@ export class ChatGateway
         });
         const message = {
             nickname: userMuted.nickName,
-            id: userMuted.id
+            id: userMuted.id,
+            roomId: muteUserDto.roomId,
         };
         this.server.to(muteUserDto.roomTitle).emit('muteUser', message);
     }
@@ -249,7 +251,8 @@ export class ChatGateway
         });
         const message = {
             nickname: userunMuted.id,
-            id: userunMuted.id
+            id: userunMuted.id,
+            roomId: unmuteUserDto.roomID,
         };
         this.server.to(room.roomTitle).emit('unmuteUser', message);
     }
@@ -357,10 +360,7 @@ export class ChatGateway
 
     @SubscribeMessage('Kick')
     async kickUser(client: any, kickmemberDto: KickMemberDto) {
-        // console.log(
-        //     'kickMembber-------------------------------------',
-        //     kickmemberDto
-        // );
+
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -381,9 +381,11 @@ export class ChatGateway
                 }
             });
 
+
             const message = {
                 nickname: userToKick.nickName,
-                id: userToKick.id
+                id: userToKick.id,
+                roomId: kickmemberDto.roomId,
             };
             this.server.to(kickmemberDto.roomTitle).emit('kickMember', message);
             const userSocket = await this.usersSockets.get(userToKick.email);
@@ -417,7 +419,8 @@ export class ChatGateway
             });
             const message = {
                 id: newAdmin.id,
-                nickname: newAdmin.nickName
+                nickname: newAdmin.nickName,
+                roomId: setAdminDto.roomId,
             };
             console.log(message);
             this.server.to(setAdminDto.roomTitle).emit('setAdmin', message);
@@ -450,7 +453,8 @@ export class ChatGateway
             const userSocket = await this.usersSockets.get(memberBanned.email);
             const message = {
                 id: memberBanned.id,
-                nickname: memberBanned.nickName
+                nickname: memberBanned.nickName,
+                roomId: banMemberDto.roomId,
             };
             this.server.to(banMemberDto.roomTitle).emit('banMember', message);
             if (userSocket)
@@ -478,7 +482,8 @@ export class ChatGateway
             });
             const message = {
                 id: admineRemoved.id,
-                nickname: admineRemoved.nickName
+                nickname: admineRemoved.nickName,
+                roomId: unsetAdminDto.roomId,
             };
 
             this.roomService.removeFromAdmins(

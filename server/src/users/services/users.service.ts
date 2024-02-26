@@ -146,6 +146,12 @@ export class UsersService {
             }
         });
 
+        await this.prisma.notification.deleteMany({
+            where: {
+                recieverNickName: ana.nickName,
+            }
+        });
+
         await this.prisma.user.delete({
             where: { id }
         });
