@@ -171,33 +171,6 @@ function Layout() {
         };
     }, [location]);
 
-    // useEffect(() => {
-    //     // ... [other code]
-    //     console.log(location);
-
-    //     const handleMouseMove = (event) => {
-    //         const sidebar = sidebarRef.current;
-    //         const threshold = 50;
-
-    //         if (sidebar && event.clientX < threshold) {
-    //             sidebar.style.left = '0px';
-    //         } else if (sidebar) {
-    //             sidebar.style.left = '-74px';
-    //         }
-    //     };
-
-    //     // Add event listener only when on /chat route
-    //     if (location.pathname === '/chat') {
-    //         document.addEventListener('mousemove', handleMouseMove);
-    //     } else if (sidebarRef.current) sidebarRef.current.style.left = '0px';
-
-    //     return () => {
-    //         if (location.pathname === '/chat') {
-    //             document.removeEventListener('mousemove', handleMouseMove);
-    //         }
-    //     };
-    // }, [location]); // Add location t
-
     if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
     return (
         <div className="flex  flex-col h-screen w-screen relative ">
@@ -235,7 +208,7 @@ function Layout() {
                     <GoSignOut size={24} />
                 </div>
             </div>
-            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden ">
+            <div className="overflow-y-auto max-h-screen flex-grow flex justify-center items-center overflow-hidden">
                 <Outlet />
             </div>
         </div>
