@@ -79,10 +79,6 @@ export class ChatGateway
         // const userCheck = await this.wsService.getUserFromAccessToken(
         //     client.handshake.auth.token
         // console.log(client.handshake);
-<<<<<<< HEAD
-
-=======
->>>>>>> 7c615b5ddd22e9c2211967bcef0d3a4f7d445937
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
