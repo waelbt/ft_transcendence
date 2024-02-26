@@ -169,6 +169,10 @@ export class ChatGateway
         }
     }
 
+    async joinPrvRoom({ roomId, roomTitle, userId }) {
+        this.server.emit('prvRoom', { roomId, roomTitle, userId });
+    }
+
     @SubscribeMessage('leaveRoom')
     async leaveRoom(client: Socket, leaveRoomDto: LeaveRoomDto) {
         const userCheck = await this.wsService.getUserFromAccessToken(
@@ -515,6 +519,7 @@ export class ChatGateway
                 action: action,
                 type
             };
+            console.log('lokii:       ', notificationPayload);
             this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);

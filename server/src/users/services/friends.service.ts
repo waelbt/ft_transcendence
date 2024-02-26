@@ -105,15 +105,15 @@ export class friendsService {
         // await this.notificationGateway.notificationEvent(receiver, sender, userMe, `accept invitaion');
     }
 
-    async rejectFriendRequest(userId1: string, userId2: string) {
+    async rejectFriendRequest(userMe: string, friendId: string) {
         //check for users if exists
-        await this.checkUsersExistence(userId1, userId2);
+        await this.checkUsersExistence(userMe, friendId);
 
         //find the friendship request
-        // const friendship = await this.findFirstStatusPending(userId1, userId2);
+        // const friendship = await this.findFirstStatusPending(userMe, userId2);
 
         const friendship = await this.prisma.friendship.findFirst({
-            where: { userId1: userId2, userId2: userId1, status: 'pending' }
+            where: { userId1: friendId, userId2: userMe, status: 'pending' }
         });
 
         // console.log('wahd: ', userId1);
@@ -127,6 +127,16 @@ export class friendsService {
         await this.prisma.friendship.delete({
             where: { id: friendship.id }
         });
+
+        //websocket();
+        const receiver = await this.getNickNameEmail(friendId);
+        // console.log('in accept: ', receiver);
+        const sender = await this.getNickNameEmail(userMe);
+        await this.notificationService.deleteNotification(
+            userMe,
+            friendId,
+            sender.nickName
+        );
     }
 
     async removeSentFriendRequest(userId1: string, userId2: string) {

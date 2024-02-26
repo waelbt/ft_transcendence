@@ -10,15 +10,16 @@ import { useNotificationStore } from '../stores/notiSocketfStore';
 import { useEffect } from 'react';
 import { NotificationDto } from '../../../shared/types';
 import { axiosPrivate } from '../api';
-
-// import { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
-// import { NotificationDto } from '../../../shared/types';
+import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import toast from 'react-hot-toast';
+import { isAxiosError } from 'axios';
 
 function NavigationMenu() {
     const navigate = useNavigate();
-    const { avatar } = useUserStore();
-    const { socket, pushNotification, notifications } = useNotificationStore();
+    const { avatar, addUserFriendId, id: myId } = useUserStore();
+    const { socket, pushNotification, notifications, unpushNotification } =
+        useNotificationStore();
+    const { socket: chatSocket, pushRoom } = useChatLayoutStore();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,24 +33,78 @@ function NavigationMenu() {
 
         fetchData();
         socket?.on('notification', pushNotification);
+        chatSocket?.on('notification', pushNotification);
 
         return () => {
+            chatSocket?.off('notification', pushNotification);
             socket?.off('notification', pushNotification);
         };
-    }, [socket]);
+    }, [socket, chatSocket]);
 
-    // /users/notification
+    useEffect(() => {
+        const joinPrvRoom = async ({
+            roomId,
+            roomTitle,
+            userId
+        }: {
+            roomId: number;
+            roomTitle: string;
+            userId: string;
+        }) => {
+            console.log('test', {
+                roomId,
+                roomTitle,
+                userId
+            });
 
-    // const handleAccept = async () => {
-    //     await axiosPrivate.post(`/friends/acceptFriendRequest/${paramId}`);
-    //     console.log('Accepted notification ');
-    // };
+            if (userId === myId) {
+                try {
+                    const res = await axiosPrivate.post('/chat/joinRoom', {
+                        roomTitle: roomTitle,
+                        roomId: roomId
+                    });
+                    socket?.emit('joinRoom', {
+                        roomTitle: roomTitle,
+                        roomId: roomId
+                    });
 
-    // const handleDecline = async () => {
-    //     await axiosPrivate.post(`/friends/declineFriendRequest/${paramId}`);
-    //     console.log('Declined notification');
+                    pushRoom(res.data);
+                    toast.success('Joined the room successfully');
+                } catch (error) {
+                    if (isAxiosError(error))
+                        toast.error(error.response?.data?.message);
+                }
+            }
+        };
+        chatSocket?.on('prvRoom', joinPrvRoom);
 
-    // };
+        return () => {
+            chatSocket?.off('prvRoom', joinPrvRoom);
+        };
+    }, [chatSocket]);
+
+    const handleAccept = async (notification: NotificationDto) => {
+        try {
+            await axiosPrivate.post(
+                `/friends/acceptFriendRequest/${notification.userId}`
+            );
+            addUserFriendId(notification.userId);
+            unpushNotification(notification.id);
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        }
+    };
+
+    const handleDecline = async (notification: NotificationDto) => {
+        try {
+            await axiosPrivate.post(
+                `friends/rejectFriendRequest/${notification.userId}`
+            );
+            unpushNotification(notification.id);
+        } catch (error) {
+            if (isAxiosError(error)) toast.error(error.response?.data?.message);
+        }
+    };
 
     return (
         <nav className="bg-white border-b border-neutral-100">
@@ -90,7 +145,7 @@ function NavigationMenu() {
                                     notifications.map((notification, index) => (
                                         <div
                                             key={index}
-                                            className="self-stretch debug p-2.5 bg-white border-b border-black border-opacity-20 justify-between items-center inline-flex mx-4 "
+                                            className="self-stretch  p-2.5 bg-white border-b border-black border-opacity-20 justify-between items-center inline-flex mx-4 "
                                         >
                                             <img
                                                 className="w-14 h-w-14 rounded-full"
@@ -108,10 +163,24 @@ function NavigationMenu() {
                                                 </span>
                                             </div>
                                             <div className="justify-center items-center gap-[5px] flex">
-                                                <div className=" p-2 bg-blue-700 text-blue-600  bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer">
+                                                <div
+                                                    className=" p-2 bg-blue-700 text-blue-600  bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer"
+                                                    onClick={() =>
+                                                        handleAccept(
+                                                            notification
+                                                        )
+                                                    }
+                                                >
                                                     <ImCheckmark />
                                                 </div>
-                                                <div className="p-2 bg-red-600 text-red-600 bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer">
+                                                <div
+                                                    className="p-2 bg-red-600 text-red-600 bg-opacity-25 rounded-[30px] flex-col justify-center items-center gap-2.5 inline-flex cursor-pointer"
+                                                    onClick={() =>
+                                                        handleDecline(
+                                                            notification
+                                                        )
+                                                    }
+                                                >
                                                     <FaXmark />
                                                 </div>
                                             </div>

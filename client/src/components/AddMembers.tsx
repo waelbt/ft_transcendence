@@ -45,22 +45,25 @@ function AddMembers() {
     };
 
     const handleSubmit = async () => {
-        try {
-            setIsloading(true);
-            const promises = selectedIds.map((id) => {
-                return axiosPrivate.post('/chat/addUserToPrivateRoom', {
-                    userId: id,
-                    roomId: +roomId
+        if (selectedIds.length) {
+            try {
+                setIsloading(true);
+                const promises = selectedIds.map((id) => {
+                    return axiosPrivate.post('/chat/addUserToPrivateRoom', {
+                        userId: id,
+                        roomId: +roomId
+                    });
                 });
-            });
 
-            await Promise.all(promises);
-            toast.success('requests send successfully');
-        } catch (error) {
-            if (isAxiosError(error)) toast.error(error.response?.data?.message);
-        } finally {
-            setIsloading(false);
-        }
+                await Promise.all(promises);
+                toast.success('requests send successfully');
+            } catch (error) {
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
+            } finally {
+                setIsloading(false);
+            }
+        } else toast.error('select at least one user before submitting');
     };
 
     return (
