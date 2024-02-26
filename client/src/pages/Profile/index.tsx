@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { useGetUserInfos } from '../../hooks/getUserInfos';
 import { useUserStore } from '../../stores/userStore';
 import Skeleton from 'react-loading-skeleton';
+// import useGameStore from '../../stores/gameStore';
+// import toast from 'react-hot-toast';
 
 export function Profile() {
     const { id: paramId } = useParams();
@@ -29,6 +31,7 @@ export function Profile() {
         console.log(user);
         refetch();
     }, [isCurrentUser, isCurrentUser ? currentUser : paramId, refetch, error]);
+
 
     if (isLoading) {
         return (

@@ -33,7 +33,7 @@ function LeaderBoard() {
                 Header: 'Player',
                 accessor: (data) => ({
                     nickName: data.nickName,
-                    avatar: data.avatar
+                    avatar: data?.avatar
                 }),
                 Cell: ({
                     value
@@ -47,7 +47,7 @@ function LeaderBoard() {
                         <div className="justify-center items-center gap-2.5 inline-flex">
                             <img
                                 className="w-8 h-8 rounded-full"
-                                src={value.avatar}
+                                src={value?.avatar}
                             />
                             <div className="text-black text-base font-normal font-['Acme'] leading-tight">
                                 {value.nickName}
@@ -154,7 +154,11 @@ function LeaderBoard() {
         <div className="overflow-y-auto h-[470px] w-[1100px] bg-white  items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
             <Table
                 columns={columns}
-                data={data}
+                data={
+                    data?.filter(
+                        (entry) => entry !== null
+                    ) as LeaderboardEntry[]
+                }
                 styles={{
                     tableStyle:
                         'w-full  text-zinc-500 text-base font-normal font-["Acme"]',

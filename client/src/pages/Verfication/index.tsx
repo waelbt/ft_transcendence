@@ -2,7 +2,7 @@ import { TwoFaVerfication, ProfileCompletion } from '../../components';
 import { useUserStore } from '../../stores/userStore';
 
 function Verfication() {
-    const { F2A } = useUserStore();
+    const { f2A } = useUserStore();
 
     return (
         <div className="flex flex-col h-screen shadow-2xl">
@@ -17,7 +17,7 @@ function Verfication() {
                 {/* content */}
                 <div className="flex-grow w-full flex flex-col justify-center items-center gap-2.5">
                     {/* // !fix conditions logic later */}
-                    {F2A ? <TwoFaVerfication /> : <ProfileCompletion />}
+                    {f2A ? <TwoFaVerfication /> : <ProfileCompletion />}
                 </div>
                 {/* Footer */}
                 <div className="h-1/4 w-screen -z-1 bg-footer-image bg-cover bg-no-repeat"></div>
