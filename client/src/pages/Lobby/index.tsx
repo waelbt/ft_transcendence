@@ -4,8 +4,10 @@ import { Modal } from '../../components';
 import { useEffect, useState } from 'react';
 import LeaderBoard from '../../components/LeaderBoard';
 import useTimer from '../../hooks/timer';
+import classicBackground from './classic.jpeg';
+import crazyBackground from './crazy2.jpeg';
+import trainingBackground from './train2.jpeg';
 import toast from 'react-hot-toast';
-
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
 
@@ -27,7 +29,14 @@ export function Lobby() {
         // else
         // toast.error("you can't join two game in the same time");
     };
+
     const { socket: gameSocket } = useGameStore();
+
+    const modeImages = {
+        classic: classicBackground,
+        crazy: crazyBackground,
+        training: trainingBackground
+    };
 
     useEffect(() => {
         gameSocket?.on('error', (message: string) => {
@@ -53,17 +62,19 @@ export function Lobby() {
 
     return (
         <>
-            <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex">
+            <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex ">
                 <div className="self-stretch px-[167px] py-[13px] justify-center items-center gap-[60px] inline-flex">
                     {MODES.map((mode, index) => (
                         <div
                             key={`mode-${index}`}
                             onClick={() => handleClick(mode)}
-                            className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
+                            // className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
                         >
-                            <div className="text-black text-[33px] font-normal font-['Acme'] leading-[42.90px]">
-                                {mode}
-                            </div>
+                            <img
+                                src={modeImages[mode]}
+                                alt={`${mode} Mode Background`}
+                                className="w-[320px] h-[200px]  bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
+                            />
                         </div>
                     ))}
                     {isEventOpen && (

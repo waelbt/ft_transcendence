@@ -8,6 +8,9 @@ import { useUserStore } from '../../stores/userStore';
 import useFriendPrevious from '../../hooks/friendPreviousHook';
 import { Avatar } from '../../components';
 import Skeleton from 'react-loading-skeleton';
+import classicBackground from './classic.jpeg';
+import crazyBackground from './bg.jpeg';
+import trainingBackground from './trr.jpeg';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -175,6 +178,7 @@ export function Game() {
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
+
     console.log('gameMode', roomId);
     React.useEffect(() => {
         socket?.on('leftscored', async () => {
@@ -308,7 +312,15 @@ export function Game() {
 
     return (
         <>
-            <div className="flex flex-col w-full items-center justify-center h-full ">
+            <div className="flex flex-col w-full items-center justify-center h-full"
+                style={{
+                    backgroundImage: `url(${gameMode === 'classic' ? classicBackground : gameMode === 'crazy' ? crazyBackground : trainingBackground})`,
+                    backgroundSize: '100% 200%',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    filter: 'grayscale(20%) blur(1px)'
+                }}>
+                
                 {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p

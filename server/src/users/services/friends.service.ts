@@ -18,7 +18,7 @@ export class friendsService {
         private userService: UsersService,
         private blockUser: BlockService,
         private notificationGateway: notificationGateway,
-        private notificationService: notificationService,
+        private notificationService: notificationService
     ) {}
 
     async sendFriendRequest(userMe: string, friendId: string) {
@@ -27,12 +27,14 @@ export class friendsService {
         await this.checkUsersExistence(userMe, friendId);
 
         //check if u already send friend request to this one
-        const existRequest = await this.findFirstStatusPending(
+        const existPending = await this.findFirstStatusPending(
             userMe,
             friendId
         );
 
-        if (existRequest) {
+        const existAccept = await this.areUsersFriends(userMe, friendId);
+
+        if (existPending || existAccept) {
             throw new ForbiddenException('-------Friend request already sent'); //need to handle this because it causes 500
         }
 
@@ -55,7 +57,13 @@ export class friendsService {
         const sender = await this.getNickNameEmail(userMe);
         // console.log('--------------- sender: ', sender);
         // console.log('--------------- reciever: ', receiver);
-        await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`, 'friend');
+        await this.notificationGateway.notificationEvent(
+            receiver,
+            sender,
+            userMe,
+            `${sender.nickName} send you a friend request`,
+            'friend'
+        );
     }
 
     async acceptFriendRequest(userMe: string, friendId: string) {
@@ -89,7 +97,11 @@ export class friendsService {
         const receiver = await this.getNickNameEmail(friendId);
         // console.log('in accept: ', receiver);
         const sender = await this.getNickNameEmail(userMe);
-        await this.notificationService.deleteNotification(userMe, friendId, sender.nickName);
+        await this.notificationService.deleteNotification(
+            userMe,
+            friendId,
+            sender.nickName
+        );
         // await this.notificationGateway.notificationEvent(receiver, sender, userMe, `accept invitaion');
     }
 
@@ -475,12 +487,12 @@ export class friendsService {
         // return user;
     }
 
-    async getNickNameEmail(userId: string){
+    async getNickNameEmail(userId: string) {
         const friend = await this.userService.getOneUser(userId);
         const data = {
             email: friend.email,
             nickName: friend.nickName,
-            avatar: friend.avatar,
+            avatar: friend.avatar
         };
         return data;
     }
