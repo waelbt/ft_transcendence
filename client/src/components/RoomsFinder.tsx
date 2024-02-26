@@ -83,7 +83,9 @@ const RoomsFinder: FC<GroupsFormProps> = ({ closeEvent }) => {
                         <div className="flex items-center justify-center gap-2">
                             <Avatar
                                 imageUrl={room.avatar}
-                                style="w-14	h-14 bg-black rounded-[150px] border border-white" userStatus={'online'} avatarUserId={''}                            />
+                                style="w-14	h-14 bg-black rounded-[150px] border border-white"
+                                
+                            />
                             <div className="text-black text-[17px] font-semibold font-['Maven Pro'] leading-snug tracking-tight">
                                 {room.roomTitle}
                             </div>

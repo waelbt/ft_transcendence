@@ -349,7 +349,7 @@ export function Game() {
                             <Avatar
                                 imageUrl={avatar}
                                 style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-amber-500 ring-offset-base-100 ring-offset-1"
-                                userStatus={'online'}
+                                userStatus={'inGame'}
                                 avatarUserId={''}
                             />
                             <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
@@ -358,23 +358,27 @@ export function Game() {
                                 </div>
                             </div>
                         </div>
-                        <div className="inline-flex gap-4 justify-center items-center">
-                            <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="text-white text-[29px] font-normal font-['Acme']">
-                                    {rightscore}
+                        {gameMode !== 'training' ? (
+                            <div className="inline-flex gap-4 justify-center items-center">
+                                <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
+                                    <div className="text-white text-[29px] font-normal font-['Acme']">
+                                        {rightscore}
+                                    </div>
                                 </div>
+                                {isLoading ? (
+                                    <Skeleton circle height={80} width={80} />
+                                ) : (
+                                    <Avatar
+                                        imageUrl={friend?.avatar}
+                                        style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
+                                        userStatus={'inGame'}
+                                        avatarUserId={friend?.id as string}
+                                    />
+                                )}
                             </div>
-                            {isLoading ? (
-                                <Skeleton circle height={80} width={80} />
-                            ) : (
-                                <Avatar
-                                    imageUrl={friend?.avatar}
-                                    style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
-                                    userStatus={friend?.status as UserStatus}
-                                    avatarUserId={friend?.id as string}
-                                />
-                            )}
-                        </div>
+                        ) : (
+                            <div></div>
+                        )}
                     </div>
                     <div className="w-[1168px] h-[663px]">
                         <div className={`table-${gameMode}`}>
@@ -387,12 +391,6 @@ export function Game() {
                                 color="#E6E6E9"
                                 pos={`${secondPaddlePos}rem`}
                             />
-                            {/* <Score
-                                    leftScore={removeDecimalPart(leftscore)}
-                                    rightScore={removeDecimalPart(rightscore)}
-                                    lColor={'white'}
-                                    rColor={'white'}
-                                /> */}
                             <div className="lineC">
                                 <div className="line"></div>
                             </div>

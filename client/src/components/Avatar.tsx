@@ -8,8 +8,8 @@ export type UserStatus = 'online' | 'offline' | 'inGame';
 
 interface AvatarProps {
     imageUrl: string | null | undefined;
-    userStatus: 'online' | 'offline' | 'inGame';
-    avatarUserId: string;
+    userStatus?: 'online' | 'offline' | 'inGame';
+    avatarUserId?: string;
     style?: string;
     isloading?: boolean;
     error?: boolean;
@@ -31,29 +31,31 @@ const Avatar: FC<AvatarProps> = ({
     const { socket } = useNotificationStore();
     const { socket: gameSocket } = useGameStore();
     const [currentState, setCurrentState] = useState<
-        'online' | 'offline' | 'inGame'
+        'online' | 'offline' | 'inGame' | undefined
     >(userStatus);
     useEffect(() => {
-        if (!socket) return;
-        if (!gameSocket) return;
+        if (currentState) {
+            if (!socket) return;
+            if (!gameSocket) return;
 
-        console.log(imageUrl);
-        const stateListenner = ({
-            userId,
-            status
-        }: {
-            userId: string;
-            status: 'online' | 'offline' | 'inGame';
-        }) => {
-            console.log(userId, status);
-            if (userId === avatarUserId) setCurrentState(status);
-        };
-        socket.on('userStatusChange', stateListenner);
-        gameSocket.on('userStatusChange', stateListenner);
-        return () => {
-            gameSocket.off('userStatusChange', stateListenner);
-            socket.off('userStatusChange', stateListenner);
-        };
+            console.log(imageUrl);
+            const stateListenner = ({
+                userId,
+                status
+            }: {
+                userId: string;
+                status: 'online' | 'offline' | 'inGame';
+            }) => {
+                console.log(userId, status);
+                if (userId === avatarUserId) setCurrentState(status);
+            };
+            socket.on('userStatusChange', stateListenner);
+            gameSocket.on('userStatusChange', stateListenner);
+            return () => {
+                gameSocket.off('userStatusChange', stateListenner);
+                socket.off('userStatusChange', stateListenner);
+            };
+        }
     }, []);
 
     return (

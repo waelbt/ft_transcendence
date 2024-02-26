@@ -119,8 +119,6 @@ function ChatLayouts() {
                             <Avatar
                                 imageUrl={room.avatar}
                                 style="w-14	h-14 bg-black rounded-[150px] border border-white"
-                                userStatus={'online'} 
-                                avatarUserId={''}
                             />
                             <div className="p-2.5 flex-col justify-start items-start gap-[5px] inline-flex">
                                 <div className="text-black text-[17px] font-semibold font-['Maven Pro'] leading-snug tracking-tight">
