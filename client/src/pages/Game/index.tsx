@@ -116,7 +116,7 @@ const Ball = ({}, {}) => {
             const interval = setInterval(() => {
                 // Toggle the ball color between its original color and the background color
                 setBallColor((prevColor) =>
-                    prevColor === 'white' ? 'black' : 'white'
+                    prevColor === 'white' ? '#014158' : 'white'
                 );
                 setShadow((prevShadow) =>
                     prevShadow === 'none' ? '0 0 1.25rem white' : 'none'
@@ -129,7 +129,7 @@ const Ball = ({}, {}) => {
             const interval = setInterval(() => {
                 // Toggle the ball color between its original color and the background color
                 setBallColor((prevColor) =>
-                    prevColor === 'black' ? 'white' : 'black'
+                    prevColor === '#014158' ? 'white' : '#014158'
                 );
                 setShadow((prevShadow) =>
                     prevShadow === '0 0 1.25rem white'
