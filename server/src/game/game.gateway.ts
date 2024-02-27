@@ -152,10 +152,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('friends')
-    handleFriendsMode(
+    async handleFriendsMode(
         client: Socket,
         ids: { userid: string; myid: string }
-    ): void {
+    ): Promise<void> {
         console.log('friends mode', ids);
         if (this.checkIfPlyrIsInGame(client, ids.userid) || this.checkIfPlyrIsInGame(client, ids.myid)) {
             this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
@@ -201,11 +201,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 chosen: 'classic',
                 opponentId: this.waitibgids['frd']
             });
+            
 
             this.waitingFriend = null;
             this.waitibgids['frd'] = null;
         } else if (ids.myid !== ids.userid) {
             console.log(this.connectedUsers);
+
+            await this.prisma.user.update({
+                where: { id: ids.myid },
+                data: { status: "inGame" }
+            });
+            this.broadcastUserStatus(ids.myid, 'inGame');
+
+            await this.prisma.user.update({
+                where: { id: ids.userid },
+                data: { status: "inGame" }
+            });
+            this.broadcastUserStatus(ids.userid, 'inGame');
 
             for (const user in this.connectedUsers) {
                 console.log(this.connectedUsers[user]?.userData?.sub, ids);
