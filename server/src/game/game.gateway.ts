@@ -80,11 +80,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                     }
                 });
                 if (!isUser) await this.handleDisconnect(client);
-                // await this.prisma.user.update({
-                //     where: { id: userCheck.userData.sub },
-                //     data: { status: "inGame" }
-                // });
-                // this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
             }
         }
 
@@ -125,14 +120,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             return;
         }
 
-        // update stat in database from true to false
-        await this.prisma.user.update({
-            where: { id: userCheck.userData.sub },
-            data: { status: "online" }
-        });
-
-        this.broadcastUserStatus(userCheck.userData.sub, 'online');
-
         for (const gameMode in this.waitingRooms) {
             if (this.waitingRooms[gameMode]?.id === client.id) {
                 this.waitingRooms[gameMode] = null;
@@ -165,10 +152,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('friends')
-    handleFriendsMode(
+    async handleFriendsMode(
         client: Socket,
         ids: { userid: string; myid: string }
-    ): void {
+    ): Promise<void> {
         console.log('friends mode', ids);
         if (this.checkIfPlyrIsInGame(client, ids.userid) || this.checkIfPlyrIsInGame(client, ids.myid)) {
             this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
@@ -208,12 +195,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 chosen: 'classic',
                 opponentId: ids.myid
             });
+            await this.prisma.user.update({
+            where: { id: ids.myid },
+            data: { status: "inGame" }
+            });
+            this.broadcastUserStatus(ids.myid, 'inGame');
+
             this.server.to(client.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 2,
                 chosen: 'classic',
                 opponentId: this.waitibgids['frd']
             });
+            
+            await this.prisma.user.update({
+                    where: { id: this.waitibgids['frd'] },
+                    data: { status: "inGame" }
+                });
+                this.broadcastUserStatus(this.waitibgids['frd'], 'inGame');
 
             this.waitingFriend = null;
             this.waitibgids['frd'] = null;
@@ -230,6 +229,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingFriend = client;
             this.waitibgids['frd'] = ids.myid;
         }
+
+        // await this.prisma.user.update({
+        //     where: { id: ids.myid },
+        //     data: { status: "inGame" }
+        // });
+        // this.broadcastUserStatus(ids.myid, 'inGame');
+
+        // await this.prisma.user.update({
+        //     where: { id: ids.userid },
+        //     data: { status: "inGame" }
+        // });
+        // this.broadcastUserStatus(ids.userid, 'inGame');
+
     }
 
     @SubscribeMessage('leaveGameMode')
@@ -273,11 +285,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         if (this.checkIfPlyrIsInGame(client, payload.userId)) {
             this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
-            // await this.prisma.user.update({
-            //     where: { id: payload.userId },
-            //     data: { status: "inGame" }
-            // });
-            // this.broadcastUserStatus(payload.userId, 'inGame');
             return;
         }
 
@@ -332,26 +339,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ],
                 plysIds: [this.waitibgids[payload.gameMode], payload.userId]
             };
-           
-
-            // await this.prisma.user.update({
-            //     where: { id: payload.userId },
-            //     data: { status: "inGame" }
-            // });
-            // this.broadcastUserStatus(payload.userId, 'inGame');
-
-            // await this.prisma.user.update({
-            //     where: { id: this.waitingRooms[payload.gameMode].id },
-            //     data: { status: "inGame" }
-            // });
-            // this.broadcastUserStatus(this.waitingRooms[payload.gameMode].id, 'inGame');
 
             this.server.to(client.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 1,
                 chosen: payload.gameMode
             });
-
             this.waitingRooms[payload.gameMode] = null;
         } else if (
             this.waitingRooms[payload.gameMode] &&
@@ -402,6 +395,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 opponentId: this.waitibgids[payload.gameMode],
                 chosen: payload.gameMode
             });
+
+            await this.prisma.user.update({
+                where: { id: payload.userId },
+                data: { status: "inGame" }
+            });
+            this.broadcastUserStatus(payload.userId, 'inGame');
+
+            await this.prisma.user.update({
+                where: { id: this.waitibgids[payload.gameMode] },
+                data: { status: "inGame" }
+            });
+            this.broadcastUserStatus(this.waitibgids[payload.gameMode], 'inGame');
+
 
             console.log(
                 `Game started in ${payload.gameMode} mode between ${this.waitingRooms[payload.gameMode].id
@@ -529,16 +535,33 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('gameended')
     async handleEndgame(client: Socket, payload: { room: string }): Promise<void>{
-    
-        // const userCheck = await this.gameService.getUserFromAccessToken(
-        //     client.handshake.auth.token
-        // );
+        
+        for (const room in this.rooms) {
+            if (
+                this.rooms[room].players[0].id === client.id ||
+                this.rooms[room].players[1].id === client.id
+            ) {
 
-        // await this.prisma.user.update({
-        //     where: { id: userCheck.userData.sub },
-        //     data: { status: "inGame" }
-        // });
-        // this.broadcastUserStatus(userCheck.userData.sub, 'inGame');
+
+                if (this.rooms[room]?.plysIds[0] !== undefined){
+                    console.log('id0 in gameended:    ', this.rooms[room]?.plysIds[0])
+                    await this.prisma.user.update({
+                        where: { id: this.rooms[room]?.plysIds[0]},
+                        data: { status: "online" }
+                    });
+                    this.broadcastUserStatus(this.rooms[room]?.plysIds[0], 'online');
+                }
+
+                if (this.rooms[room]?.plysIds[1] !== undefined){
+                    console.log('id1 in gameended:    ', this.rooms[room]?.plysIds[1])
+                    await this.prisma.user.update({
+                        where: { id: this.rooms[room]?.plysIds[1]},
+                        data: { status: "online" }
+                    });
+                    this.broadcastUserStatus(this.rooms[room]?.plysIds[1], 'online');
+                }
+            }
+        }
 
         for (const room in this.rooms) {
             if (
@@ -552,5 +575,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 delete this.rooms[room];
             }
         }
+        
+
     }
 }
