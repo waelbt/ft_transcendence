@@ -9,6 +9,7 @@ type UserStateType = {
     redirectedForProfileCompletion: boolean;
     accessToken: string | null;
     id: string;
+    achivementsCounter: number;
     email: string;
     avatar: string;
     nickName: string;
@@ -27,6 +28,7 @@ const initialState: UserStateType = {
     redirectedFor2FA: false,
     redirectedForProfileCompletion: false,
     accessToken: null,
+    achivementsCounter: 0,
     id: '',
     email: '',
     avatar: '',

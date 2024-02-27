@@ -85,7 +85,7 @@ export class UsersService {
     }
 
     async getOneUser(id: string) {
-        // console.log('userId: ', id);
+        console.log('userId: ', id);
         return await this.prisma.user.findUnique({
             where: {
                 id: id
@@ -399,13 +399,23 @@ export class UsersService {
             req.user.sub,
             userId
         );
-        const info = { user, friendsIds, type };
+
+        const userAchievements = await this.userAchievements(userId);
+        const achievementsArray = Object.values(userAchievements); // Convert object values into an array
+
+        const achivementsCounter: number = achievementsArray.filter(achievement => achievement === true).length;
+
+        console.log('achievements counter in profile: ', achivementsCounter);
+        const info = { user, friendsIds, type , achivementsCounter};
         // console.log('info wael ', info);
         return info;
     }
 
     async myInfos(@Req() req): Promise<mydata> {
+        // console.log("before");
         const user = await this.getOneUser(req.user.sub);
+        // console.log('user: ', user);
+
         if (!user) {
             throw new NotFoundException('this user does not exist');
         }
@@ -430,13 +440,20 @@ export class UsersService {
             return block.id;
         });
 
+        const userAchievements = await this.userAchievements(req.user.sub);
+        const achievementsArray = Object.values(userAchievements); // Convert object values into an array
+
+        const achivementsCounter: number = achievementsArray.filter(achievement => achievement === true).length;
+        
+        console.log('achivementsCounter: ', achivementsCounter);
         const notification =
             await this.notificationService.getFilterNotificationsForUser(
                 user.nickName
             );
         // console.log('ids ', friendsIds);
 
-        return { user, friendsIds, blocksIds, notification };
+        // console.log('user: ', user);
+        return { user, friendsIds, blocksIds, notification , achivementsCounter};
     }
 
     async userData(userId: string) {
@@ -516,7 +533,7 @@ export class UsersService {
         const allRank = await Promise.all(allRankPromises);
         const filteredRank = allRank.filter(Boolean);
 
-        console.log('rank: ', filteredRank);
+        // console.log('rank: ', filteredRank);
         return filteredRank;
     }
 }

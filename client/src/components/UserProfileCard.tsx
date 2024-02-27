@@ -13,6 +13,7 @@ type UserProfileCardProps = {
     avatar: string;
     nickName: string;
     fullName: string;
+    achivementsCounter: number
     createdAt: string;
     status: UserStatus;
     exp: 0;
@@ -92,7 +93,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
                     <div className="px-1 py-1 justify-center items-center gap-2.5 inline-flex">
                         <AchievementIcon />
                         <div className="text-amber-500 text-3xl font-normal font-['Acme']">
-                            0/7 achievement
+                            {props.achivementsCounter}/7 achievement
                         </div>
                     </div>
                     <div className="tooltip cursor-context-menu text-neutral-400 text-sm font-normal font-['Acme']">

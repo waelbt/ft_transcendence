@@ -59,10 +59,11 @@ export class notificationGateway
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
                 console.log('---- ok socket: ', this.usersSockets);
-                await this.prisma.user.update({
+                const user = await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: 'online' }
                 });
+                console.log('----------------user: ', user);
                 // console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
             }
@@ -162,7 +163,6 @@ export class notificationGateway
             where: { id: userCheck.userData.sub },
             data: {
                 status: 'offline',
-                inGame: 'online'
             }
         });
         console.log('howa : ', howa.status);

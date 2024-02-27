@@ -67,4 +67,8 @@ export class mydata{
     @ApiProperty({type: notification})
 
     notification: notification[];
+
+    @ApiProperty()
+
+    achivementsCounter: number
 }

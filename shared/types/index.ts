@@ -9,6 +9,7 @@ export interface User {
     nickName: string;
     fullName: string;
     status: UserStatus;
+    achivementsCounter: number;
     f2A: boolean;
     f2A_Secret: string;
     inGame: boolean;
