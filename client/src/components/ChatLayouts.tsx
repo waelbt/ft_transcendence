@@ -12,13 +12,28 @@ import { FaSearch } from 'react-icons/fa';
 import RoomsFinder from './RoomsFinder';
 import GroupsForm from './GroupsForm';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
+import { useRoomStore } from '../stores/roomStore';
+import { useUserStore } from '../stores/userStore';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');
-    const { Layout_Rooms, updateState, socket, pushRoom } =
+    const { Layout_Rooms, updateState, socket, pushRoom, unpushRoom } =
         useChatLayoutStore();
     // const [rooms, SetRooms] = useState<RoomsList[]>([]);
     // const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
+    const { id: userId } = useUserStore();
+
+    const {
+        messageListener,
+        userJoinedListener,
+        userLeftListener,
+        userkickedListener,
+        pushModerator,
+        pushBan,
+        pushMuted,
+        unpushMuted,
+        unpushModerator
+    } = useRoomStore();
     const axiosPrivate = useAxiosPrivate();
     const [state, setState] = useState<boolean>(false);
     const [isEventOpen, setIsEventOpen] = useState(false);
@@ -59,6 +74,58 @@ function ChatLayouts() {
         };
     }, []);
 
+    useEffect(() => {
+        if (!socket) return;
+
+        const handlekick = ({
+            id: kickedUser,
+            nickname,
+            roomId
+        }: {
+            id: string;
+            nickname: string;
+            roomId: string;
+        }) => {
+            console.log('kick ', roomId);
+            userkickedListener({ id: kickedUser, nickname });
+            if (kickedUser === userId) unpushRoom(+roomId, true);
+        };
+
+        const handleBan = ({
+            id: banUser,
+            nickname,
+            roomId
+        }: {
+            id: string;
+            nickname: string;
+            roomId: string;
+        }) => {
+            pushBan({ id: banUser, nickname });
+            if (banUser === userId) unpushRoom(+roomId, true);
+        };
+
+        socket.on('unsetAdmin', unpushModerator);
+        socket.on('unmuteUser', unpushMuted);
+        socket.on('muteUser', pushMuted);
+        socket.on('banMember', handleBan);
+        socket.on('setAdmin', pushModerator);
+        socket.on('kickMember', handlekick);
+        socket.on('joinRoom', userJoinedListener);
+        socket.on('message', messageListener);
+        socket.on('leaveRoom', userLeftListener);
+
+        return () => {
+            socket.on('unsetAdmin', unpushModerator);
+            socket.off('unmuteUser', unpushMuted);
+            socket.off('muteUser', pushMuted);
+            socket.off('banMember', handleBan);
+            socket.off('setAdmin', pushModerator);
+            socket.off('kickMember', handlekick);
+            socket.off('joinRoom', userJoinedListener);
+            socket.off('message', messageListener);
+            socket.off('leaveRoom', userLeftListener);
+        };
+    }, [socket]);
     return (
         <div className=" flex-grow h-full w-full justify-start items-start inline-flex border border-stone-300 ">
             <div className="bg-white w-[17%] h-full py-2 border-r flex  flex-col justify-start items-center gap-2 ">

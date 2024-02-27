@@ -18,9 +18,9 @@ export function Chat() {
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { messages, currentDm, pushMessage, updateState } = useDmStore();
-    const { addUserBlockId, id: userId } = useUserStore();
+    const {  id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const { pushRoom } = useChatLayoutStore();
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,17 +80,7 @@ export function Chat() {
         contentRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const blockUser = async () => {
-        if (currentDm?.id) {
-            try {
-                await axiosPrivate.post(`/users/blockUser/${currentDm.id}`);
-                addUserBlockId(currentDm.id);
-                navigate('/chat');
-            } catch (error) {
-                toast.error('Error blocking user.');
-            }
-        }
-    };
+
     const { id: ID } = useUserStore();
 
     useEffect(() => {
@@ -221,14 +211,7 @@ export function Chat() {
                             Challenge
                         </div>
                     </div>
-                    <div
-                        className="justify-start items-center gap-0.5 inline-flex cursor-pointer"
-                        onClick={blockUser}
-                    >
-                        <div className="text-red-600 text-2xl font-normal font-['Acme'] leading-none">
-                            Block
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>

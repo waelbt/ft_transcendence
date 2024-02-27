@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Avatar } from '../../components';
 import { useUserStore } from '../../stores/userStore';
@@ -10,25 +10,19 @@ import { MAX_MESSAGE_LENGTH } from '../../constants';
 
 import GroupPanel from '../../components/GroupPanel';
 import { useRoomStore } from '../../stores/roomStore';
+// import { useRoomStore } from '../../stores/roomStore';
 
 export function Room() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
-    const { socket, unpushRoom } = useChatLayoutStore();
+    const { socket } = useChatLayoutStore();
+    // const { socket, unpushRoom } = useChatLayoutStore();
     const {
         messages,
         updateState,
-        messageListener,
-        userJoinedListener,
-        userLeftListener,
-        userkickedListener,
-        canSendMessage,
-        pushModerator,
-        pushBan,
-        pushMuted,
-        unpushMuted,
-        unpushModerator
+
+        canSendMessage
     } = useRoomStore();
     const { id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
@@ -36,7 +30,7 @@ export function Room() {
         if (e.target.value.length <= MAX_MESSAGE_LENGTH)
             setMessage(e.target.value);
     };
-
+    const navigate = useNavigate();
     // const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
 
     // const navigate = useNavigate();
@@ -115,60 +109,12 @@ export function Room() {
                 updateState({ id: id });
             } catch (error) {
                 console.error('There was a problem fetching messages:', error);
+                navigate('/chat');
             }
         };
 
         fetchMessages();
     }, [id]);
-
-    useEffect(() => {
-        if (!socket) return;
-
-        const handlekick = ({
-            id: kickedUser,
-            nickname
-        }: {
-            id: string;
-            nickname: string;
-        }) => {
-            userkickedListener({ id: kickedUser, nickname });
-            console.log('kick ', kickedUser, '   ', userId, id);
-            if (kickedUser === userId && id) unpushRoom(+id, true);
-        };
-
-        const handleBan = ({
-            id: banUser,
-            nickname
-        }: {
-            id: string;
-            nickname: string;
-        }) => {
-            pushBan({ id: banUser, nickname });
-            if (banUser === userId && id) unpushRoom(+id, true);
-        };
-
-        socket.on('unsetAdmin', unpushModerator);
-        socket.on('unmuteUser', unpushMuted);
-        socket.on('muteUser', pushMuted);
-        socket.on('banMember', handleBan);
-        socket.on('setAdmin', pushModerator);
-        socket.on('kickMember', handlekick);
-        socket.on('joinRoom', userJoinedListener);
-        socket.on('message', messageListener);
-        socket.on('leaveRoom', userLeftListener);
-
-        return () => {
-            socket.on('unsetAdmin', unpushModerator);
-            socket.off('unmuteUser', unpushMuted);
-            socket.off('muteUser', pushMuted);
-            socket.off('banMember', handleBan);
-            socket.off('setAdmin', pushModerator);
-            socket.off('kickMember', handlekick);
-            socket.off('joinRoom', userJoinedListener);
-            socket.off('message', messageListener);
-            socket.off('leaveRoom', userLeftListener);
-        };
-    }, [socket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0 ">
