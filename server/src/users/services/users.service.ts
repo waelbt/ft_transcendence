@@ -516,7 +516,7 @@ export class UsersService {
         const allRank = await Promise.all(allRankPromises);
         const filteredRank = allRank.filter(Boolean);
 
-        // console.log('rank: ', filteredRank);
+        console.log('rank: ', filteredRank);
         return filteredRank;
     }
 }

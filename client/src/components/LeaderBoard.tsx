@@ -139,6 +139,8 @@ function LeaderBoard() {
         const fetchData = async () => {
             try {
                 const response = await axiosPrivate.get('/users/rank');
+                console.log('rank ',response.data );
+                
                 // Check if the data is an array and filter out null or invalid entries
                 if (Array.isArray(response.data)) {
                     const validData = response.data.filter(

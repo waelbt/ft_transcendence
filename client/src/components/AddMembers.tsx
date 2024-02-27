@@ -58,7 +58,7 @@ function AddMembers() {
                 });
 
                 await Promise.all(promises);
-                toast.success('requests send successfully');
+                toast.success('user added successfully');
             } catch (error) {
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
