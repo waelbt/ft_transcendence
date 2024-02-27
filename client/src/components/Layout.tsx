@@ -4,7 +4,7 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { useUserStore } from '../stores/userStore';
 import { NavigationMenu } from '.';
 import useGameStore from '../stores/gameStore';
-
+import loadGif from '../assets/loading.gif';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
@@ -177,7 +177,13 @@ function Layout() {
         };
     }, [location]);
 
-    if (isLoading) return <div>banaaaaaaaaaaaaaaaaaaaaaanaaana</div>;
+    if (isLoading)
+        return (
+            <div className="s h-screen w-screen flex-col justify-center items-center gap-2.5 flex  bg-white">
+                <img src={loadGif} alt="loading..." />{' '}
+            </div>
+        );
+
     return (
         <div className="flex  flex-col h-screen w-screen relative ">
             <div className="absolute top-0 left-0 z-100">

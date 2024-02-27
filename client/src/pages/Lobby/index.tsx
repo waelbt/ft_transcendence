@@ -32,7 +32,7 @@ export function Lobby() {
 
     const { socket: gameSocket } = useGameStore();
 
-    const modeImages = {
+    const modeImages: { [key: string]: string } = {
         classic: classicBackground,
         crazy: crazyBackground,
         training: trainingBackground
@@ -68,7 +68,6 @@ export function Lobby() {
                         <div
                             key={`mode-${index}`}
                             onClick={() => handleClick(mode)}
-                            // className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
                         >
                             <img
                                 src={modeImages[mode]}

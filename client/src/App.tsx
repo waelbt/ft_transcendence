@@ -1,6 +1,6 @@
 import AllRoutes from './Routes';
 import { Toaster } from 'react-hot-toast';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
     QueryClient,
     QueryClientProvider,
@@ -23,7 +23,7 @@ function App() {
             <ErrorBoundary>
                 <AllRoutes />
                 <Toaster
-                    position="bottom-right"
+                    position="top-center"
                     reverseOrder={false}
                     toastOptions={{
                         duration: 3000
@@ -31,7 +31,7 @@ function App() {
                     containerStyle={{ zIndex: 9999 }}
                 />
             </ErrorBoundary>
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
         </QueryClientProvider>
     );
 }

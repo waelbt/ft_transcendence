@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Message, RoomsList } from '../../../../shared/types';
 import { Avatar } from '../../components';
@@ -18,8 +18,8 @@ export function Chat() {
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const { messages, currentDm, pushMessage, updateState, isForbbiden } =
-        useDmStore();
+    const navigate = useNavigate();
+    const { messages, currentDm, pushMessage, updateState } = useDmStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const { pushRoom } = useChatLayoutStore();
@@ -28,7 +28,7 @@ export function Chat() {
             setMessage(e.target.value);
     };
 
-    const { socket: gameSocket, updateState: updateStateGame } = useGameStore();
+    const { socket: gameSocket } = useGameStore();
 
     const sendMessage = () => {
         if (message.trim() && socket) {
@@ -85,6 +85,7 @@ export function Chat() {
             try {
                 await axiosPrivate.post(`/users/blockUser/${currentDm.id}`);
                 addUserBlockId(currentDm.id);
+                navigate('/chat');
             } catch (error) {
                 toast.error('Error blocking user.');
             }
