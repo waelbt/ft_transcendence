@@ -1,6 +1,6 @@
 import AllRoutes from './Routes';
 import { Toaster } from 'react-hot-toast';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
     QueryClient,
     QueryClientProvider,
@@ -31,7 +31,7 @@ function App() {
                     containerStyle={{ zIndex: 9999 }}
                 />
             </ErrorBoundary>
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
         </QueryClientProvider>
     );
 }

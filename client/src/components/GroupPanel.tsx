@@ -287,7 +287,7 @@ function GroupPanel() {
                                 ))}
                             </div>
                             {selectedVisibility === 'PROTECTED' && (
-                                <div className="absolute right-14 top-1/2 transition -translate-y-10">
+                                <div className="absolute right-0 top-1/2 transition -translate-y-7 ">
                                     <input
                                         style={
                                             isSubmitting

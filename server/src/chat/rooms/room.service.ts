@@ -38,6 +38,7 @@ import { AddUserToPrivateRoom } from '../DTOS/add-user-to-private-room.dto';
 import { WebSocketService } from '../chat.gateway.service';
 import { UsersService } from 'src/users/services/users.service';
 import { user } from 'src/users/dto/mydata.dto';
+import { notification } from 'src/users/dto/notification.dto';
 
 @Injectable()
 export class RoomService {
@@ -49,7 +50,7 @@ export class RoomService {
     constructor(
         private readonly prisma: PrismaOrmService,
         @Inject(forwardRef(() => ChatGateway))
-        private readonly emit: ChatGateway,
+        private readonly emit: ChatGateway
     ) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
@@ -97,6 +98,7 @@ export class RoomService {
                 lastMessageTime: null,
                 isRoom: true
             };
+            console.log('join...........................', roomCreated);
             return roomCreated;
         }
 
@@ -165,7 +167,10 @@ export class RoomService {
         // };
         // if (!room)
         //     throw new NotFoundException('No Exsiting Room With This Id');
-        else if (room.privacy === 'PRIVATE' && !room.privateMembers.includes(userId))
+        else if (
+            room.privacy === 'PRIVATE' &&
+            !room.privateMembers.includes(userId)
+        )
             throw new ForbiddenException('This Room Is PRIVATE');
         // return { message: 'This Room Is Private', state: false };
         else if (room.privacy === 'PROTECTED') {
@@ -195,7 +200,26 @@ export class RoomService {
             }
         });
 
-        return { joinedRoom: room, state: true };
+        if (joinRoomDto.notificationId) {
+            await this.prisma.notification.delete({
+                where: {
+                    id: joinRoomDto.notificationId
+                }
+            });
+        }
+
+        const roomCreated: GetRoomsDto = {
+            id: room.id,
+            avatar: room.avatar,
+            roomTitle: room.roomTitle,
+            lastMessage: '',
+            nickName: room.roomTitle,
+            lastMessageTime: null,
+            isRoom: true,
+            privacy: room.privacy
+        };
+
+        return roomCreated;
     }
 
     async leaveRoom(leaveRoomDto: LeaveRoomDto, userId: string) {
@@ -1158,60 +1182,73 @@ export class RoomService {
     }
 
     async addUserToPrivateRoom(addUser: AddUserToPrivateRoom, userId: string) {
-
         const roomWithPrvMembers = await this.prisma.room.findUnique({
             where: {
-                id: addUser.roomId,
-            },
+                id: addUser.roomId
+            }
         });
 
         const room = await this.prisma.room.updateMany({
             where: {
-                id: addUser.roomId,
+                id: addUser.roomId
             },
             data: {
                 privateMembers: {
-                    set : [...roomWithPrvMembers.privateMembers, addUser.userId]
+                    set: [...roomWithPrvMembers.privateMembers, addUser.userId]
                 }
             }
         });
+        this.emit.joinPrvRoom({
+            roomId: addUser.roomId,
+            roomTitle: roomWithPrvMembers.roomTitle,
+            userId: addUser.userId
+        });
 
-        const receiver = await this.getUserData(addUser.userId);
-        const sender = await this.getUserData(userId);
+        // const receiver = await this.getUserData(addUser.userId);
+        // const sender = await this.getUserData(userId);
 
-        this.emit.notificationEvent(receiver, sender, userId, `invited you to join ${roomWithPrvMembers.roomTitle}`, 'chat');
+        // this.emit.notificationEvent(
+        //     receiver,
+        //     sender,
+        //     userId,
+        //     `invited you to join ${roomWithPrvMembers.roomTitle}`,
+        //     'chat'
+        // );
     }
 
     async getUserData(userId: string) {
         const user = await this.prisma.user.findUnique({
             where: {
                 id: userId
-            },
+            }
         });
 
         const userData = {
             email: user.email,
             nickname: user.nickName,
             avatar: user.avatar
-        }
+        };
 
-        return (userData);
+        return userData;
     }
 
-    async isUserBlocked( userId: string, blockedUserId: string): Promise<boolean> {
+    async isUserBlocked(
+        userId: string,
+        blockedUserId: string
+    ): Promise<boolean> {
         try {
             const block = await this.prisma.block.findFirst({
                 where: {
                     OR: [
-                        { userId: userId , blockedUserId: blockedUserId },
-                        { userId: blockedUserId , blockedUserId: userId },
-                    ],
-                },
+                        { userId: userId, blockedUserId: blockedUserId },
+                        { userId: blockedUserId, blockedUserId: userId }
+                    ]
+                }
             });
             // console.log('block: ', !!block);
             return !!block;
-        } catch(errrrr) {
-            return ;
+        } catch (errrrr) {
+            return;
         }
     }
 }

@@ -29,7 +29,7 @@ export class user{
     
     @ApiProperty()
 
-    status: boolean;
+    status: string;
     
     @ApiProperty()
 
@@ -41,7 +41,7 @@ export class user{
     
     @ApiProperty()
 
-    inGame: boolean;
+    inGame: string;
     
     @ApiProperty()
 

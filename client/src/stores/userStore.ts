@@ -1,7 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { NotificationDto } from '../../../shared/types';
+import { UserStatus } from '../components/Avatar';
 
 type UserStateType = {
     isLogged: boolean;
@@ -14,13 +14,12 @@ type UserStateType = {
     nickName: string;
     fullName: string;
     createdAt: string;
-    status: boolean;
+    status: UserStatus;
     f2A: boolean;
     inGame: boolean;
     completeProfile: boolean;
     friendsIds: string[];
     blocksIds: string[];
-    notifications: NotificationDto[];
 };
 
 const initialState: UserStateType = {
@@ -34,13 +33,12 @@ const initialState: UserStateType = {
     nickName: '',
     fullName: '',
     createdAt: '',
-    status: false,
+    status: 'offline',
     f2A: false,
     inGame: false,
     completeProfile: false,
     friendsIds: [],
-    blocksIds: [],
-    notifications: []
+    blocksIds: []
 };
 
 type UserActionsType = {
@@ -52,8 +50,6 @@ type UserActionsType = {
     removeUserFriendId: (id: string) => void;
     addUserBlockId: (id: string) => void;
     removeUserBlockId: (id: string) => void;
-    pushNotification: (notif: NotificationDto) => void;
-    unpushNotification: (id: string) => void;
 };
 
 // ? remove storing in local storage and test the behavior
@@ -128,20 +124,7 @@ export const useUserStore = createWithEqualityFn<
                 }));
             },
             updateState: (newState) =>
-                set((state) => ({ ...state, ...newState })),
-            pushNotification: (notif) => {
-                const { notifications } = get();
-
-                const newNotification = [...notifications, notif];
-                set({ notifications: newNotification });
-            },
-            unpushNotification: (id) => {
-                const { notifications } = get();
-                const filteredRooms = notifications.filter(
-                    (notif) => notif.id !== id
-                );
-                set({ notifications: filteredRooms });
-            }
+                set((state) => ({ ...state, ...newState }))
         }),
         {
             name: 'userStore',

@@ -9,8 +9,7 @@ import {
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { Server, Socket } from 'socket.io';
 import { notificationService } from '../services/notification.service';
-
-
+import { log } from 'console';
 
 @WebSocketGateway({
     cors: {
@@ -36,10 +35,14 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
+        console.log(
+            'notif handlee con.................................................................................'
+        );
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
         );
+        console.log('id: ', userCheck.userData.sub);
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
             //update stat in database from false to true
@@ -49,16 +52,16 @@ export class notificationGateway
                         id: userCheck.userData.sub
                     }
                 });
-                if (!isUser) {
-                    console.log('hello')
-                    await this.handleDisconnect(client);
-                } 
+            }
+            if (!isUser) {
+                console.log('hello');
+                await this.handleDisconnect(client);
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
-                // console.log('---- ok socket: ', this.usersSockets);
+                console.log('---- ok socket: ', this.usersSockets);
                 await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
-                    data: { status: true }
+                    data: { status: 'online' }
                 });
                 // console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
@@ -70,22 +73,29 @@ export class notificationGateway
 
     @SubscribeMessage('notification')
     async notificationEvent(receiver, sender, senderId, action, type) {
+        console.log(
+            '...............................................................................................................................'
+        );
+
         const userSocket = await this.usersSockets.get(receiver.email);
+        console.log(userSocket);
+
         if (userSocket) {
             // console.log('notification: ', notificationPayload);
             // console.log('sender: ', sender);
             // console.log('reciever: ', receiver);
             // console.log('action: ', action);
             //hna ghtstory dkchi f database
-            const notification = await this.notificationService.createNotification(
-                senderId,
-                sender.nickName,
-                sender.avatar,
-                receiver.nickName,
-                receiver.avatar,
-                action,
-                type,
-            );
+            const notification =
+                await this.notificationService.createNotification(
+                    senderId,
+                    sender.nickName,
+                    sender.avatar,
+                    receiver.nickName,
+                    receiver.avatar,
+                    action,
+                    type
+                );
             const notificationPayload = {
                 id: notification.id,
                 userId: senderId,
@@ -94,6 +104,8 @@ export class notificationGateway
                 action: action,
                 type
             };
+            console.log('notif', notificationPayload);
+
             await this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);
@@ -119,6 +131,7 @@ export class notificationGateway
             userId,
             status
         };
+        console.log('message: ', message);
         this.server.emit('userStatusChange', message);
     }
 
@@ -145,13 +158,14 @@ export class notificationGateway
         }
 
         //update stat in database from true to false
-        await this.prisma.user.update({
+        const howa = await this.prisma.user.update({
             where: { id: userCheck.userData.sub },
             data: {
-                status: false,
-                inGame: false
+                status: 'offline',
+                inGame: 'online'
             }
         });
+        console.log('howa : ', howa.status);
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
         // this.notificationService.removeSocket(client.data.playload.sub, client);

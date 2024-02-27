@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import useAxiosPrivate from '../../hooks/axiosPrivateHook';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useChatLayoutStore } from '../../stores/chatLayoutStore';
 import { Message, RoomsList } from '../../../../shared/types';
 import { Avatar } from '../../components';
@@ -10,14 +10,16 @@ import toast from 'react-hot-toast';
 import { DateFormatter } from '../../tools/date_parsing';
 import { MAX_MESSAGE_LENGTH } from '../../constants';
 import { useDmStore } from '../../stores/dmStore';
+import useGameStore from '../../stores/gameStore';
+import { UserStatus } from '../../components/Avatar';
 
 export function Chat() {
     const { id } = useParams();
     const [message, setMessage] = useState<string>('');
     const axiosPrivate = useAxiosPrivate();
     const { socket } = useChatLayoutStore();
-    const { messages, currentDm, pushMessage, updateState, isForbbiden } =
-        useDmStore();
+    const navigate = useNavigate();
+    const { messages, currentDm, pushMessage, updateState } = useDmStore();
     const { addUserBlockId, id: userId } = useUserStore();
     const contentRef = useRef<HTMLDivElement>(null);
     const { pushRoom } = useChatLayoutStore();
@@ -25,6 +27,8 @@ export function Chat() {
         if (e.target.value.length <= MAX_MESSAGE_LENGTH)
             setMessage(e.target.value);
     };
+
+    const { socket: gameSocket } = useGameStore();
 
     const sendMessage = () => {
         if (message.trim() && socket) {
@@ -60,7 +64,7 @@ export function Chat() {
         // };
 
         // socket.on('forbidden', forbiddenListener);
-       
+
         socket.on('dm', messageListener);
         socket.on('checkDm', pushRoom);
 
@@ -81,11 +85,23 @@ export function Chat() {
             try {
                 await axiosPrivate.post(`/users/blockUser/${currentDm.id}`);
                 addUserBlockId(currentDm.id);
+                navigate('/chat');
             } catch (error) {
                 toast.error('Error blocking user.');
             }
         }
     };
+    const { id: ID } = useUserStore();
+
+    useEffect(() => {
+        gameSocket?.on('gameCanceled', (message) => {
+            toast.error(message);
+        });
+
+        return () => {
+            gameSocket?.off('gameCanceled');
+        };
+    }, [gameSocket]);
 
     return (
         <div className=" flex-grow h-full flex gap-0  ">
@@ -176,6 +192,8 @@ export function Chat() {
                     <Avatar
                         imageUrl={currentDm?.avatar}
                         style="w-32 h-32 bg-black rounded-[150px]  mr-2 flex-shrink-0 ring ring-stone-700"
+                        userStatus={currentDm?.status as UserStatus}
+                        avatarUserId={currentDm?.id as string}
                     />
                     <div className="text-black text-[22px] font-normal font-['Acme']">
                         {currentDm?.nickName}
@@ -192,7 +210,12 @@ export function Chat() {
                     </NavLink>
                     <div
                         className="justify-start items-center gap-0.5 inline-flex"
-                        onClick={() => {}}
+                        onClick={() => {
+                            gameSocket?.emit('friends', {
+                                userid: currentDm?.id,
+                                myid: ID
+                            });
+                        }}
                     >
                         <div className="text-sky-500 text-2xl font-normal font-['Acme'] leading-none cursor-pointer">
                             Challenge

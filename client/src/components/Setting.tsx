@@ -14,7 +14,7 @@ import { FieldValues } from 'react-hook-form';
 import { isAxiosError } from 'axios';
 
 function Setting() {
-    const { nickName, avatar, updateState } = useUserStore();
+    const { nickName, avatar, updateState, id } = useUserStore();
     const { isCurrentUser } = useOutletContext<ProfileOutletContextType>() ?? {
         isCurrentUser: false
     };
@@ -23,7 +23,6 @@ function Setting() {
     const [file, setFIle] = useState<File | undefined>();
     const navigate = useNavigate();
     const { uploadData, imagePath, setImagePath } = useImageUpload();
-    
 
     useEffect(() => {
         if (!isCurrentUser) navigate(-1); // Go back to the Previouss page
@@ -78,6 +77,8 @@ function Setting() {
                             <Avatar
                                 imageUrl={imagePath}
                                 style="w-32 h-32 cursor-default"
+                                userStatus={'online'}
+                                avatarUserId={id}
                             />
                             <div className="flex-col justify-center items-start gap-4 inline-flex ">
                                 <input

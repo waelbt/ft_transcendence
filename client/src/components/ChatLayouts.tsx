@@ -15,9 +15,10 @@ import { useChatLayoutStore } from '../stores/chatLayoutStore';
 
 function ChatLayouts() {
     // const [searchTerm, setSearchTerm] = useState<string>('');
-    const { Layout_Rooms, updateState, socket, pushRoom } = useChatLayoutStore();
+    const { Layout_Rooms, updateState, socket, pushRoom } =
+        useChatLayoutStore();
     // const [rooms, SetRooms] = useState<RoomsList[]>([]);
-    const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
+    // const [onlineUser, setOnlineUser] = useState<OnlineUser[]>([]);
     const axiosPrivate = useAxiosPrivate();
     const [state, setState] = useState<boolean>(false);
     const [isEventOpen, setIsEventOpen] = useState(false);
@@ -37,17 +38,17 @@ function ChatLayouts() {
                     toast.error(error.response?.data?.message);
             }
         };
-        const fetchOnlineUsers = async () => {
-            try {
-                const res = await axiosPrivate.get('/users/onlineUsers');
-                setOnlineUser(res.data);
-            } catch (error) {
-                if (isAxiosError(error))
-                    toast.error(error.response?.data?.message);
-            }
-        };
+        // const fetchOnlineUsers = async () => {
+        //     try {
+        //         const res = await axiosPrivate.get('/users/onlineUsers');
+        //         setOnlineUser(res.data);
+        //     } catch (error) {
+        //         if (isAxiosError(error))
+        //             toast.error(error.response?.data?.message);
+        //     }
+        // };
 
-        fetchOnlineUsers();
+        // fetchOnlineUsers();
         fetchDns();
         socket?.on('checkDm', pushRoom);
 
@@ -88,7 +89,7 @@ function ChatLayouts() {
                         Find Rooms
                     </div>
                 </div>
-                {onlineUser.length ? (
+                {/* {onlineUser.length ? (
                     <div className="w-full  border-y gap-5 flex items-center justify-start px-4 py-2 overflow-x-auto whitespace-nowrap">
                         {onlineUser.map((user, index) => (
                             <div key={index} className="relative inline-block">
@@ -96,12 +97,14 @@ function ChatLayouts() {
                                     key={`onlineUser${index}`}
                                     imageUrl={user.avatar}
                                     style="w-9 h-9 bg-black rounded-[150px]  mr-2 flex-shrink-0"
+                                    userStatus={'online'}
+                                    avatarUserId={''}
                                 />
                                 <span className="w-4 h-4 rounded-full bg-green-500 border-2 border-white absolute bottom-0.5 right-0.5"></span>
                             </div>
                         ))}
                     </div>
-                ) : null}
+                ) : null} */}
                 <div className="flex-grow w-full overflow-auto flex-col justify-start items-center inline-flex ">
                     {Layout_Rooms.map((room, index) => (
                         <NavLink

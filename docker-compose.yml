@@ -12,7 +12,7 @@ services:
             - '8000:8000'
         volumes:
             - ./client:/client
-            # ! - client-node-modules:/client/node_modules (if someone using mac os or windowns uncommment this )
+            - client-node-modules:/client/node_modules  
         env_file: ./client/.env
         networks:
             - transcendence
@@ -32,7 +32,7 @@ services:
             - '5555:5555'
         volumes:
             - ./server:/server
-            # ! - server-node-modules:/server/node_modules ( if someone using mac os or windowns uncommment this )
+            - server-node-modules:/server/node_modules
         networks:
             - transcendence
         # command: sh start.sh
@@ -58,6 +58,5 @@ networks:
 
 volumes:
     pgdata:
-# ! if someone using mac os or windowns uncommment this
-#   client-node-modules:
-#   server-node-modules:
+    client-node-modules:
+    server-node-modules:

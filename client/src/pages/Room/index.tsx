@@ -37,6 +37,62 @@ export function Room() {
             setMessage(e.target.value);
     };
 
+    // const { socket: gameSocket, updateState : updateStateGame } = useGameStore();
+
+    // const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     console.log('start startgame useEffect');
+    //     gameSocket?.on('startgame', ({ room, SecondPlayer, opponentId, chosen }) => {
+    //         console.log(SecondPlayer);
+    //         updateStateGame({
+    //             isSecondPlayer: SecondPlayer === 1,
+    //             roomId: room,
+    //             isGameReady: true,
+    //             opponentId,
+    //             gameMode: chosen
+    //         });
+    //         // setIsEventOpen(false);
+    //         // window.location.href =(`/game/${room}`);
+    //         navigate(`/game/${room}`);
+    //     });
+
+    //     return () => {
+    //         gameSocket?.off('startgame');
+    //         console.log('stop startgame useEffect');
+
+    //     };
+    // }, [gameSocket]);
+
+    // useEffect(() => {
+    //     socket?.on('challenge', () => {
+    //         // navigate('/game');
+    //         toast((t) => (
+    //             <div className=" justify-center items-center flex flex-row gap-3">
+    //                 <span>
+    //                     you have been challenged by{' '}
+    //                 </span>
+    //                 <button
+    //                     className=' rounded-lg border border-green-500 p-1 text-green-500'
+    //                     onClick={() =>{
+    //                         socket.emit('friends', {userid : '', myid:userId})
+    //                         toast.dismiss(t.id)
+    //                     }}
+    //                 >
+    //                     Accept
+    //                 </button>
+    //                 <button
+    //                     className=' rounded-lg border border-green-500 p-1 text-green-500'
+    //                     onClick={() => toast.dismiss(t.id)}
+    //                 >
+    //                     Cancel
+    //                 </button>
+    //               </div>
+    //           ));
+    //     });
+    //     return () => {socket?.off('challenge')};
+    // }, [socket]);
+
     // const [isblocked, setIsblocked] = useState<boolean>(false);
     // const navigate = useNavigate();
     const sendMessage = () => {
@@ -76,6 +132,7 @@ export function Room() {
             nickname: string;
         }) => {
             userkickedListener({ id: kickedUser, nickname });
+            console.log('kick ', kickedUser, '   ', userId, id);
             if (kickedUser === userId && id) unpushRoom(+id, true);
         };
 
@@ -148,6 +205,8 @@ export function Room() {
                                             <Avatar
                                                 imageUrl={msg.avatar}
                                                 style="w-11 h-11 bg-black rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
+                                                userStatus={'online'}
+                                                avatarUserId={`${msg.id}`}
                                             />
                                         </div>
                                         <div className="flex-col justify-start items-start gap-0.5 inline-flex">

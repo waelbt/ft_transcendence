@@ -27,13 +27,13 @@ function Achievements() {
     };
 
     const achievementImages: { [key: string]: string } = {
-        welcome: '../../images/WELCOME.png',
-        harban: '../../images/3win.png',
-        khari: '../../images/KHARI.png',
-        brown: '../../images/BROWN.png',
-        silver: '../../images/SILVER.png',
-        goldon: '../../images/GOLDEN.png',
-        hacker: '../../images/HACKER.png'
+        welcome: '/images/WELCOME.png',
+        harban: '/images/3win.png',
+        khari: '/images/KHARI.png',
+        brown: '/images/BROWN.png',
+        silver: '/images/SILVER.png',
+        goldon: '/images/GOLDEN.png',
+        hacker: '/images/HACKER.png'
     };
 
     return (

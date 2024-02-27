@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Avatar, ProgressRingLoader, FormComponent } from '../components/';
 import { type FieldValues } from 'react-hook-form';
 import { NICKNAME_FIELD } from '../constants';
@@ -7,11 +6,10 @@ import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { IoTrashOutline } from 'react-icons/io5';
 import useImageUpload from '../hooks/uploadImageHook';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 
 function ProfileCompletion() {
     const { updateState, logout } = useUserStore();
-    const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
+    // const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const axiosPrivate = useAxiosPrivate();
     const {
         progress,
@@ -20,20 +18,13 @@ function ProfileCompletion() {
         setImagePath,
         deleteData,
         isFailed,
-        success,
-        setProgress
+        success
+        // setProgress
     } = useImageUpload();
 
     const handleSubmit = async (data: FieldValues) => {
         try {
-            if (selectedItemIndex !== -1) {
-                data['avatar'] = `${import.meta.env.VITE_DEFAULT_AVATAR}${
-                    selectedItemIndex + 1
-                }.png`;
-            } else {
-                console.log(imagePath, success);
-                data['avatar'] = success ? imagePath : '';
-            }
+            data['avatar'] = success ? imagePath : '';
 
             const response = await axiosPrivate.post(
                 '/users/info',
@@ -84,10 +75,10 @@ function ProfileCompletion() {
                                 </div>
                             </div>
                             {/* avatar section */}
-                            <div className="flex flex-col justify-start items-start w-full gap-4">
-                                <span className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
+                            <div className="flex flex-col justify-center items-center w-full gap-4">
+                                {/* <span className="text-center text-neutral-500 text-2xl font-normal font-['Acme']">
                                     Add an avatar
-                                </span>
+                                </span> */}
                                 <div className=" pr-3.5 py-px justify-center items-center gap-10 inline-flex">
                                     <input
                                         className="hidden"
@@ -113,7 +104,7 @@ function ProfileCompletion() {
                                             isloading={
                                                 !!(progress && progress < 100)
                                             }
-                                            errror={isFailed}
+                                            error={isFailed}
                                         />
                                         <label htmlFor="inputTag">
                                             <ProgressRingLoader
@@ -132,10 +123,7 @@ function ProfileCompletion() {
                                             onClick={async (e) => {
                                                 e.stopPropagation(); // This stops the event from reaching the label
                                                 setImagePath(null);
-                                                selectedItemIndex == -1
-                                                    ? await deleteData()
-                                                    : (setSelectedItemIndex(-1),
-                                                      setProgress(0));
+                                                await deleteData();
                                             }}
                                         >
                                             <div className="w-9 h-9 flex justify-center items-center">
@@ -147,71 +135,6 @@ function ProfileCompletion() {
                                         </span>
                                     </div>
                                     {/* btn and default section */}
-                                    <div className="flex-col justify-center items-center gap-4 inline-flex">
-                                        {/* btn */}
-                                        <label
-                                            className="p-3 bg-white rounded-[55px] border border-stone-300 justify-center items-center gap-3 inline-flex cursor-pointer"
-                                            htmlFor="inputTag"
-                                        >
-                                            <div className="text-center text-neutral-500 text-xs font-normal font-['Acme']">
-                                                Choose image
-                                            </div>
-                                        </label>
-                                        <div className="text-black text-base font-normal font-['Acme'] leading-snug tracking-tigh">
-                                            Or
-                                        </div>
-                                        {/* default */}
-                                        <div className="flex-col justify-center items-center gap-1 inline-flex">
-                                            <div className="inline-flex justify-content items-start gap-4 ">
-                                                <span className="text-neutral-400 text-base font-normal font-['Acme'] leading-snug tracking-tigh">
-                                                    choose one of our defaults
-                                                </span>
-                                            </div>
-                                            <ul className="list-none grid grid-cols-4 gap-3 p-0">
-                                                {Array.from(
-                                                    { length: 4 },
-                                                    (_, index) => (
-                                                        // ! use avatar component
-                                                        <li
-                                                            className={`w-10 h-10 flex-shrink-0 rounded-full border-solid border-primary-pink ${
-                                                                index ===
-                                                                selectedItemIndex
-                                                                    ? 'border-2'
-                                                                    : ''
-                                                            }`}
-                                                            key={index}
-                                                            onClick={() => {
-                                                                setImagePath(
-                                                                    `${
-                                                                        import.meta
-                                                                            .env
-                                                                            .VITE_DEFAULT_AVATAR
-                                                                    }${
-                                                                        index +
-                                                                        1
-                                                                    }.png`
-                                                                );
-                                                                setSelectedItemIndex(
-                                                                    index
-                                                                );
-                                                            }}
-                                                        >
-                                                            <img
-                                                                className="w-full h-full object-cover rounded-full"
-                                                                src={`${
-                                                                    import.meta
-                                                                        .env
-                                                                        .VITE_DEFAULT_AVATAR
-                                                                }${
-                                                                    index + 1
-                                                                }.png`}
-                                                            />
-                                                        </li>
-                                                    )
-                                                )}
-                                            </ul>
-                                        </div>
-                                    </div>
                                 </div>
                                 {/* nickname section */}
                             </div>

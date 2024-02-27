@@ -8,6 +8,7 @@ import { useRoomStore } from '../stores/roomStore';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import loadGif from '../assets/loading.gif';
+import { UserStatus } from './Avatar';
 
 function AddMembers() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +19,7 @@ function AddMembers() {
     const { id } = useUserStore();
     const { id: roomId } = useRoomStore();
     const [isloading, setIsloading] = useState<boolean>(false);
+
     useEffect(() => {
         const fetchData = async () => {
             setIsloading(true);
@@ -45,22 +47,25 @@ function AddMembers() {
     };
 
     const handleSubmit = async () => {
-        try {
-            setIsloading(true);
-            const promises = selectedIds.map((id) => {
-                return axiosPrivate.post('/chat/addUserToPrivateRoom', {
-                    userId: id,
-                    roomId: +roomId
+        if (selectedIds.length) {
+            try {
+                setIsloading(true);
+                const promises = selectedIds.map((id) => {
+                    return axiosPrivate.post('/chat/addUserToPrivateRoom', {
+                        userId: id,
+                        roomId: +roomId
+                    });
                 });
-            });
 
-            await Promise.all(promises);
-            toast.success('requests send successfully');
-        } catch (error) {
-            if (isAxiosError(error)) toast.error(error.response?.data?.message);
-        } finally {
-            setIsloading(false);
-        }
+                await Promise.all(promises);
+                toast.success('user added successfully');
+            } catch (error) {
+                if (isAxiosError(error))
+                    toast.error(error.response?.data?.message);
+            } finally {
+                setIsloading(false);
+            }
+        } else toast.error('select at least one user before submitting');
     };
 
     return (
@@ -103,6 +108,8 @@ function AddMembers() {
                                     <Avatar
                                         imageUrl={result.avatar}
                                         style="w-14 h-14 bg-black rounded-[150px] border border-white"
+                                        userStatus={result.status as UserStatus}
+                                        avatarUserId={''}
                                     />
                                     <div className="text-black text-xl font-normal font-['Acme']">
                                         {result.nickName}

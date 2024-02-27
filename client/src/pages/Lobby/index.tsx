@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import useGameStore from '../../stores/gameStore';
 import { useUserStore } from '../../stores/userStore';
 import { Modal } from '../../components';
@@ -8,66 +7,87 @@ import useTimer from '../../hooks/timer';
 import classicBackground from './classic.jpeg';
 import crazyBackground from './crazy2.jpeg';
 import trainingBackground from './train2.jpeg';
+import toast from 'react-hot-toast';
 export function Lobby() {
     const MODES = ['classic', 'crazy', 'training'];
 
-    const { updateState, socket } = useGameStore();
-    const navigate = useNavigate();
+    const { updateState, socket, gameMode } = useGameStore();
+    // const navigate = useNavigate();
     const { id } = useUserStore();
     const [isEventOpen, setIsEventOpen] = useState(false);
 
     const { elapsedTime, formatTime, startTimer } = useTimer();
 
     const handleClick = (gameMode: string) => {
+        // if (!inGame) {
+        // upatedUserState({ inGame: true });
         updateState({ gameMode: gameMode });
         socket?.emit('gameMode', { gameMode, userId: id });
         setIsEventOpen(true);
         startTimer();
+        // }
+        // else
+        // toast.error("you can't join two game in the same time");
     };
-    const modeImages = {
+
+    const { socket: gameSocket } = useGameStore();
+
+    const modeImages: { [key: string]: string } = {
         classic: classicBackground,
         crazy: crazyBackground,
         training: trainingBackground
     };
 
     useEffect(() => {
-        socket?.on('startgame', ({ room, SecondPlayer, opponentId }) => {
-            updateState({
-                isSecondPlayer: SecondPlayer === 1,
-                roomId: room,
-                isGameReady: true,
-                opponentId
-            });
+        gameSocket?.on('error', (message: string) => {
+            toast.success(message);
             setIsEventOpen(false);
-            navigate(`/game/${room}`);
         });
 
         return () => {
-            socket?.off('startgame');
+            gameSocket?.off('error');
         };
-    });
+    }, [gameSocket]);
+
+    useEffect(() => {
+        gameSocket?.on('gameCanceled', (message) => {
+            toast.error(message);
+            setIsEventOpen(false);
+        });
+
+        return () => {
+            gameSocket?.off('gameCanceled');
+        };
+    }, [gameSocket]);
+
     return (
         <>
             <div className="p-2.5 h-full  flex-col justify-center items-center gap-2.5 inline-flex ">
                 <div className="self-stretch px-[167px] py-[13px] justify-center items-center gap-[60px] inline-flex">
-                {MODES.map((mode, index) => (
-                <div
-                    key={`mode-${index}`}
-                    onClick={() => handleClick(mode)}
-                    // className="w-[300px] h-[170px] p-2.5 bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
-                >
-                    <img 
-                    src={modeImages[mode]} 
-                    alt={`${mode} Mode Background`}
-                    className="w-[320px] h-[200px]  bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
-                     />
-                </div>
-                ))}
+                    {MODES.map((mode, index) => (
+                        <div
+                            key={`mode-${index}`}
+                            onClick={() => handleClick(mode)}
+                        >
+                            <img
+                                src={modeImages[mode]}
+                                alt={`${mode} Mode Background`}
+                                className="w-[320px] h-[200px]  bg-white rounded-[40px] border border-stone-300  justify-center items-center gap-2.5 flex cursor-pointer"
+                            />
+                        </div>
+                    ))}
                     {isEventOpen && (
                         <Modal
-                            removable={false}
+                            removable={true}
                             isEventOpen={isEventOpen}
-                            closeEvent={() => setIsEventOpen(false)}
+                            closeEvent={() => {
+                                socket?.emit('leaveGameMode', {
+                                    gameMode,
+                                    userId: id
+                                });
+
+                                setIsEventOpen(false);
+                            }}
                         >
                             <div
                                 className="flex flex-col gap-4 text-white"
@@ -86,6 +106,19 @@ export function Lobby() {
                                     <p>
                                         Waiting time: {formatTime(elapsedTime)}
                                     </p>
+                                </div>
+                                <div
+                                    className="w-full text-center cursor-pointer text-4xl font-['Acme']"
+                                    onClick={() => {
+                                        socket?.emit('leaveGameMode', {
+                                            gameMode,
+                                            userId: id
+                                        });
+
+                                        setIsEventOpen(false);
+                                    }}
+                                >
+                                    cancel
                                 </div>
                             </div>
                         </Modal>

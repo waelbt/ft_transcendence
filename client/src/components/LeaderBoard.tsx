@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Column } from 'react-table';
 import { LeaderboardEntry } from '../../../shared/types';
 import { NewTabIcon } from '../assets/custom-icons';
-import { Table } from '.';
+import { Avatar, Table } from '.';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
+import { UserStatus } from './Avatar';
 // import useAxiosPrivate from '../hooks/axiosPrivateHook';
 
 function LeaderBoard() {
@@ -33,7 +34,9 @@ function LeaderBoard() {
                 Header: 'Player',
                 accessor: (data) => ({
                     nickName: data.nickName,
-                    avatar: data.avatar
+                    avatar: data?.avatar,
+                    id: data.id,
+                    status: data?.status
                 }),
                 Cell: ({
                     value
@@ -41,13 +44,18 @@ function LeaderBoard() {
                     value: {
                         nickName: string;
                         avatar: string;
+                        id: string;
+                        status: string;
                     };
                 }) => (
                     <div className="grow shrink basis-0 self-stretch px-3 py-[15px] bg-white flex-col justify-center items-center inline-flex">
                         <div className="justify-center items-center gap-2.5 inline-flex">
-                            <img
-                                className="w-8 h-8 rounded-full"
-                                src={value.avatar}
+                            <Avatar
+                                imageUrl={value?.avatar}
+                                style="w-8 h-8 rounded-full"
+                                userStatus={value?.status as UserStatus}
+                                avatarUserId={value?.id} // userStatus={value?.status as UserStatus}
+                                // avatarUserId={value?.id as string}
                             />
                             <div className="text-black text-base font-normal font-['Acme'] leading-tight">
                                 {value.nickName}
@@ -131,6 +139,8 @@ function LeaderBoard() {
         const fetchData = async () => {
             try {
                 const response = await axiosPrivate.get('/users/rank');
+                console.log('rank ',response.data );
+                
                 // Check if the data is an array and filter out null or invalid entries
                 if (Array.isArray(response.data)) {
                     const validData = response.data.filter(
@@ -154,7 +164,11 @@ function LeaderBoard() {
         <div className="overflow-y-auto h-[470px] w-[1100px] bg-white  items-start justify-start mb-2 rounded-[20px] shadow  border border-stone-300">
             <Table
                 columns={columns}
-                data={data}
+                data={
+                    data?.filter(
+                        (entry) => entry !== null
+                    ) as LeaderboardEntry[]
+                }
                 styles={{
                     tableStyle:
                         'w-full  text-zinc-500 text-base font-normal font-["Acme"]',

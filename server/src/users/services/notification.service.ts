@@ -105,10 +105,18 @@ export class notificationService {
 				type,
 			} 
 		} );
-		// console.log('notifications: ', notifications);
+		// console.log('notifications: ', filterNotification);
 		// this.deleteAllNotificationsForUser(recieverNickName);
 		return (filterNotification);
 	  }
+
+		async deleteNotificationById(notificationId: number){
+			await this.prisma.notification.delete({
+				where: {
+						id: notificationId,
+				},
+		});
+		}
 
 	  async deleteNotification(userMe: string, friendId: string, recieverNickName: string) {
 		

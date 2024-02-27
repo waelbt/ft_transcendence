@@ -11,6 +11,7 @@ import Skeleton from 'react-loading-skeleton';
 import classicBackground from './classic.jpeg';
 import crazyBackground from './bg.jpeg';
 import trainingBackground from './trr.jpeg';
+import { UserStatus } from '../../components/Avatar';
 
 function removeDecimalPart(number: number): number {
     return Math.floor(number);
@@ -115,7 +116,7 @@ const Ball = ({}, {}) => {
             const interval = setInterval(() => {
                 // Toggle the ball color between its original color and the background color
                 setBallColor((prevColor) =>
-                    prevColor === 'white' ? 'black' : 'white'
+                    prevColor === 'white' ? '#014158' : 'white'
                 );
                 setShadow((prevShadow) =>
                     prevShadow === 'none' ? '0 0 1.25rem white' : 'none'
@@ -128,7 +129,7 @@ const Ball = ({}, {}) => {
             const interval = setInterval(() => {
                 // Toggle the ball color between its original color and the background color
                 setBallColor((prevColor) =>
-                    prevColor === 'black' ? 'white' : 'black'
+                    prevColor === '#014158' ? 'white' : '#014158'
                 );
                 setShadow((prevShadow) =>
                     prevShadow === '0 0 1.25rem white'
@@ -169,12 +170,17 @@ export function Game() {
         id: opponentId
     });
 
-    console.log('moooooode ', gameMode)
+    useEffect(() => {
+        return () => {
+            socket?.emit('gameended');
+        };
+    }, [socket]);
 
     React.useEffect(() => {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
 
+    console.log('gameMode', roomId);
     React.useEffect(() => {
         socket?.on('leftscored', async () => {
             setLeftScore((prevScore: number) => {
@@ -182,17 +188,19 @@ export function Game() {
                 setRightScore((prvRightscore: number) => {
                     if (removeDecimalPart(newScore) === 5) {
                         setGameOver(true);
-                        axiosPrivate
-                            .post('/game/create', {
-                                winnerId: id,
-                                loserId: opponentId,
-                                result: `${newScore}-${prvRightscore}`,
-                                mode: gameMode
-                            })
-                            .then((res) => res)
-                            .catch((error) => console.log(error));
-                        socket?.emit('gameended');
-                        navigate('/');
+                        if (gameMode !== 'training') {
+                            axiosPrivate
+                                .post('/game/create', {
+                                    winnerId: id,
+                                    loserId: opponentId,
+                                    result: `${newScore}-${prvRightscore}`,
+                                    mode: gameMode
+                                })
+                                .then((res) => res)
+                                .catch((error) => console.log(error));
+                            socket?.emit('gameended', { payload: { roomId } });
+                            navigate('/');
+                        }
                     }
                     return prvRightscore;
                 });
@@ -284,15 +292,18 @@ export function Game() {
         socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
             console.log('player disconnected');
             console.log('ids :', playerIds);
-            //   fetch("http://localhost:3001/game1", {
-            //   method: 'POST',
-            //   mode: 'no-cors',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify({room: 'dzdzed'}),
-            // }).then((res) => console.log('data 1 ',res.json()));
-            // navigate('/')
+            if (gameMode !== 'training') {
+                axiosPrivate
+                    .post('/game/create', {
+                        winnerId: id,
+                        loserId: opponentId,
+                        result: `${leftscore}-${rightscore}`,
+                        mode: gameMode
+                    })
+                    .then((res) => res)
+                    .catch((error) => console.log(error));
+                socket?.emit('gameended', { payload: { roomId } });
+            }
             navigate('/');
         });
         return () => {
@@ -302,15 +313,22 @@ export function Game() {
 
     return (
         <>
-            <div className="flex flex-col w-full items-center justify-center h-full"
+            <div
+                className="flex flex-col w-full items-center justify-center h-full"
                 style={{
-                    backgroundImage: `url(${gameMode === 'classic' ? classicBackground : gameMode === 'crazy' ? crazyBackground : trainingBackground})`,
+                    backgroundImage: `url(${
+                        gameMode === 'classic'
+                            ? classicBackground
+                            : gameMode === 'crazy'
+                            ? crazyBackground
+                            : trainingBackground
+                    })`,
                     backgroundSize: '100% 200%',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     filter: 'grayscale(20%) blur(1px)'
-                }}>
-                
+                }}
+            >
                 {/* {!isGameReady ? (
                     <div className="waiting-screen">
                         <p
@@ -331,6 +349,8 @@ export function Game() {
                             <Avatar
                                 imageUrl={avatar}
                                 style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-amber-500 ring-offset-base-100 ring-offset-1"
+                                userStatus={'inGame'}
+                                avatarUserId={''}
                             />
                             <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
                                 <div className="text-white text-[29px] font-normal font-['Acme']">
@@ -338,21 +358,27 @@ export function Game() {
                                 </div>
                             </div>
                         </div>
-                        <div className="inline-flex gap-4 justify-center items-center">
-                            <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
-                                <div className="text-white text-[29px] font-normal font-['Acme']">
-                                    {rightscore}
+                        {gameMode !== 'training' ? (
+                            <div className="inline-flex gap-4 justify-center items-center">
+                                <div className="w-14 h-14 p-2.5 bg-black rounded-[20px] flex-col justify-center items-center gap-2.5 inline-flex">
+                                    <div className="text-white text-[29px] font-normal font-['Acme']">
+                                        {rightscore}
+                                    </div>
                                 </div>
+                                {isLoading ? (
+                                    <Skeleton circle height={80} width={80} />
+                                ) : (
+                                    <Avatar
+                                        imageUrl={friend?.avatar}
+                                        style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
+                                        userStatus={'inGame'}
+                                        avatarUserId={friend?.id as string}
+                                    />
+                                )}
                             </div>
-                            {isLoading ? (
-                                <Skeleton circle height={80} width={80} />
-                            ) : (
-                                <Avatar
-                                    imageUrl={friend?.avatar}
-                                    style="w-20 h-20 bg-black rounded-[150px] border border-white ring ring-stone-500 ring-offset-base-100 ring-offset-1"
-                                />
-                            )}
-                        </div>
+                        ) : (
+                            <div></div>
+                        )}
                     </div>
                     <div className="w-[1168px] h-[663px]">
                         <div className={`table-${gameMode}`}>
@@ -365,12 +391,6 @@ export function Game() {
                                 color="#E6E6E9"
                                 pos={`${secondPaddlePos}rem`}
                             />
-                            {/* <Score
-                                    leftScore={removeDecimalPart(leftscore)}
-                                    rightScore={removeDecimalPart(rightscore)}
-                                    lColor={'white'}
-                                    rColor={'white'}
-                                /> */}
                             <div className="lineC">
                                 <div className="line"></div>
                             </div>

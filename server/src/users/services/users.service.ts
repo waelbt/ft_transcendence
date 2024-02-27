@@ -14,11 +14,14 @@ import { BlockService } from './blocked.service';
 import { match_history } from '../dto/matchHistory.dto';
 import { mydata } from '../dto/mydata.dto';
 import { notificationService } from './notification.service';
+import { use } from 'passport';
 
 export interface Player {
+    id: string;
     avatar: string;
     name: string;
     rating: number;
+    status: string;
 }
 
 interface score {
@@ -146,6 +149,12 @@ export class UsersService {
             }
         });
 
+        await this.prisma.notification.deleteMany({
+            where: {
+                recieverNickName: ana.nickName,
+            }
+        });
+
         await this.prisma.user.delete({
             where: { id }
         });
@@ -211,11 +220,13 @@ export class UsersService {
                 const nickName = user.nickName;
                 const avatar = user.avatar;
                 const fullName = user.fullName;
+                const status = user.status;
                 return {
                     id,
                     nickName,
                     avatar,
-                    fullName
+                    fullName,
+                    status
                 };
             })
         );
@@ -282,10 +293,15 @@ export class UsersService {
                 const rating: number = user.level;
                 const name: string = user.fullName;
                 const avatar: string = user.avatar;
+                const status: string = user.status;
+                const userIda: string = user.id;
+
                 const opponent: Player = {
+                    id: userIda,
                     avatar,
                     name,
-                    rating
+                    rating,
+                    status
                 };
                 const score: score = {
                     score1,
@@ -375,6 +391,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException('this user does not exist');
         }
+        console.log('user: ', user);
         delete user.HashPassword;
         // console.log(user);
         //add the type of profile string
@@ -392,6 +409,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException('this user does not exist');
         }
+        // console.log('user: ', user);
 
         delete user.HashPassword;
         // console.log(user);
@@ -412,7 +430,10 @@ export class UsersService {
             return block.id;
         });
 
-        const notification = await this.notificationService.getFilterNotificationsForUser(user.nickName);
+        const notification =
+            await this.notificationService.getFilterNotificationsForUser(
+                user.nickName
+            );
         // console.log('ids ', friendsIds);
 
         return { user, friendsIds, blocksIds, notification };
@@ -427,10 +448,12 @@ export class UsersService {
         const id = user.id;
         const avatar = user.avatar;
         const nickName = user.nickName;
+        const status = user.status;
         return {
             id,
             avatar,
-            nickName
+            nickName,
+            status
         };
     }
 
@@ -452,7 +475,7 @@ export class UsersService {
 
     async getAllUsersRank(userId: string) {
         const isUser = await this.findOneUser(userId);
-        if (!isUser){
+        if (!isUser) {
             throw new NotFoundException('this user does not exist');
         }
         const users = await this.findAllUser();
@@ -466,9 +489,12 @@ export class UsersService {
         });
         // console.log(sortedUsers);
         var index = 1;
-        const allRankPromises = sortedUsers.map(async(sortedUsers) => {
-            if (!sortedUsers.completeProfile || await this.blockUsers.isUserBlocked(userId, sortedUsers.id)){
-                return ;
+        const allRankPromises = sortedUsers.map(async (sortedUsers) => {
+            if (
+                !sortedUsers.completeProfile ||
+                (await this.blockUsers.isUserBlocked(userId, sortedUsers.id))
+            ) {
+                return;
             }
             const id = sortedUsers.id;
             const rank = index++;
@@ -476,19 +502,21 @@ export class UsersService {
             const avatar = sortedUsers.avatar;
             const level = sortedUsers.level;
             const xp = sortedUsers.exp;
+            const status = sortedUsers.status;
             return {
                 id,
                 rank,
                 nickName,
                 avatar,
                 level,
-                xp
+                xp,
+                status,
             };
         });
         const allRank = await Promise.all(allRankPromises);
         const filteredRank = allRank.filter(Boolean);
 
-        // console.log('rank: ', filteredRank);
+        console.log('rank: ', filteredRank);
         return filteredRank;
     }
 }

@@ -2,7 +2,6 @@ import {
     ForbiddenException,
     Inject,
     Injectable,
-    NotFoundException,
     forwardRef
 } from '@nestjs/common';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
@@ -19,11 +18,11 @@ export class friendsService {
         private userService: UsersService,
         private blockUser: BlockService,
         private notificationGateway: notificationGateway,
-        private notificationService: notificationService,
+        private notificationService: notificationService
     ) {}
 
     async sendFriendRequest(userMe: string, friendId: string) {
-        // console.log('user1: ', userMe, 'user2: ', friendId);
+        console.log('user1: ', userMe, 'user2: ', friendId);
         //check for users if exists
         await this.checkUsersExistence(userMe, friendId);
 
@@ -36,7 +35,7 @@ export class friendsService {
         const existAccept = await this.areUsersFriends(userMe, friendId);
 
         if (existPending || existAccept) {
-            throw new NotFoundException('-------Friend request already sent'); //need to handle this because it causes 500
+            throw new ForbiddenException('-------Friend request already sent'); //need to handle this because it causes 500
         }
 
         //create a new friendship request
@@ -58,7 +57,13 @@ export class friendsService {
         const sender = await this.getNickNameEmail(userMe);
         // console.log('--------------- sender: ', sender);
         // console.log('--------------- reciever: ', receiver);
-        await this.notificationGateway.notificationEvent(receiver, sender, userMe, `${sender.nickName} send you a friend request`, 'friend');
+        await this.notificationGateway.notificationEvent(
+            receiver,
+            sender,
+            userMe,
+            `${sender.nickName} send you a friend request`,
+            'friend'
+        );
     }
 
     async acceptFriendRequest(userMe: string, friendId: string) {
@@ -72,7 +77,7 @@ export class friendsService {
         // console.log('id1: ', friendId, 'id2: ', userMe);
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         // update friendship status to accepted
@@ -92,32 +97,46 @@ export class friendsService {
         const receiver = await this.getNickNameEmail(friendId);
         // console.log('in accept: ', receiver);
         const sender = await this.getNickNameEmail(userMe);
-        await this.notificationService.deleteNotification(userMe, friendId, sender.nickName);
+        await this.notificationService.deleteNotification(
+            userMe,
+            friendId,
+            sender.nickName
+        );
         // await this.notificationGateway.notificationEvent(receiver, sender, userMe, `accept invitaion');
     }
 
-    async rejectFriendRequest(userId1: string, userId2: string) {
+    async rejectFriendRequest(userMe: string, friendId: string) {
         //check for users if exists
-        await this.checkUsersExistence(userId1, userId2);
+        await this.checkUsersExistence(userMe, friendId);
 
         //find the friendship request
-        // const friendship = await this.findFirstStatusPending(userId1, userId2);
+        // const friendship = await this.findFirstStatusPending(userMe, userId2);
 
         const friendship = await this.prisma.friendship.findFirst({
-            where: { userId1: userId2, userId2: userId1, status: 'pending' }
+            where: { userId1: friendId, userId2: userMe, status: 'pending' }
         });
 
         // console.log('wahd: ', userId1);
         // console.log('joj: ', userId2);
         // console.log('friends: ', friendship);
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
         await this.prisma.friendship.delete({
             where: { id: friendship.id }
         });
+
+        //websocket();
+        const receiver = await this.getNickNameEmail(friendId);
+        // console.log('in accept: ', receiver);
+        const sender = await this.getNickNameEmail(userMe);
+        await this.notificationService.deleteNotification(
+            userMe,
+            friendId,
+            sender.nickName
+        );
     }
 
     async removeSentFriendRequest(userId1: string, userId2: string) {
@@ -129,7 +148,7 @@ export class friendsService {
         });
 
         if (!friendship) {
-            throw new NotFoundException('Friend request not found');
+            throw new ForbiddenException('Friend request not found');
         }
 
         //delete from friendship
@@ -478,12 +497,12 @@ export class friendsService {
         // return user;
     }
 
-    async getNickNameEmail(userId: string){
+    async getNickNameEmail(userId: string) {
         const friend = await this.userService.getOneUser(userId);
         const data = {
             email: friend.email,
             nickName: friend.nickName,
-            avatar: friend.avatar,
+            avatar: friend.avatar
         };
         return data;
     }
@@ -516,7 +535,7 @@ export class friendsService {
         const user2 = await this.userService.getOneUser(userId2);
 
         if (!user1 || !user2) {
-            throw new NotFoundException('User not found');
+            throw new ForbiddenException('User not found');
         }
     }
 }

@@ -1,10 +1,15 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { GoogleIcon, IntraIcon } from '../../assets/custom-icons';
 import useAuthPopup from '../../hooks/authPopupHook';
+import { useChatLayoutStore } from '../../stores/chatLayoutStore';
+import useGameStore from '../../stores/gameStore';
+import { useNotificationStore } from '../../stores/notiSocketfStore';
 
 export const Auth = () => {
     const popupRef = useRef<Window | null>(null);
-
+    // const { socket: chatSocket } = useChatLayoutStore();
+    // const { socket: gameSocket } = useGameStore();
+    // const { socket } = useNotificationStore();
     const openPopup = (url: string) => {
         popupRef.current = window.open(
             url,
@@ -13,6 +18,12 @@ export const Auth = () => {
         );
     };
     useAuthPopup();
+
+    // useEffect(() => {
+    //     socket?.close();
+    //     chatSocket?.close();
+    //     gameSocket?.close();
+    // }, [socket, chatSocket, gameSocket]);
 
     return (
         <div className="flex">

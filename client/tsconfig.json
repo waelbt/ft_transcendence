@@ -20,15 +20,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": [
-        "src/**/*",
-        "types/**/*",
-        "deprecated/Rooms",
-        "deprecated/ChatSocketStore.ts",
-        "deprecated/FriendsTable.tsx",
-        "deprecated/FriendCard.tsx",
-        "deprecated/InputField.tsx",
-        "deprecated/socketStore.ts"
-    ],
+    "include": ["src/**/*", "types/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

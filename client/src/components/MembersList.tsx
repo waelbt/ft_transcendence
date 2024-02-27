@@ -7,6 +7,7 @@ import { useUserStore } from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';
 import { useChatLayoutStore } from '../stores/chatLayoutStore';
 import AddMembers from './AddMembers';
+import { UserStatus } from './Avatar';
 
 const EventButton = ({ task, label }: { task: () => void; label: string }) => {
     return (
@@ -20,7 +21,7 @@ const EventButton = ({ task, label }: { task: () => void; label: string }) => {
 };
 
 function MembersList() {
-    const { id, roomTitle, users, owner, isAdmin, isMuted, admins } =
+    const { id, roomTitle, users, owner, isAdmin, isMuted, admins, privacy } =
         useRoomStore();
     const [isEventOpen, setIsEventOpen] = useState(false);
     const { id: userID } = useUserStore();
@@ -58,16 +59,14 @@ function MembersList() {
 
     return (
         <div className="flex-grow  relative w-full max-h-[450px] overflow-y-auto gap-4 flex flex-col items-center justify-start  border border-stone-400 rounded-md  bg-slate-100 px-4 py-4 ">
-            <div
-                className="absolute bottom-5 right-5"
-                onClick={() => setShowMembersModel(true)}
-            >
-                <FaPlus
-                    size={33}
-                    className="cursor-pointer  text-black"
-                    // onClick=()
-                />
-            </div>
+            {privacy === 'PRIVATE' ? (
+                <div
+                    className="absolute bottom-5 right-5"
+                    onClick={() => setShowMembersModel(true)}
+                >
+                    <FaPlus size={33} className="cursor-pointer  text-black" />
+                </div>
+            ) : null}
             {users.map((member, index) => (
                 <Fragment key={'users' + index}>
                     <div
@@ -89,6 +88,8 @@ function MembersList() {
                         <Avatar
                             imageUrl={member.avatar}
                             style="w-14 h-14 bg-black  rounded-[150px]  mr-2 flex-shrink-0  ring ring-lime-400 ring-offset-base-100 ring-offset-0"
+                            userStatus={member.status as UserStatus}
+                            avatarUserId={member.id}
                         />
                         <div className="text-2xl font-normal font-['Acme']">
                             {member.nickName}
