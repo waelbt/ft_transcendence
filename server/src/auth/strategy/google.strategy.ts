@@ -17,6 +17,17 @@ export class googleStrategy extends PassportStrategy(
             scope: ['email' ,'profile'],
         })
     }
+
+    generateRandomString(length: number): string {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
     async validate(accessToken : string, refreshToken : string, profile: any): Promise<any> {
         // console.log('im in validate google strategy');
         // console.log(profile);
@@ -25,7 +36,7 @@ export class googleStrategy extends PassportStrategy(
             id: profile.id,
             email: emails[0].value,
             fullName: profile.displayName,
-            nickName: profile.displayName,
+            nickName: profile.displayName + this.generateRandomString(10),
             Avatar: photos[0].value,
         }
         return (user);
