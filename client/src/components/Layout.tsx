@@ -58,6 +58,9 @@ function Layout() {
                     blocksIds,
                     ...user
                 });
+                initializeSocket(accessToken);
+                initializeGameSocket(accessToken);
+                initializeNotifSocket(accessToken);
             } catch (error) {
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
@@ -74,9 +77,7 @@ function Layout() {
             redirectedForProfileCompletion: true
         });
 
-        initializeSocket(accessToken);
-        initializeGameSocket(accessToken);
-        initializeNotifSocket(accessToken);
+      
 
         return () => {
             socket?.disconnect();

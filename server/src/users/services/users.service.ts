@@ -86,11 +86,19 @@ export class UsersService {
 
     async getOneUser(id: string) {
         console.log('userId: ', id);
-        return await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
             where: {
                 id: id
             }
         });
+        const userAchievements = await this.userAchievements(id);
+        const achievementsArray = Object.values(userAchievements); // Convert object values into an array
+
+        const achivementsCounter: number = achievementsArray.filter(achievement => achievement === true).length;
+
+        const userWithAchievements = { ...user, achivementsCounter };
+
+        return userWithAchievements;
     }
 
     async updateAvatar(id: string, avatar: string) {
@@ -400,13 +408,7 @@ export class UsersService {
             userId
         );
 
-        const userAchievements = await this.userAchievements(userId);
-        const achievementsArray = Object.values(userAchievements); // Convert object values into an array
-
-        const achivementsCounter: number = achievementsArray.filter(achievement => achievement === true).length;
-
-        console.log('achievements counter in profile: ', achivementsCounter);
-        const info = { user, friendsIds, type , achivementsCounter};
+        const info = { user, friendsIds, type };
         // console.log('info wael ', info);
         return info;
     }
