@@ -35,7 +35,6 @@ function ProfileCompletion() {
                     }
                 }
             );
-            console.log(response);
             const updatedState = {
                 nickName: data.nickName,
                 avatar: data.avatar,

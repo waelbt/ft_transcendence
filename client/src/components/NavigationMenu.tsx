@@ -24,7 +24,6 @@ function NavigationMenu() {
     useEffect(() => {
         const fetchData = async () => {
             const res = await axiosPrivate.get('/users/notification');
-            console.log('response not', res);
             const notifications: NotificationDto[] = res.data;
             notifications.map((notification) => {
                 pushNotification(notification);
@@ -51,11 +50,7 @@ function NavigationMenu() {
             roomTitle: string;
             userId: string;
         }) => {
-            console.log('test', {
-                roomId,
-                roomTitle,
-                userId
-            });
+        
 
             if (userId === myId) {
                 try {

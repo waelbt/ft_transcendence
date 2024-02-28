@@ -70,7 +70,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // console.log('howa : ', client.handshake.auth.token)
         // console.log('user: ', userCheck);
         if (userCheck.state === false) {
-            console.log('from h');
+            // console.log('from h');
             await this.handleDisconnect(client);
         } else {
             if (userCheck.userData.sub) {
@@ -87,7 +87,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: any) {
-        console.log('A client disconnected: ' + client.id);
+        // console.log('A client disconnected: ' + client.id);
 
         delete this.connectedUsers[client.id];
         // console.log('client : ', client);
@@ -104,7 +104,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             });
         if (!user) {
             client.disconnect(true);
-        console.log('A client disconnected: (GAME) ' + client.id);
+        // console.log('A client disconnected: (GAME) ' + client.id);
             // for (const room in this.rooms) {
             //     if (
             //         this.rooms[room].players[0].id === client.id ||
@@ -147,7 +147,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             userId,
             status
         };
-        console.log('message in game: ', message);
+        // console.log('message in game: ', message);
         this.server.emit('userStatusChange', message);
     }
 
@@ -156,14 +156,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client: Socket,
         ids: { userid: string; myid: string }
     ): Promise<void> {
-        console.log('friends mode', ids);
+        // console.log('friends mode', ids);
         if (this.checkIfPlyrIsInGame(client, ids.userid) || this.checkIfPlyrIsInGame(client, ids.myid)) {
             this.server.to(client.id).emit('gameCanceled', 'You are already in a game.');
             return;
         }
         if (this.waitingFriend && this.waitingFriend !== client 
             && this.waitibgids['frd'] !== ids.myid) {
-            console.log('game started in friends mode');
+            // console.log('game started in friends mode');
             const room = `${this.waitingFriend.id}${client.id}`;
             client.join(room);
             this.waitingFriend.join(room);
@@ -188,7 +188,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 ],
                 plysIds: [this.waitibgids['frd'], ids.myid]
             };
-            console.log('waitroom', this.waitingFriend.id);
+            // console.log('waitroom', this.waitingFriend.id);
             this.server.to(this.waitingFriend.id).emit('startgame', {
                 room: room,
                 SecondPlayer: 1,
@@ -217,12 +217,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.waitingFriend = null;
             this.waitibgids['frd'] = null;
         } else if (ids.myid !== ids.userid) {
-            console.log(this.connectedUsers);
+            // console.log(this.connectedUsers);
 
             for (const user in this.connectedUsers) {
-                console.log(this.connectedUsers[user]?.userData?.sub, ids);
+                // console.log(this.connectedUsers[user]?.userData?.sub, ids);
                 if (this.connectedUsers[user]?.userData?.sub === ids.userid) {
-                    console.log('challenge');
+                    // console.log('challenge');
                     this.server.to(user).emit('challenge', user);
                 }
             }
@@ -249,7 +249,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client: Socket,
         payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
     ): void {
-        console.log(`Client ${client.id} left ${payload.gameMode} mode`);
+        // console.log(`Client ${client.id} left ${payload.gameMode} mode`);
         // for (const room in this.rooms) {
         //     if (this.rooms[room].players[0].id === client.id) {
         //         clearInterval(Number(this.rooms[room].intervalId));
@@ -279,7 +279,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client: Socket,
         payload: { gameMode: 'classic' | 'crazy' | 'training'; userId: string }
     ): Promise<void> {
-        console.log(`Client ${client.id} chose ${payload.gameMode} mode`);
+        // console.log(`Client ${client.id} chose ${payload.gameMode} mode`);
 
 
 
@@ -309,9 +309,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
         else if (payload.gameMode === 'training') {
             const room = `${client.id}`;
-            console.log(
-                `Game started in ${payload.gameMode} mode and ${client.id}`
-            );
+            // console.log(
+            //     `Game started in ${payload.gameMode} mode and ${client.id}`
+            // );
             client.join(room);
             const initialBall: Ball = {
                 pos: { x: 0, y: 0 },
@@ -409,10 +409,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.broadcastUserStatus(this.waitibgids[payload.gameMode], 'inGame');
 
 
-            console.log(
-                `Game started in ${payload.gameMode} mode between ${this.waitingRooms[payload.gameMode].id
-                } and ${client.id}`
-            );
+            // console.log(
+            //     `Game started in ${payload.gameMode} mode between ${this.waitingRooms[payload.gameMode].id
+            //     } and ${client.id}`
+            // );
 
             this.waitingRooms[payload.gameMode] = null;
         } else if (this.waitingRooms[payload.gameMode] === null) {
@@ -544,7 +544,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
                 if (this.rooms[room]?.plysIds[0] !== undefined){
-                    console.log('id0 in gameended:    ', this.rooms[room]?.plysIds[0])
+                    // console.log('id0 in gameended:    ', this.rooms[room]?.plysIds[0])
                     await this.prisma.user.update({
                         where: { id: this.rooms[room]?.plysIds[0]},
                         data: { status: "online" }
@@ -553,7 +553,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 }
 
                 if (this.rooms[room]?.plysIds[1] !== undefined){
-                    console.log('id1 in gameended:    ', this.rooms[room]?.plysIds[1])
+                    // console.log('id1 in gameended:    ', this.rooms[room]?.plysIds[1])
                     await this.prisma.user.update({
                         where: { id: this.rooms[room]?.plysIds[1]},
                         data: { status: "online" }

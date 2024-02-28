@@ -52,7 +52,6 @@ function Layout() {
                 setIsLoading(true);
                 const res = await axiosPrivate.get('/users/me');
                 const { user, friendsIds, blocksIds } = res.data;
-                console.log(res);
                 updateState({
                     friendsIds,
                     blocksIds,
@@ -92,11 +91,9 @@ function Layout() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('start startgame useEffect');
         gameSocket?.on(
             'startgame',
             ({ room, SecondPlayer, opponentId, chosen }) => {
-                console.log(SecondPlayer);
                 updateStateGame({
                     isSecondPlayer: SecondPlayer === 1,
                     roomId: room,
@@ -112,7 +109,6 @@ function Layout() {
 
         return () => {
             gameSocket?.off('startgame');
-            console.log('stop startgame useEffect');
         };
     }, [gameSocket]);
     useEffect(() => {

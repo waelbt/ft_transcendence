@@ -25,10 +25,8 @@ services:
         build:
             context: ./server
             dockerfile: Dockerfile
-            args:
-                UPLOADS_DESTINATION: './upload'
         ports:
-            - '4000:4000' # ? env
+            -  4000:4000 # ? env
             - '5555:5555'
         volumes:
             - ./server:/server
@@ -42,10 +40,7 @@ services:
         image: postgres
         networks:
             - transcendence
-        environment:
-            POSTGRES_USER: poza
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: transcendence
+        env_file: ./server/.env
         ports:
             - 5432:5432 # ? env
         volumes:

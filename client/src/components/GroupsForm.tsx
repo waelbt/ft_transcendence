@@ -67,7 +67,6 @@ const GroupsForm: FC<GroupsFormProps> = ({ closeEvent }) => {
                     }
                 }
             );
-            console.log(res.data);
             pushRoom(res.data);
             socket?.emit('joinRoom', {
                 ...res.data,

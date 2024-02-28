@@ -3,6 +3,7 @@ import { IoMdImages } from 'react-icons/io';
 import { CiImageOff } from 'react-icons/ci';
 import { useNotificationStore } from '../stores/notiSocketfStore';
 import useGameStore from '../stores/gameStore';
+import { useUserStore } from '../stores/userStore';
 
 export type UserStatus = 'online' | 'offline' | 'inGame';
 
@@ -28,17 +29,17 @@ const Avatar: FC<AvatarProps> = ({
         offline: 'bg-gray-500',
         inGame: 'bg-orange-500'
     };
+    const {id} = useUserStore()
     const { socket } = useNotificationStore();
     const { socket: gameSocket } = useGameStore();
     const [currentState, setCurrentState] = useState<
         'online' | 'offline' | 'inGame' | undefined
     >(userStatus);
     useEffect(() => {
-        if (currentState) {
+        if (currentState && id !== avatarUserId ) {
             if (!socket) return;
             if (!gameSocket) return;
 
-            console.log(imageUrl);
             const stateListenner = ({
                 userId,
                 status
@@ -46,7 +47,6 @@ const Avatar: FC<AvatarProps> = ({
                 userId: string;
                 status: 'online' | 'offline' | 'inGame';
             }) => {
-                console.log(userId, status);
                 if (userId === avatarUserId) setCurrentState(status);
             };
             socket.on('userStatusChange', stateListenner);
@@ -87,7 +87,7 @@ const Avatar: FC<AvatarProps> = ({
             ) : (
                 currentState && (
                     <span
-                        className={`absolute bottom-[10%] right-[10%] block rounded-full ${statusColor[currentState]} shadow-solid `}
+                        className={`absolute bottom-[10%] right-[10%] block rounded-full ${(id !== avatarUserId) ? statusColor[currentState] : ''} shadow-solid `}
                         style={{
                             width: '23%',
                             height: '23%',

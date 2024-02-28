@@ -149,7 +149,6 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         set({ messages: newMessages });
     },
     messageListener: (message: Message) => {
-        console.log('Received message:', message);
         if (get().id && message.id === +get().id) {
             set((state) => {
                 const newMessages = [...state.messages, message];
@@ -164,7 +163,6 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         id: string;
         nickname: string;
     }) => {
-        console.log(id, '  ', nickname);
         const { users, messages } = get();
 
         const userExists = users.some((user) => user.id === id);
@@ -265,7 +263,6 @@ export const useRoomStore = create<RoomState & RoomMethod>((set, get) => ({
         }
     },
     pushMuted: ({ id, nickname }) => {
-        console.log(id);
         const { muted, messages } = get();
 
         // Check if the user is not already in the muted array

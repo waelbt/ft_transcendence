@@ -74,7 +74,7 @@ export class ChatController {
         @Req() req,
         @Body() changeRoomTitle: ChangeRoomTitle
     ) {
-        console.log('wa zabi', req.user.sub);
+        // console.log('wa zabi', req.user.sub);
         return await this.roomService.changeRoomTitle(
             changeRoomTitle,
             req.user.sub
@@ -99,13 +99,13 @@ export class ChatController {
 
     @Get('mydms')
     async getMyDms(@Req() req) {
-        console.log('helooooooooooooo', req.user.sub);
+        // console.log('helooooooooooooo', req.user.sub);
         return this.roomService.getAllMyDms(req.user.sub);
     }
 
     @Get('myRooms')
     async getMyRooms(@Req() req, res: Response) {
-        console.log('hellooooooooooo', req.user.sub);
+        // console.log('hellooooooooooo', req.user.sub);
 
         return await this.roomService.getMyRooms(req.user.sub);
     }

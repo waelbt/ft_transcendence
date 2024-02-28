@@ -35,14 +35,14 @@ export class notificationGateway
     }
 
     async handleConnection(client: any, ...args: any[]) {
-        console.log(
-            'notif handlee con.................................................................................'
-        );
+        // console.log(
+        //     'notif handlee con.................................................................................'
+        // );
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
         );
-        console.log('id: ', userCheck.userData.sub);
+        // console.log('id: ', userCheck.userData.sub);
         if (userCheck.state === false) await this.handleDisconnect(client);
         else {
             //update stat in database from false to true
@@ -54,16 +54,16 @@ export class notificationGateway
                 });
             }
             if (!isUser) {
-                console.log('hello');
+                // console.log('hello');
                 await this.handleDisconnect(client);
             } else {
                 this.usersSockets.set(userCheck.userData.email, client.id);
-                console.log('---- ok socket: ', this.usersSockets);
+                // console.log('---- ok socket: ', this.usersSockets);
                 const user = await this.prisma.user.update({
                     where: { id: userCheck.userData.sub },
                     data: { status: 'online' }
                 });
-                console.log('----------------user: ', user);
+                // console.log('----------------user: ', user);
                 // console.log('socket: ', this.usersSockets);
                 this.broadcastUserStatus(userCheck.userData.sub, 'online');
             }
@@ -74,12 +74,12 @@ export class notificationGateway
 
     @SubscribeMessage('notification')
     async notificationEvent(receiver, sender, senderId, action, type) {
-        console.log(
-            '...............................................................................................................................'
-        );
+        // console.log(
+        //     '...............................................................................................................................'
+        // );
 
         const userSocket = await this.usersSockets.get(receiver.email);
-        console.log(userSocket);
+        // console.log(userSocket);
 
         if (userSocket) {
             // console.log('notification: ', notificationPayload);
@@ -105,7 +105,7 @@ export class notificationGateway
                 action: action,
                 type
             };
-            console.log('notif', notificationPayload);
+            // console.log('notif', notificationPayload);
 
             await this.server
                 .to(userSocket)
@@ -132,12 +132,12 @@ export class notificationGateway
             userId,
             status
         };
-        console.log('message: ', message);
+        // console.log('message: ', message);
         this.server.emit('userStatusChange', message);
     }
 
     async handleDisconnect(client: any) {
-        console.log('in handle disconnection (NOTIFICATION)');
+        // console.log('in handle disconnection (NOTIFICATION)');
 
         const userCheck = await this.notificationService.getUserFromAccessToken(
             client.handshake.auth.token
@@ -165,7 +165,7 @@ export class notificationGateway
                 status: 'offline',
             }
         });
-        console.log('howa : ', howa.status);
+        // console.log('howa : ', howa.status);
         this.broadcastUserStatus(userCheck.userData.sub, 'offline');
         //remove this socket in map of sockets
         // this.notificationService.removeSocket(client.data.playload.sub, client);

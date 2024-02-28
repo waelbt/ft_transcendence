@@ -6,7 +6,7 @@ import { DateFormatter } from '../tools/date_parsing';
 import useAxiosPrivate from '../hooks/axiosPrivateHook';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
-
+import { useNavigate } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import RoomsFinder from './RoomsFinder';
@@ -40,7 +40,7 @@ function ChatLayouts() {
 
     const openEvent = () => setIsEventOpen(true);
     const closeEvent = () => setIsEventOpen(false);
-
+    const navigate = useNavigate();
     useEffect(() => {
         // !
         const fetchDns = async () => {
@@ -48,7 +48,6 @@ function ChatLayouts() {
                 const res = await axiosPrivate.get('/chat/allChannels');
                 updateState({ Layout_Rooms: res.data });
             } catch (error) {
-                console.log(error);
                 if (isAxiosError(error))
                     toast.error(error.response?.data?.message);
             }
@@ -86,9 +85,12 @@ function ChatLayouts() {
             nickname: string;
             roomId: string;
         }) => {
-            console.log('kick ', roomId);
             userkickedListener({ id: kickedUser, nickname });
-            if (kickedUser === userId) unpushRoom(+roomId, true);
+            if (kickedUser === userId){
+                unpushRoom(+roomId, true);
+                navigate('/chat')
+            }
+                
         };
 
         const handleBan = ({
@@ -101,7 +103,10 @@ function ChatLayouts() {
             roomId: string;
         }) => {
             pushBan({ id: banUser, nickname });
-            if (banUser === userId) unpushRoom(+roomId, true);
+            if (banUser === userId) {
+                unpushRoom(+roomId, true);
+                navigate('/chat')
+            }
         };
 
         socket.on('unsetAdmin', unpushModerator);

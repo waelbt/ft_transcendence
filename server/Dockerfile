@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-ARG UPLOADS_DESTINATION
+# ARG UPLOADS_DESTINATION
 
 WORKDIR /server
 
@@ -10,8 +10,8 @@ RUN npm install
 
 RUN npm install -g prisma
 
-RUN mkdir -p $UPLOADS_DESTINATION && \
-    chmod 755 $UPLOADS_DESTINATION
+# RUN mkdir -p $UPLOADS_DESTINATION && \
+#     chmod 755 $UPLOADS_DESTINATION
 
 RUN chmod +x start.sh
 

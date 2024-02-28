@@ -85,7 +85,7 @@ export class UsersService {
     }
 
     async getOneUser(id: string) {
-        console.log('userId: ', id);
+        // console.log('userId: ', id);
         const user = await this.prisma.user.findUnique({
             where: {
                 id: id
@@ -399,7 +399,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException('this user does not exist');
         }
-        console.log('user: ', user);
+        // console.log('user: ', user);
         delete user.HashPassword;
         // console.log(user);
         //add the type of profile string
@@ -447,7 +447,7 @@ export class UsersService {
 
         const achivementsCounter: number = achievementsArray.filter(achievement => achievement === true).length;
         
-        console.log('achivementsCounter: ', achivementsCounter);
+        // console.log('achivementsCounter: ', achivementsCounter);
         const notification =
             await this.notificationService.getFilterNotificationsForUser(
                 user.nickName

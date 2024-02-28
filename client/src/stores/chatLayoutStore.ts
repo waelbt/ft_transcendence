@@ -55,7 +55,6 @@ export const useChatLayoutStore = create<ChatState & ChatMethod>(
             const filteredRooms = Layout_Rooms.filter(
                 (room) => room.id !== roomId || isRoom !== room.isRoom
             );
-            console.log(filteredRooms);
             set({ Layout_Rooms: filteredRooms });
         },
         initializeSocket: (token) => {

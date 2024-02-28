@@ -3,10 +3,14 @@ import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { User } from '@prisma/client';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class twoFAService {
-    constructor(private prisma: PrismaOrmService) {}
+    constructor(private prisma: PrismaOrmService,
+        private config: ConfigService,
+        ) {}
 
     generate2FASecret(nickName: string) {
         const sercet = speakeasy.generateSecret({ name: nickName });
@@ -17,8 +21,8 @@ export class twoFAService {
         const secret = this.generate2FASecret((await user).fullName);
         const otpAuthUrl = speakeasy.otpauthURL({
             secret: secret,
-            label: `transandance:${(await user).fullName}`,
-            issuer: 'transandance'
+            label: `${this.config.get('2faName')}:${(await user).fullName}`,
+            issuer: `${this.config.get('2faName')}`
         });
 
         try {

@@ -25,7 +25,8 @@ const useImageUpload = () => {
                     }
                 });
             } catch (e) {
-                console.log(e);
+                if (isAxiosError(e))
+                toast.error(e.response?.data?.message);  
             }
             setProgress(0);
         }

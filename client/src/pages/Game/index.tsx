@@ -180,7 +180,6 @@ export function Game() {
         if (!isGameReady) navigate('/home');
     }, [isGameReady]);
 
-    console.log('gameMode', roomId);
     React.useEffect(() => {
         socket?.on('leftscored', async () => {
             setLeftScore((prevScore: number) => {
@@ -290,8 +289,8 @@ export function Game() {
 
     React.useEffect(() => {
         socket?.on('PlayerDisconnected', async (playerIds: string[]) => {
-            console.log('player disconnected');
-            console.log('ids :', playerIds);
+            // console.log('player disconnected');
+            // console.log('ids :', playerIds);
             if (gameMode !== 'training') {
                 axiosPrivate
                     .post('/game/create', {

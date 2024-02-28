@@ -71,7 +71,7 @@ export class ChatGateway
 
     async handleConnection(client: any, ...args: any[]) {
         const { sockets } = this.server.sockets;
-        console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+        // console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
         // console.log(this.usersSockets);
         // this.logger.log(`This client ${client.id} connected`);
         // const sockets = this.server.sockets;
@@ -84,11 +84,11 @@ export class ChatGateway
         );
         if (userCheck.state === false) this.handleDisconnect(client);
         else {
-            console.log(
-                `This user ${userCheck.userData.email} is now connected (CHAT)`
-            );
+            // console.log(
+            //     `This user ${userCheck.userData.email} is now connected (CHAT)`
+            // );
             this.usersSockets.set(userCheck.userData.email, client.id);
-            console.log('CHAT', this.usersSockets);
+            // console.log('CHAT', this.usersSockets);
             this.wsService.joinUserSocketToItsRooms(
                 client.id,
                 userCheck.userData.sub,
@@ -208,7 +208,7 @@ export class ChatGateway
             client.handshake.auth.token
         );
         if (userCheck.state === false) throw new WsException(userCheck.message);
-        console.log('mute function');
+        // console.log('mute function');
         await this.wsService.muteUser(muteUserDto, userCheck.userData.sub);
         const userMuted = await this.prisma.user.findUnique({
             where: {
@@ -262,7 +262,7 @@ export class ChatGateway
 
     @SubscribeMessage('dm')
     async sendDM(client: any, sendMessage: SendMessageDto) {
-        console.log('heeeeeeloooooooooooooooooooooooooooooooooo');
+        // console.log('heeeeeeloooooooooooooooooooooooooooooooooo');
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -401,7 +401,7 @@ export class ChatGateway
 
     @SubscribeMessage('Set As Admin')
     async setAdmin(client: any, setAdminDto: SetAdminDto) {
-        console.log(setAdminDto);
+        // console.log(setAdminDto);
         const userCheck = await this.wsService.getUserFromAccessToken(
             client.handshake.auth.token
         );
@@ -425,7 +425,7 @@ export class ChatGateway
                 nickname: newAdmin.nickName,
                 roomId: setAdminDto.roomId,
             };
-            console.log(message);
+            // console.log(message);
             this.server.to(setAdminDto.roomTitle).emit('setAdmin', message);
         }
     }
@@ -520,7 +520,7 @@ export class ChatGateway
                 action: action,
                 type
             };
-            console.log('lokii:       ', notificationPayload);
+            // console.log('lokii:       ', notificationPayload);
             this.server
                 .to(userSocket)
                 .emit('notification', notificationPayload);

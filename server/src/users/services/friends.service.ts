@@ -22,7 +22,7 @@ export class friendsService {
     ) {}
 
     async sendFriendRequest(userMe: string, friendId: string) {
-        console.log('user1: ', userMe, 'user2: ', friendId);
+        // console.log('user1: ', userMe, 'user2: ', friendId);
         //check for users if exists
         await this.checkUsersExistence(userMe, friendId);
 

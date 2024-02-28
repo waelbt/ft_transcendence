@@ -26,7 +26,7 @@ export class AuthService {
         req.res.setHeader('Authorization', `Bearer ${accessToken}`);
         // console.log(accessToken);
         res.redirect(
-            `http://localhost:8000/auth_popup?accessToken=${accessToken}&2fa=${user.f2A}&profileComplete=${user.completeProfile}`
+            `${this.config.get('URL')}/auth_popup?accessToken=${accessToken}&2fa=${user.f2A}&profileComplete=${user.completeProfile}`
         );
     }
 

@@ -27,7 +27,6 @@ const FriendsDashboard: React.FC = () => {
     }, [filter, blocksIds, friendsIds]);
 
     const handleUnblock = async (userId: string) => {
-        console.log('clicked');
         try {
             await axiosPrivate.post(`/users/unblockUser/${userId}`);
             removeUserBlockId(userId);

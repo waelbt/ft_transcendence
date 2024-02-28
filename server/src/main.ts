@@ -7,9 +7,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import { join } from 'path'; // Corrected import for 'join'
 
+
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-        cors: { origin: 'http://localhost:8000', credentials: true }
+        cors: { origin: process.env.URL, credentials: true }
     });
 
     app.useGlobalPipes(

@@ -72,7 +72,6 @@ const TwoFA = () => {
         const GenerateQRCode = async () => {
             try {
                 const response = await axiosPrivate.get('/2fa/generate');
-                console.log('secert updated');
                 setImage(response.data.qrCode);
             } catch (error) {
                 console.error('Error fetching QR code:', error);

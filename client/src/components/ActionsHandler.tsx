@@ -36,7 +36,7 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
     };
 
     useEffect(() => {
-        console.log(relation);
+        // console.log(relation);
         if (relation) {
             let updatedActions = ['Send Message', 'Block User'];
 
@@ -68,22 +68,21 @@ const ActionsHandler: FC<ActionsHandlerProps> = ({ relationship, target }) => {
                 const res = await axiosPrivate.post('/chat/createDm', {
                     friendId: target
                 });
-                console.log(res);
+                // console.log(res);
                 socket?.emit('checkDm', { friendId: target });
                 navigate(`/chat/dms/${res.data.id}`);
             } catch (error) {
-                console.log(error);
-            }
+                if (isAxiosError(error))
+                toast.error(error.response?.data?.message);            }
         } else {
             const endpoint = ACTIONS_ENDPOINTS[action];
             if (!endpoint) {
-                console.error(`No endpoint found for action: ${action}`);
+                toast.error(`No endpoint found for action: ${action}`);
                 return;
             }
 
             try {
                 const res = await axiosPrivate.post(`${endpoint}${target}`);
-                console.log('res', res);
 
                 const effect = actionEffects[action];
                 if (effect) {

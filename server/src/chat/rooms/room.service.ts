@@ -54,7 +54,7 @@ export class RoomService {
     ) {}
 
     async createRoom(createRoomDto: CreateRoomDto, userId: string) {
-        console.log(` createRoom user id is : ${userId}`);
+        // console.log(` createRoom user id is : ${userId}`);
 
         // const newRoom = await this.findRoomByTitle(createRoomDto.roomTitle);
         // if (!newRoom)
@@ -79,7 +79,7 @@ export class RoomService {
             }
         });
         if (createRoomDto.privacy === 'PROTECTED') {
-            console.log(createRoomDto.password);
+            // console.log(createRoomDto.password);
             const password = hashPassword(createRoomDto.password);
             const room = await this.prisma.room.update({
                 where: {
@@ -98,7 +98,7 @@ export class RoomService {
                 lastMessageTime: null,
                 isRoom: true
             };
-            console.log('join...........................', roomCreated);
+            // console.log('join...........................', roomCreated);
             return roomCreated;
         }
 
@@ -394,7 +394,7 @@ export class RoomService {
     }
 
     async getDmRoom(dmId: number, userId: string) {
-        console.log(dmId);
+        // console.log(dmId);
 
         const tmpDm = await this.prisma.dMRooms.findUnique({
             where: {
@@ -643,11 +643,11 @@ export class RoomService {
     }
 
     async banMember(banMemberDto: BanMemberDto, userId: string) {
-        console.log(
-            '--------------------------------------------------------------'
-        );
+        // console.log(
+            // '--------------------------------------------------------------'
+        // );
         if (await this.isUserAdmin(userId, +banMemberDto.roomId)) {
-            console.log('dkhel');
+            // console.log('dkhel');
             await this.isUserMember(+banMemberDto.roomId, banMemberDto.userId);
             await this.isUserOwner(
                 +banMemberDto.roomId,
@@ -699,7 +699,7 @@ export class RoomService {
                     banned: true
                 }
             });
-            console.log('banned users =======================', banned.banned);
+            // console.log('banned users =======================', banned.banned);
             // return roomWithBanned.banned;
         }
         // else throw new BadRequestException('Only Admins Can Ban Other Users');
@@ -728,7 +728,7 @@ export class RoomService {
                 admins: true
             }
         });
-        console.log(roomWithAdmins, '   ', userId);
+        // console.log(roomWithAdmins, '   ', userId);
         if (roomWithAdmins.admins.includes(userId)) return true;
         return false;
     }
@@ -763,14 +763,14 @@ export class RoomService {
             }
         });
 
-        console.log(room.users);
+        // console.log(room.users);
 
         if (room.users.length === 0) return;
         // throw new BadRequestException('User Is Not A Member In This Room');
     }
 
     async removeBan(removeBan: RemoveBanDto, userId: string) {
-        console.log('banned function');
+        // console.log('banned function');
 
         const bannedUsers = await this.prisma.room.findUnique({
             where: {
@@ -829,7 +829,7 @@ export class RoomService {
                         password: newPassword
                     }
                 });
-                console.log('password changed succefully');
+                // console.log('password changed succefully');
             } else throw new BadRequestException('Passowrd Does Not Match');
         } else
             throw new BadRequestException(
@@ -841,7 +841,7 @@ export class RoomService {
         // await this.isUserMuted(muteUserDto.roomId, muteUserDto.userId);
         // you cannot mute the room owner is working succefully
         if (await this.isUserAdmin(userId, +muteUserDto.roomId)) {
-            console.log(`user ${userId}`);
+            // console.log(`user ${userId}`);
             await this.isUserOwner(
                 +muteUserDto.roomId,
                 muteUserDto.userId,
@@ -879,7 +879,7 @@ export class RoomService {
                     muted: true
                 }
             });
-            console.log('----------------muted', MutedUsers);
+            // console.log('----------------muted', MutedUsers);
 
             const userDetails = new UnmuteUserDetails(
                 +muteUserDto.roomId,
@@ -934,10 +934,10 @@ export class RoomService {
         });
 
         if (roomWithMutedUsers.muted.includes(userToCheck)) {
-            console.log(`user with the id ${userToCheck} is muted`);
+            // console.log(`user with the id ${userToCheck} is muted`);
             return false;
         } else {
-            console.log(`user with the id ${userToCheck} is not muted`);
+            // console.log(`user with the id ${userToCheck} is not muted`);
             return true;
         }
     }
@@ -948,9 +948,9 @@ export class RoomService {
             const currentTime = new Date();
             if (currentTime >= mutedUntil.mutEDuration) {
                 this.unmuteUserForCron(mutedUntil);
-                console.log(
-                    `user with the id ${mutedUntil.userID} is removed automatically from the muted users`
-                );
+                // console.log(
+                    // `user with the id ${mutedUntil.userID} is removed automatically from the muted users`
+                // );
             }
         });
     }

@@ -29,10 +29,7 @@ const UserProfileCard: FC<UserProfileCardProps> = (props) => {
         navLinks.push('setting');
     }
 
-    useEffect(() => {
-        console.log(props);
-        console.log((props.exp / 1200) * 100);
-    }, []);
+
 
     return (
         <>
