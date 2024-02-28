@@ -117,9 +117,9 @@ export class ChatGateway
                 },
             });
 
-            console.log(roomM.users)
-            if (!roomM.users.includes(user))
-                return;
+            // console.log(roomM.users)
+            // if (!roomM.users.includes(user))
+            //     return;
             const { room, newMessage } = await this.wsService.createMessage(
                 payload,
                 userCheck.userData.sub
