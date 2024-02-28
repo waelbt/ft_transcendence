@@ -103,15 +103,27 @@ export class ChatGateway
             client.handshake.auth.token
         );
         try {
-            const { room, newMessage } = await this.wsService.createMessage(
-                payload,
-                userCheck.userData.sub
-            );
             const user = await this.prisma.user.findUnique({
                 where: {
                     id: userCheck.userData.sub
                 }
             });
+            const roomM  = await this.prisma.room.findUnique({
+                where: {
+                    id: +payload.id,
+                },
+                include: {
+                    users: true,
+                },
+            });
+
+            console.log(roomM.users)
+            if (!roomM.users.includes(user))
+                return;
+            const { room, newMessage } = await this.wsService.createMessage(
+                payload,
+                userCheck.userData.sub
+            );
 
             const message: EmitMessageDto = {
                 id: room.messages[room.messages.length - 1].roomId,

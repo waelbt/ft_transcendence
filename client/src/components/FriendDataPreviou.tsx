@@ -45,9 +45,6 @@ function FriendDataPreviou({ friendId }: FriendDataPreviouProps) {
                     <div className="text-black text-xl font-normal font-['Acme']">
                         {friend?.nickName}
                     </div>
-                    <div className="text-zinc-500 text-sm font-normal font-['Acme']">
-                        {friend?.status}
-                    </div>
                 </div>
             </Link>
         </>

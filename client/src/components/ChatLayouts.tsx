@@ -88,7 +88,6 @@ function ChatLayouts() {
             userkickedListener({ id: kickedUser, nickname });
             if (kickedUser === userId){
                 unpushRoom(+roomId, true);
-                navigate('/chat')
             }
                 
         };
@@ -105,7 +104,6 @@ function ChatLayouts() {
             pushBan({ id: banUser, nickname });
             if (banUser === userId) {
                 unpushRoom(+roomId, true);
-                navigate('/chat')
             }
         };
 

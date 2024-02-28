@@ -17,23 +17,23 @@ const Modal = ({
 }: ModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (removable) {
-            const handleClickOutside = (event: MouseEvent) => {
-                if (
-                    modalRef.current &&
-                    !modalRef.current.contains(event.target as Node)
-                ) {
-                    closeEvent();
-                }
-            };
+    // useEffect(() => {
+    //     if (removable) {
+    //         const handleClickOutside = (event: MouseEvent) => {
+    //             if (
+    //                 modalRef.current &&
+    //                 !modalRef.current.contains(event.target as Node)
+    //             ) {
+    //                 closeEvent();
+    //             }
+    //         };
 
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
-        }
-    }, [modalRef, closeEvent, removable]);
+    //         document.addEventListener('mousedown', handleClickOutside);
+    //         return () => {
+    //             document.removeEventListener('mousedown', handleClickOutside);
+    //         };
+    //     }
+    // }, [modalRef, closeEvent, removable]);
 
     if (!isEventOpen) {
         return null;
