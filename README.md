@@ -1,7 +1,3 @@
-Here's a draft README file for your React Native application, which includes instructions on how to start the application and set up the JSON server using `ngrok`:
-
----
-
 # React Native Application Setup
 
 Welcome to the React Native Application repository. This README will guide you through setting up the application and starting the JSON server with `ngrok` for data fetching.
