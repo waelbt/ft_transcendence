@@ -53,6 +53,40 @@ To fetch data from a local JSON server, you need to set up `ngrok` to expose you
    ngrok http 3000
    ```
    This will provide you with a URL that forwards to your local server. Note down the URL as it will be used in your React Native application to fetch data.
+  
+ 3 - **Update the URL in `app/hooks/useProduct.js`:**
+   Open the `useProduct.js` file located in your `app/hooks` directory. Find the `fetch` call within the `useEffect` function and replace the existing URL with the URL provided by `ngrok`. For example:
+
+   ```javascript
+   const useProduct = () => {
+       const [products, setProducts] = useState([]);
+       const [error, setError] = useState(false);
+
+       useEffect(() => {
+           const fetchData = async () => {
+               try {
+                   setError(false);
+                   // Replace the URL below with your ngrok URL
+                   const response = await fetch("https://your-ngrok-url.ngrok.io/products");
+                   const data = await response.json();
+                   setProducts(data);
+               } catch (error) {
+                   console.log(error.message);
+                   setError(true);
+               }
+           };
+
+           fetchData();
+       }, []);
+
+       return { products, error };
+   };
+
+   export default useProduct;
+   ```
+
+   Make sure to replace `"https://your-ngrok-url.ngrok.io/products"` with the actual `ngrok` URL you noted earlier.
+
 
 ## Configuring the Application
 
@@ -61,3 +95,6 @@ Update your application's data fetching logic to use the `ngrok` URL provided. F
 ## Running the Application
 
 Now that everything is set up, you can run your React Native application as mentioned in the Installation section. It should now be able to fetch data from your local JSON server through `ngrok`.
+Here’s how you can update the README to include specific instructions for updating the URL in `app/hooks/useProduct.js` when setting up the JSON server and using `ngrok`:
+
+---
