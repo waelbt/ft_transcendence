@@ -1,7 +1,3 @@
-Since I can't directly navigate or view external URLs, including GitHub repositories, I'll help you draft a general README file for a project called `ft_transcendence`. You can modify the details as per the actual content and features of the repository:
-
----
-
 # FT Transcendence
 
 Welcome to the repository for FT Transcendence, a full-stack web application designed for multiplayer ping pong games. This project encompasses a robust set of features including user authentication, real-time gameplay, chat functionality, and administrative controls.
